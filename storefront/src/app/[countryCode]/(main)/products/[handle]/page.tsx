@@ -4,6 +4,8 @@ import { notFound } from "next/navigation"
 import ProductTemplate from "@modules/products/templates"
 import { getRegion, listRegions } from "@lib/data/regions"
 import { getProductByHandle, getProductsList } from "@lib/data/products"
+import { client } from "../../../../../sanity/lib/client"
+
 
 type Props = {
   params: { countryCode: string; handle: string }
@@ -79,11 +81,20 @@ export default async function ProductPage({ params }: Props) {
     notFound()
   }
 
+  const sanity = (await client.getDocument(pricedProduct.id))
+  console.log("parent:", JSON.stringify(sanity, null, 2))
+
   return (
     <ProductTemplate
       product={pricedProduct}
       region={region}
       countryCode={params.countryCode}
+      sanity={{
+        // Pass description as PortableText blocks, not as content string
+        description: sanity?.description ?? [],  // ← ADD THIS
+        tabs: sanity?.tabs ?? [],
+      }}
     />
-  )
+  );
 }
+

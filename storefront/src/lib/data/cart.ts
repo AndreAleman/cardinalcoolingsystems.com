@@ -12,18 +12,30 @@ import { getRegion } from "./regions"
 
 export async function retrieveCart() {
   const cartId = getCartId()
-
+  
   if (!cartId) {
     return null
   }
 
   return await sdk.store.cart
     .retrieve(cartId, {}, { next: { tags: ["cart"] }, ...getAuthHeaders() })
-    .then(({ cart }) => cart)
+    .then(({ cart }) => {
+      // 🔍 DEBUG: Log every cart retrieval
+      console.log(`🔍 CART RETRIEVED [${new Date().toLocaleTimeString()}]:`, {
+        cartId: cart.id,
+        subtotal: cart.subtotal,
+        item_total: cart.item_total,
+        shipping_total: cart.shipping_total,
+        total: cart.total,
+        stackTrace: new Error().stack?.split('\n')[2] // Show where this was called from
+      })
+      return cart
+    })
     .catch(() => {
       return null
     })
 }
+
 
 export async function getOrSetCart(countryCode: string) {
   let cart = await retrieveCart()
@@ -199,6 +211,11 @@ export async function setShippingMethod({
   cartId: string
   shippingMethodId: string
 }) {
+  console.log(`🔍 BEFORE ADD SHIPPING METHOD [${new Date().toLocaleTimeString()}]:`, {
+    cartId,
+    shippingMethodId
+  })
+  
   return sdk.store.cart
     .addShippingMethod(
       cartId,
@@ -207,10 +224,16 @@ export async function setShippingMethod({
       getAuthHeaders()
     )
     .then(() => {
+      console.log(`🔍 AFTER ADD SHIPPING METHOD [${new Date().toLocaleTimeString()}]:`, {
+        cartId,
+        shippingMethodId,
+        message: "Shipping method added, cart will be revalidated"
+      })
       revalidateTag("cart")
     })
     .catch(medusaError)
 }
+
 
 export async function initiatePaymentSession(
   cart: HttpTypes.StoreCart,

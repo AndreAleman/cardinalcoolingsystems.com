@@ -4,7 +4,6 @@ import { Table, Text, clx } from "@medusajs/ui"
 
 import { updateLineItem } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
-import CartItemSelect from "@modules/cart/components/cart-item-select"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import DeleteButton from "@modules/common/components/delete-button"
 import LineItemOptions from "@modules/common/components/line-item-options"
@@ -13,7 +12,7 @@ import LineItemUnitPrice from "@modules/common/components/line-item-unit-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Spinner from "@modules/common/icons/spinner"
 import Thumbnail from "@modules/products/components/thumbnail"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 
 type ItemProps = {
   item: HttpTypes.StoreCartLineItem
@@ -23,28 +22,88 @@ type ItemProps = {
 const Item = ({ item, type = "full" }: ItemProps) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [localQuantity, setLocalQuantity] = useState(item.quantity) // Local state for immediate UI updates
+  const debounceRef = useRef<NodeJS.Timeout>()
 
   const { handle } = item.variant?.product ?? {}
 
-  const changeQuantity = async (quantity: number) => {
+  // Update local quantity when item quantity changes (from external updates)
+  useEffect(() => {
+    setLocalQuantity(item.quantity)
+  }, [item.quantity])
+
+  const debouncedUpdateQuantity = async (quantity: number) => {
+    if (quantity === item.quantity) return // No change needed
+    
     setError(null)
     setUpdating(true)
 
-    const message = await updateLineItem({
-      lineId: item.id,
-      quantity,
-    })
-      .catch((err) => {
-        setError(err.message)
+    try {
+      await updateLineItem({
+        lineId: item.id,
+        quantity,
       })
-      .finally(() => {
-        setUpdating(false)
-      })
+    } catch (err: any) {
+      setError(err.message)
+      // Revert local quantity on error
+      setLocalQuantity(item.quantity)
+    } finally {
+      setUpdating(false)
+    }
   }
 
-  // TODO: Update this to grab the actual max inventory
-  const maxQtyFromInventory = 10
-  const maxQuantity = item.variant?.manage_inventory ? 10 : maxQtyFromInventory
+  const changeQuantity = (newQuantity: number) => {
+    // Update UI immediately
+    setLocalQuantity(newQuantity)
+    
+    // Clear existing timeout
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+    
+    // Set new timeout for API call
+    debounceRef.current = setTimeout(() => {
+      debouncedUpdateQuantity(newQuantity)
+    }, 500) // Wait 500ms after user stops clicking
+  }
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current)
+      }
+    }
+  }, [])
+
+  // Improved max quantity logic
+  const getMaxQuantity = () => {
+    if (item.variant?.manage_inventory && item.variant?.inventory_quantity) {
+      return Math.min(item.variant.inventory_quantity, 99)
+    }
+    return 99
+  }
+
+  const maxQuantity = getMaxQuantity()
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value)
+    if (value >= 1 && value <= maxQuantity) {
+      changeQuantity(value)
+    }
+  }
+
+  const incrementQuantity = () => {
+    if (localQuantity < maxQuantity) {
+      changeQuantity(localQuantity + 1)
+    }
+  }
+
+  const decrementQuantity = () => {
+    if (localQuantity > 1) {
+      changeQuantity(localQuantity - 1)
+    }
+  }
 
   return (
     <Table.Row className="w-full" data-testid="product-row">
@@ -76,32 +135,62 @@ const Item = ({ item, type = "full" }: ItemProps) => {
 
       {type === "full" && (
         <Table.Cell>
-          <div className="flex gap-2 items-center w-28">
+          <div className="flex gap-2 items-center">
             <DeleteButton id={item.id} data-testid="product-delete-button" />
-            <CartItemSelect
-              value={item.quantity}
-              onChange={(value) => changeQuantity(parseInt(value.target.value))}
-              className="w-14 h-10 p-4"
-              data-testid="product-select-button"
-            >
-              {/* TODO: Update this with the v2 way of managing inventory */}
-              {Array.from(
-                {
-                  length: Math.min(maxQuantity, 10),
-                },
-                (_, i) => (
-                  <option value={i + 1} key={i}>
-                    {i + 1}
-                  </option>
-                )
-              )}
-
-              <option value={1} key={1}>
-                1
-              </option>
-            </CartItemSelect>
-            {updating && <Spinner />}
+            
+            {/* Debounced Number Input with +/- Buttons */}
+            <div className="flex items-center border border-ui-border-base rounded-md">
+              <button
+                onClick={decrementQuantity}
+                disabled={localQuantity <= 1 || updating}
+                className="w-8 h-8 flex items-center justify-center text-ui-fg-base hover:bg-ui-bg-subtle disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-l-md"
+                aria-label="Decrease quantity"
+                type="button"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                </svg>
+              </button>
+              
+              <input
+                type="number"
+                min="1"
+                max={maxQuantity}
+                value={localQuantity}
+                onChange={handleInputChange}
+                disabled={updating}
+                className="w-16 h-8 text-center border-0 border-x border-ui-border-base focus:outline-none focus:ring-0 text-sm font-medium text-ui-fg-base bg-transparent disabled:opacity-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                data-testid="product-quantity-input"
+              />
+              
+              <button
+                onClick={incrementQuantity}
+                disabled={localQuantity >= maxQuantity || updating}
+                className="w-8 h-8 flex items-center justify-center text-ui-fg-base hover:bg-ui-bg-subtle disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-r-md"
+                aria-label="Increase quantity"
+                type="button"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </button>
+            </div>
+            
+            {updating && (
+              <div className="flex items-center gap-1">
+                <Spinner className="w-4 h-4" />
+                <Text className="text-xs text-ui-fg-muted">Updating...</Text>
+              </div>
+            )}
           </div>
+          
+          {/* Show max quantity hint if limited */}
+          {maxQuantity < 99 && (
+            <Text className="text-xs text-ui-fg-muted mt-1">
+              Max: {maxQuantity}
+            </Text>
+          )}
+          
           <ErrorMessage error={error} data-testid="product-error-message" />
         </Table.Cell>
       )}
@@ -120,7 +209,7 @@ const Item = ({ item, type = "full" }: ItemProps) => {
         >
           {type === "preview" && (
             <span className="flex gap-x-1 ">
-              <Text className="text-ui-fg-muted">{item.quantity}x </Text>
+              <Text className="text-ui-fg-muted">{localQuantity}x </Text>
               <LineItemUnitPrice item={item} style="tight" />
             </span>
           )}

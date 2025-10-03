@@ -104,6 +104,7 @@ export async function middleware(request: NextRequest) {
 
   // check if one of the country codes is in the url
   if (
+    request.nextUrl.pathname.startsWith("/studio") ||
     urlHasCountryCode &&
     (!isOnboarding || onboardingCookie) &&
     (!cartId || cartIdCookie)
@@ -120,7 +121,7 @@ export async function middleware(request: NextRequest) {
 
   let response = NextResponse.redirect(redirectUrl, 307)
 
-  // If no country code is set, we redirect to the relevant region.
+  //If no country code is set, we redirect to the relevant region.
   if (!urlHasCountryCode && countryCode) {
     redirectUrl = `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`
     response = NextResponse.redirect(`${redirectUrl}`, 307)

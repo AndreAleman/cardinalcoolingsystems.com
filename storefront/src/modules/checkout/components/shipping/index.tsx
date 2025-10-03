@@ -117,10 +117,14 @@ const Shipping: React.FC<ShippingProps> = ({
                       <span className="text-base-regular">{option.name}</span>
                     </div>
                     <span className="justify-self-end text-ui-fg-base">
-                      {convertToLocale({
-                        amount: option.amount!,
-                        currency_code: cart?.currency_code,
-                      })}
+                      {/* FIXED: Hide price for UPS options */}
+                      {option.name?.toLowerCase().includes('ups') ? 
+                        '' : 
+                        convertToLocale({
+                          amount: option.amount!,
+                          currency_code: cart?.currency_code,
+                        })
+                      }
                     </span>
                   </RadioGroup.Option>
                 )
@@ -154,10 +158,14 @@ const Shipping: React.FC<ShippingProps> = ({
                 </Text>
                 <Text className="txt-medium text-ui-fg-subtle">
                   {selectedShippingMethod?.name}{" "}
-                  {convertToLocale({
-                    amount: selectedShippingMethod?.amount!,
-                    currency_code: cart?.currency_code,
-                  })}
+                  {/* Also fix the selected method display */}
+                  {selectedShippingMethod?.name?.toLowerCase().includes('ups') ?
+                    '' :
+                    convertToLocale({
+                      amount: selectedShippingMethod?.amount!,
+                      currency_code: cart?.currency_code,
+                    })
+                  }
                 </Text>
               </div>
             )}

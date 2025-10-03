@@ -1,0 +1,11 @@
+woo_product_id,woo_sku,product_title,status,medusa_product_id,medusa_handle,categories_assigned,variants_count,error_message,processed_at,duration_seconds
+13174,2SXL126-400,"Polished 12"" 90° Sweep Elbows",success,prod_01K5SQA67D12DXTAE1FMPGSDKP,polished-12-90-sweep-elbows,3,10,"",2025-09-22T22:16:48.205Z,21
+13175,2SXL186-400,"Polished 18"" 90° Sweep Elbows",success,prod_01K5SR1FGSJ6KG21H0YVES35H7,polished-18-90-sweep-elbows,3,10,"",2025-09-22T22:17:10.688Z,55
+13176,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:06.323Z,4
+13177,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:11.551Z,3
+13178,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:15.931Z,3
+13179,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:20.222Z,3
+13180,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:24.288Z,3
+13181,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:28.754Z,3
+13182,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:32.624Z,4
+13183,,"",error,,,0,0,"Unknown error",2025-09-22T22:18:37.131Z,3

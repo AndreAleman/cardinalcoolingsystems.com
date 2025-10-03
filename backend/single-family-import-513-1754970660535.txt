@@ -1,0 +1,2469 @@
+
+=================================================================
+SINGLE PRODUCT FAMILY IMPORT REPORT
+Parent ID: 513
+Generated: 2025-08-12T03:51:00.525Z
+Duration: 3 seconds
+Success: YES
+=================================================================
+
+FAMILY INFORMATION
+=================================================================
+
+Parent Product:
+  • Name: Union Hexagonal Nut
+  • SKU: 13H
+  • Type: multi-variant
+  • Variations Found: 6
+
+Transformation Results:
+  • Medusa Products Created: 1
+  • Total Variants Created: 6
+  • Sales Channel: sc_01H2XQZJV8Y2K3M4N5P6Q7R8S9
+  • Inventory Location: loc_01H2XQZJV8Y2K3M4N5P6Q7R8S9
+
+=================================================================
+WOOCOMMERCE SOURCE DATA
+=================================================================
+
+[
+  {
+    "id": 513,
+    "name": "Union Hexagonal Nut",
+    "slug": "union-hexagonal-nut",
+    "permalink": "https://sanitube.us/product/union-hexagonal-nut/",
+    "date_created": "2010-12-27T19:51:54",
+    "date_created_gmt": "2010-12-27T19:51:54",
+    "date_modified": "2025-08-08T21:04:32",
+    "date_modified_gmt": "2025-08-08T21:04:32",
+    "type": "variable",
+    "status": "publish",
+    "featured": true,
+    "catalog_visibility": "visible",
+    "description": "<p>&nbsp;<br />\nn<br />\nn&nbsp;<br />\nn<br />\nn<img class=\"__mce_add_custom__\" title=\"draw.jpg\" src=\"https://sanitube.us/wp-content/uploads/product_images/uploaded_images/draw.jpg\" alt=\"draw.jpg\" width=\"234\" height=\"214\" /><br />\nn<br />\nn&nbsp;<br />\nn</p>\n<table style=\"width: 472px\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<colgroup span=\"1\">\n<col span=\"1\" width=\"59\" />\n<col span=\"1\" width=\"19\" />\n<col span=\"1\" width=\"59\" />\n<col span=\"1\" width=\"163\" />\n<col span=\"1\" width=\"83\" />\n<col span=\"1\" width=\"89\" /></colgroup>\n<p>n</p>\n<tbody>\nn</p>\n<tr>\nn</p>\n<td class=\"xl86\" colspan=\"3\" rowspan=\"2\" width=\"137\" height=\"102\">Size<br />\nn(Tube OD)</td>\n<p>n</p>\n<td class=\"xl84\" rowspan=\"2\" width=\"163\">Part Number</td>\n<p>n</p>\n<td class=\"xl82\" colspan=\"2\" width=\"172\">Dimensions</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl72 header-table\" height=\"51\">A</td>\n<p>n</p>\n<td class=\"xl73 header-table\">B</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl89\" colspan=\"3\" height=\"38\">1   \"</td>\n<p>n</p>\n<td class=\"xl78\">13H-100</td>\n<p>n</p>\n<td class=\"xl74\">0.906</td>\n<p>n</p>\n<td class=\"xl68\">1.812</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl98\" colspan=\"3\" height=\"38\">1-1/2\"</td>\n<p>n</p>\n<td class=\"xl79\">13H-150</td>\n<p>n</p>\n<td class=\"xl75\">0.968</td>\n<p>n</p>\n<td class=\"xl69\">2.406</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl95\" colspan=\"3\" height=\"38\">2   \"</td>\n<p>n</p>\n<td class=\"xl80\">13H-200</td>\n<p>n</p>\n<td class=\"xl76\">1.062</td>\n<p>n</p>\n<td class=\"xl70\">3.000</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl98\" colspan=\"3\" height=\"38\">2-1/2\"</td>\n<p>n</p>\n<td class=\"xl79\">13H-250</td>\n<p>n</p>\n<td class=\"xl75\">1.187</td>\n<p>n</p>\n<td class=\"xl69\">3.594</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl95\" colspan=\"3\" height=\"38\">3   \"</td>\n<p>n</p>\n<td class=\"xl80\">13H-300</td>\n<p>n</p>\n<td class=\"xl76\">1.281</td>\n<p>n</p>\n<td class=\"xl70\">4.188</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl100\" colspan=\"3\" height=\"38\">4   \"</td>\n<p>n</p>\n<td class=\"xl81\">13H-400</td>\n<p>n</p>\n<td class=\"xl77\">1.500</td>\n<p>n</p>\n<td class=\"xl71\">5.438</td>\n<p>n</tr>\n<p>n</tbody>\n<p>n</table>\n<p>n&nbsp;<br />\nn<br />\nn<strong>Notes:</strong><br />\nn• All Hex Nuts are T304 Stainless Steel.<br />\nn• 400 PSI maximum tolerance.</p>\n",
+    "short_description": "<p>Sanitube bevel seat fittings provide a secure, leak-tight connection using external Acme threads. Designed to work with a metal-to-metal seat, a bevel seat gasket may be used for additional security.</p>\n",
+    "sku": "13H",
+    "price": "15",
+    "regular_price": "",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": 5,
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": 0,
+    "download_expiry": 0,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "none",
+    "tax_class": "default-tax-class",
+    "manage_stock": true,
+    "stock_quantity": null,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "1",
+    "dimensions": {
+      "length": "10",
+      "width": "10",
+      "height": "10"
+    },
+    "shipping_required": true,
+    "shipping_taxable": false,
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 0,
+    "purchase_note": "",
+    "categories": [
+      {
+        "id": 349,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings-2"
+      },
+      {
+        "id": 38,
+        "name": "Fittings",
+        "slug": "fittings"
+      }
+    ],
+    "tags": [
+      {
+        "id": 196,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings"
+      },
+      {
+        "id": 202,
+        "name": "Hex Nuts",
+        "slug": "hex-nuts"
+      }
+    ],
+    "images": [
+      {
+        "id": 1433,
+        "date_created": "2024-08-16T12:13:01",
+        "date_created_gmt": "2024-08-16T12:13:01",
+        "date_modified": "2024-08-16T12:13:01",
+        "date_modified_gmt": "2024-08-16T12:13:01",
+        "src": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png",
+        "name": "Union Hexagonal Nut",
+        "alt": ""
+      }
+    ],
+    "attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "slug": "pa_alloy",
+        "position": 0,
+        "visible": true,
+        "variation": true,
+        "options": [
+          "T304"
+        ]
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "slug": "pa_size-tube-od",
+        "position": 1,
+        "visible": true,
+        "variation": true,
+        "options": [
+          "1-1/2\"",
+          "1\"",
+          "2-1/2\"",
+          "2\"",
+          "3\"",
+          "4\""
+        ]
+      }
+    ],
+    "default_attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "option": "t304"
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "option": "1-2"
+      }
+    ],
+    "variations": [
+      515,
+      516,
+      517,
+      518,
+      519,
+      520
+    ],
+    "grouped_products": [],
+    "menu_order": 0,
+    "price_html": false,
+    "related_ids": [
+      517,
+      526,
+      543,
+      527,
+      515
+    ],
+    "meta_data": [
+      {
+        "id": 4313,
+        "key": "_children",
+        "value": []
+      },
+      {
+        "id": 4315,
+        "key": "_yoast_wpseo_title",
+        "value": ""
+      },
+      {
+        "id": 4316,
+        "key": "_yoast_wpseo_metadesc",
+        "value": ""
+      },
+      {
+        "id": 4317,
+        "key": "_yoast_wpseo_focuskw",
+        "value": "Union Hexagonal Nut"
+      },
+      {
+        "id": 4324,
+        "key": "_wpm_gtin_code",
+        "value": ""
+      },
+      {
+        "id": 4325,
+        "key": "_barcode",
+        "value": ""
+      },
+      {
+        "id": 4326,
+        "key": "rank_math_title",
+        "value": ""
+      },
+      {
+        "id": 4327,
+        "key": "rank_math_description",
+        "value": ""
+      },
+      {
+        "id": 4328,
+        "key": "rank_math_focus_keyword",
+        "value": "Union Hexagonal Nut"
+      },
+      {
+        "id": 26533,
+        "key": "shopengine_product_views_count",
+        "value": "1"
+      },
+      {
+        "id": 224427,
+        "key": "_eael_post_view_count",
+        "value": "7271"
+      },
+      {
+        "id": 224574,
+        "key": "_nestedMaterials",
+        "value": ""
+      },
+      {
+        "id": 224575,
+        "key": "_nestedPercentage",
+        "value": "0"
+      },
+      {
+        "id": 224576,
+        "key": "_nestedDimension",
+        "value": "length"
+      },
+      {
+        "id": 224577,
+        "key": "_maxNestedItems",
+        "value": ""
+      },
+      {
+        "id": 224578,
+        "key": "_nestedStakingProperty",
+        "value": "Evenly"
+      },
+      {
+        "id": 224579,
+        "key": "_enable_dropship",
+        "value": ""
+      },
+      {
+        "id": 224580,
+        "key": "_dropship_location",
+        "value": "2"
+      },
+      {
+        "id": 224581,
+        "key": "_ltl_freight",
+        "value": "0"
+      },
+      {
+        "id": 224582,
+        "key": "_en_product_markup",
+        "value": ""
+      },
+      {
+        "id": 224583,
+        "key": "_hazardousmaterials",
+        "value": ""
+      },
+      {
+        "id": 224584,
+        "key": "_en_insurance_fee",
+        "value": ""
+      },
+      {
+        "id": 272275,
+        "key": "qb_income_account",
+        "value": ""
+      },
+      {
+        "id": 272276,
+        "key": "qb_cogs_account",
+        "value": ""
+      },
+      {
+        "id": 272277,
+        "key": "qb_ia_account",
+        "value": ""
+      },
+      {
+        "id": 272278,
+        "key": "qb_p_vendor",
+        "value": ""
+      },
+      {
+        "id": 272279,
+        "key": "qb_mpn",
+        "value": ""
+      },
+      {
+        "id": 272280,
+        "key": "_jck_wssv_display_title",
+        "value": ""
+      },
+      {
+        "id": 272281,
+        "key": "_wp_old_date",
+        "value": ""
+      },
+      {
+        "id": 272282,
+        "key": "product_wholesale_pricing_rules",
+        "value": ""
+      },
+      {
+        "id": 272283,
+        "key": "g6766472306344_wholesale_price",
+        "value": ""
+      },
+      {
+        "id": 272284,
+        "key": "1_wholesale_price",
+        "value": ""
+      },
+      {
+        "id": 312359,
+        "key": "woolentor_views_count_product",
+        "value": "1"
+      },
+      {
+        "id": 314611,
+        "key": "woolentor_total_stock_quantity",
+        "value": ""
+      },
+      {
+        "id": 314612,
+        "key": "_saleflash_text",
+        "value": ""
+      },
+      {
+        "id": 314613,
+        "key": "_wcpa_product_meta",
+        "value": []
+      },
+      {
+        "id": 314614,
+        "key": "wcpa_exclude_global_forms",
+        "value": ""
+      },
+      {
+        "id": 314615,
+        "key": "_gpls_woo_rfq_rfq_enable",
+        "value": "yes"
+      },
+      {
+        "id": 379905,
+        "key": "_elementor_page_assets",
+        "value": []
+      }
+    ],
+    "stock_status": "outofstock",
+    "has_options": true,
+    "post_password": "",
+    "global_unique_id": "",
+    "brands": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/513",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products"
+        }
+      ]
+    }
+  },
+  {
+    "id": 515,
+    "name": "T304, 1\" Union Hexagonal Nut",
+    "slug": "product-513-variation-2",
+    "permalink": "https://sanitube.us/product/union-hexagonal-nut/?attribute_pa_alloy=t304&attribute_pa_size-tube-od=1-2",
+    "date_created": "2010-12-27T19:51:54",
+    "date_created_gmt": "2010-12-27T19:51:54",
+    "date_modified": "2025-08-08T21:03:44",
+    "date_modified_gmt": "2025-08-08T21:03:44",
+    "type": "variation",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "",
+    "short_description": "",
+    "sku": "13H-100",
+    "price": "2200",
+    "regular_price": "2200",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": "0",
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": 0,
+    "download_expiry": 0,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "none",
+    "tax_class": "default-tax-class",
+    "manage_stock": true,
+    "stock_quantity": 146,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "0.25",
+    "dimensions": {
+      "length": "1",
+      "width": "2",
+      "height": "2"
+    },
+    "shipping_required": true,
+    "shipping_taxable": false,
+    "shipping_class": "ups",
+    "shipping_class_id": 395,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 513,
+    "purchase_note": "",
+    "categories": [
+      {
+        "id": 349,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings-2"
+      },
+      {
+        "id": 38,
+        "name": "Fittings",
+        "slug": "fittings"
+      }
+    ],
+    "tags": [
+      {
+        "id": 196,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings"
+      },
+      {
+        "id": 202,
+        "name": "Hex Nuts",
+        "slug": "hex-nuts"
+      }
+    ],
+    "images": [
+      {
+        "id": 11538,
+        "date_created": "2025-04-24T22:07:59",
+        "date_created_gmt": "2025-04-24T22:07:59",
+        "date_modified": "2025-04-24T22:07:59",
+        "date_modified_gmt": "2025-04-24T22:07:59",
+        "src": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut-300x300-1.webp",
+        "name": "Union-Hexagonal-Nut-300&#215;300",
+        "alt": ""
+      }
+    ],
+    "attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "slug": "pa_alloy",
+        "option": "T304"
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "slug": "pa_size-tube-od",
+        "option": "1\""
+      }
+    ],
+    "default_attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "menu_order": 1,
+    "price_html": false,
+    "related_ids": [
+      518,
+      519,
+      513,
+      543,
+      517
+    ],
+    "meta_data": [
+      {
+        "id": 224438,
+        "key": "qb_income_account",
+        "value": ""
+      },
+      {
+        "id": 224439,
+        "key": "qb_cogs_account",
+        "value": ""
+      },
+      {
+        "id": 224440,
+        "key": "qb_ia_account",
+        "value": "8000002C-1299169449"
+      },
+      {
+        "id": 224441,
+        "key": "qb_p_vendor",
+        "value": ""
+      },
+      {
+        "id": 224442,
+        "key": "qb_mpn",
+        "value": ""
+      },
+      {
+        "id": 224443,
+        "key": "_nestedMaterials",
+        "value": ""
+      },
+      {
+        "id": 224444,
+        "key": "_nestedPercentage",
+        "value": "0"
+      },
+      {
+        "id": 224445,
+        "key": "_nestedDimension",
+        "value": "length"
+      },
+      {
+        "id": 224446,
+        "key": "_maxNestedItems",
+        "value": ""
+      },
+      {
+        "id": 224447,
+        "key": "_nestedStakingProperty",
+        "value": "Evenly"
+      },
+      {
+        "id": 224448,
+        "key": "_enable_dropship",
+        "value": ""
+      },
+      {
+        "id": 224449,
+        "key": "_dropship_location",
+        "value": "2"
+      },
+      {
+        "id": 224450,
+        "key": "_ltl_freight",
+        "value": "0"
+      },
+      {
+        "id": 224451,
+        "key": "_en_product_markup",
+        "value": "99%"
+      },
+      {
+        "id": 224452,
+        "key": "_hazardousmaterials",
+        "value": ""
+      },
+      {
+        "id": 224453,
+        "key": "_en_insurance_fee",
+        "value": ""
+      },
+      {
+        "id": 226822,
+        "key": "_aovup_wccl_gallery",
+        "value": [
+          11624
+        ]
+      },
+      {
+        "id": 226823,
+        "key": "_jck_wssv_display_title",
+        "value": ""
+      },
+      {
+        "id": 273138,
+        "key": "_yoast_wpseo_title",
+        "value": ""
+      },
+      {
+        "id": 273139,
+        "key": "_yoast_wpseo_metadesc",
+        "value": ""
+      },
+      {
+        "id": 273140,
+        "key": "_yoast_wpseo_focuskw",
+        "value": ""
+      },
+      {
+        "id": 273141,
+        "key": "_wpm_gtin_code",
+        "value": ""
+      },
+      {
+        "id": 273142,
+        "key": "_barcode",
+        "value": ""
+      },
+      {
+        "id": 273143,
+        "key": "rank_math_title",
+        "value": ""
+      },
+      {
+        "id": 273144,
+        "key": "rank_math_description",
+        "value": ""
+      },
+      {
+        "id": 273145,
+        "key": "rank_math_focus_keyword",
+        "value": ""
+      },
+      {
+        "id": 273146,
+        "key": "shopengine_product_views_count",
+        "value": ""
+      },
+      {
+        "id": 273147,
+        "key": "_eael_post_view_count",
+        "value": ""
+      },
+      {
+        "id": 273148,
+        "key": "_wp_old_date",
+        "value": ""
+      },
+      {
+        "id": 273149,
+        "key": "product_wholesale_pricing_rules",
+        "value": ""
+      },
+      {
+        "id": 273150,
+        "key": "g6766472306344_wholesale_price",
+        "value": ""
+      },
+      {
+        "id": 273151,
+        "key": "1_wholesale_price",
+        "value": ""
+      },
+      {
+        "id": 314616,
+        "key": "_gpls_woo_rfq_rfq_enable",
+        "value": "yes"
+      },
+      {
+        "id": 321563,
+        "key": "warehouse_KC",
+        "value": "194"
+      },
+      {
+        "id": 321564,
+        "key": "warehouse_LA",
+        "value": "98"
+      },
+      {
+        "id": 321565,
+        "key": "warehouse_fl",
+        "value": "0"
+      }
+    ],
+    "stock_status": "instock",
+    "has_options": false,
+    "post_password": "",
+    "global_unique_id": "",
+    "brands": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/515",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products"
+        }
+      ],
+      "up": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/513"
+        }
+      ]
+    }
+  },
+  {
+    "id": 516,
+    "name": "T304, 1-1/2\" Union Hexagonal Nut",
+    "slug": "product-513-variation-3",
+    "permalink": "https://sanitube.us/product/union-hexagonal-nut/?attribute_pa_alloy=t304&attribute_pa_size-tube-od=1-1-2",
+    "date_created": "2010-12-27T19:51:54",
+    "date_created_gmt": "2010-12-27T19:51:54",
+    "date_modified": "2025-08-08T21:03:53",
+    "date_modified_gmt": "2025-08-08T21:03:53",
+    "type": "variation",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "",
+    "short_description": "",
+    "sku": "13H-150",
+    "price": "1500",
+    "regular_price": "1500",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": "0",
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "none",
+    "tax_class": "default-tax-class",
+    "manage_stock": true,
+    "stock_quantity": 183,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "0.44",
+    "dimensions": {
+      "length": "1",
+      "width": "2.5",
+      "height": "2.5"
+    },
+    "shipping_required": true,
+    "shipping_taxable": false,
+    "shipping_class": "ups",
+    "shipping_class_id": 395,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 513,
+    "purchase_note": "",
+    "categories": [
+      {
+        "id": 349,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings-2"
+      },
+      {
+        "id": 38,
+        "name": "Fittings",
+        "slug": "fittings"
+      }
+    ],
+    "tags": [
+      {
+        "id": 196,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings"
+      },
+      {
+        "id": 202,
+        "name": "Hex Nuts",
+        "slug": "hex-nuts"
+      }
+    ],
+    "images": [
+      {
+        "id": 1433,
+        "date_created": "2024-08-16T12:13:01",
+        "date_created_gmt": "2024-08-16T12:13:01",
+        "date_modified": "2024-08-16T12:13:01",
+        "date_modified_gmt": "2024-08-16T12:13:01",
+        "src": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png",
+        "name": "Union Hexagonal Nut",
+        "alt": ""
+      }
+    ],
+    "attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "slug": "pa_alloy",
+        "option": "T304"
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "slug": "pa_size-tube-od",
+        "option": "1-1/2\""
+      }
+    ],
+    "default_attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "menu_order": 2,
+    "price_html": false,
+    "related_ids": [
+      527,
+      521,
+      526,
+      539,
+      519
+    ],
+    "meta_data": [
+      {
+        "id": 224461,
+        "key": "qb_income_account",
+        "value": ""
+      },
+      {
+        "id": 224462,
+        "key": "qb_cogs_account",
+        "value": ""
+      },
+      {
+        "id": 224463,
+        "key": "qb_ia_account",
+        "value": "8000002C-1299169449"
+      },
+      {
+        "id": 224464,
+        "key": "qb_p_vendor",
+        "value": ""
+      },
+      {
+        "id": 224465,
+        "key": "qb_mpn",
+        "value": ""
+      },
+      {
+        "id": 224467,
+        "key": "_nestedMaterials",
+        "value": ""
+      },
+      {
+        "id": 224468,
+        "key": "_nestedPercentage",
+        "value": "0"
+      },
+      {
+        "id": 224469,
+        "key": "_nestedDimension",
+        "value": "length"
+      },
+      {
+        "id": 224470,
+        "key": "_maxNestedItems",
+        "value": ""
+      },
+      {
+        "id": 224471,
+        "key": "_nestedStakingProperty",
+        "value": "Evenly"
+      },
+      {
+        "id": 224472,
+        "key": "_enable_dropship",
+        "value": ""
+      },
+      {
+        "id": 224473,
+        "key": "_dropship_location",
+        "value": "2"
+      },
+      {
+        "id": 224474,
+        "key": "_ltl_freight",
+        "value": "50"
+      },
+      {
+        "id": 224475,
+        "key": "_en_product_markup",
+        "value": "123"
+      },
+      {
+        "id": 224476,
+        "key": "_hazardousmaterials",
+        "value": ""
+      },
+      {
+        "id": 224477,
+        "key": "_en_insurance_fee",
+        "value": ""
+      },
+      {
+        "id": 227730,
+        "key": "_jck_wssv_display_title",
+        "value": ""
+      },
+      {
+        "id": 314617,
+        "key": "_gpls_woo_rfq_rfq_enable",
+        "value": "yes"
+      },
+      {
+        "id": 323074,
+        "key": "warehouse_KC",
+        "value": "280"
+      },
+      {
+        "id": 323075,
+        "key": "warehouse_LA",
+        "value": "88"
+      },
+      {
+        "id": 323076,
+        "key": "warehouse_fl",
+        "value": "0"
+      }
+    ],
+    "stock_status": "instock",
+    "has_options": false,
+    "post_password": "",
+    "global_unique_id": "",
+    "brands": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/516",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products"
+        }
+      ],
+      "up": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/513"
+        }
+      ]
+    }
+  },
+  {
+    "id": 517,
+    "name": "T304, 2\" Union Hexagonal Nut",
+    "slug": "product-513-variation-4",
+    "permalink": "https://sanitube.us/product/union-hexagonal-nut/?attribute_pa_alloy=t304&attribute_pa_size-tube-od=2-2",
+    "date_created": "2010-12-27T19:51:54",
+    "date_created_gmt": "2010-12-27T19:51:54",
+    "date_modified": "2025-08-08T21:04:03",
+    "date_modified_gmt": "2025-08-08T21:04:03",
+    "type": "variation",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "",
+    "short_description": "",
+    "sku": "13H-200",
+    "price": "400",
+    "regular_price": "400",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": "0",
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "none",
+    "tax_class": "default-tax-class",
+    "manage_stock": true,
+    "stock_quantity": 151,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "0.75",
+    "dimensions": {
+      "length": "1",
+      "width": "3",
+      "height": "3"
+    },
+    "shipping_required": true,
+    "shipping_taxable": false,
+    "shipping_class": "ltl_freight",
+    "shipping_class_id": 246,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 513,
+    "purchase_note": "",
+    "categories": [
+      {
+        "id": 349,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings-2"
+      },
+      {
+        "id": 38,
+        "name": "Fittings",
+        "slug": "fittings"
+      }
+    ],
+    "tags": [
+      {
+        "id": 196,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings"
+      },
+      {
+        "id": 202,
+        "name": "Hex Nuts",
+        "slug": "hex-nuts"
+      }
+    ],
+    "images": [
+      {
+        "id": 1433,
+        "date_created": "2024-08-16T12:13:01",
+        "date_created_gmt": "2024-08-16T12:13:01",
+        "date_modified": "2024-08-16T12:13:01",
+        "date_modified_gmt": "2024-08-16T12:13:01",
+        "src": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png",
+        "name": "Union Hexagonal Nut",
+        "alt": ""
+      }
+    ],
+    "attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "slug": "pa_alloy",
+        "option": "T304"
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "slug": "pa_size-tube-od",
+        "option": "2\""
+      }
+    ],
+    "default_attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "menu_order": 3,
+    "price_html": false,
+    "related_ids": [
+      545,
+      543,
+      533,
+      519,
+      515
+    ],
+    "meta_data": [
+      {
+        "id": 224485,
+        "key": "qb_income_account",
+        "value": ""
+      },
+      {
+        "id": 224486,
+        "key": "qb_cogs_account",
+        "value": ""
+      },
+      {
+        "id": 224487,
+        "key": "qb_ia_account",
+        "value": ""
+      },
+      {
+        "id": 224488,
+        "key": "qb_p_vendor",
+        "value": ""
+      },
+      {
+        "id": 224489,
+        "key": "qb_mpn",
+        "value": ""
+      },
+      {
+        "id": 224491,
+        "key": "_nestedMaterials",
+        "value": ""
+      },
+      {
+        "id": 224492,
+        "key": "_nestedPercentage",
+        "value": "0"
+      },
+      {
+        "id": 224493,
+        "key": "_nestedDimension",
+        "value": "length"
+      },
+      {
+        "id": 224494,
+        "key": "_maxNestedItems",
+        "value": ""
+      },
+      {
+        "id": 224495,
+        "key": "_nestedStakingProperty",
+        "value": "Evenly"
+      },
+      {
+        "id": 224496,
+        "key": "_enable_dropship",
+        "value": ""
+      },
+      {
+        "id": 224497,
+        "key": "_dropship_location",
+        "value": "2"
+      },
+      {
+        "id": 224498,
+        "key": "_ltl_freight",
+        "value": "50"
+      },
+      {
+        "id": 224499,
+        "key": "_en_product_markup",
+        "value": "20%"
+      },
+      {
+        "id": 224500,
+        "key": "_hazardousmaterials",
+        "value": ""
+      },
+      {
+        "id": 224501,
+        "key": "_en_insurance_fee",
+        "value": ""
+      },
+      {
+        "id": 227731,
+        "key": "_jck_wssv_display_title",
+        "value": ""
+      },
+      {
+        "id": 314618,
+        "key": "_gpls_woo_rfq_rfq_enable",
+        "value": "yes"
+      },
+      {
+        "id": 321556,
+        "key": "warehouse_KC",
+        "value": "220"
+      },
+      {
+        "id": 321557,
+        "key": "warehouse_LA",
+        "value": "230"
+      },
+      {
+        "id": 321558,
+        "key": "warehouse_fl",
+        "value": "0"
+      }
+    ],
+    "stock_status": "instock",
+    "has_options": false,
+    "post_password": "",
+    "global_unique_id": "",
+    "brands": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/517",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products"
+        }
+      ],
+      "up": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/513"
+        }
+      ]
+    }
+  },
+  {
+    "id": 518,
+    "name": "T304, 2-1/2\" Union Hexagonal Nut",
+    "slug": "product-513-variation-5",
+    "permalink": "https://sanitube.us/product/union-hexagonal-nut/?attribute_pa_alloy=t304&attribute_pa_size-tube-od=2-1-2",
+    "date_created": "2010-12-27T19:51:54",
+    "date_created_gmt": "2010-12-27T19:51:54",
+    "date_modified": "2025-08-08T21:04:13",
+    "date_modified_gmt": "2025-08-08T21:04:13",
+    "type": "variation",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "",
+    "short_description": "",
+    "sku": "13H-250",
+    "price": "15",
+    "regular_price": "15",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": "0",
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "none",
+    "tax_class": "default-tax-class",
+    "manage_stock": true,
+    "stock_quantity": 77,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "1.25",
+    "dimensions": {
+      "length": "1",
+      "width": "4",
+      "height": "4"
+    },
+    "shipping_required": true,
+    "shipping_taxable": false,
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 513,
+    "purchase_note": "",
+    "categories": [
+      {
+        "id": 349,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings-2"
+      },
+      {
+        "id": 38,
+        "name": "Fittings",
+        "slug": "fittings"
+      }
+    ],
+    "tags": [
+      {
+        "id": 196,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings"
+      },
+      {
+        "id": 202,
+        "name": "Hex Nuts",
+        "slug": "hex-nuts"
+      }
+    ],
+    "images": [
+      {
+        "id": 1433,
+        "date_created": "2024-08-16T12:13:01",
+        "date_created_gmt": "2024-08-16T12:13:01",
+        "date_modified": "2024-08-16T12:13:01",
+        "date_modified_gmt": "2024-08-16T12:13:01",
+        "src": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png",
+        "name": "Union Hexagonal Nut",
+        "alt": ""
+      }
+    ],
+    "attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "slug": "pa_alloy",
+        "option": "T304"
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "slug": "pa_size-tube-od",
+        "option": "2-1/2\""
+      }
+    ],
+    "default_attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "menu_order": 4,
+    "price_html": false,
+    "related_ids": [
+      542,
+      536,
+      537,
+      527,
+      543
+    ],
+    "meta_data": [
+      {
+        "id": 224509,
+        "key": "qb_income_account",
+        "value": ""
+      },
+      {
+        "id": 224510,
+        "key": "qb_cogs_account",
+        "value": ""
+      },
+      {
+        "id": 224511,
+        "key": "qb_ia_account",
+        "value": ""
+      },
+      {
+        "id": 224512,
+        "key": "qb_p_vendor",
+        "value": ""
+      },
+      {
+        "id": 224513,
+        "key": "qb_mpn",
+        "value": ""
+      },
+      {
+        "id": 224515,
+        "key": "_nestedMaterials",
+        "value": ""
+      },
+      {
+        "id": 224516,
+        "key": "_nestedPercentage",
+        "value": "0"
+      },
+      {
+        "id": 224517,
+        "key": "_nestedDimension",
+        "value": "length"
+      },
+      {
+        "id": 224518,
+        "key": "_maxNestedItems",
+        "value": ""
+      },
+      {
+        "id": 224519,
+        "key": "_nestedStakingProperty",
+        "value": "Evenly"
+      },
+      {
+        "id": 224520,
+        "key": "_enable_dropship",
+        "value": ""
+      },
+      {
+        "id": 224521,
+        "key": "_dropship_location",
+        "value": "2"
+      },
+      {
+        "id": 224522,
+        "key": "_ltl_freight",
+        "value": "0"
+      },
+      {
+        "id": 224523,
+        "key": "_en_product_markup",
+        "value": ""
+      },
+      {
+        "id": 224524,
+        "key": "_hazardousmaterials",
+        "value": ""
+      },
+      {
+        "id": 224525,
+        "key": "_en_insurance_fee",
+        "value": ""
+      },
+      {
+        "id": 227732,
+        "key": "_jck_wssv_display_title",
+        "value": ""
+      },
+      {
+        "id": 314619,
+        "key": "_gpls_woo_rfq_rfq_enable",
+        "value": "yes"
+      },
+      {
+        "id": 322756,
+        "key": "warehouse_KC",
+        "value": "52"
+      },
+      {
+        "id": 322757,
+        "key": "warehouse_LA",
+        "value": "100"
+      },
+      {
+        "id": 322758,
+        "key": "warehouse_fl",
+        "value": "0"
+      }
+    ],
+    "stock_status": "instock",
+    "has_options": false,
+    "post_password": "",
+    "global_unique_id": "",
+    "brands": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/518",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products"
+        }
+      ],
+      "up": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/513"
+        }
+      ]
+    }
+  },
+  {
+    "id": 519,
+    "name": "T304, 3\" Union Hexagonal Nut",
+    "slug": "product-513-variation-6",
+    "permalink": "https://sanitube.us/product/union-hexagonal-nut/?attribute_pa_alloy=t304&attribute_pa_size-tube-od=3-2",
+    "date_created": "2010-12-27T19:51:54",
+    "date_created_gmt": "2010-12-27T19:51:54",
+    "date_modified": "2025-08-08T21:04:22",
+    "date_modified_gmt": "2025-08-08T21:04:22",
+    "type": "variation",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "",
+    "short_description": "",
+    "sku": "13H-300",
+    "price": "15",
+    "regular_price": "15",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": "0",
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "none",
+    "tax_class": "default-tax-class",
+    "manage_stock": true,
+    "stock_quantity": 317,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "1.81",
+    "dimensions": {
+      "length": "1",
+      "width": "4",
+      "height": "4"
+    },
+    "shipping_required": true,
+    "shipping_taxable": false,
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 513,
+    "purchase_note": "",
+    "categories": [
+      {
+        "id": 349,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings-2"
+      },
+      {
+        "id": 38,
+        "name": "Fittings",
+        "slug": "fittings"
+      }
+    ],
+    "tags": [
+      {
+        "id": 196,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings"
+      },
+      {
+        "id": 202,
+        "name": "Hex Nuts",
+        "slug": "hex-nuts"
+      }
+    ],
+    "images": [
+      {
+        "id": 1433,
+        "date_created": "2024-08-16T12:13:01",
+        "date_created_gmt": "2024-08-16T12:13:01",
+        "date_modified": "2024-08-16T12:13:01",
+        "date_modified_gmt": "2024-08-16T12:13:01",
+        "src": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png",
+        "name": "Union Hexagonal Nut",
+        "alt": ""
+      }
+    ],
+    "attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "slug": "pa_alloy",
+        "option": "T304"
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "slug": "pa_size-tube-od",
+        "option": "3\""
+      }
+    ],
+    "default_attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "menu_order": 5,
+    "price_html": false,
+    "related_ids": [
+      542,
+      545,
+      535,
+      538,
+      533
+    ],
+    "meta_data": [
+      {
+        "id": 224533,
+        "key": "qb_income_account",
+        "value": ""
+      },
+      {
+        "id": 224534,
+        "key": "qb_cogs_account",
+        "value": ""
+      },
+      {
+        "id": 224535,
+        "key": "qb_ia_account",
+        "value": ""
+      },
+      {
+        "id": 224536,
+        "key": "qb_p_vendor",
+        "value": ""
+      },
+      {
+        "id": 224537,
+        "key": "qb_mpn",
+        "value": ""
+      },
+      {
+        "id": 224539,
+        "key": "_nestedMaterials",
+        "value": ""
+      },
+      {
+        "id": 224540,
+        "key": "_nestedPercentage",
+        "value": "0"
+      },
+      {
+        "id": 224541,
+        "key": "_nestedDimension",
+        "value": "length"
+      },
+      {
+        "id": 224542,
+        "key": "_maxNestedItems",
+        "value": ""
+      },
+      {
+        "id": 224543,
+        "key": "_nestedStakingProperty",
+        "value": "Evenly"
+      },
+      {
+        "id": 224544,
+        "key": "_enable_dropship",
+        "value": ""
+      },
+      {
+        "id": 224545,
+        "key": "_dropship_location",
+        "value": "2"
+      },
+      {
+        "id": 224546,
+        "key": "_ltl_freight",
+        "value": "0"
+      },
+      {
+        "id": 224547,
+        "key": "_en_product_markup",
+        "value": ""
+      },
+      {
+        "id": 224548,
+        "key": "_hazardousmaterials",
+        "value": ""
+      },
+      {
+        "id": 224549,
+        "key": "_en_insurance_fee",
+        "value": ""
+      },
+      {
+        "id": 227733,
+        "key": "_jck_wssv_display_title",
+        "value": ""
+      },
+      {
+        "id": 314620,
+        "key": "_gpls_woo_rfq_rfq_enable",
+        "value": "yes"
+      },
+      {
+        "id": 322891,
+        "key": "warehouse_KC",
+        "value": "220"
+      },
+      {
+        "id": 322892,
+        "key": "warehouse_LA",
+        "value": "428"
+      },
+      {
+        "id": 322893,
+        "key": "warehouse_fl",
+        "value": "0"
+      }
+    ],
+    "stock_status": "instock",
+    "has_options": false,
+    "post_password": "",
+    "global_unique_id": "",
+    "brands": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/519",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products"
+        }
+      ],
+      "up": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/513"
+        }
+      ]
+    }
+  },
+  {
+    "id": 520,
+    "name": "T304, 4\" Union Hexagonal Nut",
+    "slug": "product-513-variation",
+    "permalink": "https://sanitube.us/product/union-hexagonal-nut/?attribute_pa_alloy=t304&attribute_pa_size-tube-od=4-2",
+    "date_created": "2010-12-27T19:51:54",
+    "date_created_gmt": "2010-12-27T19:51:54",
+    "date_modified": "2025-08-08T21:04:31",
+    "date_modified_gmt": "2025-08-08T21:04:31",
+    "type": "variation",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "",
+    "short_description": "",
+    "sku": "13H-400",
+    "price": "15",
+    "regular_price": "15",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": "0",
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "none",
+    "tax_class": "default-tax-class",
+    "manage_stock": true,
+    "stock_quantity": 3,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "3.63",
+    "dimensions": {
+      "length": "2",
+      "width": "5.5",
+      "height": "5.5"
+    },
+    "shipping_required": true,
+    "shipping_taxable": false,
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 513,
+    "purchase_note": "",
+    "categories": [
+      {
+        "id": 349,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings-2"
+      },
+      {
+        "id": 38,
+        "name": "Fittings",
+        "slug": "fittings"
+      }
+    ],
+    "tags": [
+      {
+        "id": 196,
+        "name": "Bevel Seat Fittings",
+        "slug": "bevel-seat-fittings"
+      },
+      {
+        "id": 202,
+        "name": "Hex Nuts",
+        "slug": "hex-nuts"
+      }
+    ],
+    "images": [
+      {
+        "id": 1433,
+        "date_created": "2024-08-16T12:13:01",
+        "date_created_gmt": "2024-08-16T12:13:01",
+        "date_modified": "2024-08-16T12:13:01",
+        "date_modified_gmt": "2024-08-16T12:13:01",
+        "src": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png",
+        "name": "Union Hexagonal Nut",
+        "alt": ""
+      }
+    ],
+    "attributes": [
+      {
+        "id": 2,
+        "name": "Alloy",
+        "slug": "pa_alloy",
+        "option": "T304"
+      },
+      {
+        "id": 13,
+        "name": "Size (Tube OD)",
+        "slug": "pa_size-tube-od",
+        "option": "4\""
+      }
+    ],
+    "default_attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "menu_order": 6,
+    "price_html": false,
+    "related_ids": [
+      530,
+      526,
+      537,
+      542,
+      535
+    ],
+    "meta_data": [
+      {
+        "id": 224556,
+        "key": "qb_income_account",
+        "value": ""
+      },
+      {
+        "id": 224557,
+        "key": "qb_cogs_account",
+        "value": ""
+      },
+      {
+        "id": 224558,
+        "key": "qb_ia_account",
+        "value": ""
+      },
+      {
+        "id": 224559,
+        "key": "qb_p_vendor",
+        "value": ""
+      },
+      {
+        "id": 224560,
+        "key": "qb_mpn",
+        "value": ""
+      },
+      {
+        "id": 224562,
+        "key": "_nestedMaterials",
+        "value": ""
+      },
+      {
+        "id": 224563,
+        "key": "_nestedPercentage",
+        "value": "0"
+      },
+      {
+        "id": 224564,
+        "key": "_nestedDimension",
+        "value": "length"
+      },
+      {
+        "id": 224565,
+        "key": "_maxNestedItems",
+        "value": ""
+      },
+      {
+        "id": 224566,
+        "key": "_nestedStakingProperty",
+        "value": "Evenly"
+      },
+      {
+        "id": 224567,
+        "key": "_enable_dropship",
+        "value": ""
+      },
+      {
+        "id": 224568,
+        "key": "_dropship_location",
+        "value": "2"
+      },
+      {
+        "id": 224569,
+        "key": "_ltl_freight",
+        "value": "0"
+      },
+      {
+        "id": 224570,
+        "key": "_en_product_markup",
+        "value": ""
+      },
+      {
+        "id": 224571,
+        "key": "_hazardousmaterials",
+        "value": ""
+      },
+      {
+        "id": 224572,
+        "key": "_en_insurance_fee",
+        "value": ""
+      },
+      {
+        "id": 227734,
+        "key": "_jck_wssv_display_title",
+        "value": ""
+      },
+      {
+        "id": 314621,
+        "key": "_gpls_woo_rfq_rfq_enable",
+        "value": "yes"
+      },
+      {
+        "id": 322536,
+        "key": "warehouse_KC",
+        "value": "40"
+      },
+      {
+        "id": 322537,
+        "key": "warehouse_LA",
+        "value": "42"
+      },
+      {
+        "id": 322538,
+        "key": "warehouse_fl",
+        "value": "0"
+      }
+    ],
+    "stock_status": "instock",
+    "has_options": false,
+    "post_password": "",
+    "global_unique_id": "",
+    "brands": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/520",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products"
+        }
+      ],
+      "up": [
+        {
+          "href": "https://sanitube.us/wp-json/wc/v3/products/513"
+        }
+      ]
+    }
+  }
+]
+
+=================================================================
+MEDUSA TRANSFORMATION OUTPUT
+=================================================================
+
+[
+  {
+    "title": "Union Hexagonal Nut",
+    "handle": "union-hexagonal-nut",
+    "sales_channels": [
+      {
+        "id": "sc_01H2XQZJV8Y2K3M4N5P6Q7R8S9"
+      }
+    ],
+    "options": [
+      {
+        "title": "Alloy",
+        "values": [
+          "T304"
+        ]
+      },
+      {
+        "title": "Size (Tube OD)",
+        "values": [
+          "1\"",
+          "1-1/2\"",
+          "2\"",
+          "2-1/2\"",
+          "3\"",
+          "4\""
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "title": "T304, 1\" Union Hexagonal Nut",
+        "sku": "13H-100",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 220000,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 146
+      },
+      {
+        "title": "T304, 1-1/2\" Union Hexagonal Nut",
+        "sku": "13H-150",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 150000,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 183
+      },
+      {
+        "title": "T304, 2\" Union Hexagonal Nut",
+        "sku": "13H-200",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 40000,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 151
+      },
+      {
+        "title": "T304, 2-1/2\" Union Hexagonal Nut",
+        "sku": "13H-250",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 1500,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 77
+      },
+      {
+        "title": "T304, 3\" Union Hexagonal Nut",
+        "sku": "13H-300",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 1500,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 317
+      },
+      {
+        "title": "T304, 4\" Union Hexagonal Nut",
+        "sku": "13H-400",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 1500,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 3
+      }
+    ],
+    "images": [
+      {
+        "url": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png"
+      }
+    ],
+    "description": "<p>&nbsp;<br />\nn<br />\nn&nbsp;<br />\nn<br />\nn<img class=\"__mce_add_custom__\" title=\"draw.jpg\" src=\"https://sanitube.us/wp-content/uploads/product_images/uploaded_images/draw.jpg\" alt=\"draw.jpg\" width=\"234\" height=\"214\" /><br />\nn<br />\nn&nbsp;<br />\nn</p>\n<table style=\"width: 472px\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<colgroup span=\"1\">\n<col span=\"1\" width=\"59\" />\n<col span=\"1\" width=\"19\" />\n<col span=\"1\" width=\"59\" />\n<col span=\"1\" width=\"163\" />\n<col span=\"1\" width=\"83\" />\n<col span=\"1\" width=\"89\" /></colgroup>\n<p>n</p>\n<tbody>\nn</p>\n<tr>\nn</p>\n<td class=\"xl86\" colspan=\"3\" rowspan=\"2\" width=\"137\" height=\"102\">Size<br />\nn(Tube OD)</td>\n<p>n</p>\n<td class=\"xl84\" rowspan=\"2\" width=\"163\">Part Number</td>\n<p>n</p>\n<td class=\"xl82\" colspan=\"2\" width=\"172\">Dimensions</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl72 header-table\" height=\"51\">A</td>\n<p>n</p>\n<td class=\"xl73 header-table\">B</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl89\" colspan=\"3\" height=\"38\">1   \"</td>\n<p>n</p>\n<td class=\"xl78\">13H-100</td>\n<p>n</p>\n<td class=\"xl74\">0.906</td>\n<p>n</p>\n<td class=\"xl68\">1.812</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl98\" colspan=\"3\" height=\"38\">1-1/2\"</td>\n<p>n</p>\n<td class=\"xl79\">13H-150</td>\n<p>n</p>\n<td class=\"xl75\">0.968</td>\n<p>n</p>\n<td class=\"xl69\">2.406</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl95\" colspan=\"3\" height=\"38\">2   \"</td>\n<p>n</p>\n<td class=\"xl80\">13H-200</td>\n<p>n</p>\n<td class=\"xl76\">1.062</td>\n<p>n</p>\n<td class=\"xl70\">3.000</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl98\" colspan=\"3\" height=\"38\">2-1/2\"</td>\n<p>n</p>\n<td class=\"xl79\">13H-250</td>\n<p>n</p>\n<td class=\"xl75\">1.187</td>\n<p>n</p>\n<td class=\"xl69\">3.594</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl95\" colspan=\"3\" height=\"38\">3   \"</td>\n<p>n</p>\n<td class=\"xl80\">13H-300</td>\n<p>n</p>\n<td class=\"xl76\">1.281</td>\n<p>n</p>\n<td class=\"xl70\">4.188</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl100\" colspan=\"3\" height=\"38\">4   \"</td>\n<p>n</p>\n<td class=\"xl81\">13H-400</td>\n<p>n</p>\n<td class=\"xl77\">1.500</td>\n<p>n</p>\n<td class=\"xl71\">5.438</td>\n<p>n</tr>\n<p>n</tbody>\n<p>n</table>\n<p>n&nbsp;<br />\nn<br />\nn<strong>Notes:</strong><br />\nn• All Hex Nuts are T304 Stainless Steel.<br />\nn• 400 PSI maximum tolerance.</p>\n",
+    "location_id": "loc_01H2XQZJV8Y2K3M4N5P6Q7R8S9",
+    "rawVariants": [
+      {
+        "sku": "13H-100",
+        "inventory_quantity": 146
+      },
+      {
+        "sku": "13H-150",
+        "inventory_quantity": 183
+      },
+      {
+        "sku": "13H-200",
+        "inventory_quantity": 151
+      },
+      {
+        "sku": "13H-250",
+        "inventory_quantity": 77
+      },
+      {
+        "sku": "13H-300",
+        "inventory_quantity": 317
+      },
+      {
+        "sku": "13H-400",
+        "inventory_quantity": 3
+      }
+    ]
+  }
+]
+
+=================================================================
+MEDUSA INTEGRATION INSTRUCTIONS
+=================================================================
+
+To import this product family into Medusa v2, use:
+
+import { createProductsWorkflow } from '@medusajs/medusa/core-flows'
+
+const container = // your Medusa container
+const medusaProducts = [
+  {
+    "title": "Union Hexagonal Nut",
+    "handle": "union-hexagonal-nut",
+    "sales_channels": [
+      {
+        "id": "sc_01H2XQZJV8Y2K3M4N5P6Q7R8S9"
+      }
+    ],
+    "options": [
+      {
+        "title": "Alloy",
+        "values": [
+          "T304"
+        ]
+      },
+      {
+        "title": "Size (Tube OD)",
+        "values": [
+          "1\"",
+          "1-1/2\"",
+          "2\"",
+          "2-1/2\"",
+          "3\"",
+          "4\""
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "title": "T304, 1\" Union Hexagonal Nut",
+        "sku": "13H-100",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 220000,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 146
+      },
+      {
+        "title": "T304, 1-1/2\" Union Hexagonal Nut",
+        "sku": "13H-150",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 150000,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 183
+      },
+      {
+        "title": "T304, 2\" Union Hexagonal Nut",
+        "sku": "13H-200",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 40000,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 151
+      },
+      {
+        "title": "T304, 2-1/2\" Union Hexagonal Nut",
+        "sku": "13H-250",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 1500,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 77
+      },
+      {
+        "title": "T304, 3\" Union Hexagonal Nut",
+        "sku": "13H-300",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 1500,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 317
+      },
+      {
+        "title": "T304, 4\" Union Hexagonal Nut",
+        "sku": "13H-400",
+        "options": [
+          {
+            "value": "Unknown"
+          },
+          {
+            "value": "Unknown"
+          }
+        ],
+        "prices": [
+          {
+            "amount": 1500,
+            "currency_code": "usd"
+          }
+        ],
+        "manage_inventory": true,
+        "inventory_quantity": 3
+      }
+    ],
+    "images": [
+      {
+        "url": "https://sanitube.us/wp-content/uploads/2010/12/Union-Hexagonal-Nut.png"
+      }
+    ],
+    "description": "<p>&nbsp;<br />\nn<br />\nn&nbsp;<br />\nn<br />\nn<img class=\"__mce_add_custom__\" title=\"draw.jpg\" src=\"https://sanitube.us/wp-content/uploads/product_images/uploaded_images/draw.jpg\" alt=\"draw.jpg\" width=\"234\" height=\"214\" /><br />\nn<br />\nn&nbsp;<br />\nn</p>\n<table style=\"width: 472px\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<colgroup span=\"1\">\n<col span=\"1\" width=\"59\" />\n<col span=\"1\" width=\"19\" />\n<col span=\"1\" width=\"59\" />\n<col span=\"1\" width=\"163\" />\n<col span=\"1\" width=\"83\" />\n<col span=\"1\" width=\"89\" /></colgroup>\n<p>n</p>\n<tbody>\nn</p>\n<tr>\nn</p>\n<td class=\"xl86\" colspan=\"3\" rowspan=\"2\" width=\"137\" height=\"102\">Size<br />\nn(Tube OD)</td>\n<p>n</p>\n<td class=\"xl84\" rowspan=\"2\" width=\"163\">Part Number</td>\n<p>n</p>\n<td class=\"xl82\" colspan=\"2\" width=\"172\">Dimensions</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl72 header-table\" height=\"51\">A</td>\n<p>n</p>\n<td class=\"xl73 header-table\">B</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl89\" colspan=\"3\" height=\"38\">1   \"</td>\n<p>n</p>\n<td class=\"xl78\">13H-100</td>\n<p>n</p>\n<td class=\"xl74\">0.906</td>\n<p>n</p>\n<td class=\"xl68\">1.812</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl98\" colspan=\"3\" height=\"38\">1-1/2\"</td>\n<p>n</p>\n<td class=\"xl79\">13H-150</td>\n<p>n</p>\n<td class=\"xl75\">0.968</td>\n<p>n</p>\n<td class=\"xl69\">2.406</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl95\" colspan=\"3\" height=\"38\">2   \"</td>\n<p>n</p>\n<td class=\"xl80\">13H-200</td>\n<p>n</p>\n<td class=\"xl76\">1.062</td>\n<p>n</p>\n<td class=\"xl70\">3.000</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl98\" colspan=\"3\" height=\"38\">2-1/2\"</td>\n<p>n</p>\n<td class=\"xl79\">13H-250</td>\n<p>n</p>\n<td class=\"xl75\">1.187</td>\n<p>n</p>\n<td class=\"xl69\">3.594</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl95\" colspan=\"3\" height=\"38\">3   \"</td>\n<p>n</p>\n<td class=\"xl80\">13H-300</td>\n<p>n</p>\n<td class=\"xl76\">1.281</td>\n<p>n</p>\n<td class=\"xl70\">4.188</td>\n<p>n</tr>\n<p>n</p>\n<tr>\nn</p>\n<td class=\"xl100\" colspan=\"3\" height=\"38\">4   \"</td>\n<p>n</p>\n<td class=\"xl81\">13H-400</td>\n<p>n</p>\n<td class=\"xl77\">1.500</td>\n<p>n</p>\n<td class=\"xl71\">5.438</td>\n<p>n</tr>\n<p>n</tbody>\n<p>n</table>\n<p>n&nbsp;<br />\nn<br />\nn<strong>Notes:</strong><br />\nn• All Hex Nuts are T304 Stainless Steel.<br />\nn• 400 PSI maximum tolerance.</p>\n",
+    "location_id": "loc_01H2XQZJV8Y2K3M4N5P6Q7R8S9",
+    "rawVariants": [
+      {
+        "sku": "13H-100",
+        "inventory_quantity": 146
+      },
+      {
+        "sku": "13H-150",
+        "inventory_quantity": 183
+      },
+      {
+        "sku": "13H-200",
+        "inventory_quantity": 151
+      },
+      {
+        "sku": "13H-250",
+        "inventory_quantity": 77
+      },
+      {
+        "sku": "13H-300",
+        "inventory_quantity": 317
+      },
+      {
+        "sku": "13H-400",
+        "inventory_quantity": 3
+      }
+    ]
+  }
+]
+
+await createProductsWorkflow(container).run({
+  input: { products: medusaProducts }
+})
+
+=================================================================
+VARIANT DETAILS (FOR DEEP-LINKING)
+=================================================================
+
+1. 13H-100: Unknown / Unknown - $2200.00
+2. 13H-150: Unknown / Unknown - $1500.00
+3. 13H-200: Unknown / Unknown - $400.00
+4. 13H-250: Unknown / Unknown - $15.00
+5. 13H-300: Unknown / Unknown - $15.00
+6. 13H-400: Unknown / Unknown - $15.00
+
+Deep-Link URLs:
+/products/union-hexagonal-nut?alloy=t304
+/products/union-hexagonal-nut?size-(tube-od)=1
+
+=================================================================
+ERRORS (if any)
+=================================================================
+
+No errors encountered!
+
+=================================================================
+NEXT STEPS
+=================================================================
+
+1. Review the Medusa transformation output above
+2. Run the integration code to import into Medusa
+3. Verify the product appears correctly in Medusa admin
+4. Test deep-linking URLs in your storefront
+5. Validate variant selection and pricing
+
+=================================================================
+END OF REPORT
+=================================================================

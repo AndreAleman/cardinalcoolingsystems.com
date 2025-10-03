@@ -100,3 +100,13 @@ export const WORKER_MODE =
  * Disable Admin
  */
 export const SHOULD_DISABLE_ADMIN = process.env.MEDUSA_DISABLE_ADMIN === 'true'
+
+
+
+// Add these new constants
+// Add these at the end of your constants file
+export const UPS_CLIENT_ID = process.env.UPS_CLIENT_ID || '';
+export const UPS_CLIENT_SECRET = process.env.UPS_CLIENT_SECRET || '';
+export const UPS_ACCOUNT_NUMBER = process.env.UPS_ACCOUNT_NUMBER || '';
+export const UPS_SHIP_FROM_ZIP = process.env.UPS_SHIP_FROM_ZIP || '';
+export const UPS_API_URL = process.env.UPS_API_URL || '';

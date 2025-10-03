@@ -36,13 +36,16 @@ module.exports = {
         },
       },
       borderRadius: {
-        none: "0px",
-        soft: "2px",
-        base: "4px",
-        rounded: "8px",
-        large: "16px",
-        circle: "9999px",
-      },
+      none: '0',
+      sm: '0',
+      DEFAULT: '0',
+      md: '0',
+      lg: '0',
+      xl: '0',
+      '2xl': '0',
+      '3xl': '0',
+      full: '0',
+    },
       maxWidth: {
         "8xl": "100rem",
       },
@@ -59,16 +62,7 @@ module.exports = {
         "3xl": "2rem",
       },
       fontFamily: {
-        sans: [
-          "Inter",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
-          "Ubuntu",
-          "sans-serif",
-        ],
+        sans: ["IBM Plex Sans", "sans-serif"],
       },
       keyframes: {
         ring: {

@@ -48,8 +48,45 @@ const medusaConfig = {
   admin: {
     backendUrl: BACKEND_URL,
     disable: SHOULD_DISABLE_ADMIN,
+    vite: () => {
+      return {
+        server: {
+          allowedHosts: ["6d022dc49e0d.ngrok-free.app"], // replace ".medusa-server-testing.com" with ".yourdomain.com"
+        },
+      };
+        
+    },
   },
   modules: [
+    {
+      resolve: "./src/modules/sanity",
+      options: {
+        api_token: process.env.SANITY_API_TOKEN,
+        project_id: process.env.SANITY_PROJECT_ID || "kgdlucjs",
+        projectId: process.env.SANITY_PROJECT_ID || "kgdlucjs",
+        api_version: new Date().toISOString().split("T")[0],
+        dataset: process.env.SANITY_DATASET || "production",
+        studio_url: process.env.SANITY_STUDIO_URL || "http://localhost:3333",
+        useCDN: false,
+        type_map: {
+          product: "product",
+        },
+      },
+    },
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      options: {
+        providers: [
+          {
+            resolve: "./src/modules/shipstation",
+            id: "shipstation",
+            options: {
+              api_key: process.env.SHIPSTATION_API_KEY,
+            },
+          },
+        ],
+      },
+    },
     {
       key: Modules.FILE,
       resolve: '@medusajs/file',
@@ -119,20 +156,22 @@ const medusaConfig = {
     }] : []),
     ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
       key: Modules.PAYMENT,
-      resolve: '@medusajs/payment',
+      resolve: "@medusajs/medusa/payment",
       options: {
         providers: [
           {
-            resolve: '@medusajs/payment-stripe',
-            id: 'stripe',
+            resolve: "@medusajs/medusa/payment-stripe",
+            id: "stripe",
             options: {
-              apiKey: STRIPE_API_KEY,
-              webhookSecret: STRIPE_WEBHOOK_SECRET,
-            },
+              apiKey: process.env.STRIPE_API_KEY,
+            }
           },
         ],
       },
-    }] : [])
+    }] : []),
+
+
+
   ],
   plugins: [
   ...(MEILISEARCH_HOST && MEILISEARCH_ADMIN_KEY ? [{
@@ -142,17 +181,40 @@ const medusaConfig = {
           host: MEILISEARCH_HOST,
           apiKey: MEILISEARCH_ADMIN_KEY
         },
-        settings: {
-          products: {
-            type: 'products',
-            enabled: true,
-            fields: ['id', 'title', 'description', 'handle', 'variant_sku', 'thumbnail'],
-            indexSettings: {
-              searchableAttributes: ['title', 'description', 'variant_sku'],
-              displayedAttributes: ['id', 'handle', 'title', 'description', 'variant_sku', 'thumbnail'],
-              filterableAttributes: ['id', 'handle'],
-            },
-            primaryKey: 'id',
+    settings: {
+      products: {
+        type: 'products',
+        enabled: true,
+        fields: [
+          'id', 
+          'title', 
+          'description', 
+          'handle', 
+          'thumbnail',
+          'metadata.parent_sku',  // Parent SKU like "13H"
+          'variants'              // Include all variant data
+        ],
+        indexSettings: {
+          searchableAttributes: [
+            'title', 
+            'description', 
+            'metadata.parent_sku',
+            'variants.sku',         // Search variant SKUs like "13H-300"
+            'variants.title'        // Search variant titles like "T304, 3\""
+          ],
+          displayedAttributes: [
+            'id', 
+            'handle', 
+            'title', 
+            'description', 
+            'thumbnail',
+            'metadata.parent_sku',
+            'variants.sku',
+            'variants.title'
+          ],
+          filterableAttributes: ['id', 'handle', 'metadata.parent_sku'],
+        },
+        primaryKey: 'id',
           }
         }
       }

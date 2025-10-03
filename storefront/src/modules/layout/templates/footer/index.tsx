@@ -1,153 +1,178 @@
 import { getCategoriesList } from "@lib/data/categories"
-import { getCollectionsList } from "@lib/data/collections"
-import { Text, clx } from "@medusajs/ui"
-
+import { Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
 
 export default async function Footer() {
-  const { collections } = await getCollectionsList(0, 6)
-  const { product_categories } = await getCategoriesList(0, 6)
+  const { product_categories } = await getCategoriesList(0, 50)
+
+  // Filter to get only parent categories
+  const parentCategories = product_categories?.filter(c => !c.parent_category && !c.parent_category_id) || []
+  
+  // Split categories into two columns for better layout
+  const midPoint = Math.ceil(parentCategories.length / 2)
+  const firstColumnCategories = parentCategories.slice(0, midPoint)
+  const secondColumnCategories = parentCategories.slice(midPoint)
 
   return (
-    <footer className="border-t border-ui-border-base w-full">
-      <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
+    <footer className="bg-blue-600 text-white w-full">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-16">
+          
+          {/* Company Info */}
+          <div className="lg:col-span-1">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+              className="text-2xl font-bold text-white hover:text-blue-100 transition-colors"
             >
-              Medusa Store
+              Cowbird Depot
             </LocalizedClientLink>
+            <p className="mt-4 text-blue-100 text-sm leading-relaxed">
+              Premium stainless steel sanitary fittings for food processing, 
+              pharmaceuticals, brewing, and industrial applications. Quality you can trust.
+            </p>
+            
+            {/* Contact Info */}
+            <div className="mt-6 space-y-2">
+              <p className="text-sm text-blue-100">
+                <span className="font-medium">Email:</span>{" "}
+                <a href="mailto:info@cowbirddepot.com" className="hover:text-white transition-colors">
+                  info@cowbirddepot.com
+                </a>
+              </p>
+              <p className="text-sm text-blue-100">
+                <span className="font-medium">Phone:</span>{" "}
+                <a href="tel:+16309479955" className="hover:text-white transition-colors">
+                  (630) 947-9955
+                </a>
+              </p>
+            </div>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {product_categories && product_categories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {product_categories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return
-                    }
 
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null
-
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
-                  </a>
-                </li>
+          {/* Product Categories - First Column */}
+          {parentCategories.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Product Categories
+              </h3>
+              <ul className="space-y-2">
+                {firstColumnCategories.map((c) => (
+                  <li key={c.id}>
+                    <LocalizedClientLink
+                      className="text-blue-100 hover:text-white transition-colors text-sm"
+                      href={`/categories/${c.handle}`}
+                      data-testid="category-link"
+                    >
+                      {c.name}
+                    </LocalizedClientLink>
+                  </li>
+                ))}
               </ul>
+            </div>
+          )}
+
+          {/* Product Categories - Second Column (overflow) */}
+          {secondColumnCategories.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-4 lg:opacity-0">
+                Categories Continued
+              </h3>
+              <ul className="space-y-2">
+                {secondColumnCategories.map((c) => (
+                  <li key={c.id}>
+                    <LocalizedClientLink
+                      className="text-blue-100 hover:text-white transition-colors text-sm"
+                      href={`/categories/${c.handle}`}
+                      data-testid="category-link"
+                    >
+                      {c.name}
+                    </LocalizedClientLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Company Links */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Company
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <LocalizedClientLink
+                  href="/about"
+                  className="text-blue-100 hover:text-white transition-colors text-sm"
+                >
+                  About Us
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/contact"
+                  className="text-blue-100 hover:text-white transition-colors text-sm"
+                >
+                  Contact Us
+                </LocalizedClientLink>
+              </li>
+              <li>
+                <LocalizedClientLink
+                  href="/shipping-returns"
+                  className="text-blue-100 hover:text-white transition-colors text-sm"
+                >
+                  Shipping & Returns
+                </LocalizedClientLink>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Newsletter Signup */}
+        <div className="border-t border-blue-500 py-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Stay Updated
+              </h3>
+              <p className="text-blue-100 text-sm">
+                Get the latest product updates and industry insights.
+              </p>
+            </div>
+            <div className="flex gap-2 max-w-md">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-2 bg-blue-700 border border-blue-500 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 rounded"
+              />
+              <button className="px-6 py-2 bg-white text-blue-600 font-medium hover:bg-blue-50 transition-colors rounded">
+                Subscribe
+              </button>
             </div>
           </div>
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
-          <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
-          </Text>
-          <MedusaCTA />
+
+        {/* Bottom Footer */}
+        <div className="border-t border-blue-500 py-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex flex-wrap gap-4 text-sm text-blue-200">
+              <LocalizedClientLink 
+                href="/privacy-policy" 
+                className="hover:text-white transition-colors"
+              >
+                Privacy Policy
+              </LocalizedClientLink>
+              <LocalizedClientLink 
+                href="/terms-of-service" 
+                className="hover:text-white transition-colors"
+              >
+                Terms of Service
+              </LocalizedClientLink>
+            </div>
+            
+            <Text className="text-sm text-blue-200">
+              © {new Date().getFullYear()} Cowbird Depot. All rights reserved.
+            </Text>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,7 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "esnext"
+    "module": "ESNext",    // or "Node16" (but *not* "CommonJS")
+    "moduleResolution": "Node", // or "Node16"
+    // ...other options
   },
   "include": ["."],
   "exclude": ["**/*.spec.js"]
