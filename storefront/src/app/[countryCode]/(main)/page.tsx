@@ -11,7 +11,7 @@ import { getRegion } from "@lib/data/regions"
 import MeiliSearchComponent from "@modules/search/components/meilisearch-component"
 
 export const metadata: Metadata = {
-  title: "Stainless Steel Tubing, Fittings, and Valves | Cowbird Depot",
+  title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
   description:
     "this is where to edit",
 }
