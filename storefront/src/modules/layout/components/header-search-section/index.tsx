@@ -205,7 +205,7 @@ const HeaderSearchSection = () => {
       <div className="bg-yellow-200 border border-yellow-400 border-t-0 text-yellow-800 px-4 py-3 text-center text-sm font-semibold">
         The website is under construction. If you have any questions, please email:&nbsp;
         <a
-          href="mailto:info@cowbirddepot.com"
+          href="mailto:info@cardinalcoolingsystems.com"
           className="underline text-blue-800 hover:text-blue-900"
         >
           info@cowbirddepot.com

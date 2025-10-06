@@ -8,7 +8,7 @@ type Props = {
 
 export default function AboutUs({ 
   title = "About Us",
-  description = "Welcome to Cowbird Depot™, the leading manufacturer of sanitary-grade stainless steel tube, valves, and fittings. Cowbird Depot products are precision engineered to meet 3A specifications and to withstand the most challenging operating environments in the food, dairy, beverage, cosmetic, pharmaceutical, and industrial markets.",
+  description = "Welcome to Cardinal Cooling Systems™, the leading manufacturer of sanitary-grade stainless steel tube, valves, and fittings. Cardinal Cooling Systems products are precision engineered to meet 3A specifications and to withstand the most challenging operating environments in the food, dairy, beverage, cosmetic, pharmaceutical, and industrial markets.",
   readMoreUrl = "/about"
 }: Props) {
   return (

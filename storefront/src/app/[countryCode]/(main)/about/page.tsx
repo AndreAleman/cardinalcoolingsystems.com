@@ -7,7 +7,7 @@ interface Props {
 
 export const metadata: Metadata = {
   title: "About Us - Our Story & Mission",
-  description: "Learn about Cowbird Depot's commitment to providing premium sanitary stainless steel fittings for food processing, pharmaceuticals, and industrial applications.",
+  description: "Learn about Cardinal Cooling Systems's commitment to providing premium sanitary stainless steel fittings for food processing, pharmaceuticals, and industrial applications.",
 }
 
 export default function AboutPage({ params }: Props) {
@@ -45,7 +45,7 @@ export default function AboutPage({ params }: Props) {
             <div className="relative">
               <img
                 src="/images/about/about-main.jpg"
-                alt="About Cowbird Depot - Sanitary fittings expertise"
+                alt="About Cardinal Cooling Systems - Sanitary fittings expertise"
                 className="w-full h-[400px] object-cover rounded-lg shadow-lg"
               />
             </div>
@@ -64,7 +64,7 @@ export default function AboutPage({ params }: Props) {
             <div className="prose prose-lg max-w-none text-gray-700">
               <p className="text-lg mb-6">
                 Founded with a mission to provide superior sanitary stainless steel solutions, 
-                Cowbird Depot has grown from a small specialty supplier to a trusted partner 
+                Cardinal Cooling Systems has grown from a small specialty supplier to a trusted partner 
                 for industries where precision and cleanliness are paramount.
               </p>
               
