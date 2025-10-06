@@ -1,3 +1,10 @@
+console.log("Backend URL:", process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL);
+console.log("Base URL:", process.env.NEXT_PUBLIC_BASE_URL);
+console.log("MinIO Endpoint:", process.env.NEXT_PUBLIC_MINIO_ENDPOINT);
+console.log("Search Endpoint:", process.env.NEXT_PUBLIC_SEARCH_ENDPOINT);
+
+
+
 const checkEnvVariables = require("./check-env-variables")
 
 checkEnvVariables()
@@ -58,7 +65,7 @@ const nextConfig = {
       /* —------------------------- NEW DOMAIN HERE ------------------------- */
       {
         protocol: "https",
-        hostname: "cowbirddepot.com",
+        hostname: "cardinalcoolingsystems.com",
       },
       // Keep sanitube.us for existing product images during migration
       {

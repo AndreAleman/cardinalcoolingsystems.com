@@ -85,9 +85,9 @@ const HeaderSearchSection = () => {
   };
 
   return (
-   <section className="fixed top-20 lg:top-24 left-0 right-0 z-40 bg-blue-50 border-b border-blue-200 py-4">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="relative max-w-2xl mx-auto">
+<section className="fixed top-20 lg:top-24 left-0 right-0 z-40 bg-blue-50 border-b border-blue-200 pt-4 pb-0">
+  <div className="max-w-7xl mx-auto px-4">
+    <div className="relative max-w-2xl mx-auto">
           {/* Search Input */}
           <div className="relative">
             <input
@@ -201,7 +201,21 @@ const HeaderSearchSection = () => {
           onClick={() => setShowResults(false)}
         />
       )}
+  {/* Under Construction Notice (put it here) */}
+      <div className="bg-yellow-200 border border-yellow-400 border-t-0 text-yellow-800 px-4 py-3 text-center text-sm font-semibold">
+        The website is under construction. If you have any questions, please email:&nbsp;
+        <a
+          href="mailto:info@cowbirddepot.com"
+          className="underline text-blue-800 hover:text-blue-900"
+        >
+          info@cowbirddepot.com
+        </a>
+      </div>
+
     </section>
+
+
+
   );
 };
 
