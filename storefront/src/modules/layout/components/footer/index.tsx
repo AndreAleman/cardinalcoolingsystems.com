@@ -1,18 +1,20 @@
-import { getCategoriesList } from "@lib/data/categories"
 import { Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
-export default async function Footer() {
-  // Fetch more categories to get all parent categories
-  const { product_categories } = await getCategoriesList(0, 50) // Increased limit
 
-  // Filter to get only parent categories
-  const parentCategories = product_categories?.filter(c => !c.parent_category && !c.parent_category_id) || []
+export default async function Footer() {
+  // Explicitly define the master categories
+  const parentCategories = [
+    { id: "1", name: "Fittings", handle: "fittings" },
+    { id: "2", name: "Tubes", handle: "tubes" },
+    { id: "3", name: "Valves", handle: "valves" }
+  ]
   
   // Split categories into two columns for better layout
   const midPoint = Math.ceil(parentCategories.length / 2)
   const firstColumnCategories = parentCategories.slice(0, midPoint)
   const secondColumnCategories = parentCategories.slice(midPoint)
+
 
   return (
     <footer className="bg-blue-600 text-white w-full">
@@ -30,7 +32,7 @@ export default async function Footer() {
             </LocalizedClientLink>
             <p className="mt-4 text-blue-100 text-sm leading-relaxed">
               Premium stainless steel sanitary fittings for food processing, 
-              pharmaceuticals, brewing, and industrial applications. Quality you can trust.!!!!!!!!
+              pharmaceuticals, brewing, and industrial applications. Quality you can trust.
             </p>
             
             {/* Contact Info */}
@@ -49,6 +51,7 @@ export default async function Footer() {
               </p>
             </div>
           </div>
+
 
           {/* Product Categories - First Column */}
           {parentCategories.length > 0 && (
@@ -72,6 +75,7 @@ export default async function Footer() {
             </div>
           )}
 
+
           {/* Product Categories - Second Column (overflow) */}
           {secondColumnCategories.length > 0 && (
             <div>
@@ -93,6 +97,7 @@ export default async function Footer() {
               </ul>
             </div>
           )}
+
 
           {/* Quick Links & Support */}
           <div>
@@ -152,6 +157,7 @@ export default async function Footer() {
           </div>
         </div>
 
+
         {/* Newsletter Signup */}
         <div className="border-t border-blue-500 py-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -175,6 +181,7 @@ export default async function Footer() {
             </div>
           </div>
         </div>
+
 
         {/* Bottom Footer */}
         <div className="border-t border-blue-500 py-6">

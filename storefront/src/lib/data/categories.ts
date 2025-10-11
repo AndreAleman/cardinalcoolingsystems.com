@@ -24,7 +24,8 @@ export const getCategoriesTree = cache(async (): Promise<HttpTypes.StoreProductC
 // Add the function your footer is using
 export const getCategoriesList = cache(async (
   offset: number = 0,
-  limit: number = DEFAULT_LIMIT
+  limit: number = DEFAULT_LIMIT,
+  queryParams?: { parent_category_id?: null | string }
 ): Promise<{
   product_categories: HttpTypes.StoreProductCategory[]
   count: number
@@ -34,6 +35,7 @@ export const getCategoriesList = cache(async (
       fields: "id,name,handle,description,metadata,parent_category",
       limit,
       offset,
+      ...queryParams,
     })
     
     return {
@@ -48,6 +50,7 @@ export const getCategoriesList = cache(async (
     }
   }
 })
+
 
 // Add the functions your existing pages are using
 export const listCategories = cache(async (): Promise<HttpTypes.StoreProductCategory[]> => {
