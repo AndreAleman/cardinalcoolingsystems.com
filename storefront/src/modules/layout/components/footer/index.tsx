@@ -31,7 +31,7 @@ export default async function Footer() {
               Cowbird Depot
             </LocalizedClientLink>
             <p className="mt-4 text-blue-100 text-sm leading-relaxed">
-              Premium stainless steel sanitary fittings for food processing, 
+              ffffffffPremium stainless steel sanitary fittings for food processing, 
               pharmaceuticals, brewing, and industrial applications. Quality you can trust.
             </p>
             
@@ -39,8 +39,8 @@ export default async function Footer() {
             <div className="mt-6 space-y-2">
               <p className="text-sm text-blue-100">
                 <span className="font-medium">Email:</span>{" "}
-                <a href="mailto:info@cowbirddepot.com" className="hover:text-white transition-colors">
-                  info@cowbirddepot.com
+                <a href="mailto:aleman@cardinalcoolingsystems.com" className="hover:text-white transition-colors">
+                  aleman@cardinalcoolingsystems.com
                 </a>
               </p>
               <p className="text-sm text-blue-100">

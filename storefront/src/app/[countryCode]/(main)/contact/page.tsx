@@ -204,10 +204,10 @@ export default function ContactPage({ params }: Props) {
                         Send us your technical questions
                       </p>
                       <a 
-                        href="mailto:info@cowbirddepot.com" 
+                        href="mailto:aleman@cardinalcoolingsystems.com" 
                         className="text-blue-600 font-semibold hover:text-blue-700 transition-colors text-lg"
                       >
-                        info@cowbirddepot.com
+                        aleman@cardinalcoolingsystems.com
                       </a>
                       <p className="text-sm text-gray-500 mt-1">
                         We respond within 24 hours

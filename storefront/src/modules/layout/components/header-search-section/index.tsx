@@ -208,7 +208,7 @@ const HeaderSearchSection = () => {
           href="mailto:aleman@cardinalcoolingsystems.com"
           className="underline text-blue-800 hover:text-blue-900"
         >
-          info@cowbirddepot.com
+          aleman@cardinalcoolingsystems.com
         </a>
       </div>
 
