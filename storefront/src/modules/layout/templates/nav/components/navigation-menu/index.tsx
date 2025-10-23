@@ -25,24 +25,38 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    const fields = [
-      "id", "name", "handle", "description",
-      "category_children.id", "category_children.name", "category_children.handle",
-      "category_children.category_children.id", "category_children.category_children.name", "category_children.category_children.handle",
-      "category_children.category_children.category_children.id", "category_children.category_children.category_children.name", "category_children.category_children.category_children.handle"
-    ].join(",")
+    const fetchCategories = async () => {
+      try {
+        // Fetch ALL categories with parent_category_id and children
+        const response = await sdk.store.category.list({
+          include_descendants_tree: true,
+          fields: "id,name,handle,parent_category_id,category_children.id,category_children.name,category_children.handle,category_children.category_children.id,category_children.category_children.name,category_children.category_children.handle,category_children.category_children.category_children.id,category_children.category_children.category_children.name,category_children.category_children.category_children.handle"
+        })
+        
+        const allCategories = response.product_categories || []
+        
+        // Filter client-side for categories where parent_category_id is null
+        const parentCategories = allCategories.filter(cat => 
+          cat.parent_category_id === null || cat.parent_category_id === undefined
+        )
+        
+        console.log('📦 Total categories fetched:', allCategories.length)
+        console.log('✅ Parent categories (parent_category_id = null):', parentCategories.length)
+        console.log('📋 Parent category names:', parentCategories.map(c => c.name))
+        
+        setCategories(parentCategories)
+        setLoading(false)
+      } catch (error) {
+        console.error("❌ Error loading categories:", error)
+        setLoading(false)
+      }
+    }
 
-    sdk.store.category.list({
-      fields,
-      include_descendants_tree: true,
-    }).then(({ product_categories }) => {
-      console.log('📦 Categories fetched:', product_categories?.length || 0, 'items')
-      setCategories(product_categories || [])
-      setLoading(false)
-    }).catch(error => {
-      console.error("❌ Error loading categories:", error)
-      setLoading(false)
-    })
+    fetchCategories()
+
+    // Refetch every 5 minutes
+    const intervalId = setInterval(fetchCategories, 300000)
+    return () => clearInterval(intervalId)
   }, [])
 
   const clearTimeouts = () => {
@@ -104,17 +118,17 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
     }
   }
 
-  // Recursive function to render category boxes
   const renderCategoryLevel = (categories: HttpTypes.StoreProductCategory[], level: number, parentPath: string[] = []) => {
     const width = Math.max(180, 220 - (level * 15))
     const leftOffset = level === 0 ? 0 : -1
     
     return (
       <div 
-        className={`absolute top-${level === 0 ? 'full' : '0'} ${level === 0 ? 'left-0 mt-1' : 'left-full'} bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-${50 + level * 5}`}
+        className={`absolute ${level === 0 ? 'top-full left-0 mt-1' : 'top-0 left-full'} bg-white rounded-lg shadow-lg border border-gray-100 py-2`}
         style={{ 
           width: `${width}px`,
-          marginLeft: level > 0 ? `${leftOffset}px` : '0'
+          marginLeft: level > 0 ? `${leftOffset}px` : '0',
+          zIndex: 50 + (level * 5)
         }}
         onMouseEnter={handleDropdownEnter}
         onMouseLeave={handleDropdownLeave}
@@ -137,7 +151,6 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
                 } else if (level === 2) {
                   handleThirdLevelHover(parentPath[0], parentPath[1], category.name, hasChildren)
                 } else {
-                  // For deeper levels, just update the path
                   if (hasChildren) {
                     setActivePath([...currentPath])
                   } else {
@@ -152,13 +165,12 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
               >
                 <span>{category.name}</span>
                 {hasChildren && (
-                  <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <svg className="w-3 h-3 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                   </svg>
                 )}
               </Link>
 
-              {/* Render next level if active and has children */}
               {hasChildren && isActive && category.category_children && (
                 renderCategoryLevel(category.category_children, level + 1, currentPath)
               )}
@@ -171,7 +183,6 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
 
   return (
     <nav className={`flex items-center space-x-8 ${className}`}>
-      {/* Shop dropdown with dynamic categories */}
       <div 
         className="relative"
         onMouseEnter={handleNavEnter}
@@ -187,13 +198,11 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
           </svg>
         </Link>
 
-        {/* Render the category hierarchy */}
         {!loading && categories.length > 0 && activeDropdown === "Shop" && (
           renderCategoryLevel(categories, 0)
         )}
       </div>
 
-      {/* Static navigation items */}
       {staticNavigationItems.map((item) => (
         <Link
           key={item.label}

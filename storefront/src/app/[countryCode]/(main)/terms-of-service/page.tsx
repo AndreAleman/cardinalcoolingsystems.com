@@ -59,7 +59,7 @@ export default function TermsOfService() {
           1120 NW 14th Terrace<br />
           Cape Coral, FL 33993<br />
           USA<br />
-          <a href="mailto:info@cowbirddepot.com">info@cowbirddepot.com</a><br />
+          <a href="mailtoaleman@cardinalcoolingsystems.com">aleman@cardinalcoolingsystems.com</a><br />
           <a href="tel:+16309479955">(630) 947-9955</a>
         </address>
       </div>
