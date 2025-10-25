@@ -23,7 +23,7 @@ const StripeWrapper: React.FC<StripeWrapperProps> = ({
 
   if (!stripeKey) {
     throw new Error(
-      "Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable."
+      "Stripe key is missing. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY environment variable."
     )
   }
 
