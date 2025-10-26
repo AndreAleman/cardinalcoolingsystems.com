@@ -23,6 +23,7 @@
     "import:all": "tsx src/scripts/import-products-all.ts"
   },
   "dependencies": {
+    "@alphabite/medusa-paypal": "^0.2.4",
     "@medusajs/admin-sdk": "2.8.8",
     "@medusajs/cli": "2.8.8",
     "@medusajs/core-flows": "2.8.8",
