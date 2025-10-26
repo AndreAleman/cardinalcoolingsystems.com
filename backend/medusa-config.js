@@ -24,9 +24,7 @@ import {
   MEILISEARCH_ADMIN_KEY
 } from 'lib/constants';
 
-
 loadEnv(process.env.NODE_ENV, process.cwd());
-
 
 const medusaConfig = {
   projectConfig: {
@@ -53,10 +51,9 @@ const medusaConfig = {
     vite: () => {
       return {
         server: {
-          allowedHosts: ["6d022dc49e0d.ngrok-free.app"], // replace ".medusa-server-testing.com" with ".yourdomain.com"
+          allowedHosts: ["6d022dc49e0d.ngrok-free.app"], // replace for prod
         },
       };
-        
     },
   },
   modules: [
@@ -156,28 +153,19 @@ const medusaConfig = {
         ]
       }
     }] : []),
-    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET || process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? [{
+    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
       key: Modules.PAYMENT,
       resolve: "@medusajs/medusa/payment",
       options: {
         providers: [
-          ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
+          {
             resolve: "@medusajs/medusa/payment-stripe",
             id: "stripe",
             options: {
               apiKey: STRIPE_API_KEY,
               webhookSecret: STRIPE_WEBHOOK_SECRET,
             }
-          }] : []),
-          ...(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? [{
-            resolve: "@rsc-labs/medusa-paypal-payment",
-            id: "paypal",
-            options: {
-              clientId: process.env.PAYPAL_CLIENT_ID,
-              clientSecret: process.env.PAYPAL_CLIENT_SECRET,
-              sandbox: process.env.PAYPAL_IS_SANDBOX === "true",
-            }
-          }] : []),
+          }
         ],
       },
     }] : []),
@@ -200,16 +188,16 @@ const medusaConfig = {
               'description', 
               'handle', 
               'thumbnail',
-              'metadata.parent_sku',  // Parent SKU like "13H"
-              'variants'              // Include all variant data
+              'metadata.parent_sku',  
+              'variants'              
             ],
             indexSettings: {
               searchableAttributes: [
                 'title', 
                 'description', 
                 'metadata.parent_sku',
-                'variants.sku',         // Search variant SKUs like "13H-300"
-                'variants.title'        // Search variant titles like "T304, 3\""
+                'variants.sku',         
+                'variants.title'        
               ],
               displayedAttributes: [
                 'id', 
@@ -230,7 +218,6 @@ const medusaConfig = {
     }] : [])
   ]
 };
-
 
 console.log(JSON.stringify(medusaConfig, null, 2));
 export default defineConfig(medusaConfig);
