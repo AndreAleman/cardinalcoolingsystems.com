@@ -156,19 +156,28 @@ const medusaConfig = {
         ]
       }
     }] : []),
-    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
+    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET || process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? [{
       key: Modules.PAYMENT,
       resolve: "@medusajs/medusa/payment",
       options: {
         providers: [
-          {
+          ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
             resolve: "@medusajs/medusa/payment-stripe",
             id: "stripe",
             options: {
               apiKey: STRIPE_API_KEY,
               webhookSecret: STRIPE_WEBHOOK_SECRET,
             }
-          },
+          }] : []),
+          ...(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? [{
+            resolve: "@rsc-labs/medusa-paypal-payment",
+            id: "paypal",
+            options: {
+              clientId: process.env.PAYPAL_CLIENT_ID,
+              clientSecret: process.env.PAYPAL_CLIENT_SECRET,
+              sandbox: process.env.PAYPAL_IS_SANDBOX === "true",
+            }
+          }] : []),
         ],
       },
     }] : []),
@@ -218,17 +227,6 @@ const medusaConfig = {
           }
         }
       }
-    }] : []),
-    ...(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? [{
-      resolve: "@alphabite/medusa-paypal",
-      options: {
-        clientId: process.env.PAYPAL_CLIENT_ID,
-        clientSecret: process.env.PAYPAL_CLIENT_SECRET,
-        isSandbox: process.env.PAYPAL_IS_SANDBOX === "true",
-        webhookId: process.env.PAYPAL_WEBHOOK_ID,
-        includeShippingData: false,
-        includeCustomerData: false,
-      },
     }] : [])
   ]
 };

@@ -23,7 +23,6 @@
     "import:all": "tsx src/scripts/import-products-all.ts"
   },
   "dependencies": {
-    "@alphabite/medusa-paypal": "^0.2.4",
     "@medusajs/admin-sdk": "2.8.8",
     "@medusajs/cli": "2.8.8",
     "@medusajs/core-flows": "2.8.8",
@@ -44,6 +43,7 @@
     "@mikro-orm/postgresql": "6.4.3",
     "@react-email/components": "^0.0.26",
     "@rokmohar/medusa-plugin-meilisearch": "1.2.3",
+    "@rsc-labs/medusa-paypal-payment": "^0.0.2",
     "@sanity/client": "^7.8.1",
     "@woocommerce/woocommerce-rest-api": "^1.0.2",
     "awilix": "^8.0.1",
