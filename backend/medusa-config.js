@@ -155,20 +155,22 @@ const medusaConfig = {
       }
     }] : []),
     ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
-      key: Modules.PAYMENT,
-      resolve: "@medusajs/medusa/payment",
-      options: {
-        providers: [
-          {
-            resolve: "@medusajs/medusa/payment-stripe",
-            id: "stripe",
-            options: {
-              apiKey: process.env.STRIPE_API_KEY,
-            }
-          },
-        ],
+  key: Modules.PAYMENT,
+  resolve: "@medusajs/medusa/payment",
+  options: {
+    providers: [
+      {
+        resolve: "@medusajs/medusa/payment-stripe",
+        id: "stripe",
+        options: {
+          apiKey: STRIPE_API_KEY,
+          webhookSecret: STRIPE_WEBHOOK_SECRET,
+        }
       },
-    }] : []),
+    ],
+  },
+}] : []),
+
 
 
 

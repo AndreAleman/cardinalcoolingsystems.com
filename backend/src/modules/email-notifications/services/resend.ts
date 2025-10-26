@@ -1,3 +1,4 @@
+// src/modules/email-notifications/services/resend.ts
 import { Logger, NotificationTypes } from '@medusajs/framework/types'
 import { AbstractNotificationProviderService, MedusaError } from '@medusajs/framework/utils'
 import { Resend, CreateEmailOptions } from 'resend'
@@ -28,9 +29,9 @@ type NotificationEmailOptions = Omit<
  */
 export class ResendNotificationService extends AbstractNotificationProviderService {
   static identifier = "RESEND_NOTIFICATION_SERVICE"
-  protected config_: ResendServiceConfig // Configuration for Resend API
-  protected logger_: Logger // Logger for error and event logging
-  protected resend: Resend // Instance of the Resend API client
+  protected config_: ResendServiceConfig
+  protected logger_: Logger
+  protected resend: Resend
 
   constructor({ logger }: InjectedDependencies, options: ResendNotificationServiceOptions) {
     super()
@@ -59,7 +60,7 @@ export class ResendNotificationService extends AbstractNotificationProviderServi
       emailContent = generateEmailTemplate(notification.template, notification.data)
     } catch (error) {
       if (error instanceof MedusaError) {
-        throw error // Re-throw MedusaError for invalid template data
+        throw error
       }
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
@@ -95,17 +96,40 @@ export class ResendNotificationService extends AbstractNotificationProviderServi
 
     // Send the email via Resend
     try {
-      await this.resend.emails.send(message)
+      console.log('[ResendService] Sending email:', {
+        to: notification.to,
+        from: message.from,
+        template: notification.template
+      })
+      
+      const { data, error } = await this.resend.emails.send(message)
+      
+      console.log('[ResendService] Resend response:', { 
+        data, 
+        error,
+        hasError: !!error 
+      })
+      
+      if (error) {
+        console.error('[ResendService] Resend error details:', JSON.stringify(error, null, 2))
+        throw new MedusaError(
+          MedusaError.Types.UNEXPECTED_STATE,
+          `Failed to send "${notification.template}" email to ${notification.to} via Resend: ${error.message || JSON.stringify(error)}`
+        )
+      }
+      
       this.logger_.log(
-        `Successfully sent "${notification.template}" email to ${notification.to} via Resend`
+        `Successfully sent "${notification.template}" email to ${notification.to} via Resend - ID: ${data?.id}`
       )
-      return {} // Return an empty object on success
-    } catch (error) {
-      const errorCode = error.code
-      const responseError = error.response?.body?.errors?.[0]
+      return {}
+    } catch (error: any) {
+      console.error('[ResendService] Exception:', error)
+      if (error instanceof MedusaError) {
+        throw error
+      }
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
-        `Failed to send "${notification.template}" email to ${notification.to} via Resend: ${errorCode} - ${responseError?.message ?? 'unknown error'}`
+        `Failed to send "${notification.template}" email to ${notification.to} via Resend: ${error.message || 'unknown error'}`
       )
     }
   }
