@@ -34,7 +34,7 @@ export default async function ProductPreview({
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
       <div 
         data-testid="product-wrapper"
-        className="bg-white shadow-md hover:shadow-md transition-shadow duration-200 overflow-hidden"
+        className="bg-white shadow-md hover:shadow-md transition-shadow duration-200 overflow-hidden h-full flex flex-col"
       >
         {/* Product Image */}
         <div className="aspect-square bg-gray-100 relative overflow-hidden">
@@ -47,10 +47,10 @@ export default async function ProductPreview({
         </div>
         
         {/* Product Info */}
-        <div className="p-4">
-          <div className="flex flex-col gap-2">
+        <div className="p-4 flex flex-col flex-grow">
+          <div className="flex flex-col gap-2 flex-grow">
             <Text 
-              className="text-gray-900 font-semibold text-sm line-clamp-2" 
+              className="text-gray-900 font-semibold text-sm line-clamp-2 min-h-[2.5rem]" 
               data-testid="product-title"
             >
               {product.title}
@@ -58,12 +58,12 @@ export default async function ProductPreview({
             
             {/* Product Description/Subtitle */}
             {product.description && (
-              <Text className="text-gray-600 text-xs line-clamp-1">
+              <Text className="text-gray-600 text-xs line-clamp-1 min-h-[1.25rem]">
                 {product.description}
               </Text>
             )}
             
-            <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center justify-between mt-auto pt-2">
               {/* Price */}
               <div className="flex items-center gap-x-2">
                 {cheapestPrice && <PreviewPrice price={cheapestPrice} />}

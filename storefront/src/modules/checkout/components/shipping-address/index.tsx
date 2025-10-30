@@ -7,6 +7,14 @@ import React, { useEffect, useMemo, useState } from "react"
 import AddressSelect from "../address-select"
 import CountrySelect from "../country-select"
 
+const US_STATES = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+  "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+  "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+  "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+];
+
 const ShippingAddress = ({
   customer,
   cart,
@@ -72,7 +80,7 @@ const ShippingAddress = ({
 
   const handleChange = (
     e: React.ChangeEvent<
-      HTMLInputElement | HTMLInputElement | HTMLSelectElement
+      HTMLInputElement | HTMLSelectElement
     >
   ) => {
     setFormData({
@@ -162,15 +170,34 @@ const ShippingAddress = ({
           required
           data-testid="shipping-country-select"
         />
-        <Input
-          label="State / Province"
-          name="shipping_address.province"
-          autoComplete="address-level1"
-          value={formData["shipping_address.province"]}
-          onChange={handleChange}
-          required
-          data-testid="shipping-province-input"
-        />
+        
+        {/* US State Dropdown - Styled to match CountrySelect */}
+        <div>
+          <label 
+            htmlFor="shipping_state" 
+            className="block txt-compact-medium mb-2"
+          >
+            
+          </label>
+          <select
+            id="shipping_state"
+            name="shipping_address.province"
+            className="w-full h-10 px-3 py-2 txt-compact-medium bg-ui-bg-field border border-ui-border-base rounded-md focus:outline-none focus:border-ui-border-interactive focus:shadow-borders-interactive-with-active transition-colors"
+            required
+            value={formData["shipping_address.province"] || ""}
+            onChange={handleChange}
+            data-testid="shipping-state-select"
+          >
+            <option value="" disabled hidden>
+              Select a state...
+            </option>
+            {US_STATES.map((abbrev) => (
+              <option key={abbrev} value={abbrev}>
+                {abbrev}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="my-8">
         <Checkbox

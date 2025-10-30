@@ -25,7 +25,7 @@ export default async function Footer() {
               href="/"
               className="text-2xl font-bold text-white hover:text-blue-100 transition-colors"
             >
-              Cowbird Depot
+              Cardinal Cooling Systems
             </LocalizedClientLink>
             <p className="mt-4 text-blue-100 text-sm leading-relaxed">
               Premium stainless steel sanitary fittings for food processing, 
@@ -170,7 +170,7 @@ export default async function Footer() {
             </div>
             
             <Text className="text-sm text-blue-200">
-              © {new Date().getFullYear()} Cowbird Depot. All rights reserved.
+              © {new Date().getFullYear()} Cardinal Cooling Systems. All rights reserved.
             </Text>
           </div>
         </div>

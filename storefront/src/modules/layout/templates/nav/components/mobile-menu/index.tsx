@@ -17,22 +17,38 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
 
   // Fetch categories on mount
   useEffect(() => {
-    const fields = [
-      "id", "name", "handle", "description",
-      "category_children.id", "category_children.name", "category_children.handle",
-      "category_children.category_children.id", "category_children.category_children.name", "category_children.category_children.handle"
-    ].join(",")
+    const fetchCategories = async () => {
+      try {
+        // Fetch ALL categories with parent_category_id and children
+        const response = await sdk.store.category.list({
+          include_descendants_tree: true,
+          fields: "id,name,handle,parent_category_id,category_children.id,category_children.name,category_children.handle,category_children.category_children.id,category_children.category_children.name,category_children.category_children.handle,category_children.category_children.category_children.id,category_children.category_children.category_children.name,category_children.category_children.category_children.handle"
+        })
+        
+        const allCategories = response.product_categories || []
+        
+        // Filter client-side for categories where parent_category_id is null
+        const parentCategories = allCategories.filter(cat => 
+          cat.parent_category_id === null || cat.parent_category_id === undefined
+        )
+        
+        console.log('📦 Total categories fetched:', allCategories.length)
+        console.log('✅ Parent categories (parent_category_id = null):', parentCategories.length)
+        console.log('📋 Parent category names:', parentCategories.map(c => c.name))
+        
+        setCategories(parentCategories)
+        setLoading(false)
+      } catch (error) {
+        console.error("❌ Error loading categories:", error)
+        setLoading(false)
+      }
+    }
 
-    sdk.store.category.list({
-      fields,
-      include_descendants_tree: true,
-    }).then(({ product_categories }) => {
-      setCategories(product_categories || [])
-      setLoading(false)
-    }).catch(error => {
-      console.error("❌ Error loading categories:", error)
-      setLoading(false)
-    })
+    fetchCategories()
+
+    // Refetch every 5 minutes
+    const intervalId = setInterval(fetchCategories, 300000)
+    return () => clearInterval(intervalId)
   }, [])
 
   // Static navigation items (non-shop items)
@@ -54,11 +70,62 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
     setExpandedCategories(newExpanded)
   }
 
-  const handleLinkClick = (hasChildren: boolean) => {
-    // Only close menu if the category has no children (is a final destination)
-    if (!hasChildren) {
-      setIsOpen(false)
-    }
+  const handleLinkClick = () => {
+    setIsOpen(false)
+  }
+
+  const renderCategoryLevel = (categories: HttpTypes.StoreProductCategory[], level: number) => {
+    const paddingLeft = 12 + (level * 4) // Base padding of 12 (3rem) + 4 per level (1rem)
+    const bgColor = level === 0 ? 'bg-gray-50' : level === 1 ? 'bg-gray-100' : level === 2 ? 'bg-gray-200' : 'bg-gray-300'
+    const hoverBg = level === 0 ? 'hover:bg-gray-100' : level === 1 ? 'hover:bg-gray-200' : level === 2 ? 'hover:bg-gray-300' : 'hover:bg-gray-400'
+    const textSize = level === 0 ? 'text-base' : level === 1 ? 'text-sm' : 'text-xs'
+
+    return (
+      <div className={bgColor}>
+        {categories.map((category) => {
+          const hasChildren = category.category_children && category.category_children.length > 0
+          const isExpanded = expandedCategories.has(category.name)
+          
+          return (
+            <div key={category.id}>
+              <div className="flex items-center">
+                <Link
+                  href={`/categories/${category.handle}`}
+                  className={`block py-3 ${textSize} text-gray-600 ${hoverBg} hover:text-blue-600 transition-colors duration-150 flex-1`}
+                  style={{ paddingLeft: `${paddingLeft * 4}px` }}
+                  onClick={handleLinkClick}
+                >
+                  {category.name}
+                </Link>
+                
+                {/* Toggle arrow for subcategories */}
+                {hasChildren && (
+                  <button
+                    onClick={() => toggleCategory(category.name)}
+                    className="px-4 py-3 text-gray-600 hover:text-blue-600 transition-colors duration-150"
+                  >
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      strokeWidth={1.5}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+              
+              {/* Recursive rendering of children */}
+              {hasChildren && isExpanded && category.category_children && (
+                renderCategoryLevel(category.category_children, level + 1)
+              )}
+            </div>
+          )
+        })}
+      </div>
+    )
   }
 
   return (
@@ -97,7 +164,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                   <Link
                     href="/store"
                     className="block px-6 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150 flex-1"
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleLinkClick}
                   >
                     Shop
                   </Link>
@@ -123,120 +190,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                 
                 {/* Dynamic Categories Submenu */}
                 {!loading && categories.length > 0 && expandedCategories.has("Shop") && (
-                  <div className="bg-gray-50">
-                    {categories.map((category) => {
-                      const hasChildren = category.category_children?.length > 0
-                      
-                      return (
-                        <div key={category.id}>
-                          {/* Main Category */}
-                          <div className="flex items-center">
-                            {hasChildren ? (
-                              // If has children, make it a button to expand/collapse
-                              <button
-                                onClick={() => toggleCategory(category.name)}
-                                className="block px-12 py-3 text-base text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex-1 text-left"
-                              >
-                                {category.name}
-                              </button>
-                            ) : (
-                              // If no children, make it a regular link
-                              <Link
-                                href={`/categories/${category.handle}`}
-                                className="block px-12 py-3 text-base text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 flex-1"
-                                onClick={() => handleLinkClick(false)}
-                              >
-                                {category.name}
-                              </Link>
-                            )}
-                            
-                            {/* Toggle arrow for subcategories */}
-                            {hasChildren && (
-                              <button
-                                onClick={() => toggleCategory(category.name)}
-                                className="px-4 py-3 text-gray-600 hover:text-blue-600 transition-colors duration-150"
-                              >
-                                <svg 
-                                  className={`w-4 h-4 transition-transform duration-200 ${expandedCategories.has(category.name) ? "rotate-180" : ""}`} 
-                                  fill="none" 
-                                  stroke="currentColor" 
-                                  viewBox="0 0 24 24" 
-                                  strokeWidth={1.5}
-                                >
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
-                              </button>
-                            )}
-                          </div>
-                          
-                          {/* Subcategories */}
-                          {hasChildren && expandedCategories.has(category.name) && (
-                            <div className="bg-gray-100">
-                              {category.category_children.map((subCategory) => {
-                                const subHasChildren = subCategory.category_children?.length > 0
-                                
-                                return (
-                                  <div key={subCategory.id}>
-                                    <div className="flex items-center">
-                                      {subHasChildren ? (
-                                        <button
-                                          onClick={() => toggleCategory(subCategory.name)}
-                                          className="block px-16 py-2 text-sm text-gray-600 hover:bg-gray-200 hover:text-blue-600 transition-colors duration-150 flex-1 text-left"
-                                        >
-                                          {subCategory.name}
-                                        </button>
-                                      ) : (
-                                        <Link
-                                          href={`/categories/${subCategory.handle}`}
-                                          className="block px-16 py-2 text-sm text-gray-600 hover:bg-gray-200 hover:text-blue-600 transition-colors duration-150 flex-1"
-                                          onClick={() => handleLinkClick(false)}
-                                        >
-                                          {subCategory.name}
-                                        </Link>
-                                      )}
-                                      
-                                      {subHasChildren && (
-                                        <button
-                                          onClick={() => toggleCategory(subCategory.name)}
-                                          className="px-4 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-150"
-                                        >
-                                          <svg 
-                                            className={`w-3 h-3 transition-transform duration-200 ${expandedCategories.has(subCategory.name) ? "rotate-180" : ""}`} 
-                                            fill="none" 
-                                            stroke="currentColor" 
-                                            viewBox="0 0 24 24" 
-                                            strokeWidth={2}
-                                          >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                          </svg>
-                                        </button>
-                                      )}
-                                    </div>
-                                    
-                                    {/* Third level categories */}
-                                    {subHasChildren && expandedCategories.has(subCategory.name) && (
-                                      <div className="bg-gray-200">
-                                        {subCategory.category_children.map((thirdLevel) => (
-                                          <Link
-                                            key={thirdLevel.id}
-                                            href={`/categories/${thirdLevel.handle}`}
-                                            className="block px-20 py-2 text-xs text-gray-600 hover:bg-gray-300 hover:text-blue-600 transition-colors duration-150"
-                                            onClick={() => handleLinkClick(false)}
-                                          >
-                                            {thirdLevel.name}
-                                          </Link>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                )
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
+                  renderCategoryLevel(categories, 0)
                 )}
               </div>
 
@@ -246,7 +200,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                   <Link
                     href={item.href}
                     className="block px-6 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleLinkClick}
                   >
                     {item.label}
                   </Link>

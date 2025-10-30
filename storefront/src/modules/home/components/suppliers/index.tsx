@@ -17,25 +17,11 @@ export default function SanitubeSection() {
             
             <div className="space-y-4 text-gray-700 text-lg leading-relaxed">
               <p>
-                Sanitube is a leading American manufacturer of sanitary-grade 
-                stainless steel tubes, valves, and fittings based in Lakeland, 
-                Florida. Founded in 2010 as a family-owned business, Sanitube 
-                has grown to operate over 100,000 square feet of production and 
-                warehousing space across its Central Florida campus.
+                Sanitube is a leading American manufacturer of sanitary-grade stainless steel tubes, valves, and fittings based in Lakeland, Florida. Founded in 2010, this family-owned business operates over 100,000 square feet of production and warehousing space.
               </p>
-              
+
               <p>
-                Specializing in precision-engineered products that meet 3A 
-                specifications, Sanitube serves the food, dairy, beverage, 
-                cosmetic, pharmaceutical, and industrial markets with superior 
-                quality and some of the lowest lead times in the industry.
-              </p>
-              
-              <p>
-                All products are manufactured in accordance with ASTM A270 and 
-                3A sanitary standards, utilizing modern, technologically advanced 
-                welding and fabrication equipment with strict quality control 
-                procedures backing every product.
+                Specializing in precision-engineered products meeting 3A specifications, Sanitube serves data centers, dairy, HVAC, beverage, pharmaceutical, and industrial markets with superior quality and industry-leading lead times.
               </p>
             </div>
 

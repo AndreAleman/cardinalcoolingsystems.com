@@ -49,58 +49,27 @@ export default async function PaginatedProducts({
   let count = 0
 
   if (q) {
-    // Use MeiliSearch for direct search queries (like "13h", "union", etc.)
-    console.log('🔍 Using MeiliSearch for search query:', q)
-    
     try {
       const searchResults = await search(q)
-      console.log('📊 MeiliSearch results:', searchResults.length, 'items')
-      
-      // Apply pagination to search results
       const paginatedResults = searchResults.slice(offset, offset + PRODUCT_LIMIT)
-      
-      // Convert MeiliSearch hits to product objects
-      // MeiliSearch results should have the right structure already
       products = paginatedResults
       count = searchResults.length
-      
-      console.log('📄 Paginated results:', products.length, 'items for page', page)
     } catch (error) {
-      console.error('❌ MeiliSearch error:', error)
-      // Fallback to empty results if MeiliSearch fails
       products = []
       count = 0
     }
   } else {
-    // Use existing database search for filters and browsing
-    console.log('🗄️ Using database search for filters')
-    
     const queryParams: PaginatedProductsParams = {
       limit: PRODUCT_LIMIT,
       offset,
     }
-
-    if (collectionId) {
-      queryParams["collection_id"] = [collectionId]
-    }
-    if (categoryId) {
-      queryParams["category_id"] = [categoryId]
-    }
-    if (productsIds) {
-      queryParams["id"] = productsIds
-    }
-    if (sortBy === "created_at") {
-      queryParams["order"] = "created_at"
-    }
-
-    // Handle material and size filters
-    if (material && size) {
-      queryParams["q"] = `${material} ${size}`
-    } else if (material) {
-      queryParams["q"] = material
-    } else if (size) {
-      queryParams["q"] = size
-    }
+    if (collectionId) queryParams["collection_id"] = [collectionId]
+    if (categoryId) queryParams["category_id"] = [categoryId]
+    if (productsIds) queryParams["id"] = productsIds
+    if (sortBy === "created_at") queryParams["order"] = "created_at"
+    if (material && size) queryParams["q"] = `${material} ${size}`
+    else if (material) queryParams["q"] = material
+    else if (size) queryParams["q"] = size
 
     const {
       response: { products: dbProducts, count: dbCount },
@@ -110,7 +79,6 @@ export default async function PaginatedProducts({
       sortBy,
       countryCode,
     })
-
     products = dbProducts
     count = dbCount
   }
@@ -120,11 +88,11 @@ export default async function PaginatedProducts({
   return (
     <>
       <ul
-        className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-8 w-full"
         data-testid="products-list"
       >
         {products.map((p) => (
-          <li key={p.id}>
+          <li key={p.id} className="flex flex-col h-full">
             <ProductPreview product={p} region={region} />
           </li>
         ))}
