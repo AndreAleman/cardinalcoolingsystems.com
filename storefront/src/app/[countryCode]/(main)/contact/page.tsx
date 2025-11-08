@@ -180,10 +180,10 @@ export default function ContactPage({ params }: Props) {
                         Speak directly with our technical experts
                       </p>
                       <a 
-                        href="tel:+1234567890" 
+                        href="tel:+6309479955" 
                         className="text-blue-600 font-semibold hover:text-blue-700 transition-colors text-lg"
                       >
-                        (123) 456-7890
+                        (630) 947-9955
                       </a>
                       <p className="text-sm text-gray-500 mt-1">
                         Mon-Fri 8:00 AM - 6:00 PM EST
@@ -216,25 +216,7 @@ export default function ContactPage({ params }: Props) {
                   </div>
 
                   {/* Address */}
-                  <div className="flex items-start">
-                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Visit Us</h3>
-                      <p className="text-gray-600 mb-2">
-                        Our headquarters and warehouse
-                      </p>
-                      <address className="text-gray-900 not-italic leading-relaxed">
-                        123 Industrial Boulevard<br />
-                        Manufacturing District<br />
-                        Chicago, IL 60601
-                      </address>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>

@@ -27,7 +27,7 @@ export default function SanitubeSection() {
 
             <div className="pt-4">
               <a
-                href="/products?brand=sanitube"
+                href="/store"
                 className="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
                 View Sanitube Products
