@@ -25,7 +25,7 @@ export default function Hero() {
             <div className="flex flex-wrap gap-4">
               {/* filled primary */}
               <a
-                href="/products"
+                href="/store"
                 className="inline-flex items-center justify-center rounded-md bg-blue-600
                            px-6 py-3 text-white font-semibold hover:bg-blue-700
                            focus-visible:outline focus-visible:outline-2
