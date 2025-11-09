@@ -170,53 +170,56 @@ const medusaConfig = {
       },
     }] : []),
   ],
-  plugins: [
-    ...(MEILISEARCH_HOST && MEILISEARCH_ADMIN_KEY ? [{
-      resolve: '@rokmohar/medusa-plugin-meilisearch',
-      options: {
-        config: {
-          host: MEILISEARCH_HOST,
-          apiKey: MEILISEARCH_ADMIN_KEY
-        },
-        settings: {
-          products: {
-            type: 'products',
-            enabled: true,
-            fields: [
-              'id', 
+plugins: [
+  ...(MEILISEARCH_HOST && MEILISEARCH_ADMIN_KEY ? [{
+    resolve: '@rokmohar/medusa-plugin-meilisearch',
+    options: {
+      config: {
+        host: MEILISEARCH_HOST,
+        apiKey: MEILISEARCH_ADMIN_KEY
+      },
+      settings: {
+        products: {
+          type: 'products',
+          enabled: true,
+          fields: [
+            'id', 
+            'title', 
+            'description', 
+            'handle', 
+            'thumbnail',
+            'metadata.parent_sku',  
+            'variants',
+            'variants.metadata.competitor_skus'  // ✅ ADD THIS LINE
+          ],
+          indexSettings: {
+            searchableAttributes: [
               'title', 
               'description', 
-              'handle', 
-              'thumbnail',
-              'metadata.parent_sku',  
-              'variants'              
+              'metadata.parent_sku',
+              'variants.sku',         
+              'variants.title',
+              'variants.metadata.competitor_skus'  // ✅ ADD THIS LINE - Makes competitor SKUs searchable
             ],
-            indexSettings: {
-              searchableAttributes: [
-                'title', 
-                'description', 
-                'metadata.parent_sku',
-                'variants.sku',         
-                'variants.title'        
-              ],
-              displayedAttributes: [
-                'id', 
-                'handle', 
-                'title', 
-                'description', 
-                'thumbnail',
-                'metadata.parent_sku',
-                'variants.sku',
-                'variants.title'
-              ],
-              filterableAttributes: ['id', 'handle', 'metadata.parent_sku'],
-            },
-            primaryKey: 'id',
-          }
+            displayedAttributes: [
+              'id', 
+              'handle', 
+              'title', 
+              'description', 
+              'thumbnail',
+              'metadata.parent_sku',
+              'variants.sku',
+              'variants.title',
+              'variants.metadata.competitor_skus'  // ✅ ADD THIS LINE
+            ],
+            filterableAttributes: ['id', 'handle', 'metadata.parent_sku'],
+          },
+          primaryKey: 'id',
         }
       }
-    }] : [])
-  ]
+    }
+  }] : [])
+]
 };
 
 console.log(JSON.stringify(medusaConfig, null, 2));

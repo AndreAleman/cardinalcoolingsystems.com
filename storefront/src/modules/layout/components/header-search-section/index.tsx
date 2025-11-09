@@ -201,7 +201,7 @@ const HeaderSearchSection = () => {
           onClick={() => setShowResults(false)}
         />
       )}
-  {/* Under Construction Notice (put it here) */}
+  {/* Under Construction Notice (put it here) 
       <div className="bg-yellow-200 border border-yellow-400 border-t-0 text-yellow-800 px-4 py-3 text-center text-sm font-semibold">
         The website is under construction. If you have any questions, please email:&nbsp;
         <a
@@ -210,7 +210,7 @@ const HeaderSearchSection = () => {
         >
           aleman@cardinalcoolingsystems.com
         </a>
-      </div>
+      </div>*/}
 
     </section>
 

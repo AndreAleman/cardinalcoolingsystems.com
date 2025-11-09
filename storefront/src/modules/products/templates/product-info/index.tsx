@@ -1,6 +1,8 @@
+// src/modules/products/templates/product-info/index.tsx
 import { HttpTypes } from "@medusajs/types"
 import { Heading, Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import ProductSKU from "@modules/products/components/product-sku"
 
 type ProductInfoProps = {
   product: HttpTypes.StoreProduct
@@ -10,8 +12,6 @@ type ProductInfoProps = {
 }
 
 const ProductInfo = ({ product, sanity }: ProductInfoProps) => {
-  console.log('in the product-info', sanity)
-
   return (
     <div id="product-info">
       <div className="flex flex-col gap-y-4 lg:max-w-[500px] mx-auto">
@@ -30,6 +30,9 @@ const ProductInfo = ({ product, sanity }: ProductInfoProps) => {
         >
           {product.title}
         </Heading>
+
+        {/* SKU Display - Dynamic with variant selection */}
+        <ProductSKU product={product} />
 
         <Text
           className="text-medium text-ui-fg-subtle whitespace-pre-line"

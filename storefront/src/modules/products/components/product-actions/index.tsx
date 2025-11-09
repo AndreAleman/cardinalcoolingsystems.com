@@ -5,6 +5,8 @@ import { isEqual } from "lodash"
 import { useParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { clsx } from "clsx"
+import { toast, ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 import { useIntersection } from "@lib/hooks/use-in-view"
 import Divider from "@modules/common/components/divider"
@@ -58,6 +60,17 @@ export default function ProductActions({
     })
   }, [product.variants, options])
 
+  // ✅ ADD THIS: Dispatch variant selection event for ProductSKU component
+  useEffect(() => {
+    if (selectedVariant) {
+      window.dispatchEvent(
+        new CustomEvent('variant-selected', {
+          detail: { variant: selectedVariant }
+        })
+      )
+    }
+  }, [selectedVariant])
+
   // update the options when a variant is selected
   const setOptionValue = (title: string, value: string) => {
     setOptions((prev) => ({
@@ -70,7 +83,6 @@ export default function ProductActions({
   const getAvailableOptionValues = (optionTitle: string) => {
     const values = new Set<string>()
     
-    // Get other selected options (excluding the current one)
     const otherSelectedOptions = Object.entries(options).reduce((acc, [key, val]) => {
       if (key !== optionTitle && val) {
         acc[key] = val
@@ -78,24 +90,19 @@ export default function ProductActions({
       return acc
     }, {} as Record<string, string>)
 
-    // Filter variants based on other selected options
     product.variants?.forEach((variant) => {
       const variantOptions = optionsAsKeymap(variant.options)
       
-      // Check if this variant matches all other selected options
       const matchesOtherOptions = Object.entries(otherSelectedOptions).every(
         ([key, value]) => variantOptions[key] === value
       )
       
-      // If it matches, add this variant's value for the current option
       if (matchesOtherOptions && variantOptions[optionTitle]) {
         values.add(variantOptions[optionTitle])
       }
     })
     
-    // Sort the values
     return Array.from(values).sort((a, b) => {
-      // Try to sort numerically first
       const numA = parseFloat(a.replace(/[^0-9.]/g, ''))
       const numB = parseFloat(b.replace(/[^0-9.]/g, ''))
       if (!isNaN(numA) && !isNaN(numB)) {
@@ -153,8 +160,37 @@ export default function ProductActions({
         quantity: quantity,
         countryCode,
       })
+      
+      // Show success toast notification
+      toast.success(
+        `✓ Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      )
+      
+      // Reset quantity to 1 after successful add
+      setQuantity(1)
     } catch (error) {
       console.error("Failed to add to cart:", error)
+      
+      // Show error toast notification
+      toast.error(
+        "Failed to add item to cart. Please try again.",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      )
     } finally {
       setIsAdding(false)
     }
@@ -185,6 +221,9 @@ export default function ProductActions({
 
   return (
     <>
+      {/* Toast Container - Add this once per page */}
+      <ToastContainer />
+      
       <div className="flex flex-col gap-y-6" ref={actionsRef}>
         {/* Variant Selection - Dropdown Style with Dependent Filtering */}
         {(product.variants?.length ?? 0) > 1 && (
@@ -196,7 +235,6 @@ export default function ProductActions({
               const availableValues = getAvailableOptionValues(option.title ?? "")
               const currentValue = options[option.title ?? ""]
               
-              // Reset selection if current value is no longer available
               useEffect(() => {
                 if (currentValue && !availableValues.includes(currentValue)) {
                   setOptionValue(option.title ?? "", "")
