@@ -4,7 +4,6 @@ import { getProductPrice } from "@lib/util/get-product-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "../thumbnail"
 import PreviewPrice from "./price"
-import AddToCartButton from "../add-to-cart-button"
 import { getProductsById } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
 
@@ -69,8 +68,23 @@ export default async function ProductPreview({
                 {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
               </div>
               
-              {/* Add to Cart Button */}
-              <AddToCartButton product={pricedProduct} />
+              {/* View Product Button */}
+              <div className="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-colors duration-200 text-xs font-medium flex items-center gap-1">
+                <span>View</span>
+                <svg 
+                  className="w-3 h-3" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M9 5l7 7-7 7" 
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>

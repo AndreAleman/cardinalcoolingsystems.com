@@ -15,10 +15,10 @@ export default function SanitaryProducts({ products }: Props) {
   // Default product data
   const defaultProducts = [
     {
-      id: "tube",
-      title: "Tube",
+      id: "tubes",
+      title: "Tubes",
       description: "Cardinal Cooling Systems welded stainless steel tubing is engineered to meet the American Society for Testing and Materials (ASTM) type A269 unpolished and A270 polished designations.",
-      learnMoreUrl: "/categories/tube"
+      learnMoreUrl: "/categories/tubes"
     },
     {
       id: "valves", 
