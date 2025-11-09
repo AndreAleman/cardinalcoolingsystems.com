@@ -165,7 +165,7 @@ const HeaderSearchSection = () => {
   };
 
   return (
-    <section className="fixed top-20 lg:top-24 left-0 right-0 z-40 bg-blue-50 border-b border-blue-200 pt-4 pb-0">
+    <section className="fixed top-20 lg:top-24 left-0 right-0 z-40 bg-blue-50 border-t border-b border-blue-200 py-3">
       <div className="max-w-7xl mx-auto px-4">
         <div className="relative max-w-2xl mx-auto">
           <div className="relative">
