@@ -1,8 +1,8 @@
-import { Container, clx } from "@medusajs/ui"
-import Image from "next/image"  // 👈 lowercase "image"
-import React from "react"
+"use client"
 
-import PlaceholderImage from "@modules/common/icons/placeholder-image"
+import { Container, clx } from "@medusajs/ui"
+import Image from "next/image"
+import React from "react"
 
 type ThumbnailProps = {
   thumbnail?: string | null
@@ -30,7 +30,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
         className,
         {
           "aspect-[11/14]": isFeatured,
-          "aspect-square": !isFeatured && size !== "square",  // 👈 changed from aspect-[9/16]
+          "aspect-square": !isFeatured && size !== "square",
           "aspect-[1/1]": size === "square",
           "w-[180px]": size === "small",
           "w-[290px]": size === "medium", 
@@ -49,22 +49,41 @@ const ImageOrPlaceholder = ({
   image,
   size,
 }: Pick<ThumbnailProps, "size"> & { image?: string }) => {
-  return image ? (
-    <Image
-      src={image}
-      alt="Thumbnail"
-      fill
-      className="absolute inset-0 object-cover object-center w-full h-full"  // 👈 changed to object-cover
-      draggable={false}
-      quality={50}
-      sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
-    />
-  ) : (
-    <div className="w-full h-full absolute inset-0 flex items-center justify-center bg-gray-100">
-      <PlaceholderImage size={size === "small" ? 16 : 24} />
+  const logoPath = "/images/logo/logo-main-3.svg"
+  const [imgSrc, setImgSrc] = React.useState(image || logoPath)
+  const [isLogo, setIsLogo] = React.useState(!image)
+
+  React.useEffect(() => {
+    setImgSrc(image || logoPath)
+    setIsLogo(!image)
+  }, [image])
+
+  return (
+    <div className={clx(
+      "w-full h-full absolute inset-0",
+      { "bg-white": isLogo }
+    )}>
+      <Image
+        src={imgSrc}
+        alt="Product thumbnail"
+        fill
+        className={clx(
+          "absolute inset-0 w-full h-full",
+          {
+            "object-cover object-center": !isLogo,
+            "object-contain object-center p-4": isLogo
+          }
+        )}
+        draggable={false}
+        quality={50}
+        sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
+        onError={() => {
+          setImgSrc(logoPath)
+          setIsLogo(true)
+        }}
+      />
     </div>
   )
 }
-
 
 export default Thumbnail
