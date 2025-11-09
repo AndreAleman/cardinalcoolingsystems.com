@@ -17,8 +17,7 @@ export const getProductsById = cache(async function ({
       {
         id: ids,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
-      },
+        fields: "*variants.calculated_price,+variants.inventory_quantity,+categories.*,+categories.parent_category",},
       { next: { tags: ["products"] } }
     )
     .then(({ products }) => products)
@@ -33,7 +32,8 @@ export const getProductByHandle = cache(async function (
       {
         handle,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
+        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories,*categories.parent_category",
+
       },
       { next: { tags: ["products"] } }
     )
