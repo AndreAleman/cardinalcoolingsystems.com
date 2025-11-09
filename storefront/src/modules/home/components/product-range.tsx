@@ -12,10 +12,9 @@ type Product = {
 
 type Props = {
   products: Product[]
-  onAdd: (id: string) => void
 }
 
-export default function ProductRange({ products, onAdd }: Props) {
+export default function ProductRange({ products }: Props) {
   console.log("ProductRange received products:", products.length) // Debug log
 
   // Use dynamic products - remove placeholder fallback
@@ -24,7 +23,7 @@ export default function ProductRange({ products, onAdd }: Props) {
   // If no products, show a message instead of placeholders
   if (!products || products.length === 0) {
     return (
-      <section className="py-16 px-4 bg-gray-50">
+      <section className="py-16 px-4 bg-white border-y border-gray-200">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Explore Our Range
@@ -38,7 +37,7 @@ export default function ProductRange({ products, onAdd }: Props) {
   }
 
   return (
-    <section className="py-16 px-4 bg-gray-50">
+    <section className="py-16 px-4 bg-white border-y border-gray-200">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-12">
@@ -78,8 +77,8 @@ export default function ProductRange({ products, onAdd }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {displayProducts.map((product) => (
             <div key={product.id} className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-              {/* Product Image */}
-              <Link href={`/products/${product.handle}`}>
+              <Link href={`/products/${product.handle}`} className="block">
+                {/* Product Image */}
                 <div className="aspect-square bg-gray-100 relative overflow-hidden">
                   {product.image && product.image !== "/images/placeholder.jpg" ? (
                     <img
@@ -93,27 +92,35 @@ export default function ProductRange({ products, onAdd }: Props) {
                     </div>
                   )}
                 </div>
-              </Link>
-              
-              {/* Product Info */}
-              <div className="p-4">
-                <Link href={`/products/${product.handle}`}>
+                
+                {/* Product Info */}
+                <div className="p-4">
                   <h3 className="font-semibold text-gray-900 mb-1 text-sm hover:text-blue-600 transition-colors">
                     {product.title}
                   </h3>
-                </Link>
-                <p className="text-gray-600 text-sm mb-4">
-                  {product.subtitle}
-                </p>
-                
-                {/* Add to Cart Button */}
-                <button
-                  onClick={() => onAdd(product.id)}
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
-                >
-                  Add to Cart
-                </button>
-              </div>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {product.subtitle}
+                  </p>
+                  
+                  {/* View Product Button */}
+                  <div className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium flex items-center justify-center gap-2">
+                    <span>View Product</span>
+                    <svg 
+                      className="w-4 h-4" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M9 5l7 7-7 7" 
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
             </div>
           ))}
         </div>

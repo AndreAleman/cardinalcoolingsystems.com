@@ -44,7 +44,7 @@ export default function ProductCard({
 
       {/* add-to-cart button */}
       <IconButton
-        label="Add to cart"
+        label="View Product"
         icon="plus"
         onClick={() => onAdd(id)}
         className="self-end"

@@ -5,34 +5,55 @@ import Image from 'next/image';
 
 export default function SanitubeSection() {
   return (
-    <section className="w-full bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+    <section className="w-full bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 border-y border-gray-200">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Image with Logo Overlay */}
+          <div className="relative h-64 lg:h-80 w-full rounded-lg overflow-hidden shadow-lg order-2 lg:order-1">
+            <Image
+              src="/images/sanitube-team.jpg"
+              alt="Sanitube Stainless Steel - Authorized Distributor"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            {/* Logo overlay on image - moved closer to corner */}
+            <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm px-4 py-3 rounded-md shadow-lg">
+              <div className="relative h-12 w-32">
+                <Image
+                  src="/images/sanitube_logo.svg"
+                  alt="Sanitube Logo"
+                  fill
+                  className="object-contain"
+                  sizes="128px"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Text Content */}
-          <div className="space-y-6">
-            <h2 className="text-4xl font-bold text-gray-900 sm:text-5xl">
+          <div className="space-y-4 order-1 lg:order-2">
+            <div className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-sm font-medium rounded-full">
+              Authorized Distributor
+            </div>
+            
+            <h2 className="text-3xl font-bold text-gray-900">
               Proud Distributor of{' '}
               <span className="text-blue-600">Sanitube Stainless Steel</span>
             </h2>
             
-            <div className="space-y-4 text-gray-700 text-lg leading-relaxed">
-              <p>
-                Sanitube is a leading American manufacturer of sanitary-grade stainless steel tubes, valves, and fittings based in Lakeland, Florida. Founded in 2010, this family-owned business operates over 100,000 square feet of production and warehousing space.
-              </p>
+            <p className="text-gray-700 leading-relaxed">
+              Sanitube is a leading American manufacturer of sanitary-grade stainless steel tubes, valves, and fittings based in Lakeland, Florida. Specializing in precision-engineered products meeting 3A specifications, Sanitube serves pharmaceutical, beverage, dairy, HVAC, and industrial markets.
+            </p>
 
-              <p>
-                Specializing in precision-engineered products meeting 3A specifications, Sanitube serves data centers, dairy, HVAC, beverage, pharmaceutical, and industrial markets with superior quality and industry-leading lead times.
-              </p>
-            </div>
-
-            <div className="pt-4">
+            <div className="pt-2">
               <a
                 href="/store"
-                className="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
                 View Sanitube Products
                 <svg
-                  className="ml-2 -mr-1 w-5 h-5"
+                  className="ml-2 -mr-1 w-4 h-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg"
@@ -44,23 +65,6 @@ export default function SanitubeSection() {
                   />
                 </svg>
               </a>
-            </div>
-          </div>
-
-          {/* Image/Photo Placeholder */}
-          <div className="relative h-[500px] w-full rounded-lg overflow-hidden shadow-xl">
-            <Image
-              src="/images/sanitube-team.jpg"
-              alt="Sanitube team and facilities"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              priority
-            />
-            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-md shadow-lg">
-              <p className="text-sm font-semibold text-gray-900">
-                Family-Owned Since 2010
-              </p>
             </div>
           </div>
         </div>

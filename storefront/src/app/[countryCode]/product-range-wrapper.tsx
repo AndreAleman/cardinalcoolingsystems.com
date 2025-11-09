@@ -15,10 +15,5 @@ type ProductRangeWrapperProps = {
 }
 
 export default function ProductRangeWrapper({ products }: ProductRangeWrapperProps) {
-  const handleAdd = (productId: string) => {
-    // TODO: Implement your add to cart logic here
-    console.log("Adding to cart:", productId)
-  }
-
-  return <ProductRange products={products} onAdd={handleAdd} />
+  return <ProductRange products={products} />
 }

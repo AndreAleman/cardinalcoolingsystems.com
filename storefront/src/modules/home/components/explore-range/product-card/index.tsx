@@ -2,10 +2,12 @@ import { HttpTypes } from "@medusajs/types"
 import Image from "next/image"
 import Link from "next/link"
 
+
 type ProductCardProps = {
   product: HttpTypes.StoreProduct | any
   region: HttpTypes.StoreRegion
 }
+
 
 export default function ProductCard({ product, region }: ProductCardProps) {
   const productImage = product?.thumbnail || "/placeholder-product.jpg"
@@ -13,12 +15,6 @@ export default function ProductCard({ product, region }: ProductCardProps) {
   const productSubtitle = product?.subtitle || product?.title || "Union Hexagonal Nut"
   const productHandle = product?.handle || "#"
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    // TODO: Implement add to cart functionality
-    console.log("Add to cart:", product?.id)
-  }
 
   return (
     <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
@@ -43,14 +39,11 @@ export default function ProductCard({ product, region }: ProductCardProps) {
             {productSubtitle}
           </p>
           
-          {/* Add to Cart Button */}
-          <button
-            onClick={handleAddToCart}
-            className="w-10 h-10 bg-emerald-800 text-white rounded-lg flex items-center justify-center hover:bg-emerald-900 transition-colors duration-200 ml-auto"
-            aria-label="Add to cart"
-          >
+          {/* View Product Button */}
+          <div className="w-full bg-emerald-800 text-white rounded-lg px-4 py-2 flex items-center justify-center gap-2 group-hover:bg-emerald-900 transition-colors duration-200">
+            <span className="text-sm font-medium">View Product</span>
             <svg 
-              className="w-5 h-5" 
+              className="w-4 h-4" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -59,10 +52,10 @@ export default function ProductCard({ product, region }: ProductCardProps) {
                 strokeLinecap="round" 
                 strokeLinejoin="round" 
                 strokeWidth={2} 
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6" 
+                d="M9 5l7 7-7 7" 
               />
             </svg>
-          </button>
+          </div>
         </div>
       </Link>
     </div>

@@ -12,7 +12,7 @@ export default function AboutUs({
   readMoreUrl = "/about"
 }: Props) {
   return (
-    <section className="py-20 px-4 bg-gray-50">
+    <section className="py-20 px-4 bg-white border-y border-gray-200">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Left Column - Content */}
@@ -85,7 +85,6 @@ export default function AboutUs({
     </div>
   </div>
 </div>
-
 
         </div>
       </div>

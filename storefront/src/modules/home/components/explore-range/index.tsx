@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+
 type Product = {
   id: string
   title: string
@@ -10,10 +12,9 @@ type Product = {
 
 type Props = {
   products: Product[]
-  onAdd: (id: string) => void
 }
 
-export default function ProductRange({ products, onAdd }: Props) {
+export default function ProductRange({ products }: Props) {
   // Placeholder products as fallback
   const placeholderProducts = [
     {
@@ -87,51 +88,50 @@ export default function ProductRange({ products, onAdd }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {displayProducts.map((product) => (
             <div key={product.id} className="group bg-white shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-              {/* Product Image */}
-              <div className="aspect-square bg-gray-100 relative overflow-hidden">
-                {product.image && product.image !== "/images/placeholder.jpg" ? (
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                    <span className="text-gray-500 text-sm">Product Image</span>
-                  </div>
-                )}
-              </div>
-              
-              {/* Product Info */}
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-                  {product.title}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  {product.subtitle}
-                </p>
-                
-                {/* Add to Cart Button */}
-                <button
-                  onClick={() => onAdd(product.id)}
-                  className="w-10 h-10 bg-emerald-800 text-white flex items-center justify-center hover:bg-emerald-900 transition-colors duration-200 ml-auto"
-                  aria-label="Add to cart"
-                >
-                  <svg 
-                    className="w-5 h-5" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6" 
+              <Link href={`/products/${product.handle}`} className="block">
+                {/* Product Image */}
+                <div className="aspect-square bg-gray-100 relative overflow-hidden">
+                  {product.image && product.image !== "/images/placeholder.jpg" ? (
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                     />
-                  </svg>
-                </button>
-              </div>
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                      <span className="text-gray-500 text-sm">Product Image</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Product Info */}
+                <div className="p-4">
+                  <h3 className="font-semibold text-gray-900 mb-1 text-sm">
+                    {product.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {product.subtitle}
+                  </p>
+                  
+                  {/* View Product Button */}
+                  <div className="w-full bg-emerald-800 text-white rounded-lg px-4 py-2 flex items-center justify-center gap-2 group-hover:bg-emerald-900 transition-colors duration-200">
+                    <span className="text-sm font-medium">View Product</span>
+                    <svg 
+                      className="w-4 h-4" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M9 5l7 7-7 7" 
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
             </div>
           ))}
         </div>

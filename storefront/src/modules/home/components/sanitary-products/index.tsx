@@ -37,7 +37,7 @@ export default function SanitaryProducts({ products }: Props) {
   const displayProducts = products || defaultProducts
 
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="py-20 px-4 bg-gray-50 border-y border-gray-200">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">
