@@ -126,10 +126,8 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
           <div className="space-y-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-ui-fg-base mb-2">
-                Related Products
               </h2>
               <p className="text-ui-fg-subtle">
-                You might also like these products
               </p>
             </div>
             

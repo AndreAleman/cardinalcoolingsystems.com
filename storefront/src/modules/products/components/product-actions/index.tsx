@@ -4,10 +4,10 @@ import { Button, Text } from "@medusajs/ui"
 import { isEqual } from "lodash"
 import { useParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
+import { clsx } from "clsx"
 
 import { useIntersection } from "@lib/hooks/use-in-view"
 import Divider from "@modules/common/components/divider"
-import OptionSelect from "@modules/products/components/product-actions/option-select"
 
 import MobileActions from "./mobile-actions"
 import ProductPrice from "../product-price"
@@ -64,6 +64,27 @@ export default function ProductActions({
       ...prev,
       [title]: value,
     }))
+  }
+
+  // Get unique values for each option
+  const getOptionValues = (optionTitle: string) => {
+    const values = new Set<string>()
+    product.variants?.forEach((variant) => {
+      variant.options?.forEach((opt) => {
+        if (opt.option?.title === optionTitle && opt.value) {
+          values.add(opt.value)
+        }
+      })
+    })
+    return Array.from(values).sort((a, b) => {
+      // Try to sort numerically first
+      const numA = parseFloat(a.replace(/[^0-9.]/g, ''))
+      const numB = parseFloat(b.replace(/[^0-9.]/g, ''))
+      if (!isNaN(numA) && !isNaN(numB)) {
+        return numA - numB
+      }
+      return a.localeCompare(b)
+    })
   }
 
   // check if the selected variant is in stock
@@ -127,7 +148,7 @@ export default function ProductActions({
 
   // Get button text based on state
   const getButtonText = () => {
-    if (!selectedVariant) return "Select variant"
+    if (!selectedVariant) return "Select options"
     if (!inStock) return "Out of stock"
     if (isAdding) return "Adding to cart..."
     return `Add ${quantity} to cart`
@@ -151,23 +172,43 @@ export default function ProductActions({
   return (
     <>
       <div className="flex flex-col gap-y-6" ref={actionsRef}>
-        {/* Variant Selection */}
+        {/* Variant Selection - Dropdown Style */}
         {(product.variants?.length ?? 0) > 1 && (
           <div className="flex flex-col gap-y-4">
             <Text className="text-base font-medium text-ui-fg-base">
               Select Options
             </Text>
             {(product.options || []).map((option) => {
+              const optionValues = getOptionValues(option.title ?? "")
+              const currentValue = options[option.title ?? ""]
+              
               return (
-                <div key={option.id}>
-                  <OptionSelect
-                    option={option}
-                    current={options[option.title ?? ""]}
-                    updateOption={setOptionValue}
-                    title={option.title ?? ""}
-                    data-testid="product-options"
+                <div key={option.id} className="flex flex-col gap-y-2">
+                  <label htmlFor={`option-${option.id}`} className="text-sm font-medium text-ui-fg-base">
+                    {option.title}
+                  </label>
+                  <select
+                    id={`option-${option.id}`}
+                    value={currentValue || ""}
+                    onChange={(e) => setOptionValue(option.title ?? "", e.target.value)}
                     disabled={!!disabled || isAdding}
-                  />
+                    className={clsx(
+                      "w-full px-4 py-3 rounded-md border text-ui-fg-base bg-ui-bg-base",
+                      "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                      "disabled:opacity-50 disabled:cursor-not-allowed",
+                      !currentValue && "text-ui-fg-subtle"
+                    )}
+                    data-testid="product-options"
+                  >
+                    <option value="" disabled>
+                      Select {option.title}
+                    </option>
+                    {optionValues.map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )
             })}
@@ -213,7 +254,7 @@ export default function ProductActions({
                   value={quantity}
                   onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
                   disabled={disabled || isAdding}
-                  className="w-16 h-10 text-center border-0 focus:ring-0 focus:outline-none text-ui-fg-base bg-transparent"
+                  className="w-16 h-10 text-center border-0 focus:ring-0 focus:outline-none text-ui-fg-base bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 
                 <button
