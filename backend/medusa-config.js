@@ -190,7 +190,14 @@ plugins: [
             'thumbnail',
             'metadata.parent_sku',  
             'variants',
-            'variants.metadata.competitor_skus'  // ✅ ADD THIS LINE
+            'variants.id',                           // ✅ ADD THIS
+            'variants.sku',                          // ✅ ADD THIS
+            'variants.title',                        // ✅ ADD THIS
+            'variants.options',                      // ✅ ADD THIS
+            'variants.options.value',                        // ✅ ADD THIS
+            'variants.options.option',                       // ✅ ADD THIS
+            'variants.options.option.title', 
+            'variants.metadata.competitor_skus'
           ],
           indexSettings: {
             searchableAttributes: [
@@ -210,6 +217,8 @@ plugins: [
               'metadata.parent_sku',
               'variants.sku',
               'variants.title',
+              'variants.options.value',                       // ✅ ADD THIS
+              'variants.options.option.title',    
               'variants.metadata.competitor_skus'  // ✅ ADD THIS LINE
             ],
             filterableAttributes: ['id', 'handle', 'metadata.parent_sku'],

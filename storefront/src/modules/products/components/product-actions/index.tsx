@@ -49,6 +49,23 @@ export default function ProductActions({
     }
   }, [product.variants])
 
+
+  // ✅ ADD THIS NEW USEEFFECT: Read SKU from URL and pre-select variant
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const skuParam = params.get('sku')
+      
+      if (skuParam && product.variants) {
+        const matchingVariant = product.variants.find(v => v.sku === skuParam)
+        if (matchingVariant) {
+          const variantOptions = optionsAsKeymap(matchingVariant.options)
+          setOptions(variantOptions ?? {})
+        }
+      }
+    }
+  }, [product.variants])
+
   const selectedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) {
       return

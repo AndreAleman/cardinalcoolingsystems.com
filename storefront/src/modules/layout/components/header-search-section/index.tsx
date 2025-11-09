@@ -7,19 +7,56 @@ interface SearchResult {
   description?: string;
   thumbnail?: string;
   handle: string;
-  variant_sku?: string;
+  variants?: Array<{
+    id: string;
+    sku: string;
+    title?: string;
+    options?: Array<{
+      option?: { title: string };
+      value: string;
+    }>;
+    metadata?: {
+      competitor_skus?: string[];
+    };
+  }>;
   [key: string]: any;
 }
+
+type VariantOption = {
+  title: string;
+  value: string;
+};
+
+// ✅ Expanded result that shows each matching variant as separate row
+type ExpandedResult = {
+  productId: string;
+  productTitle: string;
+  productHandle: string;
+  productThumbnail?: string;
+  variant: {
+    id: string;
+    sku: string;
+    options?: Array<{
+      option?: { title: string };
+      value: string;
+    }>;
+    metadata?: {
+      competitor_skus?: string[];
+    };
+  };
+};
 
 const HeaderSearchSection = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [expandedResults, setExpandedResults] = useState<ExpandedResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setResults([]);
+      setExpandedResults([]);
       setShowResults(false);
       return;
     }
@@ -35,12 +72,42 @@ const HeaderSearchSection = () => {
         },
         body: JSON.stringify({ 
           q: searchQuery,
-          limit: 6
+          limit: 20 // ✅ Increased to get more products
         })
       });
 
       const data = await response.json();
       setResults(data.hits || []);
+      
+      // ✅ Expand products into individual variant results
+      const expanded: ExpandedResult[] = [];
+      const lowerQuery = searchQuery.toLowerCase();
+      
+      (data.hits || []).forEach((product: SearchResult) => {
+        if (!product.variants) return;
+        
+        // Find ALL matching variants (not just first one)
+        product.variants.forEach(variant => {
+          const isMatch = 
+            variant.sku?.toLowerCase().includes(lowerQuery) ||
+            variant.metadata?.competitor_skus?.some(sku => 
+              sku.toLowerCase().includes(lowerQuery)
+            );
+          
+          if (isMatch) {
+            expanded.push({
+              productId: product.id,
+              productTitle: product.title,
+              productHandle: product.handle,
+              productThumbnail: product.thumbnail,
+              variant
+            });
+          }
+        });
+      });
+      
+      // Limit to 6 variant results
+      setExpandedResults(expanded.slice(0, 6));
       setShowResults(true);
     } catch (error) {
       console.error('Search error:', error);
@@ -74,21 +141,33 @@ const HeaderSearchSection = () => {
     }
   };
 
-  const handleResultClick = (result: SearchResult) => {
-    window.location.href = `/products/${result.handle}`;
+  const getVariantOptions = (variant: any): VariantOption[] => {
+    if (!variant?.options) return [];
+    
+    return variant.options
+      .filter((opt: any) => opt.option?.title && opt.value)
+      .map((opt: any) => ({
+        title: opt.option.title,
+        value: opt.value
+      }));
+  };
+
+  const handleResultClick = (result: ExpandedResult) => {
+    const url = `/products/${result.productHandle}?sku=${result.variant.sku}`;
+    window.location.href = url;
   };
 
   const clearSearch = () => {
     setQuery('');
     setResults([]);
+    setExpandedResults([]);
     setShowResults(false);
   };
 
   return (
-<section className="fixed top-20 lg:top-24 left-0 right-0 z-40 bg-blue-50 border-b border-blue-200 pt-4 pb-0">
-  <div className="max-w-7xl mx-auto px-4">
-    <div className="relative max-w-2xl mx-auto">
-          {/* Search Input */}
+    <section className="fixed top-20 lg:top-24 left-0 right-0 z-40 bg-blue-50 border-b border-blue-200 pt-4 pb-0">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="relative max-w-2xl mx-auto">
           <div className="relative">
             <input
               type="text"
@@ -99,7 +178,6 @@ const HeaderSearchSection = () => {
               className="w-full px-4 py-3 pr-20 text-base border-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-colors"
             />
             
-            {/* Right side icons */}
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
               {query && (
                 <button
@@ -125,64 +203,84 @@ const HeaderSearchSection = () => {
             </div>
           </div>
 
-          {/* Search Results Dropdown */}
           {showResults && query && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 shadow-lg z-50 max-h-96 overflow-hidden">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 shadow-lg z-50 max-h-96 overflow-y-auto">
               {isLoading && (
                 <div className="p-4 text-center text-gray-500">
                   Searching...
                 </div>
               )}
               
-              {!isLoading && results.length === 0 && (
+              {!isLoading && expandedResults.length === 0 && (
                 <div className="p-4 text-center text-gray-500">
                   No results found for "{query}"
                 </div>
               )}
               
-              {!isLoading && results.length > 0 && (
+              {!isLoading && expandedResults.length > 0 && (
                 <div className="divide-y divide-gray-100">
-                  {results.map((result) => (
-                    <div
-                      key={result.id}
-                      onClick={() => handleResultClick(result)}
-                      className="flex items-center p-3 hover:bg-gray-50 cursor-pointer"
-                    >
-                      <div className="w-12 h-12 bg-gray-100 rounded mr-3 flex-shrink-0 flex items-center justify-center">
-                        {result.thumbnail ? (
-                          <img
-                            src={result.thumbnail}
-                            alt={result.title}
-                            className="w-8 h-8 object-contain"
-                          />
-                        ) : (
-                          <div className="text-gray-400 text-xs">IMG</div>
-                        )}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-gray-900 truncate">
-                          {result.title}
+                  {expandedResults.map((result, idx) => {
+                    const variantOptions = getVariantOptions(result.variant);
+                    const competitorSkus = result.variant.metadata?.competitor_skus;
+                      // ✅ ADD THIS DEBUG LOG
+                    console.log('Variant data:', {
+                      sku: result.variant.sku,
+                      hasOptions: !!result.variant.options,
+                      options: result.variant.options,
+                      variantOptions
+                    });
+                    
+                    return (
+                      <div
+                        key={`${result.productId}-${result.variant.id}-${idx}`}
+                        onClick={() => handleResultClick(result)}
+                        className="flex items-start gap-3 p-3 hover:bg-gray-50 cursor-pointer"
+                      >
+                        <div className="w-16 h-16 bg-white rounded flex-shrink-0 overflow-hidden">
+                          {result.productThumbnail ? (
+                            <img
+                              src={result.productThumbnail}
+                              alt={result.productTitle}
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <svg className="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                            </svg>
+                          )}
                         </div>
-                        {result.variant_sku && (
-                          <div className="text-sm text-blue-600 font-medium">
-                            SKU: {result.variant_sku}
+                        
+                        <div className="flex-1 min-w-0">
+                          {/* ✅ Title with inline variant options */}
+                          <div className="font-medium text-gray-900 text-sm mb-1">
+                            {result.productTitle}
+                            {variantOptions.length > 0 && (
+                              <span className="text-gray-600 font-normal">
+                                {' '}{variantOptions.map((opt: VariantOption) => opt.value).join(', ')}
+                              </span>
+                            )}
                           </div>
-                        )}
-                        {result.description && (
-                          <div className="text-sm text-gray-500 truncate">
-                            {result.description.substring(0, 60)}...
+                          
+                          {/* SKU */}
+                          <div className="text-xs text-blue-600 font-semibold font-mono mb-1">
+                            SKU: {result.variant.sku}
                           </div>
-                        )}
+                          
+                          {/* Compatible SKUs */}
+                          {competitorSkus && competitorSkus.length > 0 && (
+                            <div className="text-xs text-gray-500">
+                              Compatible: {competitorSkus.join(', ')}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   
-                  {/* View All Results Link */}
                   <div className="p-3 bg-gray-50">
                     <button
                       onClick={handleSearchClick}
-                      className="w-full text-center text-blue-600 hover:text-blue-800 font-medium"
+                      className="w-full text-center text-blue-600 hover:text-blue-800 font-medium text-sm"
                     >
                       View all results for "{query}"
                     </button>
@@ -194,28 +292,13 @@ const HeaderSearchSection = () => {
         </div>
       </div>
 
-      {/* Click outside to close */}
       {showResults && (
         <div
-          className="fixed inset-0 z-40"
+          className="fixed inset-0 z-30"
           onClick={() => setShowResults(false)}
         />
       )}
-  {/* Under Construction Notice (put it here) 
-      <div className="bg-yellow-200 border border-yellow-400 border-t-0 text-yellow-800 px-4 py-3 text-center text-sm font-semibold">
-        The website is under construction. If you have any questions, please email:&nbsp;
-        <a
-          href="mailto:aleman@cardinalcoolingsystems.com"
-          className="underline text-blue-800 hover:text-blue-900"
-        >
-          aleman@cardinalcoolingsystems.com
-        </a>
-      </div>*/}
-
     </section>
-
-
-
   );
 };
 
