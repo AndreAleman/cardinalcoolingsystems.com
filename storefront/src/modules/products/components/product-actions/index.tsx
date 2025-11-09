@@ -66,16 +66,34 @@ export default function ProductActions({
     }))
   }
 
-  // Get unique values for each option
-  const getOptionValues = (optionTitle: string) => {
+  // Get available option values based on currently selected options (dependent filtering)
+  const getAvailableOptionValues = (optionTitle: string) => {
     const values = new Set<string>()
+    
+    // Get other selected options (excluding the current one)
+    const otherSelectedOptions = Object.entries(options).reduce((acc, [key, val]) => {
+      if (key !== optionTitle && val) {
+        acc[key] = val
+      }
+      return acc
+    }, {} as Record<string, string>)
+
+    // Filter variants based on other selected options
     product.variants?.forEach((variant) => {
-      variant.options?.forEach((opt) => {
-        if (opt.option?.title === optionTitle && opt.value) {
-          values.add(opt.value)
-        }
-      })
+      const variantOptions = optionsAsKeymap(variant.options)
+      
+      // Check if this variant matches all other selected options
+      const matchesOtherOptions = Object.entries(otherSelectedOptions).every(
+        ([key, value]) => variantOptions[key] === value
+      )
+      
+      // If it matches, add this variant's value for the current option
+      if (matchesOtherOptions && variantOptions[optionTitle]) {
+        values.add(variantOptions[optionTitle])
+      }
     })
+    
+    // Sort the values
     return Array.from(values).sort((a, b) => {
       // Try to sort numerically first
       const numA = parseFloat(a.replace(/[^0-9.]/g, ''))
@@ -89,17 +107,14 @@ export default function ProductActions({
 
   // check if the selected variant is in stock
   const inStock = useMemo(() => {
-    // If we don't manage inventory, we can always add to cart
     if (selectedVariant && !selectedVariant.manage_inventory) {
       return true
     }
 
-    // If we allow back orders on the variant, we can add to cart
     if (selectedVariant?.allow_backorder) {
       return true
     }
 
-    // If there is inventory available, we can add to cart
     if (
       selectedVariant?.manage_inventory &&
       (selectedVariant?.inventory_quantity || 0) > 0
@@ -107,7 +122,6 @@ export default function ProductActions({
       return true
     }
 
-    // Otherwise, we can't add to cart
     return false
   }, [selectedVariant])
 
@@ -172,15 +186,22 @@ export default function ProductActions({
   return (
     <>
       <div className="flex flex-col gap-y-6" ref={actionsRef}>
-        {/* Variant Selection - Dropdown Style */}
+        {/* Variant Selection - Dropdown Style with Dependent Filtering */}
         {(product.variants?.length ?? 0) > 1 && (
           <div className="flex flex-col gap-y-4">
             <Text className="text-base font-medium text-ui-fg-base">
               Select Options
             </Text>
             {(product.options || []).map((option) => {
-              const optionValues = getOptionValues(option.title ?? "")
+              const availableValues = getAvailableOptionValues(option.title ?? "")
               const currentValue = options[option.title ?? ""]
+              
+              // Reset selection if current value is no longer available
+              useEffect(() => {
+                if (currentValue && !availableValues.includes(currentValue)) {
+                  setOptionValue(option.title ?? "", "")
+                }
+              }, [availableValues, currentValue])
               
               return (
                 <div key={option.id} className="flex flex-col gap-y-2">
@@ -191,7 +212,7 @@ export default function ProductActions({
                     id={`option-${option.id}`}
                     value={currentValue || ""}
                     onChange={(e) => setOptionValue(option.title ?? "", e.target.value)}
-                    disabled={!!disabled || isAdding}
+                    disabled={!!disabled || isAdding || availableValues.length === 0}
                     className={clsx(
                       "w-full px-4 py-3 rounded-md border text-ui-fg-base bg-ui-bg-base",
                       "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
@@ -201,9 +222,12 @@ export default function ProductActions({
                     data-testid="product-options"
                   >
                     <option value="" disabled>
-                      Select {option.title}
+                      {availableValues.length === 0 
+                        ? `No ${option.title} available` 
+                        : `Select ${option.title}`
+                      }
                     </option>
-                    {optionValues.map((value) => (
+                    {availableValues.map((value) => (
                       <option key={value} value={value}>
                         {value}
                       </option>
