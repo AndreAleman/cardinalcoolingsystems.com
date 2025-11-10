@@ -18,6 +18,29 @@ type ShippingProps = {
   availableShippingMethods: HttpTypes.StoreCartShippingOption[] | null
 }
 
+// Add this helper function at the top
+const getDisplayName = (originalName: string) => {
+  // Map ShipStation names to customer-friendly names
+  const nameMap: Record<string, string> = {
+    'shipstation': 'UPS Ground',
+    // Add more mappings as you add shipping options
+    // 'shipstation_express': 'UPS 2-Day Air',
+    // 'shipstation_overnight': 'UPS Next Day Air',
+  }
+
+  const lowerName = originalName.toLowerCase()
+  
+  // Check if name contains any mapped key
+  for (const [key, displayName] of Object.entries(nameMap)) {
+    if (lowerName.includes(key)) {
+      return displayName
+    }
+  }
+  
+  // Default: return original name if no mapping found
+  return originalName
+}
+
 const Shipping: React.FC<ShippingProps> = ({
   cart,
   availableShippingMethods,
@@ -32,7 +55,6 @@ const Shipping: React.FC<ShippingProps> = ({
   const isOpen = searchParams.get("step") === "delivery"
 
   const selectedShippingMethod = availableShippingMethods?.find(
-    // To do: remove the previously selected shipping method instead of using the last one
     (method) => method.id === cart.shipping_methods?.at(-1)?.shipping_option_id
   )
 
@@ -97,6 +119,8 @@ const Shipping: React.FC<ShippingProps> = ({
           <div className="pb-8">
             <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
               {availableShippingMethods?.map((option) => {
+                const displayName = getDisplayName(option.name || '')
+                
                 return (
                   <RadioGroup.Option
                     key={option.id}
@@ -114,17 +138,11 @@ const Shipping: React.FC<ShippingProps> = ({
                       <Radio
                         checked={option.id === selectedShippingMethod?.id}
                       />
-                      <span className="text-base-regular">{option.name}</span>
+                      <span className="text-base-regular">{displayName}</span>
                     </div>
                     <span className="justify-self-end text-ui-fg-base">
-                      {/* FIXED: Hide price for UPS options */}
-                      {option.name?.toLowerCase().includes('ups') ? 
-                        '' : 
-                        convertToLocale({
-                          amount: option.amount!,
-                          currency_code: cart?.currency_code,
-                        })
-                      }
+                      {/* Free shipping for now */}
+                      Free
                     </span>
                   </RadioGroup.Option>
                 )
@@ -157,15 +175,7 @@ const Shipping: React.FC<ShippingProps> = ({
                   Method
                 </Text>
                 <Text className="txt-medium text-ui-fg-subtle">
-                  {selectedShippingMethod?.name}{" "}
-                  {/* Also fix the selected method display */}
-                  {selectedShippingMethod?.name?.toLowerCase().includes('ups') ?
-                    '' :
-                    convertToLocale({
-                      amount: selectedShippingMethod?.amount!,
-                      currency_code: cart?.currency_code,
-                    })
-                  }
+                  {getDisplayName(selectedShippingMethod?.name || '')} (Free)
                 </Text>
               </div>
             )}

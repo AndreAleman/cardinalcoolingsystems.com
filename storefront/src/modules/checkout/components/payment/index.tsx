@@ -14,6 +14,8 @@ import PaymentContainer from "@modules/checkout/components/payment-container"
 import { isStripe as isStripeFunc, paymentInfoMap } from "@lib/constants"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper"
 import { initiatePaymentSession } from "@lib/data/cart"
+import PaymentTrustBadges from "@modules/checkout/components/payment-trust-badges"
+
 
 const Payment = ({
   cart,
@@ -181,6 +183,8 @@ const Payment = ({
                       setCardComplete(e.complete)
                     }}
                   />
+                      {/* ADD THIS LINE */}
+                  <PaymentTrustBadges />
                 </div>
               )}
             </>
