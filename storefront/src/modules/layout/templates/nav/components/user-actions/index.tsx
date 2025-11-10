@@ -1,14 +1,13 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
+import { useCartCount } from "@lib/hooks/use-cart-count"
 
 export default function UserActions() {
-  const [cartCount] = useState(0) // Replace with actual cart data from MedusaJS
+  const cartCount = useCartCount()
 
   return (
-    <div className="hidden lg:flex items-center space-x-8"> {/* Added 'hidden lg:flex' to hide on mobile */}
-      {/* Account with icon on the right */}
+    <div className="hidden lg:flex items-center space-x-8">
       <Link
         href="/account"
         className="flex items-center space-x-2 text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2"
@@ -19,21 +18,22 @@ export default function UserActions() {
         </svg>
       </Link>
 
-      {/* Cart with icon on the right */}
       <Link
         href="/cart"
         className="flex items-center space-x-2 text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2"
       >
         <span>Cart</span>
-        <div className="flex items-center space-x-1">
+        <div className="relative flex items-center">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
           </svg>
-          {cartCount > 0 && (
-            <span className="bg-blue-600 text-white text-xs rounded-full px-2 py-0.5 font-medium min-w-[20px] text-center">
-              {cartCount}
-            </span>
-          )}
+            {cartCount > 0 && (
+              <span className="absolute -top-3 -right-3 bg-blue-600 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-semibold leading-none">
+                {cartCount > 99 ? '99+' : cartCount}
+              </span>
+            )}
+
+
         </div>
       </Link>
     </div>
