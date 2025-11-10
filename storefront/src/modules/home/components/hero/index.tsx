@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export default function Hero() {
   return (
-    <section className="bg-white pt-36 pb-8 lg:pt-40 md:pb-12"> {/* Updated to match header height */}
+    <section className="bg-white pt-20 pb-8 lg:pt-20 md:pb-12"> {/* Updated to match header height */}
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* 60 / 40 on lg, fixed px on xl */}
         <div className="grid items-center gap-12 

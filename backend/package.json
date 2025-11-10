@@ -41,6 +41,7 @@
     "@mikro-orm/knex": "6.4.3",
     "@mikro-orm/migrations": "6.4.3",
     "@mikro-orm/postgresql": "6.4.3",
+    "@paypal/checkout-server-sdk": "^1.0.3",
     "@react-email/components": "^0.0.26",
     "@rokmohar/medusa-plugin-meilisearch": "1.2.3",
     "@rsc-labs/medusa-paypal-payment": "^0.0.2",
