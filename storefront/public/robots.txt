@@ -1,0 +1,57 @@
+# Allow Google & Bing
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Slurp
+Allow: /
+
+# Block competitor spy bots
+User-agent: AhrefsBot
+User-agent: AhrefsSiteAudit
+User-agent: SemrushBot
+User-agent: SemrushBot-SA
+User-agent: SEMrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+User-agent: Screaming Frog SEO Spider
+User-agent: rogerbot
+User-agent: exabot
+User-agent: SEOkicks-Robot
+User-agent: LinkpadBot
+User-agent: BLEXBot
+User-agent: searchpreview
+User-agent: MegaIndex.ru
+User-agent: SEOENGBot
+User-agent: BUbiNG
+User-agent: Cliqzbot
+User-agent: DuckDuckGo-Favicons-Bot
+User-agent: LinkisBot
+User-agent: PaperLiBot
+User-agent: proximic
+User-agent: safeDNSbot
+User-agent: SeznamBot
+User-agent: Sogou
+User-agent: spbot
+User-agent: TurnitinBot
+User-agent: trendictionbot
+User-agent: Qwantify
+User-agent: YandexBot
+User-agent: Mail.RU_Bot
+Disallow: /
+
+# Block content scrapers
+User-agent: HTTrack
+User-agent: WebCopier
+User-agent: WebZIP
+User-agent: Wget
+User-agent: Teleport
+User-agent: WebReaper
+User-agent: EmailCollector
+User-agent: EmailSiphon
+User-agent: WebStripper
+Disallow: /
+
+# Default - allow good bots
+User-agent: *
+Allow: /
+
+Sitemap: https://cardinalcoolingsystems.com/us/sitemap.xml

@@ -6,6 +6,43 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
 
+// ✅ ADD: List of blocked bot user agents
+const BLOCKED_BOTS = [
+  'ahrefsbot',
+  'ahrefs',
+  'semrush',
+  'mj12bot',
+  'dotbot',
+  'screaming frog',
+  'rogerbot',
+  'exabot',
+  'seokicks',
+  'blexbot',
+  'megaindex',
+  'linkisbot',
+  'paperlibot',
+  'proximic',
+  'safednsbot',
+  'seznambot',
+  'sogou',
+  'spbot',
+  'turnitinbot',
+  'trendictionbot',
+  'qwantify',
+  'yandexbot',
+  'mail.ru_bot',
+  'httrack',
+  'webcopier',
+  'webzip',
+  'wget',
+  'teleport',
+  'webreaper',
+  'emailcollector',
+  'emailsiphon',
+  'webstripper',
+  'scrapy',
+]
+
 const regionMapCache = {
   regionMap: new Map<string, HttpTypes.StoreRegion>(),
   regionMapUpdated: Date.now(),
@@ -18,7 +55,6 @@ async function getRegionMap() {
     !regionMap.keys().next().value ||
     regionMapUpdated < Date.now() - 3600 * 1000
   ) {
-    // Fetch regions from Medusa. We can't use the JS client here because middleware is running on Edge and the client needs a Node environment.
     const { regions } = await fetch(`${BACKEND_URL}/store/regions`, {
       headers: {
         "x-publishable-api-key": PUBLISHABLE_API_KEY!,
@@ -33,7 +69,6 @@ async function getRegionMap() {
       notFound()
     }
 
-    // Create a map of country codes to regions.
     regions.forEach((region: HttpTypes.StoreRegion) => {
       region.countries?.forEach((c) => {
         regionMapCache.regionMap.set(c.iso_2 ?? "", region)
@@ -46,11 +81,6 @@ async function getRegionMap() {
   return regionMapCache.regionMap
 }
 
-/**
- * Fetches regions from Medusa and sets the region cookie.
- * @param request
- * @param response
- */
 async function getCountryCode(
   request: NextRequest,
   regionMap: Map<string, HttpTypes.StoreRegion | number>
@@ -85,9 +115,21 @@ async function getCountryCode(
 }
 
 /**
- * Middleware to handle region selection and onboarding status.
+ * Middleware to handle region selection, onboarding status, and bot blocking.
  */
 export async function middleware(request: NextRequest) {
+  // ✅ ADD: Bot blocking check (runs first, before any other logic)
+  const userAgent = request.headers.get('user-agent')?.toLowerCase() || ''
+  
+  // Block if user agent matches blocked bots
+  const isBlockedBot = BLOCKED_BOTS.some(bot => userAgent.includes(bot))
+  
+  if (isBlockedBot) {
+    console.log(`🚫 Blocked bot: ${userAgent}`)
+    return new NextResponse('Forbidden', { status: 403 })
+  }
+
+  // ✅ EXISTING CODE CONTINUES...
   const searchParams = request.nextUrl.searchParams
   const isOnboarding = searchParams.get("onboarding") === "true"
   const cartId = searchParams.get("cart_id")
@@ -102,7 +144,6 @@ export async function middleware(request: NextRequest) {
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
 
-  // check if one of the country codes is in the url
   if (
     request.nextUrl.pathname.startsWith("/studio") ||
     urlHasCountryCode &&
@@ -121,20 +162,17 @@ export async function middleware(request: NextRequest) {
 
   let response = NextResponse.redirect(redirectUrl, 307)
 
-  //If no country code is set, we redirect to the relevant region.
   if (!urlHasCountryCode && countryCode) {
     redirectUrl = `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`
     response = NextResponse.redirect(`${redirectUrl}`, 307)
   }
 
-  // If a cart_id is in the params, we set it as a cookie and redirect to the address step.
   if (cartId && !checkoutStep) {
     redirectUrl = `${redirectUrl}&step=address`
     response = NextResponse.redirect(`${redirectUrl}`, 307)
     response.cookies.set("_medusa_cart_id", cartId, { maxAge: 60 * 60 * 24 })
   }
 
-  // Set a cookie to indicate that we're onboarding. This is used to show the onboarding flow.
   if (isOnboarding) {
     response.cookies.set("_medusa_onboarding", "true", { maxAge: 60 * 60 * 24 })
   }
@@ -143,5 +181,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg).*)"], // prevents redirecting on static files
+  matcher: ["/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg).*)"],
 }

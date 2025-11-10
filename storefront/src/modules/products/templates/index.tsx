@@ -24,6 +24,7 @@ type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   countryCode: string
+  selectedVariant?: HttpTypes.StoreProductVariant | null  // ← ADDED
   sanity?: {
     description?: any[]
     content?: string
@@ -35,6 +36,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
   product,
   region,
   countryCode,
+  selectedVariant,  // ← ADDED
   sanity,
 }) => {
   if (!product || !product.id) {
@@ -54,14 +56,14 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
   if (sanity?.tabs) {
     allTabs.push(...sanity.tabs)
   }
-    console.log('🔍 Product categories:', product.categories)
+  
+  console.log('🔍 Product categories:', product.categories)
   console.log('🔍 Has categories?', product.categories && product.categories.length > 0)
   if (product.categories && product.categories.length > 0) {
     console.log('🔍 First category:', product.categories[0])
     console.log('🔍 Category name:', product.categories[0].name)
     console.log('🔍 Category handle:', product.categories[0].handle)
   }
-
 
   // Get category breadcrumb chain
   const primaryCategory = product.categories?.[0]
@@ -73,49 +75,48 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
       <div className="content-container">
         <div className="max-w-6xl mx-auto">
           {/* ✅ Breadcrumbs with Categories */}
-{/* ✅ Breadcrumbs - Adjusted spacing */}
-<nav className="flex items-center gap-2 text-sm pt-12 pb-1 border-b border-ui-border-base mb-1" aria-label="Breadcrumb">
-<Link 
-    href="/" 
-    className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors"
-  >
-    Home
-  </Link>
-  
-  <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-  </svg>
-  
-  <Link 
-    href="/store" 
-    className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors"
-  >
-    Products
-  </Link>
+          <nav className="flex items-center gap-2 text-sm pt-12 pb-1 border-b border-ui-border-base mb-1" aria-label="Breadcrumb">
+            <Link 
+              href="/" 
+              className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors"
+            >
+              Home
+            </Link>
+            
+            <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            
+            <Link 
+              href="/store" 
+              className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors"
+            >
+              Products
+            </Link>
 
-  {/* Show category if exists */}
-  {product.categories && product.categories.length > 0 && (
-    <>
-      <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-      </svg>
-      <Link 
-        href={`/categories/${product.categories[0].handle}`}
-        className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors"
-      >
-        {product.categories[0].name}
-      </Link>
-    </>
-  )}
-  
-  <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-  </svg>
-  
-  <span className="text-ui-fg-base font-medium truncate">
-    {product.title}
-  </span>
-</nav>
+            {/* Show category if exists */}
+            {product.categories && product.categories.length > 0 && (
+              <>
+                <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+                <Link 
+                  href={`/categories/${product.categories[0].handle}`}
+                  className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors"
+                >
+                  {product.categories[0].name}
+                </Link>
+              </>
+            )}
+            
+            <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            
+            <span className="text-ui-fg-base font-medium truncate">
+              {product.title}
+            </span>
+          </nav>
 
           <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-8 py-8 lg:py-12">
             
@@ -149,7 +150,11 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
                       />
                     }
                   >
-                    <ProductActionsWrapper id={product.id} region={region} />
+                    <ProductActionsWrapper 
+                      id={product.id} 
+                      region={region}
+                      selectedVariant={selectedVariant}  // ← ADDED: Pass selected variant
+                    />
                   </Suspense>
                 </div>
 

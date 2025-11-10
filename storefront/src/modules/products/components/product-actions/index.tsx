@@ -2,7 +2,7 @@
 
 import { Button, Text } from "@medusajs/ui"
 import { isEqual } from "lodash"
-import { useParams } from "next/navigation"
+import { useParams, useRouter, usePathname, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { clsx } from "clsx"
 import { toast, ToastContainer } from "react-toastify"
@@ -20,6 +20,7 @@ type ProductActionsProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   disabled?: boolean
+  selectedVariant?: HttpTypes.StoreProductVariant | null  // ← ADDED
 }
 
 const optionsAsKeymap = (variantOptions: any) => {
@@ -35,36 +36,29 @@ export default function ProductActions({
   product,
   region,
   disabled,
+  selectedVariant: initialSelectedVariant,  // ← ADDED
 }: ProductActionsProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const countryCode = useParams().countryCode as string
 
-  // If there is only 1 variant, preselect the options
+  // ← UPDATED: Use pre-selected variant if provided, otherwise read from URL
   useEffect(() => {
-    if (product.variants?.length === 1) {
+    if (initialSelectedVariant) {
+      // Pre-selected variant from URL options
+      const variantOptions = optionsAsKeymap(initialSelectedVariant.options)
+      setOptions(variantOptions ?? {})
+    } else if (product.variants?.length === 1) {
+      // Only 1 variant - preselect it
       const variantOptions = optionsAsKeymap(product.variants[0].options)
       setOptions(variantOptions ?? {})
     }
-  }, [product.variants])
-
-
-  // ✅ ADD THIS NEW USEEFFECT: Read SKU from URL and pre-select variant
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      const skuParam = params.get('sku')
-      
-      if (skuParam && product.variants) {
-        const matchingVariant = product.variants.find(v => v.sku === skuParam)
-        if (matchingVariant) {
-          const variantOptions = optionsAsKeymap(matchingVariant.options)
-          setOptions(variantOptions ?? {})
-        }
-      }
-    }
-  }, [product.variants])
+  }, [initialSelectedVariant, product.variants])
 
   const selectedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) {
@@ -77,16 +71,47 @@ export default function ProductActions({
     })
   }, [product.variants, options])
 
-  // ✅ ADD THIS: Dispatch variant selection event for ProductSKU component
+  // ← UPDATED: Update URL when variant selection changes
   useEffect(() => {
-    if (selectedVariant) {
+    if (selectedVariant && Object.keys(options).length > 0) {
+      // Build query string from options
+      const params = new URLSearchParams()
+
+      selectedVariant.options?.forEach((opt: any) => {
+        if (opt.option?.title && opt.value) {
+          // Clean option name: "Size (Tube OD)" → "size-tube-od"
+          const optionName = opt.option.title
+            .toLowerCase()
+            .replace(/\s*\([^)]*\)/g, '-') // Remove parentheses content
+            .replace(/[^a-z0-9]+/g, '-')    // Replace special chars with dash
+            .replace(/^-+|-+$/g, '')        // Trim dashes
+          
+          // Clean option value: '1"' → "1in"
+          const optionValue = opt.value
+            .toLowerCase()
+            .replace(/"/g, 'in')            // Replace " with "in"
+            .replace(/'/g, 'ft')            // Replace ' with "ft"
+            .replace(/[^a-z0-9.]+/g, '-')   // Replace special chars
+            .replace(/^-+|-+$/g, '')        // Trim dashes
+          
+          params.set(optionName, optionValue)
+        }
+      })
+      
+      const queryString = params.toString()
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname
+      
+      // Update URL without triggering a page reload
+      window.history.replaceState(null, '', newUrl)
+      
+      // Dispatch event for other components
       window.dispatchEvent(
         new CustomEvent('variant-selected', {
           detail: { variant: selectedVariant }
         })
       )
     }
-  }, [selectedVariant])
+  }, [selectedVariant, pathname, options])
 
   // update the options when a variant is selected
   const setOptionValue = (title: string, value: string) => {
@@ -178,7 +203,6 @@ export default function ProductActions({
         countryCode,
       })
       
-      // Show success toast notification
       toast.success(
         `✓ Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`,
         {
@@ -191,12 +215,10 @@ export default function ProductActions({
         }
       )
       
-      // Reset quantity to 1 after successful add
       setQuantity(1)
     } catch (error) {
       console.error("Failed to add to cart:", error)
       
-      // Show error toast notification
       toast.error(
         "Failed to add item to cart. Please try again.",
         {
@@ -213,7 +235,6 @@ export default function ProductActions({
     }
   }
 
-  // Get button text based on state
   const getButtonText = () => {
     if (!selectedVariant) return "Select options"
     if (!inStock) return "Out of stock"
@@ -221,7 +242,6 @@ export default function ProductActions({
     return `Add ${quantity} to cart`
   }
 
-  // Get stock status message
   const getStockStatus = () => {
     if (!selectedVariant) return null
     if (!inStock) return { message: "Out of stock", color: "text-red-600" }
@@ -238,11 +258,9 @@ export default function ProductActions({
 
   return (
     <>
-      {/* Toast Container - Add this once per page */}
       <ToastContainer />
       
       <div className="flex flex-col gap-y-6" ref={actionsRef}>
-        {/* Variant Selection - Dropdown Style with Dependent Filtering */}
         {(product.variants?.length ?? 0) > 1 && (
           <div className="flex flex-col gap-y-4">
             <Text className="text-base font-medium text-ui-fg-base">
@@ -295,11 +313,9 @@ export default function ProductActions({
           </div>
         )}
 
-        {/* Price */}
         <div className="flex flex-col gap-y-2">
           <ProductPrice product={product} variant={selectedVariant} />
           
-          {/* Stock Status */}
           {stockStatus && (
             <Text className={`text-sm font-medium ${stockStatus.color}`}>
               {stockStatus.message}
@@ -307,7 +323,6 @@ export default function ProductActions({
           )}
         </div>
 
-        {/* Quantity Selector */}
         {selectedVariant && inStock && (
           <div className="flex flex-col gap-y-3">
             <Text className="text-base font-medium text-ui-fg-base">
@@ -361,7 +376,6 @@ export default function ProductActions({
           </div>
         )}
 
-        {/* Add to Cart Button */}
         <Button
           onClick={handleAddToCart}
           disabled={!inStock || !selectedVariant || !!disabled || isAdding}
@@ -373,7 +387,6 @@ export default function ProductActions({
           {getButtonText()}
         </Button>
 
-        {/* Additional Info */}
         {selectedVariant && inStock && (
           <div className="flex flex-col gap-y-2 pt-2 border-t border-ui-border-base">
             <div className="flex items-center gap-x-2 text-sm text-ui-fg-subtle">
