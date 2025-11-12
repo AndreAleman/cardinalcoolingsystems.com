@@ -8,6 +8,7 @@ type Product = {
   subtitle: string
   image: string
   handle: string
+  price?: string | number // Add price to the type
 }
 
 type Props = {
@@ -73,12 +74,16 @@ export default function ProductRange({ products }: Props) {
           </div>
         </div>
 
-        {/* Product Grid */}
+        {/* Product Grid - Matching ProductPreview styling */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {displayProducts.map((product) => (
-            <div key={product.id} className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-              <Link href={`/products/${product.handle}`} className="block">
-                {/* Product Image */}
+            <Link 
+              key={product.id} 
+              href={`/products/${product.handle}`}
+              className="group"
+            >
+              <div className="bg-white shadow-md hover:shadow-md transition-shadow duration-200 overflow-hidden h-full flex flex-col">
+                {/* Product Image - Matching ProductPreview */}
                 <div className="aspect-square bg-gray-100 relative overflow-hidden">
                   {product.image && product.image !== "/images/placeholder.jpg" ? (
                     <img
@@ -93,35 +98,53 @@ export default function ProductRange({ products }: Props) {
                   )}
                 </div>
                 
-                {/* Product Info */}
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 mb-1 text-sm hover:text-blue-600 transition-colors">
-                    {product.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {product.subtitle}
-                  </p>
-                  
-                  {/* View Product Button */}
-                  <div className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium flex items-center justify-center gap-2">
-                    <span>View Product</span>
-                    <svg 
-                      className="w-4 h-4" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
+                {/* Product Info - Matching ProductPreview layout */}
+                <div className="p-4 flex flex-col flex-grow">
+                  <div className="flex flex-col gap-2 flex-grow">
+                    {/* Title - Always 2 lines with ellipsis */}
+                    <h3 
+                      className="text-gray-900 font-semibold text-sm line-clamp-2 min-h-[2.5rem]"
+                      title={product.title}
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M9 5l7 7-7 7" 
-                      />
-                    </svg>
+                      {product.title}
+                    </h3>
+                    
+                    {/* NO Description/Subtitle shown */}
+                    
+                    <div className="flex items-center justify-between mt-auto pt-2">
+                      {/* Price */}
+                      <div className="flex items-center gap-x-2">
+                        {product.price && (
+                          <span className="text-gray-900 font-medium text-sm">
+                            {typeof product.price === 'number' 
+                              ? `$${product.price.toFixed(2)}` 
+                              : product.price}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* View Product Button - Matching ProductPreview */}
+                      <div className="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-colors duration-200 text-xs font-medium flex items-center gap-1">
+                        <span>View</span>
+                        <svg 
+                          className="w-3 h-3" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={2} 
+                            d="M9 5l7 7-7 7" 
+                          />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </Link>
-            </div>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
