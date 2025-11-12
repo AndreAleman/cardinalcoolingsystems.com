@@ -1,346 +1,375 @@
 // import 'dotenv/config'
 // import axios from 'axios'
 
-// // Use your existing types (Medusa AI confirmed they're correct)
 // import { WooCommerceProduct } from '../lib/woocommerce/types.js'
 // import { MedusaProductInput } from '../lib/woocommerce/types.js'
-// import { CategoryManager } from './category-manager.js' // Add this line
+// import { CategoryManager } from './category-manager.js'
 
 // class WooToMedusaMigration {
 //   private wooClient: axios.AxiosInstance
 //   private medusaClient: axios.AxiosInstance
 //   private authToken: string | null = null
-//   private categoryManager: CategoryManager // Add this line
+//   private categoryManager: CategoryManager
 
-//     constructor() {
-//     // WooCommerce client - ✅ FIXED: Use correct environment variable names
+//    private skippedVariants: Array<{
+//     productId: number
+//     productName: string
+//     sku: string
+//     variantName: string
+//     reason: string
+//     missingOptions: string[]
+//   }> = []
+
+//   constructor() {
 //     this.wooClient = axios.create({
-//         baseURL: `${process.env.WOOCOMMERCE_URL}/wp-json/wc/${process.env.SANITUBE_WC_API_VERSION}`,
-//         auth: {
+//       baseURL: `${process.env.WOOCOMMERCE_URL}/wp-json/wc/${process.env.SANITUBE_WC_API_VERSION}`,
+//       auth: {
 //         username: process.env.WOOCOMMERCE_CONSUMER_KEY!,
 //         password: process.env.WOOCOMMERCE_CONSUMER_SECRET!
-//         },
-//         timeout: parseInt(process.env.SANITUBE_WC_TIMEOUT || '30000')
+//       },
+//       timeout: parseInt(process.env.SANITUBE_WC_TIMEOUT || '30000')
 //     })
 
-//     // Medusa client (unchanged)
 //     this.medusaClient = axios.create({
-//         baseURL: process.env.MEDUSA_API_URL || 'http://localhost:9000',
-//         headers: {
-//         'Content-Type': 'application/json'
-//         }
+//       baseURL: process.env.MEDUSA_API_URL || 'http://localhost:9000',
+//       headers: { 'Content-Type': 'application/json' }
 //     })
 
 //     this.categoryManager = new CategoryManager()
-//     }
-
-
-//   /**
-//    * STEP 1: Transform WooCommerce product to Medusa format
-//    * Based on Medusa AI's exact transformation pattern
-//    */
-//   transformWooToMedusaProduct(wooProduct: WooCommerceProduct, wooVariations: any[] = []): MedusaProductInput {
-//     console.log(`🔄 Transforming WooCommerce product: ${wooProduct.name}`)
-
-//     // Map options (attributes used for variations) - Medusa AI pattern
-//     const options = (wooProduct.attributes || [])
-//       .filter((attr: any) => attr.variation)
-//       .map((attr: any) => ({
-//         title: attr.name,
-//         values: attr.options
-//       }))
-
-//     console.log(`   📋 Found ${options.length} options:`, options.map(o => o.title))
-
-//     // Map variants (for variable products) - Medusa AI pattern
-//     const variants = wooVariations.map((variation: any) => {
-//       // Dynamic options mapping - exactly as Medusa AI specified
-//       const variantOptions: Record<string, string> = {}
-//       ;(variation.attributes || []).forEach((attr: any) => {
-//         variantOptions[attr.name] = attr.option
-//       })
-
-//       console.log(`   🔧 Mapping variant ${variation.sku}:`, variantOptions)
-
-//       return {
-//         title: variation.name || `${wooProduct.name} Variant`,
-//         sku: variation.sku,
-//         options: variantOptions,
-//         prices: [
-//           {
-//             amount: Math.round(Number(variation.price) * 100), // Convert to cents
-//             currency_code: 'usd'
-//           }
-//         ],
-//         manage_inventory: variation.manage_stock,
-//         allow_backorder: variation.backorders_allowed,
-//         weight: Number(variation.weight) || undefined,
-//         length: Number(variation.dimensions?.length) || undefined,
-//         height: Number(variation.dimensions?.height) || undefined,
-//         width: Number(variation.dimensions?.width) || undefined,
-//         metadata: {
-//           woocommerce_id: variation.id
-//         }
-//       }
-//     })
-
-//     console.log(`   ✅ Transformed ${variants.length} variants`)
-
-//     // Build Medusa product - exactly as Medusa AI specified
-//     const medusaProduct: MedusaProductInput = {
-//         title: wooProduct.name,
-//         handle: wooProduct.slug,
-//         description: wooProduct.description,
-//         status: 'published',       
-//         thumbnail: wooProduct.images?.[0]?.src,
-//         images: (wooProduct.images || []).map((img: any) => ({ url: img.src })),
-//         options,
-//         variants,
-//         metadata: {
-//             woocommerce_id: wooProduct.id
-//         },
-//         sales_channels: [
-//             { id: "sc_01K0AZA26A0C06GVADK4ZCA1EQ" }
-//     ]
-//     }
-
-//     console.log(`🎯 Transformation complete for: ${medusaProduct.title}`)
-//     return medusaProduct
 //   }
 
 //   /**
-//    * TEST: Fetch WooCommerce product and test transformation
+//    * Authenticate with Medusa
 //    */
-//   async testTransformation(productId: number): Promise<void> {
+//   async authenticateWithMedusa(): Promise<void> {
+//     if (this.authToken) return
+
 //     try {
-//       console.log(`🔍 Testing transformation for WooCommerce product ${productId}`)
+//       console.log('🔐 Authenticating with Medusa admin...')
+      
+//       const response = await this.medusaClient.post('/auth/user/emailpass', {
+//         email: process.env.MEDUSA_ADMIN_EMAIL,
+//         password: process.env.MEDUSA_ADMIN_PASSWORD
+//       })
 
-//       // Fetch parent product
-//       console.log('📡 Fetching WooCommerce parent product...')
-//       const parentResponse = await this.wooClient.get(`/products/${productId}`)
-//       const wooProduct = parentResponse.data
+//       this.authToken = response.data.token
+//       this.medusaClient.defaults.headers['Authorization'] = `Bearer ${this.authToken}`
+      
+//       console.log('✅ Authenticated with Medusa successfully')
+//     } catch (error: any) {
+//       throw new Error(`Medusa authentication failed: ${error.response?.data?.message || error.message}`)
+//     }
+//   }
 
-//       // Fetch variations
-//       console.log('📡 Fetching WooCommerce variations...')
-//       const variationsResponse = await this.wooClient.get(`/products/${productId}/variations`)
-//       const wooVariations = variationsResponse.data
+//   /**
+//    * Get all VARIABLE products from WooCommerce (excluding Custom category)
+//    */
+//   async getAllVariableProducts(): Promise<number[]> {
+//     try {
+//       console.log('📡 Fetching all variable products from WooCommerce...')
 
-//       console.log(`📊 Fetched: 1 parent + ${wooVariations.length} variations`)
+//       let page = 1
+//       let variableProducts: number[] = []
+//       let hasMore = true
 
-//       // Test transformation
-//       const medusaProduct = this.transformWooToMedusaProduct(wooProduct, wooVariations)
+//       while (hasMore) {
+//         const response = await this.wooClient.get('/products', {
+//           params: {
+//             per_page: 100,
+//             page: page,
+//             status: 'publish',
+//             type: 'variable'  // ✅ ONLY variable products
+//           }
+//         })
 
-//       // Show result
-//       console.log('\n🎯 TRANSFORMATION RESULT:')
-//       console.log('=====================================')
-//       console.log(JSON.stringify(medusaProduct, null, 2))
-//       console.log('=====================================\n')
+//         const products = response.data
 
-//       console.log('✅ Transformation test completed successfully!')
+//         // Filter out Custom category
+//         const filteredProducts = products.filter((p: any) => {
+//           const categories = p.categories || []
+//           const hasCustomCategory = categories.some(
+//             (cat: any) => cat.name.toLowerCase() === 'custom'
+//           )
+
+//           if (hasCustomCategory) {
+//             console.log(`   ⏭️  Skipping: ${p.name} (Custom category)`)
+//             return false
+//           }
+
+//           return true
+//         })
+
+//         variableProducts.push(...filteredProducts.map((p: any) => p.id))
+
+//         console.log(`   📦 Page ${page}: ${filteredProducts.length}/${products.length} variable products`)
+
+//         hasMore = products.length === 100
+//         page++
+//       }
+
+//       console.log(`✅ Total variable products found: ${variableProducts.length}`)
+//       return variableProducts
 
 //     } catch (error: any) {
-//       console.error('❌ Transformation test failed:', error.message)
+//       console.error('❌ Failed to fetch products:', error.message)
 //       throw error
 //     }
 //   }
 
-// /**
-//  * Make sure every variant has (a) an inventory_item and
-//  * (b) that item is linked to the variant.
-//  *
-//  * Called once right after the product is created OR
-//  * when you discover the product already exists.
-//  */
-// async ensureInventoryItems(productId: string): Promise<void> {
-//   await this.authenticateWithMedusa()
+//   /**
+//    * Get all SKUs currently in Medusa database
+//    */
+//   async getAllMedusaSKUs(): Promise<Set<string>> {
+//     try {
+//       console.log('📡 Fetching all SKUs from Medusa database...')
 
-//   /* 1. Get the variants with their inventory links */
-//   const { data } = await this.medusaClient.get(`/admin/products/${productId}`, {
-//     params: { fields: '*variants,*variants.inventory_items' }
-//   })
-//   const variants = data.product.variants
+//       await this.authenticateWithMedusa()
 
-//   /* 2. Prepare batch payloads */
-//   const createLinks: any[] = []
+//       const response = await this.medusaClient.get('/admin/products', {
+//         params: {
+//           limit: 9999,
+//           fields: '*variants'
+//         }
+//       })
 
-//   for (const v of variants) {
-//     if (v.inventory_items?.length) continue        // already linked
+//       const allSKUs = new Set<string>()
+      
+//       response.data.products.forEach((product: any) => {
+//         product.variants?.forEach((variant: any) => {
+//           if (variant.sku) {
+//             allSKUs.add(variant.sku)
+//           }
+//         })
+//       })
 
-//     /* 2.a Create a bare inventory item (one per variant) */
-//     const item = await this.medusaClient.post("/admin/inventory-items", {
-//       sku: v.sku,
-//       title: v.title
-//     })
+//       console.log(`✅ Found ${allSKUs.size} SKUs in Medusa database`)
+//       return allSKUs
 
-//     /* 2.b Record the link we need to create */
-//     createLinks.push({
-//       inventory_item_id: item.data.inventory_item.id,
-//       variant_id: v.id,
-//       required_quantity: 1                       // “1 unit of this item per variant”
-//     })
+//     } catch (error: any) {
+//       console.error('❌ Failed to fetch Medusa SKUs:', error.message)
+//       throw error
+//     }
 //   }
 
-//   /* 3. Link new items in one call */
-//   if (createLinks.length) {
-//     console.log(`🔗 Linking ${createLinks.length} new inventory items …`)
+//   /**
+//    * Check if product exists by handle
+//    */
+//   async checkProductExists(handle: string): Promise<string | null> {
+//     try {
+//       await this.authenticateWithMedusa()
+      
+//       const response = await this.medusaClient.get('/admin/products', {
+//         params: { handle: handle }
+//       })
+      
+//       const existingProduct = response.data.products?.[0]
+//       return existingProduct ? existingProduct.id : null
+      
+//     } catch (error: any) {
+//       return null
+//     }
+//   }
+
+//   /**
+//    * Transform WooCommerce product to Medusa format
+//    */
+// transformWooToMedusaProduct(wooProduct: WooCommerceProduct, wooVariations: any[]): MedusaProductInput {
+//   const options = (wooProduct.attributes || [])
+//     .filter((attr: any) => attr.variation)
+//     .map((attr: any) => ({
+//       title: attr.name,
+//       values: attr.options
+//     }))
+
+//   const validVariants: any[] = []
+//   const optionTitles = options.map(opt => opt.title)
+
+//   wooVariations.forEach((variation: any) => {
+//     const variantOptions: Record<string, string> = {}
+    
+//     // Add all the variant's option values
+//     ;(variation.attributes || []).forEach((attr: any) => {
+//       variantOptions[attr.name] = attr.option
+//     })
+
+//     // ✅ NEW: Check if variant has all required options
+//     const missingOptions = optionTitles.filter(title => !variantOptions[title])
+    
+//     if (missingOptions.length > 0) {
+//       // Skip this variant and track it
+//       console.log(`   ⏭️  Skipping ${variation.sku}: Missing options: ${missingOptions.join(', ')}`)
+      
+//       this.skippedVariants.push({
+//         productId: wooProduct.id,
+//         productName: wooProduct.name,
+//         sku: variation.sku,
+//         variantName: variation.name || variation.sku,
+//         reason: 'Incomplete option values',
+//         missingOptions: missingOptions
+//       })
+      
+//       return // Skip this variant
+//     }
+
+//     // Variant has all options - add it
+//     validVariants.push({
+//       title: variation.name || `${wooProduct.name} Variant`,
+//       sku: variation.sku,
+//       options: variantOptions,
+//       prices: [{
+//         amount: Math.round(Number(variation.price) * 100),
+//         currency_code: 'usd'
+//       }],
+//       manage_inventory: variation.manage_stock,
+//       allow_backorder: variation.backorders_allowed,
+//       weight: Number(variation.weight) || undefined,
+//       length: Number(variation.dimensions?.length) || undefined,
+//       height: Number(variation.dimensions?.height) || undefined,
+//       width: Number(variation.dimensions?.width) || undefined,
+//       metadata: { woocommerce_id: variation.id }
+//     })
+//   })
+
+//   console.log(`   ✅ Valid variants: ${validVariants.length}/${wooVariations.length}`)
+
+//   return {
+//     title: wooProduct.name,
+//     handle: wooProduct.slug,
+//     description: wooProduct.description,
+//     status: 'published',
+//     thumbnail: wooProduct.images?.[0]?.src,
+//     images: (wooProduct.images || []).map((img: any) => ({ url: img.src })),
+//     options,
+//     variants: validVariants,
+//     metadata: { woocommerce_id: wooProduct.id },
+//     sales_channels: [{ id: "sc_01K0AZA26A0C06GVADK4ZCA1EQ" }]
+//   }
+// }
+
+
+//   /**
+//    * Create product in Medusa
+//    */
+// /**
+//  * Create product in Medusa
+//  */
+// async createProductInMedusa(medusaProductData: MedusaProductInput): Promise<any> {
+//   await this.authenticateWithMedusa()
+  
+//   try {
+//     const response = await this.medusaClient.post('/admin/products', medusaProductData)
+//     return response.data.product
+//   } catch (error: any) {
+//     // ✅ ADD DETAILED ERROR LOGGING
+//     console.error(`\n❌ Failed to create product in Medusa:`)
+//     console.error(`   Error: ${error.message}`)
+    
+//     if (error.response?.data) {
+//       console.error(`   Details:`, JSON.stringify(error.response.data, null, 2))
+//     }
+    
+//     if (error.response?.status) {
+//       console.error(`   Status: ${error.response.status}`)
+//     }
+    
+//     // Log the payload for debugging
+//     console.error(`\n📦 Payload that failed:`)
+//     console.error(JSON.stringify(medusaProductData, null, 2))
+    
+//     throw error
+//   }
+// }
+
+
+//   /**
+//    * Add missing variant to existing product
+//    */
+//   async addVariantToProduct(productId: string, variantData: any): Promise<void> {
+//     await this.authenticateWithMedusa()
+    
 //     await this.medusaClient.post(
-//       `/admin/products/${productId}/variants/inventory-items/batch`,
-//       { create: createLinks }
+//       `/admin/products/${productId}/variants`,
+//       variantData
 //     )
 //   }
 
-//   console.log('✅ All variants now have inventory items')
-// }
+//   /**
+//    * Ensure inventory items exist
+//    */
+//   async ensureInventoryItems(productId: string): Promise<void> {
+//     await this.authenticateWithMedusa()
 
-
-
-
-
-
-// /**
-//  * Authenticate with Medusa admin
-//  */
-// async authenticateWithMedusa(): Promise<void> {
-//   if (this.authToken) return
-
-//   try {
-//     console.log('🔐 Authenticating with Medusa admin...')
-    
-//     const response = await this.medusaClient.post('/auth/user/emailpass', {
-//       email: process.env.MEDUSA_ADMIN_EMAIL,
-//       password: process.env.MEDUSA_ADMIN_PASSWORD
+//     const { data } = await this.medusaClient.get(`/admin/products/${productId}`, {
+//       params: { fields: '*variants,*variants.inventory_items' }
 //     })
+//     const variants = data.product.variants
 
-//     this.authToken = response.data.token
-//     this.medusaClient.defaults.headers['Authorization'] = `Bearer ${this.authToken}`
-    
-//     console.log('✅ Authenticated with Medusa successfully')
-//   } catch (error: any) {
-//     throw new Error(`Medusa authentication failed: ${error.response?.data?.message || error.message}`)
+//     const createLinks: any[] = []
+
+//     for (const v of variants) {
+//       if (v.inventory_items?.length) continue
+
+//       const item = await this.medusaClient.post("/admin/inventory-items", {
+//         sku: v.sku,
+//         title: v.title
+//       })
+
+//       createLinks.push({
+//         inventory_item_id: item.data.inventory_item.id,
+//         variant_id: v.id,
+//         required_quantity: 1
+//       })
+//     }
+
+//     if (createLinks.length) {
+//       await this.medusaClient.post(
+//         `/admin/products/${productId}/variants/inventory-items/batch`,
+//         { create: createLinks }
+//       )
+//     }
 //   }
-// }
 
-// /**
-//  * STEP 2: Create product in Medusa
-//  */
-// async createProductInMedusa(medusaProductData: MedusaProductInput): Promise<any> {
-//   try {
-//     console.log(`🏗️  STEP 2: Creating product in Medusa: ${medusaProductData.title}`)
-    
+//   /**
+//    * Set inventory levels
+//    */
+//   async completeInventorySetup(productId: string, wooCommerceVariants: any[]): Promise<void> {
 //     await this.authenticateWithMedusa()
     
-//     const response = await this.medusaClient.post('/admin/products', medusaProductData)
-//     const createdProduct = response.data.product
-    
-//     console.log(`✅ Product created successfully!`)
-//     console.log(`   • Product ID: ${createdProduct.id}`)
-//     console.log(`   • Handle: ${createdProduct.handle}`)
-//     console.log(`   • Variants: ${createdProduct.variants?.length || 0}`)
-    
-//     return createdProduct
-    
-//   } catch (error: any) {
-//     console.error('❌ Failed to create product in Medusa:', error.response?.data || error.message)
-//     throw error
-//   }
-// }
-
-// /**
-//  * TEST: Full transformation and creation
-//  */
-// async testTransformationAndCreation(productId: number): Promise<void> {
-//   try {
-//     console.log(`🔍 Testing full transformation + creation for WooCommerce product ${productId}`)
-
-//     // Step 1: Transform (existing code)
-//     const parentResponse = await this.wooClient.get(`/products/${productId}`)
-//     const variationsResponse = await this.wooClient.get(`/products/${productId}/variations`)
-//     const medusaProduct = this.transformWooToMedusaProduct(parentResponse.data, variationsResponse.data)
-
-//     // Step 2: Create in Medusa
-//     const createdProduct = await this.createProductInMedusa(medusaProduct)
-
-//     console.log('\n🎉 SUCCESS! Product created in Medusa:')
-//     console.log(`   • Access via admin: http://localhost:7001/products/${createdProduct.id}`)
-//     console.log(`   • Store API: http://localhost:9000/store/products?handle=${createdProduct.handle}`)
-
-//   } catch (error: any) {
-//     console.error('❌ Full test failed:', error.message)
-//     throw error
-//   }
-// }
-
-
-
-
-
-// /**
-//  * STEP 3: Complete inventory setup - FIXED for correct JSON structure
-//  */
-// async completeInventorySetup(productId: string, wooCommerceVariants: any[]): Promise<void> {
-//   try {
-//     console.log(`🔧 STEP 3: Setting up inventory for product ${productId}`)
-    
-//     await this.authenticateWithMedusa()
-    
-//     // Get the product with inventory relationships
 //     const response = await this.medusaClient.get(`/admin/products/${productId}`, {
 //       params: {
-//         fields: '*variants,*variants.inventory_items,*variants.inventory_items.inventory'
+//         fields: '*variants,*variants.inventory_items'
 //       }
 //     })
     
 //     const product = response.data.product
-//     console.log(`📋 Found ${product.variants.length} variants to process`)
     
 //     for (const variant of product.variants) {
 //       try {
-//         // Find matching WooCommerce data for stock quantity
 //         const wooVariant = wooCommerceVariants.find(wv => wv.sku === variant.sku)
 //         const stockQuantity = wooVariant ? (wooVariant.stock_quantity || 0) : 0
         
-//         // ✅ FIXED: Use correct inventory structure
 //         if (variant.inventory_items?.length > 0 && process.env.MEDUSA_LOCATION_ID) {
 //           const inventoryItemId = variant.inventory_items[0].inventory_item_id
           
-//           console.log(`   📦 Setting ${stockQuantity} units for ${variant.sku}`)
-          
-//           // Set inventory level at location
 //           await this.setInventoryLevel(inventoryItemId, process.env.MEDUSA_LOCATION_ID, stockQuantity)
-          
-//         } else {
-//           console.log(`   ⚠️  Skipping ${variant.sku}: No inventory items found`)
 //         }
 //       } catch (error: any) {
 //         console.error(`   ❌ Failed to set inventory for ${variant.sku}:`, error.message)
 //       }
 //     }
-    
-//     console.log('✅ Inventory setup completed')
-    
-//   } catch (error: any) {
-//     console.error('❌ Failed to complete inventory setup:', error.response?.data || error.message)
-//     throw error
 //   }
-// }
 
-
-// /**
-//  * Helper: Set inventory level at location
-//  */
-
-// /** Create or update the location-level for one inventory item */
 // async setInventoryLevel(itemId: string, locationId: string, qty: number) {
 //   try {
-//     // try update first
 //     await this.medusaClient.post(
 //       `/admin/inventory-items/${itemId}/location-levels`,
 //       { location_id: locationId, stocked_quantity: qty }
 //     )
 //   } catch (err: any) {
-//     if (err.response?.status === 404 ||
-//         err.response?.data?.code === 'item_not_stocked_at_location') {
-//       // create level, then retry
+//     // ✅ ADD THIS - Show actual error
+//     console.error(`      🔴 Error details:`, err.response?.data || err.message)
+    
+//     if (err.response?.status === 404) {
 //       await this.medusaClient.post(
 //         `/admin/inventory-items/${itemId}/location-levels`,
 //         { location_id: locationId, stocked_quantity: qty }
@@ -352,148 +381,270 @@
 // }
 
 
-
-
-
-
-
-
-// /**
-//  * Check if product already exists in Medusa
-//  */
-// async checkProductExists(handle: string): Promise<string | null> {
+//   /**
+//    * MAIN: Process variable product family
+//    */
+// async processVariableProduct(productId: number, medusaSKUs: Set<string>, dryRun: boolean): Promise<{ success: boolean, addedVariants: number }> {
 //   try {
-//     await this.authenticateWithMedusa()
-    
-//     const response = await this.medusaClient.get('/admin/products', {
-//       params: { handle: handle }
-//     })
-    
-//     const existingProduct = response.data.products?.[0]
-//     return existingProduct ? existingProduct.id : null
-    
-//   } catch (error: any) {
-//     console.error('⚠️  Failed to check product existence:', error.message)
-//     return null
-//   }
-// }
+//     console.log(`\n${'='.repeat(70)}`)
+//     console.log(`🔍 Processing Variable Product: ${productId}`)
 
-
-
-
-
-
-
-
-
-
-// /**
-//  * COMPLETE TEST: Full WooCommerce → Medusa migration
-//  */
-// /**
-//  * COMPLETE TEST: Full WooCommerce → Medusa migration (handles existing products)
-//  */
-// /**
-//  * COMPLETE TEST: Full WooCommerce → Medusa migration with categories
-//  */
-// async testCompleteMigration(productId: number, overwriteCategories: boolean = false): Promise<void> {
-//   try {
-//     console.log(`🚀 Testing complete migration for WooCommerce product ${productId}`)
-//     console.log(`📂 Category mode: ${overwriteCategories ? 'REPLACE' : 'ADD'}`)
-    
-//     // Steps 1-3: Fetch and transform (existing code)
 //     const parentResponse = await this.wooClient.get(`/products/${productId}`)
-//     const variationsResponse = await this.wooClient.get(`/products/${productId}/variations`)
 //     const wooProduct = parentResponse.data
-    
-//     // Step 2: Process categories FIRST  
-//     console.log('📂 Processing product categories...')
-//     const categoryIds = await this.categoryManager.ensureCategories(wooProduct.categories || [])
-    
-//     const medusaProduct = this.transformWooToMedusaProduct(wooProduct, variationsResponse.data)
-    
-//     // Steps 4-6: Product creation/update (existing code)
-//     console.log(`🔍 Checking if product exists: ${medusaProduct.handle}`)
-//     const existingProductId = await this.checkProductExists(medusaProduct.handle!)
 
-//     let productToUpdate: string
-//     if (existingProductId) {
-//       console.log(`✅ Product already exists: ${existingProductId}`)
-//       productToUpdate = existingProductId
-//     } else {
-//       console.log(`🆕 Product doesn't exist, creating new one...`)
-//       const createdProduct = await this.createProductInMedusa(medusaProduct)
-//       productToUpdate = createdProduct.id
-//     }
+//     // ✅ FIX THIS LINE:
+//     const variationsResponse = await this.wooClient.get(`/products/${productId}/variations`, {
+//       params: { per_page: 100 }  // ADD THIS
+//     })
+//     const wooVariations = variationsResponse.data
 
-//     await this.ensureInventoryItems(productToUpdate)
 
-//     if (existingProductId) {
-//       const { data } = await this.medusaClient.get(`/admin/products/${existingProductId}`)
-//       if (data.product.status !== 'published') {
-//         console.log('🔄 Product exists but is draft – publishing it now')
-//         await this.medusaClient.post(`/admin/products/${existingProductId}`, { status: 'published' })
+//       console.log(`   • Total variants in WooCommerce: ${wooVariations.length}`)
+
+//       // Check which SKUs are missing
+//       const missingVariants = wooVariations.filter(v => !medusaSKUs.has(v.sku))
+//       const existingVariants = wooVariations.filter(v => medusaSKUs.has(v.sku))
+
+//       console.log(`   • Existing in Medusa: ${existingVariants.length}`)
+//       console.log(`   • Missing from Medusa: ${missingVariants.length}`)
+
+//       if (missingVariants.length === 0) {
+//         console.log('✅ All variants already exist in Medusa')
+//         return { success: true, addedVariants: 0 }
 //       }
-//     }
 
-//     // Step 7: Assign categories with chosen mode
-//     if (categoryIds.length > 0) {
-//       const mode = overwriteCategories ? 'replace' : 'add'
-//       await this.categoryManager.smartAssignCategories(productToUpdate, categoryIds, mode)
-//     }
+//       if (dryRun) {
+//         console.log(`\n📋 DRY RUN - Would add these variants:`)
+//         missingVariants.forEach(v => {
+//           console.log(`   • ${v.sku} - ${v.name}`)
+//         })
+//         return { success: true, addedVariants: missingVariants.length }
+//       }
 
-//     await this.completeInventorySetup(productToUpdate, variationsResponse.data)
+//       // Check if parent product exists
+//       const existingProductId = await this.checkProductExists(wooProduct.slug)
 
-//     console.log('\n🎉 COMPLETE MIGRATION WITH CATEGORIES SUCCESS!')
-//     console.log(`• Product ID: ${productToUpdate}`)
-//     console.log(`Description Migration: npx tsx src/scripts/description-to-meta.ts process ${productToUpdate}`)
-//     console.log(`• Categories: ${categoryIds.length} ${overwriteCategories ? 'replaced' : 'assigned'}`)
-//     console.log(`• Admin: http://localhost:9000/app/products/${productToUpdate}`)
+//       let productId_medusa: string
 
-//   } catch (error: any) {
-//     console.error('❌ Complete migration failed:', error.message)
-//     throw error
-//   }
-// }
+//       if (existingProductId) {
+//         console.log(`✅ Parent product exists: ${existingProductId}`)
+//         productId_medusa = existingProductId
 
+//         // Add missing variants
+//         console.log(`🔄 Adding ${missingVariants.length} missing variants...`)
+        
+//         for (const wooVariant of missingVariants) {
+//           const variantOptions: Record<string, string> = {}
+//           ;(wooVariant.attributes || []).forEach((attr: any) => {
+//             variantOptions[attr.name] = attr.option
+//           })
 
+//           const variantPayload = {
+//             title: wooVariant.name || `${wooProduct.name} Variant`,
+//             sku: wooVariant.sku,
+//             options: variantOptions,
+//             prices: [{
+//               amount: Math.round(Number(wooVariant.price) * 100),
+//               currency_code: 'usd'
+//             }],
+//             manage_inventory: wooVariant.manage_stock,
+//             allow_backorder: wooVariant.backorders_allowed,
+//             weight: Number(wooVariant.weight) || undefined,
+//             metadata: { woocommerce_id: wooVariant.id }
+//           }
 
+//           await this.addVariantToProduct(productId_medusa, variantPayload)
+//           console.log(`   ✅ Added variant: ${wooVariant.sku}`)
+//         }
 
+//       } else {
+//         console.log(`🆕 Parent product doesn't exist, creating with all variants...`)
+        
+//         // Process categories
+//         const categoryIds = await this.categoryManager.ensureCategories(wooProduct.categories || [])
+        
+//         // Transform and create
+//         const medusaProduct = this.transformWooToMedusaProduct(wooProduct, wooVariations)
+//         const createdProduct = await this.createProductInMedusa(medusaProduct)
+//         productId_medusa = createdProduct.id
 
-// //end
-// }
+//         console.log(`✅ Created product: ${productId_medusa}`)
 
-// // Test runner
-// async function main(): Promise<void> {
-//   const action = process.argv[2] || 'transform'
-//   const productId = parseInt(process.argv[3] || '513')
-//   const overwriteCategories = process.argv[4] === '--overwrite-categories'
+//         // Assign categories
+//         if (categoryIds.length > 0) {
+//           await this.categoryManager.smartAssignCategories(productId_medusa, categoryIds, 'add')
+//         }
+//       }
+
+//       // Ensure inventory items
+//       await this.ensureInventoryItems(productId_medusa)
+      
+//       // Set inventory levels
+//       await this.completeInventorySetup(productId_medusa, wooVariations)
+
+//       console.log(`🎉 SUCCESS! Added ${missingVariants.length} variants`)
+      
+//       return { success: true, addedVariants: missingVariants.length }
+
+//     } catch (error: any) {
+//   console.error(`❌ Failed to process product ${productId}:`, error.message)
   
-//   console.log(`🚀 Starting WooCommerce → Medusa migration`)
-//   console.log(`📦 Action: ${action}, Product ID: ${productId}`)
-//   if (overwriteCategories) {
-//     console.log(`🔄 Category mode: REPLACE`)
+//   // ✅ ADD THIS
+//   if (error.response?.data) {
+//     console.error(`📋 Error details:`, JSON.stringify(error.response.data, null, 2))
 //   }
+//       return { success: false, addedVariants: 0 }
+//     }
+//   }
+
+//   /**
+//    * BULK MIGRATION: Process all variable products
+//    */
+//   async bulkMigrateVariableProducts(dryRun: boolean = false): Promise<void> {
+//     try {
+//       console.log('🚀 Starting variable product migration...')
+//       console.log(`📋 Mode: ${dryRun ? 'DRY RUN (first 5 products only)' : 'LIVE MIGRATION'}`)
+
+//       // Get all variable products
+//       const variableProducts = await this.getAllVariableProducts()
+
+//       // Get all SKUs in Medusa
+//       const medusaSKUs = await this.getAllMedusaSKUs()
+
+//       // Limit to 5 for dry run
+//       const productsToProcess = dryRun ? variableProducts.slice(0, 5) : variableProducts
+
+//       console.log(`\n📊 Processing ${productsToProcess.length} variable products...\n`)
+
+//       let successCount = 0
+//       let failCount = 0
+//       let totalVariantsAdded = 0
+
+//       for (const productId of productsToProcess) {
+//         const result = await this.processVariableProduct(productId, medusaSKUs, dryRun)
+        
+//         if (result.success) {
+//           successCount++
+//           totalVariantsAdded += result.addedVariants
+//         } else {
+//           failCount++
+//         }
+//       }
+
+//       console.log(`\n${'='.repeat(70)}`)
+//       console.log('🎉 MIGRATION COMPLETE!')
+//       console.log(`   ✅ Successful products: ${successCount}`)
+//       console.log(`   ❌ Failed products: ${failCount}`)
+//       console.log(`   📊 Total variants added: ${totalVariantsAdded}`)
+//       console.log(`   📈 Total products processed: ${productsToProcess.length}`)
+
+//           // ✅ NEW: Export skipped variants
+//     if (!dryRun) {
+//       await this.exportSkippedVariantsCSV()
+//     }
+
+
+//     } catch (error: any) {
+//       console.error('💥 Bulk migration failed:', error.message)
+//       throw error
+//     }
+//   }
+
+
+//   /**
+//  * Export skipped variants to CSV
+//  */
+// async exportSkippedVariantsCSV(): Promise<void> {
+//   if (this.skippedVariants.length === 0) {
+//     console.log('\n✅ No skipped variants to export')
+//     return
+//   }
+
+//   const fs = await import('fs')
+//   const csvContent = [
+//     // Header
+//     'Product ID,Product Name,SKU,Variant Name,Reason,Missing Options',
+//     // Data rows
+//     ...this.skippedVariants.map(v => 
+//       `${v.productId},"${v.productName}",${v.sku},"${v.variantName}","${v.reason}","${v.missingOptions.join('; ')}"`
+//     )
+//   ].join('\n')
+
+//   const filename = `skipped-variants-${Date.now()}.csv`
+//   fs.writeFileSync(filename, csvContent)
+  
+//   console.log(`\n📄 Exported ${this.skippedVariants.length} skipped variants to: ${filename}`)
+// }
+
+
+//   //end
+// }
+
+// // Main runner
+// // Main runner
+// async function main(): Promise<void> {
+//   const action = process.argv[2] || 'bulk'
+//   const productIdArg = process.argv[3]
+//   const dryRunArg = process.argv[4] || process.argv[3]
+
+//   console.log(`🚀 Starting WooCommerce → Medusa Variable Product Migration`)
 
 //   const migration = new WooToMedusaMigration()
-  
+
 //   try {
-//     if (action === 'complete') {
-//       await migration.testCompleteMigration(productId, overwriteCategories)
+//     if (action === 'single') {
+//       // ✅ NEW: Single product test
+//       const productId = parseInt(productIdArg)
+//       const dryRun = dryRunArg === '--dry-run'
+      
+//       if (!productId || isNaN(productId)) {
+//         console.error('❌ Please provide a product ID: npx tsx ... single 521')
+//         process.exit(1)
+//       }
+
+//       console.log(`📋 Mode: ${dryRun ? 'DRY RUN' : 'LIVE'} - Single Product`)
+//       console.log(`🎯 Testing product ID: ${productId}\n`)
+
+//       // Get Medusa SKUs
+//       const medusaSKUs = await migration.getAllMedusaSKUs()
+
+//       // Process single product
+//       const result = await migration.processVariableProduct(productId, medusaSKUs, dryRun)
+
+//       console.log(`\n${'='.repeat(70)}`)
+//       if (result.success) {
+//         console.log(`✅ SUCCESS! ${dryRun ? 'Would add' : 'Added'} ${result.addedVariants} variants`)
+//       } else {
+//         console.log(`❌ FAILED to process product ${productId}`)
+//       }
+
+//     } else if (action === 'bulk') {
+//       const dryRun = productIdArg === '--dry-run'
+//       await migration.bulkMigrateVariableProducts(dryRun)
 //     }
-//     // ... other actions stay the same
+
 //   } catch (error: any) {
 //     console.error('💥 Migration failed:', error.message)
 //     process.exit(1)
 //   }
+
+
+
+  
+
+
 // }
-
-
 
 
 // export { WooToMedusaMigration }
 
-// // ✅ ADD THIS - Run if called directly
 // if (require.main === module) {
 //   main()
 // }
+
+
+
+
+
+
+

@@ -4,22 +4,30 @@ import { Text } from "@medusajs/ui"
 export default function PaymentTrustBadges() {
   return (
     <div className="mt-6 pt-6 border-t border-ui-border-base space-y-4">
-      {/* Payment Methods Accepted */}
+      {/* Payment Methods Accepted - With Real Icons */}
       <div className="flex items-center justify-between">
         <Text className="text-sm text-ui-fg-subtle">We accept:</Text>
-        <div className="flex gap-2">
-          <div className="h-8 w-12 bg-ui-bg-base rounded border border-ui-border-base flex items-center justify-center">
-            <span className="text-xs font-semibold text-blue-600">VISA</span>
-          </div>
-          <div className="h-8 w-12 bg-ui-bg-base rounded border border-ui-border-base flex items-center justify-center">
-            <span className="text-xs font-semibold text-red-600">MC</span>
-          </div>
-          <div className="h-8 w-12 bg-ui-bg-base rounded border border-ui-border-base flex items-center justify-center">
-            <span className="text-xs font-semibold text-blue-500">AMEX</span>
-          </div>
-          <div className="h-8 w-12 bg-ui-bg-base rounded border border-ui-border-base flex items-center justify-center">
-            <span className="text-xs font-semibold text-orange-600">DISC</span>
-          </div>
+        <div className="flex gap-2 items-center">
+          <img 
+            src="/images/payments/visa.svg" 
+            alt="Visa" 
+            className="h-6 w-auto opacity-70" 
+          />
+          <img 
+            src="/images/payments/mastercard.svg" 
+            alt="Mastercard" 
+            className="h-6 w-auto opacity-70" 
+          />
+          <img 
+            src="/images/payments/amex.svg" 
+            alt="American Express" 
+            className="h-6 w-auto opacity-70" 
+          />
+          <img 
+            src="/images/payments/discover.svg" 
+            alt="Discover" 
+            className="h-6 w-auto opacity-70" 
+          />
         </div>
       </div>
 
@@ -48,3 +56,4 @@ export default function PaymentTrustBadges() {
     </div>
   )
 }
+
