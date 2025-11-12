@@ -28,6 +28,10 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
     gift_card_total,
   } = totals
 
+  // Free shipping threshold: $100
+  const FREE_SHIPPING_THRESHOLD = 100 // $100.00 in cents
+  const isFreeShipping = (subtotal ?? 0) >= FREE_SHIPPING_THRESHOLD
+
   return (
     <div>
       <div className="flex flex-col gap-y-2 txt-medium text-ui-fg-subtle ">
@@ -55,9 +59,22 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
         <div className="flex items-center justify-between">
           <span>Shipping</span>
           <span data-testid="cart-shipping" data-value={shipping_total || 0}>
-            {convertToLocale({ amount: shipping_total ?? 0, currency_code })}
+            {isFreeShipping ? (
+              <span className="text-green-600 font-medium">FREE</span>
+            ) : (
+              convertToLocale({ amount: shipping_total ?? 0, currency_code })
+            )}
           </span>
         </div>
+        {/* Free Shipping Progress */}
+        {!isFreeShipping && subtotal && subtotal > 0 && (
+          <div className="text-xs text-ui-fg-subtle italic">
+            Add {convertToLocale({ 
+              amount: FREE_SHIPPING_THRESHOLD - subtotal, 
+              currency_code 
+            })} more for free shipping
+          </div>
+        )}
         <div className="flex justify-between">
           <span className="flex gap-x-1 items-center ">Taxes</span>
           <span data-testid="cart-taxes" data-value={tax_total || 0}>
