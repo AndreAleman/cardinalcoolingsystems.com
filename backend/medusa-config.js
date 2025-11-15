@@ -98,7 +98,7 @@ const medusaConfig = {
               endPoint: MINIO_ENDPOINT,
               accessKey: MINIO_ACCESS_KEY,
               secretKey: MINIO_SECRET_KEY,
-              bucket: MINIO_BUCKET // Optional, default: medusa-media
+              bucket: MINIO_BUCKET
             }
           }] : [{
             resolve: '@medusajs/file-local',
@@ -170,65 +170,65 @@ const medusaConfig = {
       },
     }] : []),
   ],
-plugins: [
-  ...(MEILISEARCH_HOST && MEILISEARCH_ADMIN_KEY ? [{
-    resolve: '@rokmohar/medusa-plugin-meilisearch',
-    options: {
-      config: {
-        host: MEILISEARCH_HOST,
-        apiKey: MEILISEARCH_ADMIN_KEY
-      },
-      settings: {
-        products: {
-          type: 'products',
-          enabled: true,
-          fields: [
-            'id', 
-            'title', 
-            'description', 
-            'handle', 
-            'thumbnail',
-            'metadata.parent_sku',  
-            'variants',
-            'variants.id',                           // ✅ ADD THIS
-            'variants.sku',                          // ✅ ADD THIS
-            'variants.title',                        // ✅ ADD THIS
-            'variants.options',                      // ✅ ADD THIS
-            'variants.options.value',                        // ✅ ADD THIS
-            'variants.options.option',                       // ✅ ADD THIS
-            'variants.options.option.title', 
-            'variants.metadata.competitor_skus'
-          ],
-          indexSettings: {
-            searchableAttributes: [
-              'title', 
-              'description', 
-              'metadata.parent_sku',
-              'variants.sku',         
-              'variants.title',
-              'variants.metadata.competitor_skus'  // ✅ ADD THIS LINE - Makes competitor SKUs searchable
-            ],
-            displayedAttributes: [
+  plugins: [
+    ...(MEILISEARCH_HOST && MEILISEARCH_ADMIN_KEY ? [{
+      resolve: '@rokmohar/medusa-plugin-meilisearch',
+      options: {
+        config: {
+          host: MEILISEARCH_HOST,
+          apiKey: MEILISEARCH_ADMIN_KEY
+        },
+        settings: {
+          products: {
+            type: 'products',
+            enabled: true,
+            fields: [
               'id', 
-              'handle', 
               'title', 
               'description', 
+              'handle', 
               'thumbnail',
-              'metadata.parent_sku',
+              'metadata.parent_sku',  
+              'variants',
+              'variants.id',
               'variants.sku',
               'variants.title',
-              'variants.options.value',                       // ✅ ADD THIS
-              'variants.options.option.title',    
-              'variants.metadata.competitor_skus'  // ✅ ADD THIS LINE
+              'variants.options',
+              'variants.options.value',
+              'variants.options.option',
+              'variants.options.option.title', 
+              'variants.metadata.competitor_skus'
             ],
-            filterableAttributes: ['id', 'handle', 'metadata.parent_sku'],
-          },
-          primaryKey: 'id',
+            indexSettings: {
+              searchableAttributes: [
+                'title', 
+                'description', 
+                'metadata.parent_sku',
+                'variants.sku',         
+                'variants.title',
+                'variants.metadata.competitor_skus'
+              ],
+              displayedAttributes: [
+                'id', 
+                'handle', 
+                'title', 
+                'description', 
+                'thumbnail',
+                'metadata.parent_sku',
+                'variants.sku',
+                'variants.title',
+                'variants.options.value',
+                'variants.options.option.title',    
+                'variants.metadata.competitor_skus'
+              ],
+              filterableAttributes: ['id', 'handle', 'metadata.parent_sku'],
+            },
+            primaryKey: 'id',
+          }
         }
       }
-    }
-  }] : [])
-]
+    }] : [])
+  ]
 };
 
 console.log(JSON.stringify(medusaConfig, null, 2));

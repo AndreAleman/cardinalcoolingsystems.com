@@ -1,10 +1,9 @@
-import { ModuleProviderExports } from '@medusajs/framework/types'
-import { ResendNotificationService } from './services/resend'
+import { 
+  ModuleProvider, 
+  Modules,
+} from "@medusajs/framework/utils"
+import ResendNotificationProviderService from "./services/resend"
 
-const services = [ResendNotificationService]
-
-const providerExport: ModuleProviderExports = {
-  services,
-}
-
-export default providerExport
+export default ModuleProvider(Modules.NOTIFICATION, {
+  services: [ResendNotificationProviderService],
+})
