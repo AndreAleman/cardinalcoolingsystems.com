@@ -5,14 +5,14 @@ import { InviteUserEmail, INVITE_USER, isInviteUserData } from './invite-user'
 import { OrderPlacedTemplate, ORDER_PLACED, isOrderPlacedTemplateData } from './order-placed'
 import { AdminOrderTemplate, ADMIN_ORDER, isAdminOrderData } from './admin-order'
 import { AdminUserRegisteredTemplate, ADMIN_USER_REGISTERED, isAdminUserRegisteredData } from './admin-user-registered'
-import { ContactFormTemplate, CONTACT_FORM, isContactFormData } from './contact-form'  // Add this
+import { contactFormEmail } from './contact-form'  // ✅ Changed: removed other imports
 
 export const EmailTemplates = {
   INVITE_USER,
   ORDER_PLACED,
   ADMIN_ORDER,
   ADMIN_USER_REGISTERED,
-  CONTACT_FORM  // Add this
+  CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
 export type EmailTemplateType = keyof typeof EmailTemplates
@@ -59,15 +59,9 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
       }
       return <AdminUserRegisteredTemplate {...data} />
 
-    case EmailTemplates.CONTACT_FORM:  // Add this case
+    case EmailTemplates.CONTACT_FORM:  // ✅ Simplified case
       console.log('[Templates] Using CONTACT_FORM template')
-      if (!isContactFormData(data)) {
-        throw new MedusaError(
-          MedusaError.Types.INVALID_DATA,
-          `Invalid data for template "${EmailTemplates.CONTACT_FORM}"`
-        )
-      }
-      return <ContactFormTemplate {...data} />
+      return contactFormEmail(data as any)  // Using the actual export from contact-form.tsx
 
     default:
       throw new MedusaError(
