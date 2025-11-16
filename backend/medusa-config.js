@@ -164,6 +164,7 @@ const medusaConfig = {
             options: {
               apiKey: STRIPE_API_KEY,
               webhookSecret: STRIPE_WEBHOOK_SECRET,
+              from: process.env.RESEND_FROM_EMAIL, 
             }
           }
         ],
