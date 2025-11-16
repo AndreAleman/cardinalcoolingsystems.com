@@ -24,6 +24,13 @@ import {
   MEILISEARCH_ADMIN_KEY
 } from 'lib/constants';
 
+console.log('🔍 CHECKING ENV VARIABLES:')
+console.log('  RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL)
+console.log('  RESEND_FROM:', process.env.RESEND_FROM)
+console.log('  CONSTANT VALUE:', RESEND_FROM_EMAIL)
+
+
+
 loadEnv(process.env.NODE_ENV, process.cwd());
 
 const medusaConfig = {
@@ -164,7 +171,7 @@ const medusaConfig = {
             options: {
               apiKey: STRIPE_API_KEY,
               webhookSecret: STRIPE_WEBHOOK_SECRET,
-              from: process.env.RESEND_FROM_EMAIL, 
+              
             }
           }
         ],

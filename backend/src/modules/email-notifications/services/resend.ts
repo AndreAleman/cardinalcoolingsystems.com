@@ -46,6 +46,8 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     options: ResendOptions
   ) {
     super()
+    console.log('🔍 RESEND OPTIONS:', options)  // Add this
+    console.log('🔍 FROM EMAIL:', options.from)  // Add this
     this.resendClient = new Resend(options.api_key)
     this.options = options
     this.logger = logger
