@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 type FormData = {
   name: string
@@ -20,6 +20,9 @@ export default function ContactForm() {
     message: "",
     agreeToTerms: false
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const formRef = useRef<HTMLFormElement>(null)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -36,10 +39,47 @@ export default function ContactForm() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement form submission logic
-    console.log("Form submitted:", formData)
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-publishable-api-key': process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message
+        })
+      })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({
+          name: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          message: "",
+          agreeToTerms: false
+        })
+        formRef.current?.reset()
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Contact form error:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -50,13 +90,26 @@ export default function ContactForm() {
           How Can We Help?
         </h2>
 
+        {/* Success/Error Messages */}
+        {submitStatus === 'success' && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded text-green-800">
+            Thank you! Your message has been sent successfully. We'll get back to you soon.
+          </div>
+        )}
+
+        {submitStatus === 'error' && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded text-red-800">
+            Sorry, there was an error sending your message. Please try again.
+          </div>
+        )}
+
         {/* Contact Form */}
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
           {/* Row 1: Name and Last Name */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Name
+                Name*
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -71,6 +124,7 @@ export default function ContactForm() {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="First Name"
+                  required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -78,7 +132,7 @@ export default function ContactForm() {
 
             <div>
               <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                Last Name
+                Last Name*
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -93,6 +147,7 @@ export default function ContactForm() {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   placeholder="Last Name"
+                  required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -126,7 +181,7 @@ export default function ContactForm() {
 
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number*
+                Phone Number <span className="text-gray-500 text-xs">(optional)</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -141,7 +196,6 @@ export default function ContactForm() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="Enter your phone number..."
-                  required
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -174,8 +228,6 @@ export default function ContactForm() {
 
           {/* Terms and Submit */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-            {/* Properly aligned checkbox */}
-            {/* Properly aligned checkbox */}
             <div className="flex items-center">
               <input
                 id="agreeToTerms"
@@ -190,15 +242,12 @@ export default function ContactForm() {
               </label>
             </div>
 
-
-            {/* Button with primary color hover */}
-            {/* Button with primary color and darker hover */}
             <button
               type="submit"
-              disabled={!formData.agreeToTerms}
+              disabled={!formData.agreeToTerms || isSubmitting}
               className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
             >
-              Submit Form
+              {isSubmitting ? 'Sending...' : 'Submit Form'}
               <svg 
                 className="ml-3 w-5 h-5" 
                 fill="none" 
@@ -213,7 +262,6 @@ export default function ContactForm() {
                 />
               </svg>
             </button>
-
           </div>
         </form>
       </div>

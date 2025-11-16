@@ -2,7 +2,7 @@
 
 import { Metadata } from "next"
 import Link from "next/link"
-import { useState, FormEvent } from "react"
+import { useState, FormEvent, useRef } from "react"
 
 interface Props {
   params: { countryCode: string }
@@ -12,6 +12,7 @@ export default function ContactPage({ params }: Props) {
   const { countryCode } = params
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -28,18 +29,18 @@ export default function ContactPage({ params }: Props) {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://localhost:9000'}/store/contact`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'x-publishable-api-key': process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || 'pk_3505fbe63a609e299c8f5d4c30b229213daf4e205ced25fb94087ab585ed855c'
+          'x-publishable-api-key': process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!
         },
         body: JSON.stringify(data)
       })
 
       if (response.ok) {
         setSubmitStatus('success')
-        e.currentTarget.reset()
+        formRef.current?.reset()
       } else {
         setSubmitStatus('error')
       }
@@ -101,7 +102,7 @@ export default function ContactPage({ params }: Props) {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
