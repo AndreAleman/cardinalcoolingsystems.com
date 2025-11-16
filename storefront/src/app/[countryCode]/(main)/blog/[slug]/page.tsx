@@ -1,9 +1,13 @@
+"use client"
+
 import { client } from "../../../../../../src/sanity/lib/client"
 import { groq } from "next-sanity"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { PortableText } from "next-sanity"
 import type { Metadata } from "next"
+import { useState, useRef } from "react"
+
 
 // Type definitions
 interface BlogPost {
@@ -43,12 +47,14 @@ interface BlogPost {
   }[]
 }
 
+
 interface PostCategory {
   title: string
   slug: {
     current: string
   }
 }
+
 
 interface RelatedPost {
   _id: string
@@ -66,6 +72,16 @@ interface RelatedPost {
   }
 }
 
+type FormData = {
+  name: string
+  lastName: string
+  email: string
+  phone: string
+  message: string
+  agreeToTerms: boolean
+}
+
+
 // GROQ queries
 const POST_QUERY = groq`
   *[_type == "post" && slug.current == $slug][0] {
@@ -73,7 +89,16 @@ const POST_QUERY = groq`
     title,
     slug,
     publishedAt,
-    body,
+    body[]{
+      ...,
+      _type == "table" => {
+        ...,
+        rows[]{
+          ...,
+          cells[]
+        }
+      }
+    },
     excerpt,
     mainImage{
       asset->{
@@ -100,6 +125,7 @@ const POST_QUERY = groq`
   }
 `
 
+
 const RELATED_POSTS_QUERY = groq`
   *[_type == "post" && slug.current != $slug && count(categories[@._ref in ^.^.categories[]._ref]) > 0] | order(publishedAt desc)[0...3] {
     _id,
@@ -116,40 +142,273 @@ const RELATED_POSTS_QUERY = groq`
   }
 `
 
+
 interface Props {
   params: { countryCode: string; slug: string }
 }
 
-// Generate metadata for SEO
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await client.fetch(POST_QUERY, { slug: params.slug })
 
-  if (!post) {
-    return {
-      title: 'Post Not Found',
+// Contact Form Component
+function ContactForm() {
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+    agreeToTerms: false
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const formRef = useRef<HTMLFormElement>(null)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      agreeToTerms: e.target.checked
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-publishable-api-key': process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message
+        })
+      })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({
+          name: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          message: "",
+          agreeToTerms: false
+        })
+        formRef.current?.reset()
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Contact form error:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  return {
-    title: `${post.title} | Blog`,
-    description: post.excerpt || `Read ${post.title} on our technical blog`,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt || `Read ${post.title} on our technical blog`,
-      images: post.mainImage?.asset?.url ? [post.mainImage.asset.url] : [],
-      type: 'article',
-      publishedTime: post.publishedAt,
-      authors: post.author?.name ? [post.author.name] : [],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt || `Read ${post.title} on our technical blog`,
-      images: post.mainImage?.asset?.url ? [post.mainImage.asset.url] : [],
-    },
-  }
+  return (
+    <section className="py-20 px-4 bg-gray-50">
+      <div className="max-w-4xl mx-auto">
+        {/* Heading */}
+        <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 text-center mb-16">
+          How Can We Help?
+        </h2>
+
+        {/* Success/Error Messages */}
+        {submitStatus === 'success' && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded text-green-800">
+            Thank you! Your message has been sent successfully. We'll get back to you soon.
+          </div>
+        )}
+
+        {submitStatus === 'error' && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded text-red-800">
+            Sorry, there was an error sending your message. Please try again.
+          </div>
+        )}
+
+        {/* Contact Form */}
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
+          {/* Row 1: Name and Last Name */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                Name*
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="First Name"
+                  required
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                Last Name*
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Last Name"
+                  required
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Row 2: Email and Phone */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address*
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email address..."
+                  required
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                Phone Number <span className="text-gray-500 text-xs">(optional)</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                </div>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="Enter your phone number..."
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3: Message */}
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+              Message*
+            </label>
+            <div className="relative">
+              <div className="absolute top-3 left-3 pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                placeholder="Enter your message as clear as possible..."
+                required
+                rows={6}
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+              />
+            </div>
+          </div>
+
+          {/* Terms and Submit */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <div className="flex items-center">
+              <input
+                id="agreeToTerms"
+                name="agreeToTerms"
+                type="checkbox"
+                checked={formData.agreeToTerms}
+                onChange={handleCheckboxChange}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 flex-shrink-0"
+              />
+              <label htmlFor="agreeToTerms" className="ml-3 block text-sm text-gray-700">
+                I have agreed to the Terms & Conditions
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={!formData.agreeToTerms || isSubmitting}
+              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+              {isSubmitting ? 'Sending...' : 'Submit Form'}
+              <svg 
+                className="ml-3 w-5 h-5" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M17 8l4 4m0 0l-4 4m4-4H3" 
+                />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  )
 }
 
+
+// Main Blog Post Page Component
 export default async function BlogPostPage({ params }: Props) {
   const { countryCode, slug } = params
 
@@ -167,7 +426,7 @@ export default async function BlogPostPage({ params }: Props) {
     <div className="bg-white">
       {/* Breadcrumb */}
       <section className="bg-gray-50 pt-32 pb-6">
-        <div className="content-container">
+        <div className="max-w-4xl mx-auto px-4">
           <nav className="flex items-center space-x-2 text-sm text-gray-600">
             <Link href={`/${countryCode}/blog`} className="hover:text-blue-600">
               Blog
@@ -195,14 +454,14 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Article */}
       <article className="bg-white">
-        <div className="content-container my-8 lg:my-16">
+        <div className="max-w-4xl mx-auto px-4 my-8 lg:my-16">
           <div className="grid gap-8">
             {/* Article Header */}
             <div>
               <div className="pb-4 grid gap-4 mb-6 border-b border-gray-100">
                 {/* Categories */}
                 {post.categories && post.categories.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 justify-center">
                     {post.categories.map((category: PostCategory) => (
                       <Link
                         key={category.slug.current}
@@ -216,14 +475,14 @@ export default async function BlogPostPage({ params }: Props) {
                 )}
 
                 {/* Title */}
-                <div className="max-w-3xl">
+                <div className="text-center">
                   <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
                     {post.title}
                   </h1>
                 </div>
 
                 {/* Compact Author & Date */}
-                <div className="max-w-3xl">
+                <div className="text-center">
                   <div className="text-sm text-gray-600">
                     {post.author?.name && (
                       <span>By {post.author.name}</span>
@@ -243,10 +502,10 @@ export default async function BlogPostPage({ params }: Props) {
               </div>
 
               {/* Article Content */}
-              <article className="gap-6 grid max-w-4xl">
-                {/* Smaller Featured Image (30% reduction) */}
+              <article className="gap-6 grid">
+                {/* Featured Image */}
                 {post.mainImage?.asset?.url && (
-                  <div className="max-w-3xl">
+                  <div className="mx-auto w-full">
                     <img
                       src={post.mainImage.asset.url}
                       alt={post.mainImage.alt || post.title}
@@ -257,10 +516,35 @@ export default async function BlogPostPage({ params }: Props) {
 
                 {/* Post Content */}
                 {post.body?.length && (
-                  <div className="max-w-2xl">
+                  <div className="mx-auto w-full">
                     <PortableText 
                       value={post.body}
                       components={{
+                        types: {
+                          table: ({value}) => (
+                            <div className="my-8 overflow-x-auto">
+                              <table className="min-w-full border-collapse border border-gray-300">
+                                <tbody>
+                                  {value.rows?.map((row: any, rowIndex: number) => (
+                                    <tr key={rowIndex} className={rowIndex === 0 ? 'bg-gray-50' : ''}>
+                                      {row.cells?.map((cell: any, cellIndex: number) => {
+                                        const CellComponent = rowIndex === 0 ? 'th' : 'td';
+                                        return (
+                                          <CellComponent
+                                            key={cellIndex}
+                                            className={`border border-gray-300 px-4 py-2 ${rowIndex === 0 ? 'font-semibold text-left' : ''}`}
+                                          >
+                                            {cell}
+                                          </CellComponent>
+                                        );
+                                      })}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ),
+                        },
                         block: {
                           normal: ({children}) => <p className="mb-6 leading-relaxed text-gray-700">{children}</p>,
                           h2: ({children}) => <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">{children}</h2>,
@@ -304,33 +588,34 @@ export default async function BlogPostPage({ params }: Props) {
       {/* Author Bio */}
       {post.author?.bio && (
         <section className="border-t border-gray-100 bg-gray-50">
-          <div className="content-container py-12 lg:py-16">
-            <div className="max-w-2xl">
-              <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
-                <div className="flex items-start gap-6">
-                  {post.author.image?.asset?.url && (
-                    <div className="flex-shrink-0">
-                      <img
-                        src={post.author.image.asset.url}
-                        alt={post.author.image.alt || post.author.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      About {post.author.name}
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      {post.author.bio}
-                    </p>
+          <div className="max-w-4xl mx-auto px-4 py-12 lg:py-16">
+            <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
+              <div className="flex items-start gap-6">
+                {post.author.image?.asset?.url && (
+                  <div className="flex-shrink-0">
+                    <img
+                      src={post.author.image.asset.url}
+                      alt={post.author.image.alt || post.author.name}
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
                   </div>
+                )}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    About {post.author.name}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {post.author.bio}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </section>
       )}
+
+      {/* Contact Form */}
+      <ContactForm />
 
       {/* Related Posts */}
       {relatedPosts && relatedPosts.length > 0 && (
