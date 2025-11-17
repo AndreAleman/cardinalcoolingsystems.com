@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Cowbird Depot",
+  title: "Privacy Policy -  Cardinal Cooling Systems",
   description: "Our commitment to protecting your privacy and personal information. Learn how we collect, use, and protect your data."
 }
 
@@ -73,7 +73,7 @@ export default function PrivacyPolicy() {
         <h2>Contacting Us</h2>
         <p>If there are any questions regarding this privacy policy, you may contact us using the information below.</p>
         <address>
-          <strong>Cowbird Depot</strong><br />
+          <strong>Cardinal Cooling Systems</strong><br />
           <em>(operated by Colibri Connect LLC)</em><br />
           1120 NW 14th Terrace<br />
           Cape Coral, FL 33993<br />

@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Shipping & Returns - Cowbird Depot",
+  title: "Shipping & Returns - Cardinal Cooling Systems",
   description: "Information about our shipping policies, delivery times, and return procedures for stainless steel sanitary fittings."
 }
 
@@ -21,7 +21,7 @@ export default function ShippingReturns() {
       {/* Page Content */}
       <div className="prose prose-lg max-w-none">
         <h2>Free Freight Policy</h2>
-        <p>Cowbird Depot currently offers full freight allowance to the lower 48 US states on sanitary valve and fitting orders exceeding $2,500, excluding clamps and hangers-only orders. A270 Polished Tube orders are full freight allowed to Eastern and Central time zones for orders exceeding $7,500, and to Mountain and Western time zones for orders exceeding $25,000.</p>
+        <p>Cardinal Cooling Systems currently offers full freight allowance to the lower 48 US states on sanitary valve and fitting orders exceeding $2,500, excluding clamps and hangers-only orders. A270 Polished Tube orders are full freight allowed to Eastern and Central time zones for orders exceeding $7,500, and to Mountain and Western time zones for orders exceeding $25,000.</p>
 
         <h2>Tube Case Quantities</h2>
         <div className="overflow-x-auto">
@@ -48,17 +48,17 @@ export default function ShippingReturns() {
         </div>
 
         <h2>Warranty</h2>
-        <p>Colibri Connect LLC dba Cowbird Depot (herein called Cowbird Depot) warrants the products described herein to be free from defects in material and workmanship for a period of ninety (90) days from date of shipment by Cowbird Depot under normal use and service. Cowbird Depot's sole obligation under this warranty is limited to replacing, as herein after provided, any stock (not special order or fabricated) product found to Cowbird Depot's satisfaction to be defective upon examination by Cowbird Depot, provided that such product shall be returned for inspection to Cowbird Depot within thirty (30) days after discovery of the defect.</p>
+        <p>Colibri Connect LLC dba Cardinal Cooling Systems (herein called Cardinal Cooling Systems) warrants the products described herein to be free from defects in material and workmanship for a period of ninety (90) days from date of shipment by Cardinal Cooling Systems under normal use and service. Cardinal Cooling Systems's sole obligation under this warranty is limited to replacing, as herein after provided, any stock (not special order or fabricated) product found to Cardinal Cooling Systems's satisfaction to be defective upon examination by Cardinal Cooling Systems, provided that such product shall be returned for inspection to Cardinal Cooling Systems within thirty (30) days after discovery of the defect.</p>
 
-        <p>The replacement of defective products will be made without charge for parts. This warranty shall not apply to: (a) any product that has been subject to abuse, negligence, accident, or misapplication; (b) any product altered or repaired by a party not exclusively authorized by Cowbird Depot; and (c) normal maintenance services or the replacement of service items (such as gaskets and seats) made in connection with such services. To the extent permitted by State and Federal law, this limited warranty shall extend only to the buyer and any other person reasonably expected to use or consume the warranted goods.</p>
+        <p>The replacement of defective products will be made without charge for parts. This warranty shall not apply to: (a) any product that has been subject to abuse, negligence, accident, or misapplication; (b) any product altered or repaired by a party not exclusively authorized by Cardinal Cooling Systems; and (c) normal maintenance services or the replacement of service items (such as gaskets and seats) made in connection with such services. To the extent permitted by State and Federal law, this limited warranty shall extend only to the buyer and any other person reasonably expected to use or consume the warranted goods.</p>
 
-        <p>Cowbird Depot disclaims any and all liability for injury to persons or property, or other damages of any nature, including special, indirect, consequential, compensatory, and punitive damages, directly or indirectly resulting from the performance operation, or the failure to operate, of any equipment or process. No action may be brought against Cowbird Depot for an alleged breach of warranty unless such action is instituted within ninety (90) days from the date the cause of action accrues. This limited warranty shall be construed and enforced to the fullest extent allowable by applicable State and Federal law.</p>
+        <p>Cardinal Cooling Systems disclaims any and all liability for injury to persons or property, or other damages of any nature, including special, indirect, consequential, compensatory, and punitive damages, directly or indirectly resulting from the performance operation, or the failure to operate, of any equipment or process. No action may be brought against Cardinal Cooling Systems for an alleged breach of warranty unless such action is instituted within ninety (90) days from the date the cause of action accrues. This limited warranty shall be construed and enforced to the fullest extent allowable by applicable State and Federal law.</p>
 
-        <p><strong>OTHER THAN THE OBLIGATION OF COWBIRD DEPOT SET FORTH HEREIN, COWBIRD DEPOT DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, AND ANY OTHER OBLIGATION OR LIABILITY. THE FOREGOING CONSTITUTES COWBIRD DEPOT'S SOLE OBLIGATION WITH RESPECT TO DAMAGES, WHETHER DIRECT, INCIDENTAL OR CONSEQUENTIAL, RESULTING FROM THE USE OR PERFORMANCE OF THE PRODUCT.</strong></p>
+        <p><strong>OTHER THAN THE OBLIGATION OF Cardinal Cooling Systems SET FORTH HEREIN, Cardinal Cooling Systems DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, AND ANY OTHER OBLIGATION OR LIABILITY. THE FOREGOING CONSTITUTES Cardinal Cooling Systems'S SOLE OBLIGATION WITH RESPECT TO DAMAGES, WHETHER DIRECT, INCIDENTAL OR CONSEQUENTIAL, RESULTING FROM THE USE OR PERFORMANCE OF THE PRODUCT.</strong></p>
 
         <h2>Contact Information</h2>
         <address>
-          <strong>Cowbird Depot</strong><br />
+          <strong>Cardinal Cooling Systems</strong><br />
           <em>(operated by Colibri Connect LLC)</em><br />
           1120 NW 14th Terrace<br />
           Cape Coral, FL 33993<br />
