@@ -11,7 +11,7 @@
 //   private authToken: string | null = null
 //   private categoryManager: CategoryManager
 
-//    private skippedVariants: Array<{
+//   private skippedVariants: Array<{
 //     productId: number
 //     productName: string
 //     sku: string
@@ -78,7 +78,7 @@
 //             per_page: 100,
 //             page: page,
 //             status: 'publish',
-//             type: 'variable'  // ✅ ONLY variable products
+//             type: 'variable'
 //           }
 //         })
 
@@ -171,115 +171,219 @@
 //   }
 
 //   /**
-//    * Transform WooCommerce product to Medusa format
+//    * Get full product details including options
 //    */
-// transformWooToMedusaProduct(wooProduct: WooCommerceProduct, wooVariations: any[]): MedusaProductInput {
-//   const options = (wooProduct.attributes || [])
-//     .filter((attr: any) => attr.variation)
-//     .map((attr: any) => ({
-//       title: attr.name,
-//       values: attr.options
-//     }))
-
-//   const validVariants: any[] = []
-//   const optionTitles = options.map(opt => opt.title)
-
-//   wooVariations.forEach((variation: any) => {
-//     const variantOptions: Record<string, string> = {}
-    
-//     // Add all the variant's option values
-//     ;(variation.attributes || []).forEach((attr: any) => {
-//       variantOptions[attr.name] = attr.option
-//     })
-
-//     // ✅ NEW: Check if variant has all required options
-//     const missingOptions = optionTitles.filter(title => !variantOptions[title])
-    
-//     if (missingOptions.length > 0) {
-//       // Skip this variant and track it
-//       console.log(`   ⏭️  Skipping ${variation.sku}: Missing options: ${missingOptions.join(', ')}`)
+//   async getProductWithOptions(productId: string): Promise<any> {
+//     try {
+//       await this.authenticateWithMedusa()
       
-//       this.skippedVariants.push({
-//         productId: wooProduct.id,
-//         productName: wooProduct.name,
-//         sku: variation.sku,
-//         variantName: variation.name || variation.sku,
-//         reason: 'Incomplete option values',
-//         missingOptions: missingOptions
+//       const response = await this.medusaClient.get(`/admin/products/${productId}`, {
+//         params: { fields: '*options' }
 //       })
       
-//       return // Skip this variant
+//       return response.data.product
+      
+//     } catch (error: any) {
+//       console.error(`❌ Failed to get product details:`, error.message)
+//       throw error
 //     }
-
-//     // Variant has all options - add it
-//     validVariants.push({
-//       title: variation.name || `${wooProduct.name} Variant`,
-//       sku: variation.sku,
-//       options: variantOptions,
-//       prices: [{
-//         amount: Math.round(Number(variation.price) * 100),
-//         currency_code: 'usd'
-//       }],
-//       manage_inventory: variation.manage_stock,
-//       allow_backorder: variation.backorders_allowed,
-//       weight: Number(variation.weight) || undefined,
-//       length: Number(variation.dimensions?.length) || undefined,
-//       height: Number(variation.dimensions?.height) || undefined,
-//       width: Number(variation.dimensions?.width) || undefined,
-//       metadata: { woocommerce_id: variation.id }
-//     })
-//   })
-
-//   console.log(`   ✅ Valid variants: ${validVariants.length}/${wooVariations.length}`)
-
-//   return {
-//     title: wooProduct.name,
-//     handle: wooProduct.slug,
-//     description: wooProduct.description,
-//     status: 'published',
-//     thumbnail: wooProduct.images?.[0]?.src,
-//     images: (wooProduct.images || []).map((img: any) => ({ url: img.src })),
-//     options,
-//     variants: validVariants,
-//     metadata: { woocommerce_id: wooProduct.id },
-//     sales_channels: [{ id: "sc_01K0AZA26A0C06GVADK4ZCA1EQ" }]
 //   }
-// }
 
+//   /**
+//    * ✅ NEW: Normalize option values to ensure consistency
+//    * Adds quotes to numeric values that should have them
+//    */
+//   private normalizeOptionValue(optionTitle: string, value: string): string {
+//     // For size-related options, ensure numeric values have quotes
+//     const sizeRelatedOptions = ['size', 'tube od', 'od', 'diameter', 'tube']
+//     const isSize = sizeRelatedOptions.some(keyword => 
+//       optionTitle.toLowerCase().includes(keyword)
+//     )
+    
+//     if (isSize) {
+//       // If it's a plain number (1, 2, 10, etc.) add quotes
+//       if (/^\d+$/.test(value)) {
+//         return `${value}"`
+//       }
+//       // If it already has proper formatting (1", 1-1/2", etc.), leave it
+//       return value
+//     }
+    
+//     return value
+//   }
+
+//   /**
+//    * ✅ UPDATED: Ensure product has all required option values
+//    * Adds missing option values to product options if needed
+//    * Returns normalized option values for variant creation
+//    */
+//   async ensureProductHasOptionValues(
+//     productId: string, 
+//     productName: string,
+//     variantOptions: Record<string, string>
+//   ): Promise<Record<string, string>> {
+//     try {
+//       const product = await this.getProductWithOptions(productId)
+//       const productOptions = product.options || []
+      
+//       // ✅ NEW: Track normalized values
+//       const normalizedVariantOptions: Record<string, string> = {}
+      
+//       let needsUpdate = false
+//       const updatedOptions = productOptions.map((opt: any) => {
+//         const optionTitle = opt.title
+//         const variantValue = variantOptions[optionTitle]
+        
+//         // If this variant has a value for this option
+//         if (variantValue) {
+//           // ✅ NEW: Normalize the value
+//           const normalizedValue = this.normalizeOptionValue(optionTitle, variantValue)
+//           normalizedVariantOptions[optionTitle] = normalizedValue
+          
+//           const existingValues = opt.values || []
+//           const valueExists = existingValues.some((v: any) => v.value === normalizedValue)
+          
+//           if (!valueExists) {
+//             console.log(`   🔧 Adding "${normalizedValue}" to option "${optionTitle}"`)
+//             needsUpdate = true
+//             return {
+//               id: opt.id,
+//               title: opt.title,
+//               values: [...existingValues.map((v: any) => v.value), normalizedValue]
+//             }
+//           }
+//         } else {
+//           // Option not present in variant, keep existing values
+//           normalizedVariantOptions[optionTitle] = variantOptions[optionTitle]
+//         }
+        
+//         return {
+//           id: opt.id,
+//           title: opt.title,
+//           values: opt.values.map((v: any) => v.value)
+//         }
+//       })
+      
+//       // Update product with new option values if needed
+//       if (needsUpdate) {
+//         await this.medusaClient.post(`/admin/products/${productId}`, {
+//           options: updatedOptions
+//         })
+//         console.log(`   ✅ Updated product options`)
+//       }
+      
+//       // ✅ NEW: Return normalized values to use for variant creation
+//       return normalizedVariantOptions
+      
+//     } catch (error: any) {
+//       console.error(`   ❌ Failed to update product options:`, error.message)
+//       throw error
+//     }
+//   }
+
+//   /**
+//    * Transform WooCommerce product to Medusa format
+//    */
+//   transformWooToMedusaProduct(wooProduct: WooCommerceProduct, wooVariations: any[]): MedusaProductInput {
+//     const options = (wooProduct.attributes || [])
+//       .filter((attr: any) => attr.variation)
+//       .map((attr: any) => ({
+//         title: attr.name,
+//         values: attr.options
+//       }))
+
+//     const validVariants: any[] = []
+//     const optionTitles = options.map(opt => opt.title)
+
+//     wooVariations.forEach((variation: any) => {
+//       const variantOptions: Record<string, string> = {}
+      
+//       // Add all the variant's option values
+//       ;(variation.attributes || []).forEach((attr: any) => {
+//         variantOptions[attr.name] = attr.option
+//       })
+
+//       // Check if variant has all required options
+//       const missingOptions = optionTitles.filter(title => !variantOptions[title])
+      
+//       if (missingOptions.length > 0) {
+//         // Skip this variant and track it
+//         console.log(`   ⏭️  Skipping ${variation.sku}: Missing options: ${missingOptions.join(', ')}`)
+        
+//         this.skippedVariants.push({
+//           productId: wooProduct.id,
+//           productName: wooProduct.name,
+//           sku: variation.sku,
+//           variantName: variation.name || variation.sku,
+//           reason: 'Incomplete option values',
+//           missingOptions: missingOptions
+//         })
+        
+//         return // Skip this variant
+//       }
+
+//       // Variant has all options - add it
+//       validVariants.push({
+//         title: variation.name || `${wooProduct.name} Variant`,
+//         sku: variation.sku,
+//         options: variantOptions,
+//         prices: [{
+//           amount: Math.round(Number(variation.price) * 100),
+//           currency_code: 'usd'
+//         }],
+//         manage_inventory: variation.manage_stock,
+//         allow_backorder: variation.backorders_allowed,
+//         weight: Number(variation.weight) || undefined,
+//         length: Number(variation.dimensions?.length) || undefined,
+//         height: Number(variation.dimensions?.height) || undefined,
+//         width: Number(variation.dimensions?.width) || undefined,
+//         metadata: { woocommerce_id: variation.id }
+//       })
+//     })
+
+//     console.log(`   ✅ Valid variants: ${validVariants.length}/${wooVariations.length}`)
+
+//     return {
+//       title: wooProduct.name,
+//       handle: wooProduct.slug,
+//       description: wooProduct.description,
+//       status: 'published',
+//       thumbnail: wooProduct.images?.[0]?.src,
+//       images: (wooProduct.images || []).map((img: any) => ({ url: img.src })),
+//       options,
+//       variants: validVariants,
+//       metadata: { woocommerce_id: wooProduct.id },
+//       sales_channels: [{ id: "sc_01K0AZA26A0C06GVADK4ZCA1EQ" }]
+//     }
+//   }
 
 //   /**
 //    * Create product in Medusa
 //    */
-// /**
-//  * Create product in Medusa
-//  */
-// async createProductInMedusa(medusaProductData: MedusaProductInput): Promise<any> {
-//   await this.authenticateWithMedusa()
-  
-//   try {
-//     const response = await this.medusaClient.post('/admin/products', medusaProductData)
-//     return response.data.product
-//   } catch (error: any) {
-//     // ✅ ADD DETAILED ERROR LOGGING
-//     console.error(`\n❌ Failed to create product in Medusa:`)
-//     console.error(`   Error: ${error.message}`)
+//   async createProductInMedusa(medusaProductData: MedusaProductInput): Promise<any> {
+//     await this.authenticateWithMedusa()
     
-//     if (error.response?.data) {
-//       console.error(`   Details:`, JSON.stringify(error.response.data, null, 2))
+//     try {
+//       const response = await this.medusaClient.post('/admin/products', medusaProductData)
+//       return response.data.product
+//     } catch (error: any) {
+//       console.error(`\n❌ Failed to create product in Medusa:`)
+//       console.error(`   Error: ${error.message}`)
+      
+//       if (error.response?.data) {
+//         console.error(`   Details:`, JSON.stringify(error.response.data, null, 2))
+//       }
+      
+//       if (error.response?.status) {
+//         console.error(`   Status: ${error.response.status}`)
+//       }
+      
+//       console.error(`\n📦 Payload that failed:`)
+//       console.error(JSON.stringify(medusaProductData, null, 2))
+      
+//       throw error
 //     }
-    
-//     if (error.response?.status) {
-//       console.error(`   Status: ${error.response.status}`)
-//     }
-    
-//     // Log the payload for debugging
-//     console.error(`\n📦 Payload that failed:`)
-//     console.error(JSON.stringify(medusaProductData, null, 2))
-    
-//     throw error
 //   }
-// }
-
 
 //   /**
 //    * Add missing variant to existing product
@@ -359,45 +463,41 @@
 //     }
 //   }
 
-// async setInventoryLevel(itemId: string, locationId: string, qty: number) {
-//   try {
-//     await this.medusaClient.post(
-//       `/admin/inventory-items/${itemId}/location-levels`,
-//       { location_id: locationId, stocked_quantity: qty }
-//     )
-//   } catch (err: any) {
-//     // ✅ ADD THIS - Show actual error
-//     console.error(`      🔴 Error details:`, err.response?.data || err.message)
-    
-//     if (err.response?.status === 404) {
+//   async setInventoryLevel(itemId: string, locationId: string, qty: number) {
+//     try {
 //       await this.medusaClient.post(
 //         `/admin/inventory-items/${itemId}/location-levels`,
 //         { location_id: locationId, stocked_quantity: qty }
 //       )
-//     } else {
-//       throw err
+//     } catch (err: any) {
+//       console.error(`      🔴 Error details:`, err.response?.data || err.message)
+      
+//       if (err.response?.status === 404) {
+//         await this.medusaClient.post(
+//           `/admin/inventory-items/${itemId}/location-levels`,
+//           { location_id: locationId, stocked_quantity: qty }
+//         )
+//       } else {
+//         throw err
+//       }
 //     }
 //   }
-// }
-
 
 //   /**
 //    * MAIN: Process variable product family
 //    */
-// async processVariableProduct(productId: number, medusaSKUs: Set<string>, dryRun: boolean): Promise<{ success: boolean, addedVariants: number }> {
-//   try {
-//     console.log(`\n${'='.repeat(70)}`)
-//     console.log(`🔍 Processing Variable Product: ${productId}`)
+//   async processVariableProduct(productId: number, medusaSKUs: Set<string>, dryRun: boolean): Promise<{ success: boolean, addedVariants: number }> {
+//     try {
+//       console.log(`\n${'='.repeat(70)}`)
+//       console.log(`🔍 Processing Variable Product: ${productId}`)
 
-//     const parentResponse = await this.wooClient.get(`/products/${productId}`)
-//     const wooProduct = parentResponse.data
+//       const parentResponse = await this.wooClient.get(`/products/${productId}`)
+//       const wooProduct = parentResponse.data
 
-//     // ✅ FIX THIS LINE:
-//     const variationsResponse = await this.wooClient.get(`/products/${productId}/variations`, {
-//       params: { per_page: 100 }  // ADD THIS
-//     })
-//     const wooVariations = variationsResponse.data
-
+//       const variationsResponse = await this.wooClient.get(`/products/${productId}/variations`, {
+//         params: { per_page: 100 }
+//       })
+//       const wooVariations = variationsResponse.data
 
 //       console.log(`   • Total variants in WooCommerce: ${wooVariations.length}`)
 
@@ -425,36 +525,61 @@
 //       const existingProductId = await this.checkProductExists(wooProduct.slug)
 
 //       let productId_medusa: string
+//       let variantsAdded = 0
 
 //       if (existingProductId) {
 //         console.log(`✅ Parent product exists: ${existingProductId}`)
 //         productId_medusa = existingProductId
 
-//         // Add missing variants
+//         // Add missing variants with option value management
 //         console.log(`🔄 Adding ${missingVariants.length} missing variants...`)
         
 //         for (const wooVariant of missingVariants) {
-//           const variantOptions: Record<string, string> = {}
-//           ;(wooVariant.attributes || []).forEach((attr: any) => {
-//             variantOptions[attr.name] = attr.option
-//           })
+//           try {
+//             const variantOptions: Record<string, string> = {}
+//             ;(wooVariant.attributes || []).forEach((attr: any) => {
+//               variantOptions[attr.name] = attr.option
+//             })
 
-//           const variantPayload = {
-//             title: wooVariant.name || `${wooProduct.name} Variant`,
-//             sku: wooVariant.sku,
-//             options: variantOptions,
-//             prices: [{
-//               amount: Math.round(Number(wooVariant.price) * 100),
-//               currency_code: 'usd'
-//             }],
-//             manage_inventory: wooVariant.manage_stock,
-//             allow_backorder: wooVariant.backorders_allowed,
-//             weight: Number(wooVariant.weight) || undefined,
-//             metadata: { woocommerce_id: wooVariant.id }
+//             // ✅ UPDATED: Ensure product has all option values AND get normalized values
+//             const normalizedOptions = await this.ensureProductHasOptionValues(
+//               productId_medusa, 
+//               wooProduct.name,
+//               variantOptions
+//             )
+
+//             const variantPayload = {
+//               title: wooVariant.name || `${wooProduct.name} Variant`,
+//               sku: wooVariant.sku,
+//               options: normalizedOptions, // ✅ USE NORMALIZED VALUES
+//               prices: [{
+//                 amount: Math.round(Number(wooVariant.price) * 100),
+//                 currency_code: 'usd'
+//               }],
+//               manage_inventory: wooVariant.manage_stock,
+//               allow_backorder: wooVariant.backorders_allowed,
+//               weight: Number(wooVariant.weight) || undefined,
+//               metadata: { woocommerce_id: wooVariant.id }
+//             }
+
+//             await this.addVariantToProduct(productId_medusa, variantPayload)
+//             console.log(`   ✅ Added variant: ${wooVariant.sku}`)
+//             variantsAdded++
+
+//           } catch (variantError: any) {
+//             console.log(`   ⏭️  Skipping ${wooVariant.sku}: ${variantError.response?.data?.message || variantError.message}`)
+            
+//             this.skippedVariants.push({
+//               productId: wooProduct.id,
+//               productName: wooProduct.name,
+//               sku: wooVariant.sku,
+//               variantName: wooVariant.name || wooVariant.sku,
+//               reason: variantError.response?.data?.message || variantError.message,
+//               missingOptions: []
+//             })
+            
+//             continue
 //           }
-
-//           await this.addVariantToProduct(productId_medusa, variantPayload)
-//           console.log(`   ✅ Added variant: ${wooVariant.sku}`)
 //         }
 
 //       } else {
@@ -465,8 +590,16 @@
         
 //         // Transform and create
 //         const medusaProduct = this.transformWooToMedusaProduct(wooProduct, wooVariations)
+        
+//         // Only create if there are valid variants
+//         if (medusaProduct.variants.length === 0) {
+//           console.log(`⚠️  No valid variants to create - skipping product`)
+//           return { success: true, addedVariants: 0 }
+//         }
+        
 //         const createdProduct = await this.createProductInMedusa(medusaProduct)
 //         productId_medusa = createdProduct.id
+//         variantsAdded = medusaProduct.variants.length
 
 //         console.log(`✅ Created product: ${productId_medusa}`)
 
@@ -476,23 +609,27 @@
 //         }
 //       }
 
-//       // Ensure inventory items
-//       await this.ensureInventoryItems(productId_medusa)
-      
-//       // Set inventory levels
-//       await this.completeInventorySetup(productId_medusa, wooVariations)
+//       // Only proceed with inventory if variants were added
+//       if (variantsAdded > 0) {
+//         // Ensure inventory items
+//         await this.ensureInventoryItems(productId_medusa)
+        
+//         // Set inventory levels
+//         await this.completeInventorySetup(productId_medusa, wooVariations)
 
-//       console.log(`🎉 SUCCESS! Added ${missingVariants.length} variants`)
+//         console.log(`🎉 SUCCESS! Added ${variantsAdded} variants`)
+//       } else {
+//         console.log(`⚠️  No variants added (all skipped due to errors)`)
+//       }
       
-//       return { success: true, addedVariants: missingVariants.length }
+//       return { success: true, addedVariants: variantsAdded }
 
 //     } catch (error: any) {
-//   console.error(`❌ Failed to process product ${productId}:`, error.message)
-  
-//   // ✅ ADD THIS
-//   if (error.response?.data) {
-//     console.error(`📋 Error details:`, JSON.stringify(error.response.data, null, 2))
-//   }
+//       console.error(`❌ Failed to process product ${productId}:`, error.message)
+      
+//       if (error.response?.data) {
+//         console.error(`📋 Error details:`, JSON.stringify(error.response.data, null, 2))
+//       }
 //       return { success: false, addedVariants: 0 }
 //     }
 //   }
@@ -536,13 +673,13 @@
 //       console.log(`   ✅ Successful products: ${successCount}`)
 //       console.log(`   ❌ Failed products: ${failCount}`)
 //       console.log(`   📊 Total variants added: ${totalVariantsAdded}`)
+//       console.log(`   ⏭️  Total variants skipped: ${this.skippedVariants.length}`)
 //       console.log(`   📈 Total products processed: ${productsToProcess.length}`)
 
-//           // ✅ NEW: Export skipped variants
-//     if (!dryRun) {
-//       await this.exportSkippedVariantsCSV()
-//     }
-
+//       // Export skipped variants
+//       if (!dryRun) {
+//         await this.exportSkippedVariantsCSV()
+//       }
 
 //     } catch (error: any) {
 //       console.error('💥 Bulk migration failed:', error.message)
@@ -550,37 +687,32 @@
 //     }
 //   }
 
-
 //   /**
-//  * Export skipped variants to CSV
-//  */
-// async exportSkippedVariantsCSV(): Promise<void> {
-//   if (this.skippedVariants.length === 0) {
-//     console.log('\n✅ No skipped variants to export')
-//     return
+//    * Export skipped variants to CSV
+//    */
+//   async exportSkippedVariantsCSV(): Promise<void> {
+//     if (this.skippedVariants.length === 0) {
+//       console.log('\n✅ No skipped variants to export')
+//       return
+//     }
+
+//     const fs = await import('fs')
+//     const csvContent = [
+//       // Header
+//       'Product ID,Product Name,SKU,Variant Name,Reason,Missing Options',
+//       // Data rows
+//       ...this.skippedVariants.map(v => 
+//         `${v.productId},"${v.productName}",${v.sku},"${v.variantName}","${v.reason}","${v.missingOptions.join('; ')}"`
+//       )
+//     ].join('\n')
+
+//     const filename = `skipped-variants-${Date.now()}.csv`
+//     fs.writeFileSync(filename, csvContent)
+    
+//     console.log(`\n📄 Exported ${this.skippedVariants.length} skipped variants to: ${filename}`)
 //   }
-
-//   const fs = await import('fs')
-//   const csvContent = [
-//     // Header
-//     'Product ID,Product Name,SKU,Variant Name,Reason,Missing Options',
-//     // Data rows
-//     ...this.skippedVariants.map(v => 
-//       `${v.productId},"${v.productName}",${v.sku},"${v.variantName}","${v.reason}","${v.missingOptions.join('; ')}"`
-//     )
-//   ].join('\n')
-
-//   const filename = `skipped-variants-${Date.now()}.csv`
-//   fs.writeFileSync(filename, csvContent)
-  
-//   console.log(`\n📄 Exported ${this.skippedVariants.length} skipped variants to: ${filename}`)
 // }
 
-
-//   //end
-// }
-
-// // Main runner
 // // Main runner
 // async function main(): Promise<void> {
 //   const action = process.argv[2] || 'bulk'
@@ -593,7 +725,6 @@
 
 //   try {
 //     if (action === 'single') {
-//       // ✅ NEW: Single product test
 //       const productId = parseInt(productIdArg)
 //       const dryRun = dryRunArg === '--dry-run'
       
@@ -627,24 +758,11 @@
 //     console.error('💥 Migration failed:', error.message)
 //     process.exit(1)
 //   }
-
-
-
-  
-
-
 // }
-
 
 // export { WooToMedusaMigration }
 
 // if (require.main === module) {
 //   main()
 // }
-
-
-
-
-
-
-
+ 

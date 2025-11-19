@@ -53,68 +53,73 @@ const HeaderSearchSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
-  const performSearch = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      setResults([]);
-      setExpandedResults([]);
-      setShowResults(false);
-      return;
-    }
+const performSearch = useCallback(async (searchQuery: string) => {
+  if (!searchQuery.trim()) {
+    setResults([]);
+    setExpandedResults([]);
+    setShowResults(false);
+    return;
+  }
 
-    setIsLoading(true);
+  setIsLoading(true);
+  
+  try {
+    const response = await fetch('https://meilisearch-production-4381.up.railway.app/indexes/products/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 1736a63c82c45518d38d9a8e8bd378885b15c79e85e03fbb4d65bba5e4f452e1'
+      },
+      body: JSON.stringify({ 
+        q: searchQuery,
+        limit: 20
+      })
+    });
+
+    const data = await response.json();
+    setResults(data.hits || []);
     
-    try {
-      const response = await fetch('https://meilisearch-production-4381.up.railway.app/indexes/products/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer 1736a63c82c45518d38d9a8e8bd378885b15c79e85e03fbb4d65bba5e4f452e1'
-        },
-        body: JSON.stringify({ 
-          q: searchQuery,
-          limit: 20 // ✅ Increased to get more products
-        })
-      });
-
-      const data = await response.json();
-      setResults(data.hits || []);
+    // ✅ Expand products into individual variant results
+    const expanded: ExpandedResult[] = [];
+    const lowerQuery = searchQuery.toLowerCase();
+    
+    (data.hits || []).forEach((product: SearchResult) => {
+      if (!product.variants || product.variants.length === 0) return;
       
-      // ✅ Expand products into individual variant results
-      const expanded: ExpandedResult[] = [];
-      const lowerQuery = searchQuery.toLowerCase();
+      // ✅ Find matching variants OR use first variant if title matches
+      const matchingVariants = product.variants.filter(variant => 
+        variant.sku?.toLowerCase().includes(lowerQuery) ||
+        variant.metadata?.competitor_skus?.some(sku => 
+          sku.toLowerCase().includes(lowerQuery)
+        )
+      );
       
-      (data.hits || []).forEach((product: SearchResult) => {
-        if (!product.variants) return;
-        
-        // Find ALL matching variants (not just first one)
-        product.variants.forEach(variant => {
-          const isMatch = 
-            variant.sku?.toLowerCase().includes(lowerQuery) ||
-            variant.metadata?.competitor_skus?.some(sku => 
-              sku.toLowerCase().includes(lowerQuery)
-            );
-          
-          if (isMatch) {
-            expanded.push({
-              productId: product.id,
-              productTitle: product.title,
-              productHandle: product.handle,
-              productThumbnail: product.thumbnail,
-              variant
-            });
-          }
+      // ✅ If we have SKU matches, use those. Otherwise, show first variant
+      const variantsToShow = matchingVariants.length > 0 
+        ? matchingVariants 
+        : [product.variants[0]]; // Show first variant when title matches
+      
+      variantsToShow.forEach(variant => {
+        expanded.push({
+          productId: product.id,
+          productTitle: product.title,
+          productHandle: product.handle,
+          productThumbnail: product.thumbnail,
+          variant
         });
       });
-      
-      // Limit to 6 variant results
-      setExpandedResults(expanded.slice(0, 6));
-      setShowResults(true);
-    } catch (error) {
-      console.error('Search error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    });
+    
+    // Limit to 6 results
+    setExpandedResults(expanded.slice(0, 6));
+    setShowResults(true);
+  } catch (error) {
+    console.error('Search error:', error);
+  } finally {
+    setIsLoading(false);
+  }
+}, []);
+
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
