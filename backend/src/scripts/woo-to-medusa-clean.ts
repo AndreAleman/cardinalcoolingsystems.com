@@ -328,7 +328,7 @@
 //         sku: variation.sku,
 //         options: variantOptions,
 //         prices: [{
-//           amount: Math.round(Number(variation.price) * 100),
+//           amount: Math.round(Number(variation.price) * 2),
 //           currency_code: 'usd'
 //         }],
 //         manage_inventory: variation.manage_stock,
@@ -553,7 +553,7 @@
 //               sku: wooVariant.sku,
 //               options: normalizedOptions, // ✅ USE NORMALIZED VALUES
 //               prices: [{
-//                 amount: Math.round(Number(wooVariant.price) * 100),
+//                 amount: Math.round(Number(wooVariant.price) * 2),
 //                 currency_code: 'usd'
 //               }],
 //               manage_inventory: wooVariant.manage_stock,
