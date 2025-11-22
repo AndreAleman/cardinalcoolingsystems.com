@@ -860,26 +860,50 @@ private isYourTableStructure(rows: any[]): boolean {
     }
     
     // Step 2: Add tables with CORRECT FORMAT (simple strings in cells)
-    components.tables.forEach(table => {
-      sanityBlocks.push({
-        _type: 'table',
-        _key: this.generateUniqueKey(),
-        rows: [
-          // Header row - simple strings only
-          {
-            _type: 'tableRow',
-            _key: this.generateUniqueKey(),
-            cells: table.headers.map(header => header.text) // ← Just the text string
-          },
-          // Data rows - simple strings only  
-          ...table.rows.map(row => ({
-            _type: 'tableRow',
-            _key: this.generateUniqueKey(),
-            cells: row.map(cell => cell.text) // ← Just the text string
-          }))
-        ]
+    // Step 2: Add tables - CORRECT FORMAT matching your working product
+components.tables.forEach(table => {
+  const tableRows: any[] = []
+  
+  // Add headers (checking if it's multi-row)
+  if (Array.isArray(table.headers[0])) {
+    // Multi-row headers
+    table.headers.forEach((headerRow: any) => {
+      tableRows.push({
+        cells: headerRow.map((cell: any) => ({
+          text: cell.text || '',
+          colspan: parseInt(cell.colspan) || 1,
+          rowspan: parseInt(cell.rowspan) || 1
+        }))
       })
     })
+  } else {
+    // Single header row
+    tableRows.push({
+      cells: table.headers.map((cell: any) => ({
+        text: cell.text || '',
+        colspan: parseInt(cell.colspan) || 1,
+        rowspan: parseInt(cell.rowspan) || 1
+      }))
+    })
+  }
+  
+  // Add data rows
+  table.rows.forEach((row: any) => {
+    tableRows.push({
+      cells: row.map((cell: any) => ({
+        text: cell.text || '',
+        colspan: parseInt(cell.colspan) || 1,
+        rowspan: parseInt(cell.rowspan) || 1
+      }))
+    })
+  })
+  
+  sanityBlocks.push({
+    _type: 'productTable',  // ✅ Changed from 'table' to 'productTable'
+    _key: this.generateUniqueKey(),
+    rows: tableRows  // No _type or _key on rows
+  })
+})
     
     // Step 3: Add text blocks
     components.textBlocks.forEach(textBlock => {
@@ -1050,140 +1074,104 @@ private isYourTableStructure(rows: any[]): boolean {
   /**
    * ✅ STEP 5: Parse, publish to Sanity, verify, then clear description
    */
-/**
- * ✅ STEP 5: Parse, publish to Sanity, verify, then clear description
- */
-async runStep5ParseAndClearDescription(productId: string): Promise<void> {
-  try {
-    console.log('🚀 Starting Step 5: Parse → Publish to Sanity → Verify → Clear Description\n')
-    
-    // Step 1: Test Medusa connection first
-    console.log('📋 Step 1: Testing Medusa authentication...')
+  async runStep5ParseAndClearDescription(productId: string): Promise<void> {
     try {
-      await this.testMedusaConnection()
-      console.log('✅ Medusa authentication successful')
-    } catch (medusaError: any) {
-      console.error('❌ Medusa authentication failed:', medusaError.response?.status, medusaError.response?.data)
-      throw new Error(`Medusa auth failed: ${medusaError.message}`)
-    }
-
-    // Step 2: Test Sanity connection
-    console.log('📋 Step 2: Testing Sanity authentication...')
-    try {
-      const sanityTest = await this.sanityClient.fetch('*[_type == "productTab"][0]')
-      console.log('✅ Sanity authentication successful')
-    } catch (sanityError: any) {
-      console.error('❌ Sanity authentication failed:', sanityError.message)
-      throw new Error(`Sanity auth failed: ${sanityError.message}`)
-    }
-
-    // Step 2.5: Check if Sanity already has full content for this product
-    const docId = `productTab-${productId.replace('prod_', '')}`
-    console.log(`📋 Step 2.5: Checking if Sanity already has content for ${docId}...`)
-    
-    try {
-      const existingDoc = await this.sanityClient.getDocument(docId)
-      if (existingDoc && existingDoc.content && existingDoc.content.length > 0) {
-        console.log('✅ Sanity already has full content for this product!')
-        console.log(`   Content blocks: ${existingDoc.content.length}`)
-        console.log('   Skipping migration - product already migrated.')
-        console.log(`   🔗 View in Studio: ${process.env.SANITY_STUDIO_URL || 'https://your-project.sanity.studio'}/desk/productTab;${docId}`)
-        return
-      } else {
-        console.log('ℹ️  No existing content found in Sanity, proceeding with migration...')
+      console.log('🚀 Starting Step 5: Parse → Publish to Sanity → Verify → Clear Description\n')
+      
+      // Step 1: Test Medusa connection first
+      console.log('📋 Step 1: Testing Medusa authentication...')
+      try {
+        await this.testMedusaConnection()
+        console.log('✅ Medusa authentication successful')
+      } catch (medusaError: any) {
+        console.error('❌ Medusa authentication failed:', medusaError.response?.status, medusaError.response?.data)
+        throw new Error(`Medusa auth failed: ${medusaError.message}`)
       }
-    } catch (error: any) {
-      if (error.statusCode === 404 || error.message.includes('not found')) {
-        console.log('ℹ️  Document does not exist in Sanity, proceeding with migration...')
-      } else {
-        throw error
+
+      // Step 2: Test Sanity connection
+      console.log('📋 Step 2: Testing Sanity authentication...')
+      try {
+        const sanityTest = await this.sanityClient.fetch('*[_type == "productTab"][0]')
+        console.log('✅ Sanity authentication successful')
+      } catch (sanityError: any) {
+        console.error('❌ Sanity authentication failed:', sanityError.message)
+        throw new Error(`Sanity auth failed: ${sanityError.message}`)
       }
-    }
 
-    // Step 3: Fetch and parse product content
-    console.log('📋 Step 3: Fetching and parsing product content...')
-    const response = await this.medusaClient.get(`/admin/products/${productId}`, {
-      params: { fields: 'id,title,description,metadata' }
-    })
-    const product = response.data.product
-    console.log(`✅ Product: ${product.title}`)
+      // Step 3: Fetch and parse product content
+// Step 3: Fetch and parse product content
+console.log('📋 Step 3: Fetching and parsing product content...')
+const response = await this.medusaClient.get(`/admin/products/${productId}`, {
+  params: { fields: 'id,title,description,metadata' }  // Add metadata
+})
+const product = response.data.product
+console.log(`✅ Product: ${product.title}`)
+
+// Check description field first, then metadata
+let descriptionHTML: string | null = null
+if (product.description && product.description.trim() !== '') {
+  descriptionHTML = product.description
+  console.log(`✅ Using description from description field (${descriptionHTML.length} characters)`)
+} else if (product.metadata?.woocommerce_description) {
+  descriptionHTML = product.metadata.woocommerce_description
+  console.log(`✅ Using description from metadata (${descriptionHTML.length} characters)`)
+} else {
+  console.log('⚠️ No description found')
+  return
+}
+
+const cleanedHTML = this.cleanHTML(descriptionHTML)
+const components = this.parseHTMLComponents(cleanedHTML)
+
+      
+      // Display parsed components for verification
+      this.displayParsedComponents(components)
+
+      // Step 4: Convert to Sanity blocks and publish directly
+      console.log('\n🔄 Step 4: Converting to Sanity format and publishing...')
+      const sanityBlocks = await this.convertToSanityBlocks(components)
+
+      // ✅ CREATE PUBLISHED DOCUMENT DIRECTLY (no drafts prefix)
+// ✅ UPDATE THE PRODUCT DOCUMENT DIRECTLY (add description field)
+console.log('📤 Publishing content to Sanity...')
+console.log(`📤 Document ID: ${productId}`)
+
+try {
+  const sanityResult = await this.sanityClient
+    .patch(productId)  // Update the existing product document
+    .set({ description: sanityBlocks })  // Add description field
+    .commit()
     
-    // ✅ Check description field first, then fallback to metadata.woocommerce_description
-    let descriptionHTML = ''
-    let descriptionSource: 'description' | 'metadata' | 'none' = 'none'
-    let shouldClearAfter = false
-    
-    if (product.description && product.description.trim() !== '') {
-      // Use description field and mark for deletion
-      descriptionHTML = product.description
-      descriptionSource = 'description'
-      shouldClearAfter = true
-      console.log('ℹ️  Using description from description field (will be cleared after migration)')
-    } else if (product.metadata?.woocommerce_description) {
-      // Fallback to metadata and keep it
-      descriptionHTML = product.metadata.woocommerce_description
-      descriptionSource = 'metadata'
-      shouldClearAfter = false
-      console.log('ℹ️  Using description from metadata.woocommerce_description (will be preserved)')
-    } else {
-      console.log('⚠️  No description found in either description or metadata.woocommerce_description')
-      return
-    }
+  console.log('✅ Content published to Sanity successfully!')
+  console.log(`   Document ID: ${sanityResult._id}`)
+} catch (sanityCreateError: any) {
+  console.error('❌ Failed to publish to Sanity:', sanityCreateError)
+  throw sanityCreateError
+}
 
-    const cleanedHTML = this.cleanHTML(descriptionHTML)
-    const components = this.parseHTMLComponents(cleanedHTML)
-    
-    // Display parsed components for verification
-    this.displayParsedComponents(components)
 
-    // Step 4: Convert to Sanity blocks and publish directly
-    console.log('\n🔄 Step 4: Converting to Sanity format and publishing...')
-    const sanityBlocks = await this.convertToSanityBlocks(components)
+      // Step 5: Show Sanity Studio link for verification
+      const studioBaseUrl = process.env.SANITY_STUDIO_URL || 'https://your-project.sanity.studio'
+const sanityStudioUrl = `${studioBaseUrl}/desk/product;${productId}`  // Changed from productTab to product
+      
+      console.log('\n🔍 CONTENT PUBLISHED TO SANITY STUDIO')
+      console.log('=' .repeat(80))
+      console.log('Your content is now live and visible in Sanity Studio!')
+      console.log('')
+      console.log(`🔗 View in Studio: ${sanityStudioUrl}`)
+      console.log('')
+      console.log('You can now see:')
+      console.log('• Complete product specification tables')
+      console.log('• Uploaded product images')
+      console.log('• Formatted text content and notes')
+      console.log('=' .repeat(80))
 
-    // ✅ CREATE PUBLISHED DOCUMENT DIRECTLY (no drafts prefix)
-    const sanityDocument = {
-      _type: 'productTab',
-      _id: docId, // Published immediately - no 'drafts.' prefix
-      title: `${product.title} - Product Information`,
-      medusaProductId: productId,
-      content: sanityBlocks
-    }
-
-    console.log('📤 Publishing content to Sanity...')
-    console.log(`📤 Document ID: ${docId}`)
-
-    try {
-      const sanityResult = await this.sanityClient.createOrReplace(sanityDocument)
-      console.log('✅ Content published to Sanity successfully!')
-      console.log(`   Document ID: ${sanityResult._id}`)
-    } catch (sanityCreateError: any) {
-      console.error('❌ Failed to publish to Sanity:', sanityCreateError)
-      throw sanityCreateError
-    }
-
-    // Step 5: Show Sanity Studio link for verification
-    const studioBaseUrl = process.env.SANITY_STUDIO_URL || 'https://your-project.sanity.studio'
-    const sanityStudioUrl = `${studioBaseUrl}/desk/productTab;${docId}`
-    
-    console.log('\n🔍 CONTENT PUBLISHED TO SANITY STUDIO')
-    console.log('='.repeat(80))
-    console.log('Your content is now live and visible in Sanity Studio!')
-    console.log('')
-    console.log(`🔗 View in Studio: ${sanityStudioUrl}`)
-    console.log('')
-    console.log(`📝 Description source: ${descriptionSource}`)
-    console.log('You can now see:')
-    console.log('• Complete product specification tables')
-    console.log('• Uploaded product images')
-    console.log('• Formatted text content and notes')
-    console.log('='.repeat(80))
-
-    // Step 6: Only clear description if it came from the description field
-    if (shouldClearAfter) {
-      const answer = await this.askQuestion('\n❓ Content published successfully! Ready to CLEAR the description field in Medusa? (yes/no): ')
+      // Step 6: Wait for user verification and confirmation
+      const answer = await this.askQuestion('\n❓ Content published successfully! Ready to CLEAR the original HTML description in Medusa? (yes/no): ')
 
       if (answer.toLowerCase().trim() === 'yes') {
-        console.log('\n🗑️  Clearing description field from Medusa...')
+        // Step 7: Clear the messy HTML description in Medusa
+        console.log('\n🗑️  Clearing HTML description from Medusa...')
         await this.clearMedusaProductDescription(productId)
 
         console.log('\n🎉 Migration completed successfully!')
@@ -1191,27 +1179,20 @@ async runStep5ParseAndClearDescription(productId: string): Promise<void> {
         console.log('   ✅ Original HTML description cleared from Medusa')
         console.log('   ✅ Product ready for custom description')
         console.log(`   🔗 Sanity Studio: ${sanityStudioUrl}`)
+
       } else {
         console.log('\n⏹️  Keeping original Medusa description')
         console.log('   ✅ Content published in Sanity')
-        console.log('   • Original description preserved in description field')
+        console.log('   • Original description preserved in Medusa')
         console.log(`   🔗 View content: ${sanityStudioUrl}`)
       }
-    } else {
-      console.log('\n🎉 Migration completed successfully!')
-      console.log('   ✅ Content published and live in Sanity')
-      console.log('   ✅ Metadata preserved in Medusa (description sourced from metadata)')
-      console.log('   ℹ️  No description field to clear')
-      console.log(`   🔗 Sanity Studio: ${sanityStudioUrl}`)
+
+    } catch (error: any) {
+      console.error('\n💥 Step 5 failed:', error.message)
+      console.error('Full error:', error)
+      throw error
     }
-
-  } catch (error: any) {
-    console.error('\n💥 Step 5 failed:', error.message)
-    console.error('Full error:', error)
-    throw error
   }
-}
-
 
   /**
    * Helper: Remove all tabs from a Sanity product (for testing)
