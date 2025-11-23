@@ -2,6 +2,12 @@
 
 import { useState, FormEvent, useRef } from "react"
 
+declare global {
+  interface Window {
+    dataLayer: any[]
+  }
+}
+
 interface BulkPricingModalProps {
   isOpen: boolean
   onClose: () => void
@@ -38,6 +44,19 @@ export default function BulkPricingModal({ isOpen, onClose }: BulkPricingModalPr
       })
 
       if (response.ok) {
+        // ✅ Track successful bulk pricing form submission
+        if (typeof window !== 'undefined') {
+          window.dataLayer = window.dataLayer || []
+          window.dataLayer.push({
+            event: 'bulk_pricing_form_submit',
+            form_type: 'bulk_pricing',
+            user_email: data.email,
+            user_company: data.company,
+            form_location: 'product_page_discount_table'
+          })
+          console.log('✅ Bulk pricing form submitted:', data.email, data.company)
+        }
+
         setSubmitStatus('success')
         formRef.current?.reset()
         setTimeout(() => {

@@ -4,6 +4,12 @@ import { Metadata } from "next"
 import Link from "next/link"
 import { useState, FormEvent, useRef } from "react"
 
+declare global {
+  interface Window {
+    dataLayer: any[]
+  }
+}
+
 interface Props {
   params: { countryCode: string }
 }
@@ -39,6 +45,18 @@ export default function ContactPage({ params }: Props) {
       })
 
       if (response.ok) {
+        // ✅ ADD THIS: Track successful contact form submission
+        if (typeof window !== 'undefined') {
+          window.dataLayer = window.dataLayer || []
+          window.dataLayer.push({
+            event: 'contact_form_submit',
+            form_type: 'general_contact',
+            user_email: data.email,
+            form_location: 'contact_page'
+          })
+          console.log('✅ Contact form submitted:', data.email)
+        }
+
         setSubmitStatus('success')
         formRef.current?.reset()
       } else {

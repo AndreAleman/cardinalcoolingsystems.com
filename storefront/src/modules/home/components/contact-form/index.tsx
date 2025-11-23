@@ -2,6 +2,12 @@
 
 import { useState, useRef } from "react"
 
+declare global {
+  interface Window {
+    dataLayer: any[]
+  }
+}
+
 type FormData = {
   name: string
   lastName: string
@@ -61,6 +67,18 @@ export default function ContactForm() {
       })
 
       if (response.ok) {
+        // ✅ Track successful home page contact form submission
+        if (typeof window !== 'undefined') {
+          window.dataLayer = window.dataLayer || []
+          window.dataLayer.push({
+            event: 'contact_form_submit',
+            form_type: 'homepage_contact',
+            user_email: formData.email,
+            form_location: 'homepage'
+          })
+          console.log('✅ Homepage contact form submitted:', formData.email)
+        }
+
         setSubmitStatus('success')
         setFormData({
           name: "",

@@ -191,49 +191,71 @@ export default function ProductActions({
   }
 
   // add the selected variant to the cart
-  const handleAddToCart = async () => {
-    if (!selectedVariant?.id) return null
+// add the selected variant to the cart
+const handleAddToCart = async () => {
+  if (!selectedVariant?.id) return null
 
-    setIsAdding(true)
+  setIsAdding(true)
 
-    try {
-      await addToCart({
-        variantId: selectedVariant.id,
-        quantity: quantity,
-        countryCode,
+  try {
+    await addToCart({
+      variantId: selectedVariant.id,
+      quantity: quantity,
+      countryCode,
+    })
+    
+    // ✅ ADD THIS: Track add to cart event
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || []
+      window.dataLayer.push({
+        event: 'add_to_cart',
+        ecommerce: {
+          currency: 'USD',
+          value: (selectedVariant.calculated_price?.calculated_amount || 0) / 100 * quantity,
+          items: [{
+            item_id: selectedVariant.sku || selectedVariant.id,
+            item_name: product.title,
+            item_category: product.categories?.[0]?.name || 'Uncategorized',
+            price: (selectedVariant.calculated_price?.calculated_amount || 0) / 100,
+            quantity: quantity
+          }]
+        }
       })
-      
-      toast.success(
-        `✓ Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        }
-      )
-      
-      setQuantity(1)
-    } catch (error) {
-      console.error("Failed to add to cart:", error)
-      
-      toast.error(
-        "Failed to add item to cart. Please try again.",
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        }
-      )
-    } finally {
-      setIsAdding(false)
+      console.log('✅ Add to cart tracked:', product.title, 'Qty:', quantity)
     }
+    
+    toast.success(
+      `✓ Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`,
+      {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      }
+    )
+    
+    setQuantity(1)
+  } catch (error) {
+    console.error("Failed to add to cart:", error)
+    
+    toast.error(
+      "Failed to add item to cart. Please try again.",
+      {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      }
+    )
+  } finally {
+    setIsAdding(false)
   }
+}
+
 
   const getButtonText = () => {
     if (!selectedVariant) return "Select options"

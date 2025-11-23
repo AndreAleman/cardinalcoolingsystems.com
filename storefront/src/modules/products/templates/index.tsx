@@ -13,6 +13,8 @@ import ProductActionsWrapper from "./product-actions-wrapper"
 import { HttpTypes } from "@medusajs/types"
 import SanityTabs from "../components/sanity-tabs"
 import Link from "next/link"
+import ProductViewTracker from "@modules/products/components/product-view-tracker"
+
 
 type SanityTab = {
   _key: string
@@ -57,6 +59,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
 
   return (
     <div className="bg-white">
+      <ProductViewTracker product={product} selectedVariant={selectedVariant} />
       {/* Main Product Section */}
       <div className="content-container">
         <div className="max-w-6xl mx-auto">
