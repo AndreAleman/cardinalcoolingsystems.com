@@ -104,38 +104,38 @@ export default function BulkPricingModal({ isOpen, onClose }: BulkPricingModalPr
           </p>
 
           {/* Blurred Discount Table Preview */}
-          <div className="relative mb-6">
-            <div className="filter blur-md select-none pointer-events-none">
-              <table className="w-full border border-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-sm font-medium">Discount %</th>
-                    <th className="px-4 py-2 text-left text-sm font-medium">Qty Purchased</th>
-                    <th className="px-4 py-2 text-left text-sm font-medium">Dollars Spent</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t">
-                    <td className="px-4 py-2 text-orange-600 font-bold">5%</td>
-                    <td className="px-4 py-2">10+</td>
-                    <td className="px-4 py-2">$100+</td>
-                  </tr>
-                  <tr className="border-t">
-                    <td className="px-4 py-2 text-orange-600 font-bold">10%</td>
-                    <td className="px-4 py-2">25+</td>
-                    <td className="px-4 py-2">$250+</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white/95 px-6 py-3 rounded-lg shadow-lg border border-gray-200">
-                <p className="text-sm font-semibold text-gray-900">
-                  🔒 B2B Volume Pricing Available
-                </p>
-              </div>
-            </div>
-          </div>
+{/* Blurred Discount Table Preview */}
+<div className="relative mb-6">
+  <table className="w-full border border-gray-200">
+    <thead className="bg-gray-50">
+      <tr>
+        <th className="px-4 py-2 text-left text-sm font-medium">Discount %</th>
+        <th className="px-4 py-2 text-left text-sm font-medium">Qty Purchased</th>
+        <th className="px-4 py-2 text-left text-sm font-medium">Dollars Spent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr className="border-t filter blur-md select-none pointer-events-none">
+        <td className="px-4 py-2 text-orange-600 font-bold">5%</td>
+        <td className="px-4 py-2">10+</td>
+        <td className="px-4 py-2">$100+</td>
+      </tr>
+      <tr className="border-t">
+        <td className="px-4 py-2 text-orange-600 font-bold">10%</td>
+        <td className="px-4 py-2">25+</td>
+        <td className="px-4 py-2">$250+</td>
+      </tr>
+    </tbody>
+  </table>
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="bg-white/95 px-6 py-3 rounded-lg shadow-lg border border-gray-200">
+      <p className="text-sm font-semibold text-gray-900">
+        🔒 B2B Volume Pricing Available
+      </p>
+    </div>
+  </div>
+</div>
+
 
           {/* Call Now Option */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
