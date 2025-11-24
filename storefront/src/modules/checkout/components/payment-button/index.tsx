@@ -11,6 +11,13 @@ import { placeOrder } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { isManual, isPaypal, isStripe } from "@lib/constants"
 
+// ✅ ADD THIS: TypeScript declaration
+declare global {
+  interface Window {
+    dataLayer: any[]
+  }
+}
+
 type PaymentButtonProps = {
   cart: HttpTypes.StoreCart
   "data-testid": string
@@ -27,14 +34,6 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     !cart.email ||
     (cart.shipping_methods?.length ?? 0) < 1
 
-  // TODO: Add this once gift cards are implemented
-  // const paidByGiftcard =
-  //   cart?.gift_cards && cart?.gift_cards?.length > 0 && cart?.total === 0
-
-  // if (paidByGiftcard) {
-  //   return <GiftCardPaymentButton />
-  // }
-
   const paymentSession = cart.payment_collection?.payment_sessions?.[0]
 
   switch (true) {
@@ -48,7 +47,11 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       )
     case isManual(paymentSession?.provider_id):
       return (
-        <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
+        <ManualTestPaymentButton 
+          notReady={notReady} 
+          cart={cart}
+          data-testid={dataTestId} 
+        />
       )
     case isPaypal(paymentSession?.provider_id):
       return (
@@ -96,6 +99,29 @@ const StripePaymentButton = ({
 
   const onPaymentCompleted = async () => {
     await placeOrder()
+      .then(() => {
+        // ✅ ADD THIS: Track purchase after successful order
+        if (typeof window !== 'undefined') {
+          window.dataLayer = window.dataLayer || []
+          window.dataLayer.push({
+            event: 'purchase',
+            ecommerce: {
+              transaction_id: cart.id,
+              value: (cart.total || 0) / 100,
+              tax: (cart.tax_total || 0) / 100,
+              shipping: (cart.shipping_total || 0) / 100,
+              currency: 'USD',
+              items: cart.items?.map(item => ({
+                item_id: item.variant?.sku || item.variant_id,
+                item_name: item.title,
+                price: (item.unit_price || 0) / 100,
+                quantity: item.quantity
+              }))
+            }
+          })
+          console.log('✅ Purchase tracked:', cart.id, '$' + (cart.total || 0) / 100)
+        }
+      })
       .catch((err) => {
         setErrorMessage(err.message)
       })
@@ -203,6 +229,29 @@ const PayPalPaymentButton = ({
 
   const onPaymentCompleted = async () => {
     await placeOrder()
+      .then(() => {
+        // ✅ ADD THIS: Track purchase after successful order
+        if (typeof window !== 'undefined') {
+          window.dataLayer = window.dataLayer || []
+          window.dataLayer.push({
+            event: 'purchase',
+            ecommerce: {
+              transaction_id: cart.id,
+              value: (cart.total || 0) / 100,
+              tax: (cart.tax_total || 0) / 100,
+              shipping: (cart.shipping_total || 0) / 100,
+              currency: 'USD',
+              items: cart.items?.map(item => ({
+                item_id: item.variant?.sku || item.variant_id,
+                item_name: item.title,
+                price: (item.unit_price || 0) / 100,
+                quantity: item.quantity
+              }))
+            }
+          })
+          console.log('✅ Purchase tracked:', cart.id, '$' + (cart.total || 0) / 100)
+        }
+      })
       .catch((err) => {
         setErrorMessage(err.message)
       })
@@ -259,12 +308,43 @@ const PayPalPaymentButton = ({
   }
 }
 
-const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
+const ManualTestPaymentButton = ({ 
+  notReady,
+  cart,
+  "data-testid": dataTestId,
+}: { 
+  notReady: boolean
+  cart: HttpTypes.StoreCart
+  "data-testid"?: string
+}) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onPaymentCompleted = async () => {
     await placeOrder()
+      .then(() => {
+        // ✅ ADD THIS: Track purchase after successful order
+        if (typeof window !== 'undefined') {
+          window.dataLayer = window.dataLayer || []
+          window.dataLayer.push({
+            event: 'purchase',
+            ecommerce: {
+              transaction_id: cart.id,
+              value: (cart.total || 0) / 100,
+              tax: (cart.tax_total || 0) / 100,
+              shipping: (cart.shipping_total || 0) / 100,
+              currency: 'USD',
+              items: cart.items?.map(item => ({
+                item_id: item.variant?.sku || item.variant_id,
+                item_name: item.title,
+                price: (item.unit_price || 0) / 100,
+                quantity: item.quantity
+              }))
+            }
+          })
+          console.log('✅ Purchase tracked:', cart.id, '$' + (cart.total || 0) / 100)
+        }
+      })
       .catch((err) => {
         setErrorMessage(err.message)
       })
@@ -275,7 +355,6 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
 
   const handlePayment = () => {
     setSubmitting(true)
-
     onPaymentCompleted()
   }
 
@@ -286,7 +365,7 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
         isLoading={submitting}
         onClick={handlePayment}
         size="large"
-        data-testid="submit-order-button"
+        data-testid={dataTestId}
       >
         Place order
       </Button>
