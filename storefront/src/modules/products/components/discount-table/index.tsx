@@ -26,15 +26,15 @@ const DiscountTable = () => {
             </tr>
           </thead>
           <tbody>
-            {DISCOUNTS.map((row, i) => (
+            {DISCOUNTS.map((row) => (
               <tr key={row.qty}>
-                <td className={`py-2 px-4 ${i === 0 ? "text-orange-600 font-bold" : "text-gray-400 blur-sm"}`}>
+                <td className="py-2 px-4 text-gray-400 blur-sm">
                   {row.percent}
                 </td>
-                <td className={`py-2 px-4 ${i === 0 ? "text-black" : "text-gray-400 blur-sm"}`}>
+                <td className="py-2 px-4 text-gray-400 blur-sm">
                   {row.qty}
                 </td>
-                <td className={`py-2 px-4 ${i === 0 ? "text-black" : "text-gray-400 blur-sm"}`}>
+                <td className="py-2 px-4 text-gray-400 blur-sm">
                   {row.dollars}
                 </td>
               </tr>
