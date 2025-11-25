@@ -3,8 +3,6 @@ console.log("Base URL:", process.env.NEXT_PUBLIC_BASE_URL);
 console.log("MinIO Endpoint:", process.env.NEXT_PUBLIC_MINIO_ENDPOINT);
 console.log("Search Endpoint:", process.env.NEXT_PUBLIC_SEARCH_ENDPOINT);
 
-
-
 const checkEnvVariables = require("./check-env-variables")
 
 checkEnvVariables()
@@ -20,19 +18,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Add these lines for framer-motion fix
   transpilePackages: ['framer-motion'],
   experimental: {
     optimizePackageImports: ['framer-motion'],
     esmExternals: 'loose'
   },
-  // Your existing images config
   images: {
     remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-      },
       {
         protocol: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https") ? "https" : "http",
         hostname: process.env.NEXT_PUBLIC_BASE_URL?.replace(/^https?:\/\//, ""),
@@ -61,20 +53,21 @@ const nextConfig = {
             },
           ]
         : []),
-
-      /* —------------------------- NEW DOMAIN HERE ------------------------- */
       {
         protocol: "https",
         hostname: "cardinalcoolingsystems.com",
       },
-      // Keep sanitube.us for existing product images during migration
       {
         protocol: "https",
         hostname: "sanitube.us",
       },
+      // Railway bucket for MinIO/uploaded images
+      {
+        protocol: "https",
+        hostname: "bucket-production-02b9.up.railway.app",
+      },
     ],
   },
-
   serverRuntimeConfig: {
     port: process.env.PORT || 3000
   }
