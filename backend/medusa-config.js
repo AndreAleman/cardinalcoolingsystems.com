@@ -54,6 +54,7 @@ const medusaConfig = {
   },
   admin: {
     backendUrl: BACKEND_URL,
+    storefrontUrl: "https://cardinalcoolingsystems.com",
     disable: SHOULD_DISABLE_ADMIN,
     vite: () => {
       return {
