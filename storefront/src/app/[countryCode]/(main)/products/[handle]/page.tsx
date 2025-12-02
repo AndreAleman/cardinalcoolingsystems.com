@@ -45,6 +45,7 @@ export async function generateStaticParams() {
 }
 
 // ← ADDED: Helper function to find variant by options
+// ← UPDATED: Helper function to find variant by options
 function findVariantByOptions(product: any, searchParams: Record<string, string>) {
   if (!searchParams || Object.keys(searchParams).length === 0) {
     return null
@@ -53,7 +54,11 @@ function findVariantByOptions(product: any, searchParams: Record<string, string>
   return product.variants?.find((variant: any) => {
     return variant.options?.every((opt: any) => {
       const optionName = opt.option.title.toLowerCase()
-      const optionValue = opt.value.toLowerCase()
+      let optionValue = opt.value.toLowerCase()
+      
+      // Convert quote marks to "in" to match URL format
+      optionValue = optionValue.replace(/["'']/g, 'in').replace(/\s+/g, '')
+      
       const searchValue = searchParams[optionName]?.toLowerCase()
       return searchValue === optionValue
     })

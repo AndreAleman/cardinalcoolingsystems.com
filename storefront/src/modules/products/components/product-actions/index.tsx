@@ -20,7 +20,7 @@ type ProductActionsProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   disabled?: boolean
-  selectedVariant?: HttpTypes.StoreProductVariant | null  // ← ADDED
+  selectedVariant?: HttpTypes.StoreProductVariant | null
 }
 
 const optionsAsKeymap = (variantOptions: any) => {
@@ -36,7 +36,7 @@ export default function ProductActions({
   product,
   region,
   disabled,
-  selectedVariant: initialSelectedVariant,  // ← ADDED
+  selectedVariant: initialSelectedVariant,
 }: ProductActionsProps) {
   const router = useRouter()
   const pathname = usePathname()
@@ -47,7 +47,7 @@ export default function ProductActions({
   const [quantity, setQuantity] = useState(1)
   const countryCode = useParams().countryCode as string
 
-  // ← UPDATED: Use pre-selected variant if provided, otherwise read from URL
+  // ← FIRST: Initialize options from pre-selected variant or URL
   useEffect(() => {
     if (initialSelectedVariant) {
       // Pre-selected variant from URL options
@@ -60,6 +60,7 @@ export default function ProductActions({
     }
   }, [initialSelectedVariant, product.variants])
 
+  // ← SECOND: Calculate selectedVariant based on options
   const selectedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) {
       return
@@ -71,7 +72,7 @@ export default function ProductActions({
     })
   }, [product.variants, options])
 
-  // ← UPDATED: Update URL when variant selection changes
+  // ← THIRD: Update URL when variant selection changes
   useEffect(() => {
     if (selectedVariant && Object.keys(options).length > 0) {
       // Build query string from options
@@ -79,20 +80,17 @@ export default function ProductActions({
 
       selectedVariant.options?.forEach((opt: any) => {
         if (opt.option?.title && opt.value) {
-          // Clean option name: "Size (Tube OD)" → "size-tube-od"
-          const optionName = opt.option.title
-            .toLowerCase()
-            .replace(/\s*\([^)]*\)/g, '-') // Remove parentheses content
-            .replace(/[^a-z0-9]+/g, '-')    // Replace special chars with dash
-            .replace(/^-+|-+$/g, '')        // Trim dashes
+          // Use the EXACT option title in lowercase (matching findVariantByOptions)
+          const optionName = opt.option.title.toLowerCase()
           
           // Clean option value: '1"' → "1in"
-          const optionValue = opt.value
-            .toLowerCase()
-            .replace(/"/g, 'in')            // Replace " with "in"
-            .replace(/'/g, 'ft')            // Replace ' with "ft"
-            .replace(/[^a-z0-9.]+/g, '-')   // Replace special chars
-            .replace(/^-+|-+$/g, '')        // Trim dashes
+          let optionValue = opt.value.toLowerCase()
+          
+          // Replace inch symbol with "in"
+          optionValue = optionValue.replace(/["'']/g, 'in')
+          
+          // Remove extra spaces
+          optionValue = optionValue.replace(/\s+/g, '')
           
           params.set(optionName, optionValue)
         }
@@ -101,17 +99,20 @@ export default function ProductActions({
       const queryString = params.toString()
       const newUrl = queryString ? `${pathname}?${queryString}` : pathname
       
-      // Update URL without triggering a page reload
-      window.history.replaceState(null, '', newUrl)
+      // Only update if URL actually changed
+      const currentSearch = searchParams.toString()
+      if (queryString !== currentSearch) {
+        window.history.replaceState(null, '', newUrl)
+      }
       
-      // Dispatch event for other components
+      // ← ADDED: Dispatch event for other components (like ProductSKU)
       window.dispatchEvent(
         new CustomEvent('variant-selected', {
           detail: { variant: selectedVariant }
         })
       )
     }
-  }, [selectedVariant, pathname, options])
+  }, [selectedVariant, pathname, options, searchParams])
 
   // update the options when a variant is selected
   const setOptionValue = (title: string, value: string) => {
@@ -191,71 +192,69 @@ export default function ProductActions({
   }
 
   // add the selected variant to the cart
-// add the selected variant to the cart
-const handleAddToCart = async () => {
-  if (!selectedVariant?.id) return null
+  const handleAddToCart = async () => {
+    if (!selectedVariant?.id) return null
 
-  setIsAdding(true)
+    setIsAdding(true)
 
-  try {
-    await addToCart({
-      variantId: selectedVariant.id,
-      quantity: quantity,
-      countryCode,
-    })
-    
-    // ✅ ADD THIS: Track add to cart event
-    if (typeof window !== 'undefined') {
-      window.dataLayer = window.dataLayer || []
-      window.dataLayer.push({
-        event: 'add_to_cart',
-        ecommerce: {
-          currency: 'USD',
-          value: (selectedVariant.calculated_price?.calculated_amount || 0) / 100 * quantity,
-          items: [{
-            item_id: selectedVariant.sku || selectedVariant.id,
-            item_name: product.title,
-            item_category: product.categories?.[0]?.name || 'Uncategorized',
-            price: (selectedVariant.calculated_price?.calculated_amount || 0) / 100,
-            quantity: quantity
-          }]
-        }
+    try {
+      await addToCart({
+        variantId: selectedVariant.id,
+        quantity: quantity,
+        countryCode,
       })
-      console.log('✅ Add to cart tracked:', product.title, 'Qty:', quantity)
+      
+      // Track add to cart event
+      if (typeof window !== 'undefined') {
+        window.dataLayer = window.dataLayer || []
+        window.dataLayer.push({
+          event: 'add_to_cart',
+          ecommerce: {
+            currency: 'USD',
+            value: (selectedVariant.calculated_price?.calculated_amount || 0) / 100 * quantity,
+            items: [{
+              item_id: selectedVariant.sku || selectedVariant.id,
+              item_name: product.title,
+              item_category: product.categories?.[0]?.name || 'Uncategorized',
+              price: (selectedVariant.calculated_price?.calculated_amount || 0) / 100,
+              quantity: quantity
+            }]
+          }
+        })
+        console.log('✅ Add to cart tracked:', product.title, 'Qty:', quantity)
+      }
+      
+      toast.success(
+        `✓ Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      )
+      
+      setQuantity(1)
+    } catch (error) {
+      console.error("Failed to add to cart:", error)
+      
+      toast.error(
+        "Failed to add item to cart. Please try again.",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      )
+    } finally {
+      setIsAdding(false)
     }
-    
-    toast.success(
-      `✓ Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`,
-      {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      }
-    )
-    
-    setQuantity(1)
-  } catch (error) {
-    console.error("Failed to add to cart:", error)
-    
-    toast.error(
-      "Failed to add item to cart. Please try again.",
-      {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      }
-    )
-  } finally {
-    setIsAdding(false)
   }
-}
-
 
   const getButtonText = () => {
     if (!selectedVariant) return "Select options"
