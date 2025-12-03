@@ -1,4 +1,7 @@
-import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import {
+  createWorkflow,
+  WorkflowResponse,
+} from "@medusajs/framework/workflows-sdk"
 import { getProductFeedItemsStep } from "./steps/get-product-feed-items"
 import { buildProductFeedXmlStep } from "./steps/build-product-feed-xml"
 
@@ -11,13 +14,16 @@ type GenerateProductFeedWorkflowOutput = {
   xml: string
 }
 
-// @ts-expect-error - Workflow type inference issue with pnpm monorepo structure
-export const generateProductFeedWorkflow = createWorkflow(
+export const generateProductFeedWorkflow = createWorkflow<
+  GenerateProductFeedWorkflowInput,
+  GenerateProductFeedWorkflowOutput,
+  any
+>(
   "generate-product-feed",
-  (input: GenerateProductFeedWorkflowInput) => {
+  (input) => {
     const { items: feedItems } = getProductFeedItemsStep(input)
 
-    const xml = buildProductFeedXmlStep({ 
+    const xml = buildProductFeedXmlStep({
       items: feedItems,
     })
 
