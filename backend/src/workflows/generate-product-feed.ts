@@ -7,6 +7,11 @@ type GenerateProductFeedWorkflowInput = {
   country_code: string
 }
 
+type GenerateProductFeedWorkflowOutput = {
+  xml: string
+}
+
+// @ts-expect-error - Workflow type inference issue with pnpm monorepo structure
 export const generateProductFeedWorkflow = createWorkflow(
   "generate-product-feed",
   (input: GenerateProductFeedWorkflowInput) => {
@@ -21,4 +26,3 @@ export const generateProductFeedWorkflow = createWorkflow(
 )
 
 export default generateProductFeedWorkflow
- 
