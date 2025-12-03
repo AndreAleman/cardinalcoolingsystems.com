@@ -38,7 +38,7 @@ export default function ProductRange({ products }: Props) {
   }
 
   return (
-    <section className="py-16 px-4 bg-white border-y border-gray-200">
+    <section className="py-16 px-4 bg-gray-50 border-y border-gray-200">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-12">

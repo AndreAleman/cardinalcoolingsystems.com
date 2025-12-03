@@ -17,6 +17,9 @@ export async function GET(
     },
   })
 
-  res.setHeader("Content-Type", "application/rss+xml; charset=utf-8")
-  res.status(200).send(result.xml)
+  res.writeHead(200, {
+    'Content-Type': 'application/rss+xml; charset=utf-8',
+    'Content-Length': Buffer.byteLength(result.xml, 'utf-8')
+  })
+  res.end(result.xml, 'utf-8')
 }
