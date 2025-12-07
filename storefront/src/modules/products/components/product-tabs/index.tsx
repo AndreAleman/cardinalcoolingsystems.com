@@ -9,13 +9,14 @@ import { HttpTypes } from "@medusajs/types"
 
 type ProductTabsProps = {
   product: HttpTypes.StoreProduct
+  variant?: HttpTypes.StoreProductVariant | null
 }
 
-const ProductTabs = ({ product }: ProductTabsProps) => {
+const ProductTabs = ({ product, variant }: ProductTabsProps) => {
   const tabs = [
     {
       label: "Product Information",
-      component: <ProductInfoTab product={product} />,
+      component: <ProductInfoTab product={product} variant={variant} />,
     },
     {
       label: "Shipping & Returns",
@@ -41,36 +42,43 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
   )
 }
 
-const ProductInfoTab = ({ product }: ProductTabsProps) => {
+const ProductInfoTab = ({ product, variant }: ProductTabsProps) => {
+  // Use variant data if available, otherwise fall back to product data for dimensions
+  const displayData = variant || product
+  
   return (
     <div className="text-small-regular py-8">
       <div className="grid grid-cols-2 gap-x-8">
         <div className="flex flex-col gap-y-4">
+          {variant && (
+            <>
+              <div>
+                <span className="font-semibold">SKU</span>
+                <p>{variant.sku || "-"}</p>
+              </div>
+              <div>
+                <span className="font-semibold">Variant</span>
+                <p>{variant.title || "-"}</p>
+              </div>
+            </>
+          )}
           <div>
-            <span className="font-semibold">Material</span>
-            <p>{product.material ? product.material : "-"}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Country of origin</span>
-            <p>{product.origin_country ? product.origin_country : "-"}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Type</span>
-            <p>{product.type ? product.type.value : "-"}</p>
+            <span className="font-semibold">Weight</span>
+            <p>{displayData.weight ? `${displayData.weight} g` : "-"}</p>
           </div>
         </div>
         <div className="flex flex-col gap-y-4">
           <div>
-            <span className="font-semibold">Weight</span>
-            <p>{product.weight ? `${product.weight} g` : "-"}</p>
+            <span className="font-semibold">Length</span>
+            <p>{displayData.length ? `${displayData.length}` : "-"}</p>
           </div>
           <div>
-            <span className="font-semibold">Dimensions</span>
-            <p>
-              {product.length && product.width && product.height
-                ? `${product.length}L x ${product.width}W x ${product.height}H`
-                : "-"}
-            </p>
+            <span className="font-semibold">Width</span>
+            <p>{displayData.width ? `${displayData.width}` : "-"}</p>
+          </div>
+          <div>
+            <span className="font-semibold">Height</span>
+            <p>{displayData.height ? `${displayData.height}` : "-"}</p>
           </div>
         </div>
       </div>

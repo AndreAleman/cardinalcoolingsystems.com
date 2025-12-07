@@ -1,7 +1,7 @@
 import { PortableText } from "@portabletext/react"
 import React, { Suspense } from "react"
 import ImageGallery from "@modules/products/components/image-gallery"
-import DiscountTable from "@modules/products/components/discount-table" // <-- Import your DiscountTable
+import DiscountTable from "@modules/products/components/discount-table"
 import ProductActions from "@modules/products/components/product-actions"
 import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductTabs from "@modules/products/components/product-tabs"
@@ -15,12 +15,12 @@ import SanityTabs from "../components/sanity-tabs"
 import Link from "next/link"
 import ProductViewTracker from "@modules/products/components/product-view-tracker"
 
-
 type SanityTab = {
   _key: string
   title: string
   content: any[]
 }
+
 type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
@@ -43,6 +43,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
   if (!product || !product.id) {
     return notFound()
   }
+  
   const allTabs: SanityTab[] = []
   if (sanity?.description && sanity.description.length > 0) {
     allTabs.push({
@@ -123,7 +124,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
                 <DiscountTable />
 
                 <div className="border-t border-ui-border-base pt-8">
-                  <ProductTabs product={product} />
+                  <ProductTabs product={product} variant={selectedVariant} />
                 </div>
               </div>
             </div>
