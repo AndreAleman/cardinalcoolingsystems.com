@@ -69,6 +69,7 @@ export default async function Home({
   return (
     <>
       <Hero />
+      <SanitaryProducts />
       <ProductRangeWrapper products={rangeProducts} />
       <SanitubeSection />
       
@@ -76,7 +77,7 @@ export default async function Home({
      
         {/*  <IndustriesSupport /> */}
 
-      <SanitaryProducts />
+      
 
       <AboutUs />
 
