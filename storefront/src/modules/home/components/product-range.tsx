@@ -1,6 +1,8 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
+import { Link2, CornerDownRight, Settings2, ShieldCheck, Thermometer } from "lucide-react"
 
 type Product = {
   id: string
@@ -8,7 +10,7 @@ type Product = {
   subtitle: string
   image: string
   handle: string
-  price?: string | number // Add price to the type
+  price?: string | number
 }
 
 type Props = {
@@ -16,21 +18,44 @@ type Props = {
 }
 
 export default function ProductRange({ products }: Props) {
-  console.log("ProductRange received products:", products.length) // Debug log
+  // Layout configuration based on position (repeats every 5 products)
+  const layoutPattern = [
+    { type: "large", icon: Link2, color: "blue", position: "left" },
+    { type: "regular", icon: CornerDownRight, color: "blue" },
+    { type: "regular", icon: Settings2, color: "blue" },
+    { type: "regular", icon: ShieldCheck, color: "blue" },
+    { type: "large", icon: Thermometer, color: "orange", position: "right" },
+  ]
 
-  // Use dynamic products - remove placeholder fallback
-  const displayProducts = products.slice(0, 4)
+  const getProductLayout = (index: number) => {
+    return layoutPattern[index % layoutPattern.length]
+  }
 
-  // If no products, show a message instead of placeholders
+  const getColorClasses = (color: string) => {
+    const colors = {
+      blue: {
+        bg: "bg-blue-50",
+        border: "border-blue-100",
+        text: "text-blue-600"
+      },
+      orange: {
+        bg: "bg-orange-50",
+        border: "border-orange-100",
+        text: "text-orange-600"
+      }
+    }
+    return colors[color as keyof typeof colors] || colors.blue
+  }
+
   if (!products || products.length === 0) {
     return (
-      <section className="py-16 px-4 bg-white border-y border-gray-200">
+      <section className="py-24 px-6 border-b border-slate-200 bg-slate-50">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Explore Our Range
+          <h2 className="text-3xl md:text-4xl text-slate-900 font-medium tracking-tight mb-2">
+            Engineered Components
           </h2>
-          <p className="text-lg text-gray-600">
-            Featured products will appear here once configured in Medusa Admin.
+          <p className="text-slate-500 font-light">
+            Featured products will appear here once configured.
           </p>
         </div>
       </section>
@@ -38,114 +63,128 @@ export default function ProductRange({ products }: Props) {
   }
 
   return (
-    <section className="py-16 px-4 bg-gray-50 border-y border-gray-200">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-12">
-          <div className="mb-6 lg:mb-0">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Explore Our Range
+    <section className="py-24 px-6 border-b border-slate-200 bg-slate-50" id="products">
+      <div className="max-w-7xl mx-auto space-y-12">
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <h2 className="text-3xl md:text-4xl text-slate-900 font-medium tracking-tight mb-2">
+              Engineered Components
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl">
-              Browse our curated selection and choose the perfect fit for your project.
+            <p className="text-slate-500 font-light">
+              Modular systems designed for rapid deployment and longevity.
             </p>
           </div>
-          
-          <div className="flex-shrink-0">
-            <Link 
-              href="/categories"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors duration-200 rounded-md"
-            >
-              View All Products
-              <svg 
-                className="ml-2 w-5 h-5" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M17 8l4 4m0 0l-4 4m4-4H3" 
-                />
-              </svg>
-            </Link>
-          </div>
+          <a 
+            href="/line-card.pdf" 
+            download
+            className="text-slate-600 text-sm border-b border-slate-300 pb-1 hover:text-blue-600 hover:border-blue-600 transition-colors inline-block"
+          >
+            Download Line Card
+          </a>
         </div>
 
-        {/* Product Grid - Matching ProductPreview styling */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {displayProducts.map((product) => (
-            <Link 
-              key={product.id} 
-              href={`/products/${product.handle}`}
-              className="group"
-            >
-              <div className="bg-white shadow-md hover:shadow-md transition-shadow duration-200 overflow-hidden h-full flex flex-col">
-                {/* Product Image - Matching ProductPreview */}
-                <div className="aspect-square bg-gray-100 relative overflow-hidden">
-                  {product.image && product.image !== "/images/placeholder.jpg" ? (
-                    <img
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {products.map((product, index) => {
+            const layout = getProductLayout(index)
+            const Icon = layout.icon
+            const colorClasses = getColorClasses(layout.color)
+            const isLarge = layout.type === "large"
+
+            // Large featured card (2 columns)
+            if (isLarge) {
+              const isReversed = layout.position === "right"
+              
+              return (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.handle}`}
+                  className={`md:col-span-2 bg-white border border-slate-200 rounded-sm p-8 hover:shadow-lg transition-all duration-300 group flex flex-col ${
+                    isReversed ? 'md:flex-row-reverse' : 'md:flex-row'
+                  } gap-8 items-center overflow-hidden`}
+                >
+                  <div className="flex-1 space-y-6 relative z-10">
+                    {/* Icon Badge */}
+                    <div className={`h-10 w-10 ${colorClasses.bg} ${colorClasses.border} border flex items-center justify-center ${colorClasses.text} rounded-sm transition-colors`}>
+                      <Icon className="w-5 h-5" strokeWidth={1.5} />
+                    </div>
+                    
+                    {/* Content */}
+                    <div>
+                      <h3 className="text-xl text-slate-900 font-semibold mb-2 tracking-tight">
+                        {product.title}
+                      </h3>
+                      <p className="text-sm text-slate-500 leading-relaxed font-light">
+                        {product.subtitle}
+                      </p>
+                    </div>
+                    
+                    {/* Specs/Price */}
+                    {product.price && (
+                      <div className="flex gap-2 flex-wrap">
+                        <span className="text-[10px] font-mono bg-slate-100 px-2 py-1 text-slate-500 rounded">
+                          {typeof product.price === 'number' 
+                            ? `PRICE: $${product.price.toFixed(2)}` 
+                            : product.price}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Image Container */}
+                  <div className="w-full md:w-1/2 aspect-square md:aspect-auto md:h-80 bg-slate-100 relative rounded-sm overflow-hidden">
+                    {product.image && (
+                      <>
+                        <Image
+                          src={product.image}
+                          alt={product.title}
+                          fill
+                          className="object-cover transition-all duration-500 grayscale-[20%] opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent mix-blend-overlay"></div>
+                      </>
+                    )}
+                  </div>
+                </Link>
+              )
+            }
+
+            // Regular card (1 column)
+            return (
+              <Link
+                key={product.id}
+                href={`/products/${product.handle}`}
+                className="bg-white border border-slate-200 rounded-sm hover:shadow-lg transition-all duration-300 group overflow-hidden flex flex-col"
+              >
+                {/* Image Top */}
+                <div className="h-48 bg-slate-100 relative overflow-hidden">
+                  {product.image && (
+                    <Image
                       src={product.image}
                       alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                      fill
+                      className="object-cover transition-all duration-500 grayscale-[20%] opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
                     />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">Product Image</span>
-                    </div>
                   )}
                 </div>
                 
-                {/* Product Info - Matching ProductPreview layout */}
-                <div className="p-4 flex flex-col flex-grow">
-                  <div className="flex flex-col gap-2 flex-grow">
-                    {/* Title - Always 2 lines with ellipsis */}
-                    <h3 
-                      className="text-gray-900 font-semibold text-sm line-clamp-2 min-h-[2.5rem]"
-                      title={product.title}
-                    >
+                {/* Content */}
+                <div className="p-8 flex flex-col flex-grow">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg text-slate-900 font-medium tracking-tight">
                       {product.title}
                     </h3>
-                    
-                    {/* NO Description/Subtitle shown */}
-                    
-                    <div className="flex items-center justify-between mt-auto pt-2">
-                      {/* Price */}
-                      <div className="flex items-center gap-x-2">
-                        {product.price && (
-                          <span className="text-gray-900 font-medium text-sm">
-                            {typeof product.price === 'number' 
-                              ? `$${product.price.toFixed(2)}` 
-                              : product.price}
-                          </span>
-                        )}
-                      </div>
-                      
-                      {/* View Product Button - Matching ProductPreview */}
-                      <div className="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-colors duration-200 text-xs font-medium flex items-center gap-1">
-                        <span>View</span>
-                        <svg 
-                          className="w-3 h-3" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth={2} 
-                            d="M9 5l7 7-7 7" 
-                          />
-                        </svg>
-                      </div>
-                    </div>
+                    <Icon className="w-5 h-5 text-slate-400 flex-shrink-0 ml-2" strokeWidth={1.5} />
                   </div>
+                  <p className="text-sm text-slate-500 leading-relaxed font-light">
+                    {product.subtitle}
+                  </p>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            )
+          })}
         </div>
       </div>
     </section>
