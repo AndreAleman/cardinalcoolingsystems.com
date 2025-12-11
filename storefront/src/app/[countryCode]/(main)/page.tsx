@@ -79,7 +79,7 @@ export default async function Home({
 
       
 
-      <AboutUs />
+     {/*} <AboutUs />*/}
 
       <ContactForm />
     </>

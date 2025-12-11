@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { ArrowRight } from "lucide-react"
 
 declare global {
   interface Window {
@@ -14,7 +15,7 @@ type FormData = {
   email: string
   phone: string
   message: string
-  agreeToTerms: boolean
+  projectType: string
 }
 
 export default function ContactForm() {
@@ -24,7 +25,7 @@ export default function ContactForm() {
     email: "",
     phone: "",
     message: "",
-    agreeToTerms: false
+    projectType: ""
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -38,10 +39,10 @@ export default function ContactForm() {
     }))
   }
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRadioChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
-      agreeToTerms: e.target.checked
+      projectType: value
     }))
   }
 
@@ -62,7 +63,8 @@ export default function ContactForm() {
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-          message: formData.message
+          message: formData.message,
+          projectType: formData.projectType
         })
       })
 
@@ -74,7 +76,8 @@ export default function ContactForm() {
             event: 'contact_form_submit',
             form_type: 'homepage_contact',
             user_email: formData.email,
-            form_location: 'homepage'
+            form_location: 'homepage',
+            project_type: formData.projectType
           })
           console.log('✅ Homepage contact form submitted:', formData.email)
         }
@@ -86,7 +89,7 @@ export default function ContactForm() {
           email: "",
           phone: "",
           message: "",
-          agreeToTerms: false
+          projectType: ""
         })
         formRef.current?.reset()
       } else {
@@ -101,185 +104,184 @@ export default function ContactForm() {
   }
 
   return (
-    <section className="py-20 px-4 bg-gray-50">
-      <div className="max-w-4xl mx-auto">
+    <section id="contact" className="py-24 px-6 relative bg-blue-50">
+      <div className="max-w-3xl mx-auto relative z-10">
+        
         {/* Heading */}
-        <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 text-center mb-16">
-          How Can We Help?
-        </h2>
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl text-slate-900 font-medium tracking-tight mb-6">
+            Initialize Project.
+          </h2>
+          <p className="text-slate-500 text-lg font-light">
+            Discuss your cooling infrastructure requirements with our engineering team.
+          </p>
+        </div>
 
         {/* Success/Error Messages */}
         {submitStatus === 'success' && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded text-green-800">
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-sm text-green-800 text-sm">
             Thank you! Your message has been sent successfully. We'll get back to you soon.
           </div>
         )}
 
         {submitStatus === 'error' && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded text-red-800">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-sm text-red-800 text-sm">
             Sorry, there was an error sending your message. Please try again.
           </div>
         )}
 
         {/* Contact Form */}
-        <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
-          {/* Row 1: Name and Last Name */}
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+          
+          {/* Row 1: Name Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Name*
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-xs font-medium text-slate-500 uppercase tracking-widest">
+                First Name
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="First Name"
-                  required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                Last Name*
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  placeholder="Last Name"
-                  required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Row 2: Email and Phone */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address*
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter your email address..."
-                  required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number <span className="text-gray-500 text-xs">(optional)</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </div>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="Enter your phone number..."
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Row 3: Message */}
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-              Message*
-            </label>
-            <div className="relative">
-              <div className="absolute top-3 left-3 pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                placeholder="Enter your message as clear as possible..."
-                required
-                rows={6}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-              />
-            </div>
-          </div>
-
-          {/* Terms and Submit */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-            <div className="flex items-center">
               <input
-                id="agreeToTerms"
-                name="agreeToTerms"
-                type="checkbox"
-                checked={formData.agreeToTerms}
-                onChange={handleCheckboxChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 flex-shrink-0"
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="First Name"
+                required
+                className="w-full bg-slate-50 border border-slate-200 text-slate-900 px-4 py-3 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder-slate-400 rounded-sm"
               />
-              <label htmlFor="agreeToTerms" className="ml-3 block text-sm text-gray-700">
-                I have agreed to the Terms & Conditions
-              </label>
             </div>
 
+            <div className="space-y-2">
+              <label htmlFor="lastName" className="text-xs font-medium text-slate-500 uppercase tracking-widest">
+                Last Name
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                placeholder="Last Name"
+                required
+                className="w-full bg-slate-50 border border-slate-200 text-slate-900 px-4 py-3 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder-slate-400 rounded-sm"
+              />
+            </div>
+          </div>
+
+          {/* Row 2: Email & Phone */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-xs font-medium text-slate-500 uppercase tracking-widest">
+                Work Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="name@company.com"
+                required
+                className="w-full bg-slate-50 border border-slate-200 text-slate-900 px-4 py-3 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder-slate-400 rounded-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="phone" className="text-xs font-medium text-slate-500 uppercase tracking-widest">
+                Phone <span className="text-slate-400 normal-case">(optional)</span>
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="(555) 123-4567"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-900 px-4 py-3 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder-slate-400 rounded-sm"
+              />
+            </div>
+          </div>
+
+          {/* Row 3: Project Type */}
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-slate-500 uppercase tracking-widest">
+              Project Type
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <label className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="projectType"
+                  value="industrial"
+                  checked={formData.projectType === "industrial"}
+                  onChange={() => handleRadioChange("industrial")}
+                  className="peer sr-only"
+                />
+                <div className="w-full border border-slate-200 bg-slate-50 p-4 text-center text-sm text-slate-500 peer-checked:border-teal-500 peer-checked:text-teal-600 peer-checked:bg-teal-50 transition-all hover:bg-white rounded-sm">
+                  Industrial
+                </div>
+              </label>
+
+              <label className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="projectType"
+                  value="data-center"
+                  checked={formData.projectType === "data-center"}
+                  onChange={() => handleRadioChange("data-center")}
+                  className="peer sr-only"
+                />
+                <div className="w-full border border-slate-200 bg-slate-50 p-4 text-center text-sm text-slate-500 peer-checked:border-red-500 peer-checked:text-red-600 peer-checked:bg-red-50 transition-all hover:bg-white rounded-sm">
+                  Data Center
+                </div>
+              </label>
+
+              <label className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="projectType"
+                  value="food-sanitary"
+                  checked={formData.projectType === "food-sanitary"}
+                  onChange={() => handleRadioChange("food-sanitary")}
+                  className="peer sr-only"
+                />
+                <div className="w-full border border-slate-200 bg-slate-50 p-4 text-center text-sm text-slate-500 peer-checked:border-orange-500 peer-checked:text-orange-600 peer-checked:bg-orange-50 transition-all hover:bg-white rounded-sm">
+                  Food / Sanitary
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Row 4: Message/Specifications */}
+          <div className="space-y-2">
+            <label htmlFor="message" className="text-xs font-medium text-slate-500 uppercase tracking-widest">
+              Specifications
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
+              placeholder="Details regarding pressure, fittings, and estimated quantity..."
+              required
+              rows={6}
+              className="w-full bg-slate-50 border border-slate-200 text-slate-900 px-4 py-3 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder-slate-400 resize-none rounded-sm"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="pt-4">
             <button
               type="submit"
-              disabled={!formData.agreeToTerms || isSubmitting}
-              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+              disabled={isSubmitting}
+              className="w-full bg-slate-900 text-white font-medium py-4 px-8 hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 rounded-sm shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Sending...' : 'Submit Form'}
-              <svg 
-                className="ml-3 w-5 h-5" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M17 8l4 4m0 0l-4 4m4-4H3" 
-                />
-              </svg>
+              {isSubmitting ? 'Sending...' : 'Submit Request'}
+              <ArrowRight className="w-4 h-4" />
             </button>
+            <p className="text-center text-[10px] text-slate-400 mt-4 uppercase tracking-wider">
+              Cardinal Cooling Systems ensures NDA compliance.
+            </p>
           </div>
         </form>
       </div>

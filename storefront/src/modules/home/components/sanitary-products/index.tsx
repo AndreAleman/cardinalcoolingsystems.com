@@ -9,7 +9,7 @@ type ProductItem = {
   description: string
   features: string[]
   icon: "factory" | "server" | "wheat"
-  colorScheme: "indigo" | "blue" | "orange"
+  colorScheme: "teal" | "red" | "orange"
   sectorNumber: string
 }
 
@@ -29,7 +29,7 @@ export default function SanitaryProducts({ products }: Props) {
         "Fatigue-rated alloys"
       ],
       icon: "factory",
-      colorScheme: "indigo",
+      colorScheme: "teal",
       sectorNumber: "01"
     },
     {
@@ -41,7 +41,7 @@ export default function SanitaryProducts({ products }: Props) {
         "Non-drip coupling systems"
       ],
       icon: "server",
-      colorScheme: "blue",
+      colorScheme: "red",
       sectorNumber: "02"
     },
     {
@@ -60,24 +60,24 @@ export default function SanitaryProducts({ products }: Props) {
 
   const displayProducts = products || defaultProducts
 
-  const getColorClasses = (scheme: "indigo" | "blue" | "orange") => {
+  const getColorClasses = (scheme: "teal" | "red" | "orange") => {
     switch (scheme) {
-      case "indigo":
+      case "teal":
         return {
-          badge: "text-indigo-600 border-indigo-100 bg-indigo-50",
-          icon: "text-slate-200 group-hover:text-indigo-100",
-          checkmark: "text-indigo-600"
+          badge: "text-teal-600 border-teal-100 bg-teal-50",
+          icon: "text-teal-500",
+          checkmark: "text-teal-600"
         }
-      case "blue":
+      case "red":
         return {
-          badge: "text-blue-600 border-blue-100 bg-blue-50",
-          icon: "text-slate-200 group-hover:text-blue-100",
-          checkmark: "text-blue-600"
+          badge: "text-red-600 border-red-100 bg-red-50",
+          icon: "text-red-600",
+          checkmark: "text-red-600"
         }
       case "orange":
         return {
           badge: "text-orange-600 border-orange-200 bg-orange-50",
-          icon: "text-slate-200 group-hover:text-orange-100",
+          icon: "text-orange-300",
           checkmark: "text-orange-600"
         }
     }
@@ -89,19 +89,19 @@ export default function SanitaryProducts({ products }: Props) {
   }
 
   return (
-    <section id="products" className="border-b border-slate-200 bg-white">
-      <div className="grid grid-cols-1 lg:grid-cols-3">
-        {displayProducts.map((product, index) => {
-          const colors = getColorClasses(product.colorScheme)
-          const isLast = index === displayProducts.length - 1
+<section id="products" className="border-b border-slate-300 bg-blue-50">
+  <div className="grid grid-cols-1 lg:grid-cols-3">
+    {displayProducts.map((product, index) => {
+      const colors = getColorClasses(product.colorScheme)
+      const isLast = index === displayProducts.length - 1
 
-          return (
-            <div
-              key={product.id}
-              className={`relative group border-b lg:border-b-0 ${
-                !isLast ? "lg:border-r" : ""
-              } border-slate-200 p-10 hover:bg-slate-50 transition-colors duration-500`}
-            >
+      return (
+        <div
+          key={product.id}
+          className={`relative group border-b lg:border-b-0 ${
+            !isLast ? "lg:border-r" : ""
+          } border-slate-300 p-10 transition-colors duration-500`}
+        >
               {/* Icon - Top Right */}
               <div className={`absolute top-10 right-10 transition-colors ${colors.icon}`}>
                 {renderIcon(product.icon)}

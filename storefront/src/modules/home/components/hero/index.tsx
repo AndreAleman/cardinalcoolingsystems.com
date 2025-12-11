@@ -66,13 +66,14 @@ export default function Hero() {
   const progressWidth = ((currentSlide + 1) / totalSlides) * 100
 
   return (
-    <section 
-      className="bg-white pt-20 pb-8 lg:pt-32 md:pb-12 border-b border-slate-200 overflow-hidden"
-      style={{
-        backgroundSize: '40px 40px',
-        backgroundImage: 'linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)'
-      }}
-    >
+<section 
+  className="bg-white pt-20 pb-8 lg:pt-32 md:pb-12 border-b border-slate-200 overflow-hidden"
+  style={{
+    backgroundSize: '40px 40px',
+    backgroundImage: 'linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px)'
+  }}
+>
+
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-12">
           
