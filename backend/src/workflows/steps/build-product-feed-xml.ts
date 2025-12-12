@@ -1,9 +1,11 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
 import { FeedItem } from "./get-product-feed-items"
 
+
 type StepInput = {
   items: FeedItem[]
 }
+
 
 export const buildProductFeedXmlStep = createStep(
   "build-product-feed-xml",
@@ -18,15 +20,18 @@ export const buildProductFeedXmlStep = createStep(
         .replace(/'/g, "&apos;")
     }
 
+
     // Build using String.fromCharCode to avoid any encoding issues
     const openChannel = String.fromCharCode(60, 99, 104, 97, 110, 110, 101, 108, 62) // hannel>
     const closeChannel = String.fromCharCode(60, 47, 99, 104, 97, 110, 110, 101, 108, 62) // </channel>
+
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml += '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">\n'
     xml += '  ' + openChannel + '\n'
     xml += '    <title>Product Feed</title>\n'
     xml += '    <description>Product Feed for Social Platforms</description>\n'
+
 
     for (const item of input.items) {
       xml += '    <item>\n'
@@ -38,8 +43,16 @@ export const buildProductFeedXmlStep = createStep(
       if (item.image_link) {
         xml += `      <g:image_link>${escape(item.image_link)}</g:image_link>\n`
       }
+      
       if (item.additional_image_link) {
-        xml += `      <g:additional_image_link>${escape(item.additional_image_link)}</g:additional_image_link>\n`
+        const additionalImages = item.additional_image_link.split(',')
+        // Google allows up to 10 additional images
+        additionalImages.slice(0, 10).forEach(imageUrl => {
+          const trimmedUrl = imageUrl.trim()
+          if (trimmedUrl) {
+            xml += `      <g:additional_image_link>${escape(trimmedUrl)}</g:additional_image_link>\n`
+          }
+        })
       }
       
       xml += `      <g:availability>${escape(item.availability)}</g:availability>\n`
@@ -82,8 +95,10 @@ export const buildProductFeedXmlStep = createStep(
       xml += '    </item>\n'
     }
 
+
     xml += '  ' + closeChannel + '\n'
     xml += '</rss>'
+
 
     return new StepResponse(xml)
   }
