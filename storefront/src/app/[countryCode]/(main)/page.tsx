@@ -9,7 +9,10 @@ import ContactForm from "@modules/home/components/contact-form"
 import { getCollectionsWithProducts } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 import MeiliSearchComponent from "@modules/search/components/meilisearch-component"
-import SanitubeSection from '@modules/home/components/suppliers';
+import SanitubeSection from '@modules/home/components/suppliers'
+import { client } from "../../../../src/sanity/lib/client"
+import { groq } from "next-sanity"
+
 
 export const metadata: Metadata = {
   title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
@@ -17,18 +20,38 @@ export const metadata: Metadata = {
     "this is where to edit",
 }
 
+const RECENT_POSTS_QUERY = groq`
+  *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3] {
+    _id,
+    title,
+    slug,
+    excerpt,
+    mainImage{
+      asset->{
+        url
+      },
+      alt
+    }
+  }
+`
+
 export default async function Home({
   params: { countryCode },
 }: {
   params: { countryCode: string }
 }) {
   // Fetch data
-  const collections = await getCollectionsWithProducts(countryCode)
-  const region = await getRegion(countryCode)
+  const [collections, region, recentPosts] = await Promise.all([
+    getCollectionsWithProducts(countryCode),
+    getRegion(countryCode),
+    client.fetch(RECENT_POSTS_QUERY)
+  ])
+
 
   if (!collections || !region) {
     return null
   }
+
 
   // Prepare products for the range section
   const rangeProducts = collections
@@ -41,6 +64,7 @@ export default async function Home({
       image: p.thumbnail ?? "/images/placeholder.jpg",
       handle: p.handle,
     })) ?? []
+
 
   // Tube category data
   const tubeImages = [
@@ -66,20 +90,25 @@ export default async function Home({
     }
   ]
 
+
   return (
     <>
-      <Hero />
+      <Hero recentPosts={recentPosts} countryCode={countryCode} />
       <SanitaryProducts />
       <ProductRangeWrapper products={rangeProducts} />
       <SanitubeSection />
       
 
+
      
         {/*  <IndustriesSupport /> */}
 
+
       
 
+
      {/*} <AboutUs />*/}
+
 
       <ContactForm />
     </>

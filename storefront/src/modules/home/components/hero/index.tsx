@@ -1,49 +1,70 @@
 // src/modules/home/components/hero-stagger.tsx
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 
-export default function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const totalSlides = 4
-
-  // Slide data with your image paths and link destinations
-  const slides = [
-    {
-      image: "/images/hero/home_page1.jpg",
-      alt: "Industrial manufacturing equipment",
-      title: "Featured Product",
-      description: "High-quality sanitary fittings for your production line",
-      link: "/store/products/featured-product-handle", // Update with actual product handle
-      caption: "FEATURED"
-    },
-    {
-      image: "/images/hero/home_page2.jpg",
-      alt: "Precision sanitary fittings",
-      title: "Latest Insights",
-      description: "Industry news and technical articles",
-      link: "/blog/latest-post-slug", // Update with actual blog slug
-      caption: "BLOG POST"
-    },
-    {
-      image: "/images/hero/home_page3.jpg",
-      alt: "Stainless steel components",
-      title: "Premium Components",
-      description: "Browse our full catalog of products",
-      link: "/store", // Or another product
-      caption: "CATALOG"
-    },
-    {
-      image: "/images/hero/home_page4.jpg",
-      alt: "Contact our team",
-      title: "Get in Touch",
-      description: "Discuss your project requirements",
-      link: "/contact",
-      caption: "CONTACT"
+interface BlogPost {
+  _id: string
+  title: string
+  slug: {
+    current: string
+  }
+  excerpt?: string
+  mainImage?: {
+    asset?: {
+      url: string
     }
-  ]
+    alt?: string
+  }
+}
+
+interface HeroProps {
+  recentPosts: BlogPost[]
+  countryCode: string
+}
+
+export default function Hero({ recentPosts, countryCode }: HeroProps) {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  
+  // Build slides from 3 most recent blog posts
+  const slides = recentPosts.length >= 3 
+    ? recentPosts.slice(0, 3).map(post => ({
+        image: post.mainImage?.asset?.url || "/images/hero/home_page1.jpg",
+        alt: post.mainImage?.alt || post.title,
+        title: post.title,
+        description: post.excerpt || "Read our latest insights and technical articles",
+        link: `/${countryCode}/blog/${post.slug.current}`,
+        caption: "BLOG POST"
+      }))
+    : [
+        {
+          image: "/images/hero/home_page1.jpg",
+          alt: "Industrial manufacturing equipment",
+          title: "Featured Product",
+          description: "High-quality sanitary fittings for your production line",
+          link: "/store/products/featured-product-handle",
+          caption: "FEATURED"
+        },
+        {
+          image: "/images/hero/home_page2.jpg",
+          alt: "Precision sanitary fittings",
+          title: "Latest Insights",
+          description: "Industry news and technical articles",
+          link: "/blog/latest-post-slug",
+          caption: "BLOG POST"
+        },
+        {
+          image: "/images/hero/home_page3.jpg",
+          alt: "Stainless steel components",
+          title: "Premium Components",
+          description: "Browse our full catalog of products",
+          link: "/store",
+          caption: "CATALOG"
+        }
+      ]
+
+  const totalSlides = slides.length
 
   // Auto-advance slider every 5 seconds
   useEffect(() => {
@@ -66,14 +87,13 @@ export default function Hero() {
   const progressWidth = ((currentSlide + 1) / totalSlides) * 100
 
   return (
-<section 
-  className="bg-white pt-20 pb-8 lg:pt-32 md:pb-12 border-b border-slate-200 overflow-hidden"
-  style={{
-    backgroundSize: '40px 40px',
-    backgroundImage: 'linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px)'
-  }}
->
-
+    <section 
+      className="bg-white pt-20 pb-8 lg:pt-32 md:pb-12 border-b border-slate-200 overflow-hidden"
+      style={{
+        backgroundSize: '40px 40px',
+        backgroundImage: 'linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px)'
+      }}
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-12">
           
@@ -159,12 +179,10 @@ export default function Hero() {
                   href={slide.link}
                   className="min-w-full h-full relative block"
                 >
-                  <Image
+                  <img
                     src={slide.image}
                     alt={slide.alt}
-                    fill
-                    className="object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
-                    priority={index === 0}
+                    className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent"></div>
                   
@@ -173,7 +191,7 @@ export default function Hero() {
                     <h3 className="text-xl text-white font-medium tracking-tight mb-1 shadow-sm">
                       {slide.title}
                     </h3>
-                    <p className="text-xs text-slate-300 font-light leading-relaxed">
+                    <p className="text-xs text-slate-300 font-light leading-relaxed line-clamp-2">
                       {slide.description}
                     </p>
                   </div>
