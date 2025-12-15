@@ -7,9 +7,9 @@ export default function Logo() {
       className="flex items-center hover:opacity-80 transition-opacity duration-200 py-3 pr-6"
     >
       <img
-        src="/images/logo/logo-main-3.svg"
+        src="/images/logo/new-cardinal-cooling-logo.svg"
         alt="Cowbird Depot Logo"
-        className="max-h-14 w-auto lg:max-h-16"  // Constrain to container height
+        className="max-h-24 w-auto lg:max-h-24"   // Constrain to container height
       />
     </Link>
   )

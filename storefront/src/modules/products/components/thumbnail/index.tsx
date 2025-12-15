@@ -49,7 +49,7 @@ const ImageOrPlaceholder = ({
   image,
   size,
 }: Pick<ThumbnailProps, "size"> & { image?: string }) => {
-  const logoPath = "/images/logo/logo-main-3.svg"
+  const logoPath = "/images/logo/new-cardinal-cooling-logo.svg"
   const [imgSrc, setImgSrc] = React.useState(image || logoPath)
   const [isLogo, setIsLogo] = React.useState(!image)
 

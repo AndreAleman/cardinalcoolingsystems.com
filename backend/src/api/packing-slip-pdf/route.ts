@@ -12,15 +12,16 @@ export async function GET(
   const dummyOrder = {
     orderNumber: "1002",
     orderDate: new Date().toLocaleDateString(),
-    customerName: "Claire Olsen",
+    customerName: "empirical foods, Inc. - SSC",
     shippingAddress: {
-      line1: "891 2 Rivers Dr.",
-      city: "Dakota Dunes, SD",
-      postal: "57049",
+      line1: "6001 Dakota Ave",
+      city: "South Sioux City, NE",
+      postal: "68776",
       country: "USA"
     },
     items: [
-      { title: "Short Weld Clamp Ferrule", variant: "T304, 1in", quantity: 1, sku: "14WMP4-100" },
+      { title: "Concentric Reducer", variant: "T304, 2in x 1 1/2in", quantity: 4, sku: "31W4P-200150" },
+      { title: "45° Butt Weld Elbow", variant: "T304, 2in", quantity: 1, sku: "L2KS4P-200" },
     ]
   };
 

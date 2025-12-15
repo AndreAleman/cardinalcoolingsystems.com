@@ -10,7 +10,7 @@ type ImageGalleryProps = {
 }
 
 const ImageGallery = ({ images }: ImageGalleryProps) => {
-  const logoPath = "/images/logo/logo-main-3.svg"
+  const logoPath = "/images/logo/new-cardinal-cooling-logo.svg"
   
   // Filter out localhost images
   const validImages = images?.filter(img => img?.url && !img.url.includes('localhost')) || []
@@ -125,7 +125,7 @@ const ImageOrPlaceholder = ({
   isZoomed: boolean
   mousePosition: { x: number; y: number }
 }) => {
-  const logoPath = "/images/logo/logo-main-3.svg"
+  const logoPath = "/images/logo/new-cardinal-cooling-logo.svg"
   const [imgSrc, setImgSrc] = useState(image || logoPath)
   const [isLogo, setIsLogo] = useState(!image)
 
