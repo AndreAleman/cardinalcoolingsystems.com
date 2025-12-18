@@ -26,6 +26,21 @@ function getCheckoutStep(cart: HttpTypes.StoreCart) {
 
 const Summary = ({ cart }: SummaryProps) => {
   const step = getCheckoutStep(cart)
+    console.log('🔍 FULL CART DEBUG:', {
+    subtotal: cart.subtotal,
+    item_total: cart.item_total,
+    discount_total: cart.discount_total,
+    gift_card_total: cart.gift_card_total,
+    items: cart.items?.map(item => ({
+      id: item.id,
+      title: item.title,
+      quantity: item.quantity,
+      unit_price: item.unit_price,
+      subtotal: item.subtotal,
+      total: item.total,
+      tax_total: item.tax_total
+    }))
+  })
 
   return (
     <div className="flex flex-col gap-y-4">

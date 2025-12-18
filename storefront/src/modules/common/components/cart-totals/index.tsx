@@ -9,6 +9,7 @@ type CartTotalsProps = {
   totals: {
     total?: number | null
     subtotal?: number | null
+    item_subtotal?: number | null
     tax_total?: number | null
     shipping_total?: number | null
     discount_total?: number | null
@@ -22,15 +23,23 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
     currency_code,
     total,
     subtotal,
+    item_subtotal,
     tax_total,
     shipping_total,
     discount_total,
     gift_card_total,
   } = totals
 
+  // Calculate items-only subtotal (excluding shipping)
+  const itemsSubtotal = item_subtotal ?? (subtotal ?? 0) - (shipping_total ?? 0)
+
   // Free shipping threshold: $100
-  const FREE_SHIPPING_THRESHOLD = 100 // $100.00 in cents
-  const isFreeShipping = (subtotal ?? 0) >= FREE_SHIPPING_THRESHOLD
+  const FREE_SHIPPING_THRESHOLD = 100
+  const isFreeShipping = itemsSubtotal >= FREE_SHIPPING_THRESHOLD
+
+  // Recalculate display total - if free shipping, don't add shipping cost
+  const shippingAmount = isFreeShipping ? 0 : (shipping_total ?? 0)
+  const displayTotal = itemsSubtotal + shippingAmount + (tax_total ?? 0) - (discount_total ?? 0) - (gift_card_total ?? 0)
 
   return (
     <div>
@@ -39,8 +48,8 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
           <span className="flex gap-x-1 items-center">
             Subtotal (excl. shipping and taxes)
           </span>
-          <span data-testid="cart-subtotal" data-value={subtotal || 0}>
-            {convertToLocale({ amount: subtotal ?? 0, currency_code })}
+          <span data-testid="cart-subtotal" data-value={itemsSubtotal}>
+            {convertToLocale({ amount: itemsSubtotal, currency_code })}
           </span>
         </div>
         {!!discount_total && (
@@ -58,7 +67,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
         )}
         <div className="flex items-center justify-between">
           <span>Shipping</span>
-          <span data-testid="cart-shipping" data-value={shipping_total || 0}>
+          <span data-testid="cart-shipping" data-value={shippingAmount}>
             {isFreeShipping ? (
               <span className="text-green-600 font-medium">FREE</span>
             ) : (
@@ -67,10 +76,10 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
           </span>
         </div>
         {/* Free Shipping Progress */}
-        {!isFreeShipping && subtotal && subtotal > 0 && (
+        {!isFreeShipping && itemsSubtotal > 0 && (
           <div className="text-xs text-ui-fg-subtle italic">
             Add {convertToLocale({ 
-              amount: FREE_SHIPPING_THRESHOLD - subtotal, 
+              amount: FREE_SHIPPING_THRESHOLD - itemsSubtotal, 
               currency_code 
             })} more for free shipping
           </div>
@@ -101,14 +110,16 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
         <span
           className="txt-xlarge-plus"
           data-testid="cart-total"
-          data-value={total || 0}
+          data-value={displayTotal}
         >
-          {convertToLocale({ amount: total ?? 0, currency_code })}
+          {convertToLocale({ amount: displayTotal, currency_code })}
         </span>
       </div>
       <div className="h-px w-full border-b border-gray-200 mt-4" />
     </div>
   )
 }
+
+
 
 export default CartTotals

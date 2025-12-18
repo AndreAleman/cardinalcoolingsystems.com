@@ -18,27 +18,36 @@ type ShippingProps = {
   availableShippingMethods: HttpTypes.StoreCartShippingOption[] | null
 }
 
-// Add this helper function at the top
 const getDisplayName = (originalName: string) => {
-  // Map ShipStation names to customer-friendly names
   const nameMap: Record<string, string> = {
     'shipstation': 'UPS Ground',
-    // Add more mappings as you add shipping options
-    // 'shipstation_express': 'UPS 2-Day Air',
-    // 'shipstation_overnight': 'UPS Next Day Air',
   }
 
   const lowerName = originalName.toLowerCase()
   
-  // Check if name contains any mapped key
   for (const [key, displayName] of Object.entries(nameMap)) {
     if (lowerName.includes(key)) {
       return displayName
     }
   }
   
-  // Default: return original name if no mapping found
   return originalName
+}
+
+const getDeliveryTime = (originalName: string) => {
+  const timeMap: Record<string, string> = {
+    'shipstation': '2-3 days',
+  }
+
+  const lowerName = originalName.toLowerCase()
+  
+  for (const [key, deliveryTime] of Object.entries(timeMap)) {
+    if (lowerName.includes(key)) {
+      return deliveryTime
+    }
+  }
+  
+  return '2-3 days'
 }
 
 const Shipping: React.FC<ShippingProps> = ({
@@ -47,6 +56,7 @@ const Shipping: React.FC<ShippingProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined)
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -58,6 +68,13 @@ const Shipping: React.FC<ShippingProps> = ({
     (method) => method.id === cart.shipping_methods?.at(-1)?.shipping_option_id
   )
 
+  // Reset selection when address changes or when opening delivery step
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedOption(selectedShippingMethod?.id)
+    }
+  }, [isOpen, selectedShippingMethod?.id])
+
   const handleEdit = () => {
     router.push(pathname + "?step=delivery", { scroll: false })
   }
@@ -66,11 +83,21 @@ const Shipping: React.FC<ShippingProps> = ({
     router.push(pathname + "?step=payment", { scroll: false })
   }
 
-  const set = async (id: string) => {
+  const handleShippingMethodClick = async (id: string) => {
+    // If clicking the already selected option, deselect it
+    if (selectedOption === id) {
+      setSelectedOption(undefined)
+      return
+    }
+
+    // Otherwise, select the new option
     setIsLoading(true)
+    setSelectedOption(id)
+    
     await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
       .catch((err) => {
         setError(err.message)
+        setSelectedOption(undefined) // Reset on error
       })
       .finally(() => {
         setIsLoading(false)
@@ -80,6 +107,14 @@ const Shipping: React.FC<ShippingProps> = ({
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
+  // Force refresh cart data when delivery step opens
+  useEffect(() => {
+    if (isOpen) {
+      console.log('🔄 Delivery step opened - refreshing cart data')
+      router.refresh()
+    }
+  }, [isOpen, router])
 
   return (
     <div className="bg-white">
@@ -117,9 +152,12 @@ const Shipping: React.FC<ShippingProps> = ({
       {isOpen ? (
         <div data-testid="delivery-options-container">
           <div className="pb-8">
-            <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
+            <RadioGroup value={selectedOption} onChange={handleShippingMethodClick}>
               {availableShippingMethods?.map((option) => {
                 const displayName = getDisplayName(option.name || '')
+                const deliveryTime = getDeliveryTime(option.name || '')
+                
+                const shippingPrice = option.amount || option.calculated_price?.calculated_amount || 0
                 
                 return (
                   <RadioGroup.Option
@@ -130,20 +168,29 @@ const Shipping: React.FC<ShippingProps> = ({
                       "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
                       {
                         "border-ui-border-interactive":
-                          option.id === selectedShippingMethod?.id,
+                          option.id === selectedOption,
                       }
                     )}
                   >
                     <div className="flex items-center gap-x-4">
                       <Radio
-                        checked={option.id === selectedShippingMethod?.id}
+                        checked={option.id === selectedOption}
                       />
                       <span className="text-base-regular">{displayName}</span>
                     </div>
-                    <span className="justify-self-end text-ui-fg-base">
-                      {/* Free shipping for now */}
-                      Free
-                    </span>
+                    <div className="flex flex-col items-end">
+                      {shippingPrice > 0 && (
+                        <span className="text-ui-fg-base font-medium">
+                          {convertToLocale({
+                            amount: shippingPrice,
+                            currency_code: cart.currency_code,
+                          })}
+                        </span>
+                      )}
+                      <span className="text-ui-fg-subtle text-small-regular">
+                        {deliveryTime}
+                      </span>
+                    </div>
                   </RadioGroup.Option>
                 )
               })}
@@ -160,7 +207,7 @@ const Shipping: React.FC<ShippingProps> = ({
             className="mt-6"
             onClick={handleSubmit}
             isLoading={isLoading}
-            disabled={!cart.shipping_methods?.[0]}
+            disabled={!selectedOption}
             data-testid="submit-delivery-option-button"
           >
             Continue to payment
@@ -175,7 +222,7 @@ const Shipping: React.FC<ShippingProps> = ({
                   Method
                 </Text>
                 <Text className="txt-medium text-ui-fg-subtle">
-                  {getDisplayName(selectedShippingMethod?.name || '')} (Free)
+                  {getDisplayName(selectedShippingMethod?.name || '')} ({getDeliveryTime(selectedShippingMethod?.name || '')})
                 </Text>
               </div>
             )}

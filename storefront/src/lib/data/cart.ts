@@ -1,10 +1,11 @@
 "use server"
 
+
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
 import { HttpTypes } from "@medusajs/types"
 import { omit } from "lodash"
-import { revalidateTag } from "next/cache"
+import { revalidateTag, revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getAuthHeaders, getCartId, removeCartId, setCartId } from "./cookies"
 import { getProductsById } from "./products"
@@ -18,16 +19,28 @@ export async function retrieveCart() {
   }
 
   return await sdk.store.cart
-    .retrieve(cartId, {}, { next: { tags: ["cart"] }, ...getAuthHeaders() })
+    .retrieve(
+      cartId, 
+      {
+        fields: "+items.*, +shipping_methods.*" // ADD THIS to get item totals
+      },
+      { next: { tags: ["cart"] }, ...getAuthHeaders() }
+    )
     .then(({ cart }) => {
-      // 🔍 DEBUG: Log every cart retrieval
       console.log(`🔍 CART RETRIEVED [${new Date().toLocaleTimeString()}]:`, {
         cartId: cart.id,
         subtotal: cart.subtotal,
         item_total: cart.item_total,
         shipping_total: cart.shipping_total,
         total: cart.total,
-        stackTrace: new Error().stack?.split('\n')[2] // Show where this was called from
+        items: cart.items?.map(item => ({
+          title: item.title,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+          subtotal: item.subtotal, // Item-level subtotal
+          total: item.total, // Item-level total
+          adjustments: item.adjustments // Promotions/discounts
+        }))
       })
       return cart
     })
@@ -35,6 +48,7 @@ export async function retrieveCart() {
       return null
     })
 }
+
 
 
 export async function getOrSetCart(countryCode: string) {
@@ -136,7 +150,11 @@ export async function updateLineItem({
       revalidateTag("cart")
     })
     .catch(medusaError)
+  
+  // Add this line to force the current page to refresh
+  revalidatePath("/[countryCode]/cart", "page")
 }
+
 
 export async function deleteLineItem(lineId: string) {
   if (!lineId) {
@@ -154,8 +172,13 @@ export async function deleteLineItem(lineId: string) {
       revalidateTag("cart")
     })
     .catch(medusaError)
+  
   revalidateTag("cart")
+  
+  // Force the current page to refresh
+  revalidatePath("/[countryCode]/cart", "page")
 }
+
 
 export async function enrichLineItems(
   lineItems:
@@ -362,7 +385,15 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
         province: formData.get("billing_address.province"),
         phone: formData.get("billing_address.phone"),
       }
+    
+    // SOLUTION: Update cart address - Medusa will handle shipping method invalidation
     await updateCart(data)
+    
+    // Force multiple revalidations to clear cache
+    revalidateTag("cart")
+    revalidateTag("fulfillment")
+    
+    console.log('✅ Address updated, cache revalidated')
   } catch (e: any) {
     return e.message
   }
@@ -371,6 +402,8 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
     `/${formData.get("shipping_address.country_code")}/checkout?step=delivery`
   )
 }
+
+
 
 export async function placeOrder() {
   const cartId = getCartId()

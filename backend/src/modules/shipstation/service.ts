@@ -131,47 +131,79 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
     })
   }
 
-  async calculatePrice(
-    optionData: CalculateShippingOptionPriceDTO["optionData"], 
-    data: CalculateShippingOptionPriceDTO["data"], 
-    context: CalculateShippingOptionPriceDTO["context"]
-  ): Promise<CalculatedShippingOptionPrice> {
-    const { shipment_id } = data as {
-      shipment_id?: string
-    } || {}
-    const { carrier_id, carrier_service_code } = optionData as {
-      carrier_id: string
-      carrier_service_code: string
-    }
-    let rate: Rate | undefined
+async calculatePrice(
+  optionData: CalculateShippingOptionPriceDTO["optionData"], 
+  data: CalculateShippingOptionPriceDTO["data"], 
+  context: CalculateShippingOptionPriceDTO["context"]
+): Promise<CalculatedShippingOptionPrice> {
+  // ✅ FREE SHIPPING LOGIC - Check cart subtotal
+  const FREE_SHIPPING_THRESHOLD = 10000 // $100.00 in cents
+  
+  // Calculate cart subtotal (items only, excluding shipping and tax)
+  let cartSubtotal = 0
+  for (const item of context.items || []) {
+    const unitPrice = Number(item.unit_price ?? 0)
+    const quantity = Number(item.quantity ?? 0)
+    cartSubtotal += unitPrice * quantity
+  }
 
-    if (!shipment_id) {
-      const shipment = await this.createShipment({
-        carrier_id,
-        carrier_service_code,
-        from_address: {
-          name: context.from_location?.name,
-          address: context.from_location?.address
-        },
-        to_address: context.shipping_address,
-        items: context.items || [],
-        currency_code: context.currency_code as string
-      })
-      rate = shipment.rate_response.rates[0]
-    } else {
-      const rateResponse = await this.client.getShipmentRates(shipment_id)
-      rate = rateResponse[0].rates[0]
-    }
+  console.log('🚢 ShipStation Calculate Price:', {
+    cartSubtotal,
+    threshold: FREE_SHIPPING_THRESHOLD,
+    isFreeShipping: cartSubtotal >= FREE_SHIPPING_THRESHOLD,
+    items: context.items?.map(i => ({ title: i.title, qty: i.quantity, price: i.unit_price }))
+  })
 
-    const calculatedPrice = !rate ? 0 : rate.shipping_amount.amount + rate.insurance_amount.amount + 
-      rate.confirmation_amount.amount + rate.other_amount.amount + 
-      (rate.tax_amount?.amount || 0)
-
+  // If cart subtotal >= $100, return free shipping
+  if (cartSubtotal >= FREE_SHIPPING_THRESHOLD) {
+    console.log('✅ FREE SHIPPING APPLIED!')
     return {
-      calculated_amount: calculatedPrice,
-      is_calculated_price_tax_inclusive: !!rate?.tax_amount
+      calculated_amount: 0,
+      is_calculated_price_tax_inclusive: true
     }
   }
+
+  // Otherwise, calculate normal ShipStation rate
+  const { shipment_id } = data as {
+    shipment_id?: string
+  } || {}
+  const { carrier_id, carrier_service_code } = optionData as {
+    carrier_id: string
+    carrier_service_code: string
+  }
+  let rate: Rate | undefined
+
+  if (!shipment_id) {
+    const shipment = await this.createShipment({
+      carrier_id,
+      carrier_service_code,
+      from_address: {
+        name: context.from_location?.name,
+        address: context.from_location?.address
+      },
+      to_address: context.shipping_address,
+      items: context.items || [],
+      currency_code: context.currency_code as string
+    })
+    rate = shipment.rate_response.rates[0]
+  } else {
+    const rateResponse = await this.client.getShipmentRates(shipment_id)
+    rate = rateResponse[0].rates[0]
+  }
+
+  const calculatedPrice = !rate ? 0 : rate.shipping_amount.amount + rate.insurance_amount.amount + 
+    rate.confirmation_amount.amount + rate.other_amount.amount + 
+    (rate.tax_amount?.amount || 0)
+
+  console.log('💰 ShipStation Rate:', calculatedPrice)
+
+  return {
+    calculated_amount: calculatedPrice,
+    is_calculated_price_tax_inclusive: !!rate?.tax_amount
+  }
+}
+
+
 
   async validateFulfillmentData(
     optionData: Record<string, unknown>, 
