@@ -20,37 +20,34 @@ type ShippingProps = {
 
 const getDisplayName = (originalName: string) => {
   const nameMap: Record<string, string> = {
-    'shipstation': 'UPS Ground',
+    shipstation: "UPS Ground",
   }
 
   const lowerName = originalName.toLowerCase()
-  
+
   for (const [key, displayName] of Object.entries(nameMap)) {
     if (lowerName.includes(key)) {
       return displayName
     }
   }
-  
+
   return originalName
 }
 
-// Add delivery time mapping
 const getDeliveryTime = (originalName: string) => {
   const timeMap: Record<string, string> = {
-    'shipstation': '2-3 days',
-    // 'shipstation_express': '1-2 days',
-    // 'shipstation_overnight': 'Next day',
+    shipstation: "2-3 days",
   }
 
   const lowerName = originalName.toLowerCase()
-  
+
   for (const [key, deliveryTime] of Object.entries(timeMap)) {
     if (lowerName.includes(key)) {
       return deliveryTime
     }
   }
-  
-  return '2-3 days' // default
+
+  return "2-3 days"
 }
 
 const Shipping: React.FC<ShippingProps> = ({
@@ -89,9 +86,23 @@ const Shipping: React.FC<ShippingProps> = ({
       })
   }
 
+  // Clear error when reopening the step
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
+  // Auto-select and calculate when Delivery opens
+  useEffect(() => {
+    if (
+      isOpen &&
+      availableShippingMethods?.length === 1 &&
+      !(cart.shipping_methods?.length ?? 0)
+    ) {
+      const method = availableShippingMethods[0]
+      void set(method.id)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, availableShippingMethods, cart.shipping_methods?.length])
 
   return (
     <div className="bg-white">
@@ -131,12 +142,14 @@ const Shipping: React.FC<ShippingProps> = ({
           <div className="pb-8">
             <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
               {availableShippingMethods?.map((option) => {
-                const displayName = getDisplayName(option.name || '')
-                const deliveryTime = getDeliveryTime(option.name || '')
-                
-                // Get the calculated price from the option
-                const shippingPrice = option.amount || option.calculated_price?.calculated_amount || 0
-                
+                const displayName = getDisplayName(option.name || "")
+                const deliveryTime = getDeliveryTime(option.name || "")
+
+                const shippingPrice =
+                  option.calculated_price?.calculated_amount ??
+                  option.amount ??
+                  0
+
                 return (
                   <RadioGroup.Option
                     key={option.id}
@@ -200,7 +213,8 @@ const Shipping: React.FC<ShippingProps> = ({
                   Method
                 </Text>
                 <Text className="txt-medium text-ui-fg-subtle">
-                  {getDisplayName(selectedShippingMethod?.name || '')} ({getDeliveryTime(selectedShippingMethod?.name || '')})
+                  {getDisplayName(selectedShippingMethod?.name || "")} (
+                  {getDeliveryTime(selectedShippingMethod?.name || "")})
                 </Text>
               </div>
             )}
