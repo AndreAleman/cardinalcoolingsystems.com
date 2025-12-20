@@ -34,9 +34,12 @@ const getDisplayName = (originalName: string) => {
   return originalName
 }
 
+// Add delivery time mapping
 const getDeliveryTime = (originalName: string) => {
   const timeMap: Record<string, string> = {
     'shipstation': '2-3 days',
+    // 'shipstation_express': '1-2 days',
+    // 'shipstation_overnight': 'Next day',
   }
 
   const lowerName = originalName.toLowerCase()
@@ -47,7 +50,7 @@ const getDeliveryTime = (originalName: string) => {
     }
   }
   
-  return '2-3 days'
+  return '2-3 days' // default
 }
 
 const Shipping: React.FC<ShippingProps> = ({
@@ -56,7 +59,6 @@ const Shipping: React.FC<ShippingProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined)
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -68,13 +70,6 @@ const Shipping: React.FC<ShippingProps> = ({
     (method) => method.id === cart.shipping_methods?.at(-1)?.shipping_option_id
   )
 
-  // Reset selection when address changes or when opening delivery step
-  useEffect(() => {
-    if (isOpen) {
-      setSelectedOption(selectedShippingMethod?.id)
-    }
-  }, [isOpen, selectedShippingMethod?.id])
-
   const handleEdit = () => {
     router.push(pathname + "?step=delivery", { scroll: false })
   }
@@ -83,21 +78,11 @@ const Shipping: React.FC<ShippingProps> = ({
     router.push(pathname + "?step=payment", { scroll: false })
   }
 
-  const handleShippingMethodClick = async (id: string) => {
-    // If clicking the already selected option, deselect it
-    if (selectedOption === id) {
-      setSelectedOption(undefined)
-      return
-    }
-
-    // Otherwise, select the new option
+  const set = async (id: string) => {
     setIsLoading(true)
-    setSelectedOption(id)
-    
     await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
       .catch((err) => {
         setError(err.message)
-        setSelectedOption(undefined) // Reset on error
       })
       .finally(() => {
         setIsLoading(false)
@@ -107,14 +92,6 @@ const Shipping: React.FC<ShippingProps> = ({
   useEffect(() => {
     setError(null)
   }, [isOpen])
-
-  // Force refresh cart data when delivery step opens
-  useEffect(() => {
-    if (isOpen) {
-      console.log('🔄 Delivery step opened - refreshing cart data')
-      router.refresh()
-    }
-  }, [isOpen, router])
 
   return (
     <div className="bg-white">
@@ -152,11 +129,12 @@ const Shipping: React.FC<ShippingProps> = ({
       {isOpen ? (
         <div data-testid="delivery-options-container">
           <div className="pb-8">
-            <RadioGroup value={selectedOption} onChange={handleShippingMethodClick}>
+            <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
               {availableShippingMethods?.map((option) => {
                 const displayName = getDisplayName(option.name || '')
                 const deliveryTime = getDeliveryTime(option.name || '')
                 
+                // Get the calculated price from the option
                 const shippingPrice = option.amount || option.calculated_price?.calculated_amount || 0
                 
                 return (
@@ -168,13 +146,13 @@ const Shipping: React.FC<ShippingProps> = ({
                       "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
                       {
                         "border-ui-border-interactive":
-                          option.id === selectedOption,
+                          option.id === selectedShippingMethod?.id,
                       }
                     )}
                   >
                     <div className="flex items-center gap-x-4">
                       <Radio
-                        checked={option.id === selectedOption}
+                        checked={option.id === selectedShippingMethod?.id}
                       />
                       <span className="text-base-regular">{displayName}</span>
                     </div>
@@ -207,7 +185,7 @@ const Shipping: React.FC<ShippingProps> = ({
             className="mt-6"
             onClick={handleSubmit}
             isLoading={isLoading}
-            disabled={!selectedOption}
+            disabled={!cart.shipping_methods?.[0]}
             data-testid="submit-delivery-option-button"
           >
             Continue to payment
