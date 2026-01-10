@@ -13,8 +13,8 @@ export async function GET(
   // ============================================
   
   const poData = {
-    poNumber: "PO-0001",
-    poDate: "12/15/2025",
+    poNumber: "PO-0002",
+    poDate: "01/05/2026",
     
     vendorName: "Sanitube",
     vendorAddress: {
@@ -26,24 +26,18 @@ export async function GET(
     
     shipTo: {
       name: "empirical foods, Inc. - SSC",
-      line1: "6001 Dakota Ave",
-      city: "South Sioux City, NE",
-      postal: "68776",
+      line1: "110 S Jennie Barker Road",
+      city: "Garden City, KS",
+      postal: "67846",
       country: "USA"
     },
     
     items: [
       { 
-        description: "Concentric Reducer", 
-        sku: "31W4P-200150",
-        quantity: 4, 
-        unitPrice: 5.63
-      },
-      { 
-        description: "45° Butt Weld Elbow", 
-        sku: "L2KS4P-200",
+        description: "Butt Weld Reducing Tee, 316T, 1in x 1/2in", 
+        sku: "7WRT6P-100050",
         quantity: 1, 
-        unitPrice: 6.51 
+        unitPrice: 20.27
       },
     ],
     
