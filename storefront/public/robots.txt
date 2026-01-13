@@ -12,7 +12,7 @@ User-agent: SemrushBot-SA
 User-agent: SEMrushBot
 User-agent: MJ12bot
 User-agent: DotBot
-User-agent: Screaming Frog SEO Spider
+
 User-agent: rogerbot
 User-agent: exabot
 User-agent: SEOkicks-Robot

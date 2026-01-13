@@ -13,7 +13,7 @@ export async function GET(
   // ============================================
   
   const poData = {
-    poNumber: "PO-0002",
+    poNumber: "PO-0003",
     poDate: "01/05/2026",
     
     vendorName: "Sanitube",
@@ -39,6 +39,37 @@ export async function GET(
         quantity: 1, 
         unitPrice: 20.27
       },
+      { 
+        description: "45deg Elbow BW Tube, 304T, 2 1/2in", 
+        sku: "2WK4P-250",
+        quantity: 4, 
+        unitPrice: 6.83
+      },
+            { 
+        description: "Butt Weld Eccentric Reducer, 304T, 4in x 2in", 
+        sku: "32W4P-400200",
+        quantity: 4, 
+        unitPrice: 29.59
+      },
+            { 
+        description: "90 deg Elbow BW Tube, 304T, 4in", 
+        sku: "2WC4P-400",
+        quantity: 5, 
+        unitPrice: 20.52
+      },
+            { 
+        description: "90 deg Elbow BW Tube, 304T, 2in", 
+        sku: "2WC4P-200",
+        quantity: 10, 
+        unitPrice: 6.00
+      },
+            { 
+        description: "90 deg Elbow BW Tube, 304T, 1in", 
+        sku: "2WC4P-100",
+        quantity: 4, 
+        unitPrice: 3.10
+      },
+
     ],
     
     

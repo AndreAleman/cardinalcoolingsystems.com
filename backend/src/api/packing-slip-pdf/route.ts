@@ -10,7 +10,7 @@ export async function GET(
   
     
   const dummyOrder = {
-    orderNumber: "1002",
+    orderNumber: "1003",
     orderDate: new Date().toLocaleDateString(),
     customerName: "empirical foods, Inc. - SSC",
     shippingAddress: {
@@ -20,8 +20,43 @@ export async function GET(
       country: "USA"
     },
     items: [
-      { title: "Concentric Reducer", variant: "T304, 2in x 1 1/2in", quantity: 4, sku: "31W4P-200150" },
-      { title: "45° Butt Weld Elbow", variant: "T304, 2in", quantity: 1, sku: "L2KS4P-200" },
+      
+            { 
+        title: "Butt Weld Reducing Tee", 
+        variant:"316T, 1in x 1/2in",
+        sku: "7WRT6P-100050",
+        quantity: 1, 
+      },
+      { 
+        title: "45deg Elbow BW Tube", 
+        variant: "304T, 2 1/2in",
+        sku: "2WK4P-250",
+        quantity: 4, 
+      },
+            { 
+        title: "Butt Weld Eccentric Reducer", 
+        variant: "304T, 4in x 2in",
+        sku: "32W4P-400200",
+        quantity: 4, 
+      },
+            { 
+        title: "90 deg Elbow BW Tube", 
+        variant: "316T, 4in",
+        sku: "2WC6P-400",
+        quantity: 5, 
+      },
+            { 
+        title: "90 deg Elbow BW Tube", 
+        variant: "304T, 2in",
+        sku: "2WC4P-200",
+        quantity: 10,
+      },
+            { 
+        title: "90 deg Elbow BW Tube", 
+        variant: "304T, 1in",
+        sku: "2WC4P-100",
+        quantity: 4, 
+      },
     ]
   };
 
