@@ -1,6 +1,17 @@
 import { client } from "../../../../../src/sanity/lib/client"
 import { groq } from "next-sanity"
 import Link from "next/link"
+import { Metadata } from "next"
+
+// ✅ CANONICAL TAG AND METADATA ADDED HERE
+export const metadata: Metadata = {
+  title: "Technical Resources & Industry Insights | Cardinal Cooling Systems Blog",
+  description:
+    "Expert articles on stainless steel sanitary fittings, tubing, and valves. Industry guides for data centers, HVAC, food processing, and pharmaceutical applications.",
+  alternates: {
+    canonical: 'https://cardinalcoolingsystems.com/us/blog'
+  }
+}
 
 // Type definitions
 interface Category {
@@ -84,6 +95,9 @@ export default async function BlogCategoriesPage({ params }: { params: { country
   ])
   
   const { countryCode } = params
+
+  // ... rest of your existing code stays exactly the same
+
 
   return (
     <div className="bg-white">

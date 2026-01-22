@@ -6,8 +6,6 @@ import { PortableText } from "next-sanity"
 import type { Metadata } from "next"
 import { useState, useRef } from "react"
 
-
-
 // Type definitions
 interface BlogPost {
   _id: string
@@ -46,14 +44,12 @@ interface BlogPost {
   }[]
 }
 
-
 interface PostCategory {
   title: string
   slug: {
     current: string
   }
 }
-
 
 interface RelatedPost {
   _id: string
@@ -79,7 +75,6 @@ type FormData = {
   message: string
   agreeToTerms: boolean
 }
-
 
 // GROQ queries
 const POST_QUERY = groq`
@@ -124,7 +119,6 @@ const POST_QUERY = groq`
   }
 `
 
-
 const RELATED_POSTS_QUERY = groq`
   *[_type == "post" && slug.current != $slug && count(categories[@._ref in ^.^.categories[]._ref]) > 0] | order(publishedAt desc)[0...3] {
     _id,
@@ -141,12 +135,46 @@ const RELATED_POSTS_QUERY = groq`
   }
 `
 
-
 interface Props {
   params: { countryCode: string; slug: string }
 }
 
+// ✅ CANONICAL TAG AND METADATA ADDED HERE
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = params
+  
+  const post = await client.fetch<BlogPost>(POST_QUERY, { slug })
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+    }
+  }
 
+  // Create description from excerpt or first 155 characters of body
+  let description = post.excerpt || ''
+  if (!description && post.body?.length > 0) {
+    // Extract plain text from portable text body
+    const firstBlock = post.body.find(block => block._type === 'block' && block.children)
+    if (firstBlock?.children) {
+      description = firstBlock.children
+        .map((child: any) => child.text)
+        .join('')
+        .slice(0, 155)
+    }
+  }
+
+  return {
+    title: `${post.title} | Cardinal Cooling Systems Blog`,
+    description: description || `Read our expert article about ${post.title.toLowerCase()}. Technical insights on stainless steel sanitary fittings.`,
+    alternates: {
+      canonical: `https://cardinalcoolingsystems.com/us/blog/${slug}`
+    },
+    openGraph: post.mainImage?.asset?.url ? {
+      images: [post.mainImage.asset.url],
+    } : undefined,
+  }
+}
 
 // Main Blog Post Page Component
 export default async function BlogPostPage({ params }: Props) {
@@ -161,6 +189,9 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) {
     notFound()
   }
+
+  // ... rest of your existing code stays exactly the same
+
 
   return (
     <div className="bg-white">

@@ -1,8 +1,12 @@
 import { Metadata } from "next"
 
+// ✅ CANONICAL TAG ADDED HERE
 export const metadata: Metadata = {
-  title: "Privacy Policy -  Cardinal Cooling Systems",
-  description: "Our commitment to protecting your privacy and personal information. Learn how we collect, use, and protect your data."
+  title: "Privacy Policy | Cardinal Cooling Systems",
+  description: "Our commitment to protecting your privacy and personal information. Learn how we collect, use, and protect your data when you shop for stainless steel fittings.",
+  alternates: {
+    canonical: 'https://cardinalcoolingsystems.com/us/privacy-policy'
+  }
 }
 
 export default function PrivacyPolicy() {
@@ -78,7 +82,7 @@ export default function PrivacyPolicy() {
           1120 NW 14th Terrace<br />
           Cape Coral, FL 33993<br />
           USA<br />
-          <a href="mailto:aleman@cardinalcoolingsystems.com">ialeman@cardinalcoolingsystems.com</a><br />
+          <a href="mailto:aleman@cardinalcoolingsystems.com">aleman@cardinalcoolingsystems.com</a><br />
           <a href="tel:+16309479955">(630) 947-9955</a>
         </address>
       </div>

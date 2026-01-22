@@ -2,6 +2,7 @@ import { client } from "../../../../../../sanity/lib/client"
 import { groq } from "next-sanity"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Metadata } from "next"
 
 // Type definitions
 interface Category {
@@ -113,6 +114,34 @@ interface Props {
   params: { countryCode: string; slug: string }
 }
 
+// ✅ CANONICAL TAG AND METADATA ADDED HERE
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = params
+  
+  const category = await client.fetch(CATEGORY_QUERY, { slug })
+  
+  if (!category) {
+    return {
+      title: 'Category Not Found',
+    }
+  }
+
+  const postCount = await client.fetch<number>(
+    groq`count(*[_type == "post" && references(*[_type=="category" && slug.current == $slug]._id)])`,
+    { slug }
+  )
+
+  return {
+    title: `${category.title} - Stainless Steel Resources | Cardinal Cooling Systems`,
+    description: category.description 
+      ? `${category.description.slice(0, 140)}` 
+      : `Expert articles and guides about ${category.title.toLowerCase()} for stainless steel sanitary fittings. ${postCount} technical resources.`,
+    alternates: {
+      canonical: `https://cardinalcoolingsystems.com/us/blog/category/${slug}`
+    }
+  }
+}
+
 export default async function CategoryArchivePage({ params }: Props) {
   const { countryCode, slug } = params
 
@@ -126,6 +155,9 @@ export default async function CategoryArchivePage({ params }: Props) {
   if (!category) {
     notFound()
   }
+
+  // ... rest of your existing code stays the same
+
 
   return (
     <div className="bg-white">

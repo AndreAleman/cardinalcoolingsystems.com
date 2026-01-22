@@ -14,11 +14,16 @@ import { client } from "../../../../src/sanity/lib/client"
 import { groq } from "next-sanity"
 
 
+
 export const metadata: Metadata = {
-  title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
+  title: "Stainless Steel Tubing, Fittings & Valves | Cardinal Cooling Systems",
   description:
-    "this is where to edit",
+    "Premium 304 & 316 stainless steel sanitary tubing, fittings, and valves for data centers, HVAC, and industrial cooling systems. 3A certified. Fast delivery.",
+  alternates: {
+    canonical: 'https://cardinalcoolingsystems.com/us'
+  }
 }
+
 
 const RECENT_POSTS_QUERY = groq`
   *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3] {
@@ -35,6 +40,7 @@ const RECENT_POSTS_QUERY = groq`
   }
 `
 
+
 export default async function Home({
   params: { countryCode },
 }: {
@@ -48,9 +54,11 @@ export default async function Home({
   ])
 
 
+
   if (!collections || !region) {
     return null
   }
+
 
 
   // Prepare products for the range section
@@ -64,6 +72,7 @@ export default async function Home({
       image: p.thumbnail ?? "/images/placeholder.jpg",
       handle: p.handle,
     })) ?? []
+
 
 
   // Tube category data
@@ -91,6 +100,7 @@ export default async function Home({
   ]
 
 
+
   return (
     <>
       <Hero recentPosts={recentPosts} countryCode={countryCode} />
@@ -100,14 +110,18 @@ export default async function Home({
       
 
 
+
      
         {/*  <IndustriesSupport /> */}
+
 
 
       
 
 
+
      {/*} <AboutUs />*/}
+
 
 
       <ContactForm />
