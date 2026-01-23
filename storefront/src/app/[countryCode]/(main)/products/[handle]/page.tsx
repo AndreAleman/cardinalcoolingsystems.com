@@ -8,7 +8,7 @@ import { client } from "../../../../../sanity/lib/client"
 
 type Props = {
   params: { countryCode: string; handle: string }
-  searchParams: Record<string, string>  // ← ADDED: For variant options
+  searchParams: Record<string, string>
 }
 
 export async function generateStaticParams() {
@@ -44,8 +44,6 @@ export async function generateStaticParams() {
   return staticParams
 }
 
-// ← ADDED: Helper function to find variant by options
-// ← UPDATED: Helper function to find variant by options
 function findVariantByOptions(product: any, searchParams: Record<string, string>) {
   if (!searchParams || Object.keys(searchParams).length === 0) {
     return null
@@ -56,7 +54,6 @@ function findVariantByOptions(product: any, searchParams: Record<string, string>
       const optionName = opt.option.title.toLowerCase()
       let optionValue = opt.value.toLowerCase()
       
-      // Convert quote marks to "in" to match URL format
       optionValue = optionValue.replace(/["'']/g, 'in').replace(/\s+/g, '')
       
       const searchValue = searchParams[optionName]?.toLowerCase()
@@ -65,7 +62,6 @@ function findVariantByOptions(product: any, searchParams: Record<string, string>
   })
 }
 
-// ← UPDATED: Add searchParams to metadata
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { handle } = params
   const region = await getRegion(params.countryCode)
@@ -80,10 +76,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     notFound()
   }
 
-  // ← ADDED: Find selected variant if options in URL
   const selectedVariant = findVariantByOptions(product, searchParams) || product.variants?.[0]
 
-  // ← ADDED: Build option string for title/description
   const optionString = selectedVariant?.options
     ?.map((opt: any) => `${opt.option.title}: ${opt.value}`)
     .join(", ") || ""
@@ -96,7 +90,6 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       ? `${product.title} with ${optionString}. SKU: ${selectedVariant?.sku}. ${product.description || ''}`
       : product.description || product.title,
     
-    // ← ADDED: Canonical tag to parent (no query params)
     alternates: {
       canonical: `https://cardinalcoolingsystems.com/${params.countryCode}/products/${handle}`
     },
@@ -115,7 +108,6 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
 }
 
-// ← UPDATED: Add searchParams parameter
 export default async function ProductPage({ params, searchParams }: Props) {
   const region = await getRegion(params.countryCode)
 
@@ -129,24 +121,70 @@ export default async function ProductPage({ params, searchParams }: Props) {
   }
 
   const sanity = (await client.getDocument(pricedProduct.id))
-  console.log("parent:", JSON.stringify(sanity, null, 2))
 
-  // ← ADDED: Find selected variant from URL options
   const selectedVariant = findVariantByOptions(pricedProduct, searchParams)
+  
+  // ✅ CREATE PRODUCT SCHEMA - Adjusted for MedusaJS data structure
+  const variant = selectedVariant || pricedProduct.variants?.[0]
+  
+  // Price is already in dollars (not cents) in calculated_amount
+  const price = variant?.calculated_price?.calculated_amount
+    ? variant.calculated_price.calculated_amount.toFixed(2)
+    : null
+
+  const productSchema: any = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: pricedProduct.title,
+    description: pricedProduct.description || pricedProduct.subtitle || pricedProduct.title,
+    image: pricedProduct.thumbnail || pricedProduct.images?.[0]?.url,
+    sku: variant?.sku || pricedProduct.id,
+    brand: {
+      "@type": "Brand",
+      name: "Cardinal Cooling Systems"
+    },
+    offers: {
+      "@type": "Offer",
+      url: `https://cardinalcoolingsystems.com/${params.countryCode}/products/${params.handle}`,
+      priceCurrency: region.currency_code.toUpperCase(),
+      price: price,
+      availability: variant?.inventory_quantity && variant.inventory_quantity > 0
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: "Cardinal Cooling Systems"
+      }
+    }
+  }
+
+  // Add category - use the first (most specific) category
+  if (pricedProduct.categories && pricedProduct.categories.length > 0) {
+    productSchema.category = pricedProduct.categories[0].name
+  }
+
+  // Add material from variant options if "Alloy" option exists
+  const alloyOption = variant?.options?.find((opt: any) => opt.option.title === "Alloy")
+  if (alloyOption) {
+    productSchema.material = alloyOption.value
+  }
 
   return (
     <>
-      {/* ← ADDED: Canonical link tag */}
-      <link 
-        rel="canonical" 
-        href={`https://cardinalcoolingsystems.com/${params.countryCode}/products/${params.handle}`} 
+      {/* ✅ PRODUCT SCHEMA JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productSchema).replace(/</g, '\\u003c')
+        }}
       />
       
       <ProductTemplate
         product={pricedProduct}
         region={region}
         countryCode={params.countryCode}
-        selectedVariant={selectedVariant}  // ← ADDED: Pass selected variant
+        selectedVariant={selectedVariant}
         sanity={{
           description: sanity?.description ?? [],
           tabs: sanity?.tabs ?? [],
