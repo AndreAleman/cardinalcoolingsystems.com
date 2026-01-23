@@ -58,6 +58,16 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
   
   const primaryCategory = product.categories?.[0]
 
+  // ✅ Build H1 with variant info if selected
+  const variantInfo = selectedVariant?.options
+    ?.map((opt: any) => opt.value)
+    .filter(Boolean)
+    .join(", ")
+  
+  const h1Text = variantInfo 
+    ? `${product.title} - ${variantInfo}`
+    : product.title
+
   return (
     <div className="bg-white">
       <ProductViewTracker product={product} selectedVariant={selectedVariant} />
@@ -93,6 +103,11 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
               <div className="lg:sticky lg:top-8 space-y-8 lg:pl-4 lg:pr-8 xl:pr-12">
 
                 <ProductOnboardingCta />
+
+                {/* ✅ H1 TAG ADDED HERE */}
+                <h1 className="text-3xl lg:text-4xl font-bold text-ui-fg-base leading-tight">
+                  {h1Text}
+                </h1>
 
                 {/* 3A CERTIFIED BADGE PLACEMENT */}
                 <div className="flex items-center space-x-2">
