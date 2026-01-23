@@ -14,7 +14,7 @@ export default function SanitubeSection() {
           {/* Image with Logo Overlay */}
           <div className="relative h-[400px] w-full border border-slate-200 bg-slate-100 rounded-sm overflow-hidden group shadow-sm">
             <Image
-              src="/images/sanitube-team.jpg"
+              src="/images/sanitube-team.webp"
               alt="Sanitube Stainless Steel - Authorized Distributor"
               fill
               className="object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700"
