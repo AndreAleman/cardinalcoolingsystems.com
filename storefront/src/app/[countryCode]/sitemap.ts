@@ -1,16 +1,8 @@
 import { MetadataRoute } from 'next'
 import { getProductsList } from '@lib/data/products'
 import { listRegions } from '@lib/data/regions'
-
-// Helper to escape XML characters
-function escapeXml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
-}
+import { client } from '../../sanity/lib/client'
+import { groq } from 'next-sanity'
 
 // Helper function to clean option values for URL
 function cleanOptionValue(value: string): string {
@@ -56,6 +48,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/${countryCode}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/${countryCode}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/${countryCode}/account`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -63,6 +67,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
+  // Get products
   const { response } = await getProductsList({
     countryCode,
     queryParams: { 
@@ -96,14 +101,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
               return `${optionName}=${optionValue}`
             })
             .filter(Boolean)
-            .join('&')
+            .join('&amp;')  // ✅ FIXED: Use &amp; directly in the join
 
           if (queryParams) {
-            // ✅ FIXED: Escape the URL for XML
             const fullUrl = `${baseUrl}/${countryCode}/products/${product.handle}?${queryParams}`
             
             productUrls.push({
-              url: escapeXml(fullUrl),  // ← Escape the & to &amp;
+              url: fullUrl,
               lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
               changeFrequency: 'weekly',
               priority: 0.7,
@@ -114,5 +118,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   })
 
-  return [...staticPages, ...productUrls]
+  // Get blog posts from Sanity
+  const blogPosts = await client.fetch(groq`
+    *[_type == "post" && defined(slug.current)] {
+      "slug": slug.current,
+      _updatedAt
+    }
+  `)
+
+  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: any) => ({
+    url: `${baseUrl}/${countryCode}/blog/${post.slug}`,
+    lastModified: new Date(post._updatedAt),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }))
+
+  // Get blog categories from Sanity
+  const categories = await client.fetch(groq`
+    *[_type == "category" && defined(slug.current)] {
+      "slug": slug.current,
+      _updatedAt
+    }
+  `)
+
+  const categoryUrls: MetadataRoute.Sitemap = categories.map((category: any) => ({
+    url: `${baseUrl}/${countryCode}/blog/category/${category.slug}`,
+    lastModified: new Date(category._updatedAt),
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }))
+
+  return [...staticPages, ...productUrls, ...blogUrls, ...categoryUrls]
 }
