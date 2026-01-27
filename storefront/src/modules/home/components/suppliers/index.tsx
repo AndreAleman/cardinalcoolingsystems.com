@@ -13,13 +13,14 @@ export default function SanitubeSection() {
           
           {/* Image with Logo Overlay */}
           <div className="relative h-[400px] w-full border border-slate-200 bg-slate-100 rounded-sm overflow-hidden group shadow-sm">
-            <Image
-              src="/images/sanitube-team.webp"
-              alt="Sanitube Stainless Steel - Authorized Distributor"
-              fill
-              className="object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
+<Image
+  src="/images/sanitube-team.png"
+  alt="Sanitube Stainless Steel - Authorized Distributor"
+  fill
+  unoptimized  // Add this
+  className="object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700"
+  sizes="(max-width: 1024px) 100vw, 50vw"
+/>
             
             {/* Logo Overlay */}
             <div className="absolute top-6 left-6 bg-white/90 backdrop-blur border border-slate-200 px-6 py-4 rounded-sm shadow-sm">
