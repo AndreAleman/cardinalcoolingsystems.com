@@ -19,7 +19,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           }}
         />
         <script src="https://t.contentsquare.net/uxa/c8f95efdc22b3.js"></script>
-        
+        <script id="vtag-ai-js" async src="https://r2.leadsy.ai/tag.js" data-pid="1BqpijfvlFWlLguUn" data-version="062024"></script>
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
