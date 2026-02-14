@@ -17,9 +17,10 @@ export default function PrivacyPolicy() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Privacy Policy
         </h1>
-        <p className="text-lg text-gray-600">
-          Last updated: September 25, 2025
-        </p>
+<p className="text-lg text-gray-600">
+  Last updated: February 14, 2026
+</p>
+
       </div>
 
       {/* Page Content */}
@@ -76,15 +77,20 @@ export default function PrivacyPolicy() {
 
         <h2>Contacting Us</h2>
         <p>If there are any questions regarding this privacy policy, you may contact us using the information below.</p>
-        <address>
-          <strong>Cardinal Cooling Systems</strong><br />
-          <em>(operated by Colibri Connect LLC)</em><br />
-          1120 NW 14th Terrace<br />
-          Cape Coral, FL 33993<br />
-          USA<br />
-          <a href="mailto:aleman@cardinalcoolingsystems.com">aleman@cardinalcoolingsystems.com</a><br />
-          <a href="tel:+16309479955">(630) 947-9955</a>
-        </address>
+<address>
+  <strong>Cardinal Cooling Systems</strong><br />
+  <em>(operated by Colibri Connect LLC dba Cardinal Cooling Systems)</em><br />
+  1200 NW 14th Terrace<br />
+  Cape Coral, FL 33993<br />
+  USA<br />
+  <a href="mailto:aleman@cardinalcoolingsystems.com">
+    aleman@cardinalcoolingsystems.com
+  </a><br />
+  <a href="tel:+16309479955">
+    (630) 947-9955
+  </a>
+</address>
+
       </div>
     </div>
   )

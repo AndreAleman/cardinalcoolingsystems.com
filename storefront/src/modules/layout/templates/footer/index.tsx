@@ -6,8 +6,11 @@ export default async function Footer() {
   const { product_categories } = await getCategoriesList(0, 50)
 
   // Filter to get only parent categories
-  const parentCategories = product_categories?.filter(c => !c.parent_category && !c.parent_category_id) || []
-  
+  const parentCategories =
+    product_categories?.filter(
+      (c) => !c.parent_category && !c.parent_category_id
+    ) || []
+
   // Split categories into two columns for better layout
   const midPoint = Math.ceil(parentCategories.length / 2)
   const firstColumnCategories = parentCategories.slice(0, midPoint)
@@ -18,7 +21,6 @@ export default async function Footer() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-16">
-          
           {/* Company Info */}
           <div className="lg:col-span-1">
             <LocalizedClientLink
@@ -28,29 +30,43 @@ export default async function Footer() {
               Cardinal Cooling Systems
             </LocalizedClientLink>
             <p className="mt-4 text-blue-100 text-sm leading-relaxed">
-              Premium stainless steel sanitary fittings for food processing, 
-              pharmaceuticals, brewing, and industrial applications. Quality you can trust.
+              Premium stainless steel sanitary fittings for food processing,
+              pharmaceuticals, brewing, and industrial applications. Quality you
+              can trust.
             </p>
-            
+
             {/* Contact Info */}
             <div className="mt-6 space-y-2">
+              <p className="text-xs text-blue-100">
+                Operated by Colibri Connect LLC dba Cardinal Cooling Systems
+              </p>
               <p className="text-sm text-blue-100">
                 <span className="font-medium">Email:</span>{" "}
-                <a href="mailto:aleman@cardinalcoolingsystems.com" className="hover:text-white transition-colors">
+                <a
+                  href="mailto:aleman@cardinalcoolingsystems.com"
+                  className="hover:text-white transition-colors"
+                >
                   aleman@cardinalcoolingsystems.com
                 </a>
               </p>
               <p className="text-sm text-blue-100">
                 <span className="font-medium">Phone:</span>{" "}
-                <a href="tel:+16309479955" className="hover:text-white transition-colors">
+                <a
+                  href="tel:+16309479955"
+                  className="hover:text-white transition-colors"
+                >
                   (630) 947-9955
                 </a>
               </p>
               <p className="mt-2 text-sm text-blue-100">
-                <span className="font-medium">Address:</span>{" "}
-                1200 NW 14th Terrace, Cape Coral, FL 33993
+                <span className="font-medium">Address:</span>
+                <br />
+                1200 NW 14th Terrace
+                <br />
+                Cape Coral, FL 33993
+                <br />
+                United States
               </p>
-
             </div>
           </div>
 
@@ -100,9 +116,7 @@ export default async function Footer() {
 
           {/* Company Links */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Company
-            </h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
                 <LocalizedClientLink
@@ -125,7 +139,23 @@ export default async function Footer() {
                   href="/shipping-returns"
                   className="text-blue-100 hover:text-white transition-colors text-sm"
                 >
-                  Shipping & Returns
+                  Shipping &amp; Returns
+                </LocalizedClientLink>
+              </li>
+                            <li>
+                <LocalizedClientLink
+                  href="/terms-of-service"
+                  className="text-blue-100 hover:text-white transition-colors text-sm"
+                >
+                  Terms of Service
+                </LocalizedClientLink>
+              </li>
+                            <li>
+                <LocalizedClientLink
+                  href="/privacy-policy"
+                  className="text-blue-100 hover:text-white transition-colors text-sm"
+                >
+                  Privacy Policy
                 </LocalizedClientLink>
               </li>
             </ul>
@@ -156,51 +186,75 @@ export default async function Footer() {
           </div>
         </div>
 
-{/* Payment Methods */}
-<div className="border-t border-blue-500 py-6">
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-    <div className="flex flex-col gap-y-2">
-      <h3 className="text-sm font-semibold text-white">
-        We Accept
-      </h3>
-      <div className="flex gap-x-3 items-center">
-        <img src="/images/payments/visa.svg" alt="Visa" className="h-8 w-auto" />
-        <img src="/images/payments/mastercard.svg" alt="Mastercard" className="h-8 w-auto" />
-        <img src="/images/payments/amex.svg" alt="American Express" className="h-8 w-auto" />
-        <img src="/images/payments/discover.svg" alt="Discover" className="h-8 w-auto" />
-      </div>
-    </div>
-    
-    <div className="flex items-center gap-x-2 text-blue-100 text-sm">
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-      </svg>
-      <span>Secure SSL Encrypted Checkout</span>
-    </div>
-  </div>
-</div>
+        {/* Payment Methods */}
+        <div className="border-t border-blue-500 py-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex flex-col gap-y-2">
+              <h3 className="text-sm font-semibold text-white">We Accept</h3>
+              <div className="flex gap-x-3 items-center">
+                <img
+                  src="/images/payments/visa.svg"
+                  alt="Visa"
+                  className="h-8 w-auto"
+                />
+                <img
+                  src="/images/payments/mastercard.svg"
+                  alt="Mastercard"
+                  className="h-8 w-auto"
+                />
+                <img
+                  src="/images/payments/amex.svg"
+                  alt="American Express"
+                  className="h-8 w-auto"
+                />
+                <img
+                  src="/images/payments/discover.svg"
+                  alt="Discover"
+                  className="h-8 w-auto"
+                />
+              </div>
+            </div>
 
+            <div className="flex items-center gap-x-2 text-blue-100 text-sm">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              <span>Secure SSL Encrypted Checkout</span>
+            </div>
+          </div>
+        </div>
 
         {/* Bottom Footer */}
         <div className="border-t border-blue-500 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex flex-wrap gap-4 text-sm text-blue-200">
-              <LocalizedClientLink 
-                href="/privacy-policy" 
+              <LocalizedClientLink
+                href="/privacy-policy"
                 className="hover:text-white transition-colors"
               >
                 Privacy Policy
               </LocalizedClientLink>
-              <LocalizedClientLink 
-                href="/terms-of-service" 
+              <LocalizedClientLink
+                href="/terms-of-service"
                 className="hover:text-white transition-colors"
               >
                 Terms of Service
               </LocalizedClientLink>
             </div>
-            
+
             <Text className="text-sm text-blue-200">
-              © {new Date().getFullYear()} Cardinal Cooling Systems. All rights reserved.
+              © {new Date().getFullYear()} Cardinal Cooling Systems. All rights
+              reserved.
             </Text>
           </div>
         </div>
