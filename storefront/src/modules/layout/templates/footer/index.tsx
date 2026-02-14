@@ -46,6 +46,11 @@ export default async function Footer() {
                   (630) 947-9955
                 </a>
               </p>
+              <p className="mt-2 text-sm text-blue-100">
+                <span className="font-medium">Address:</span>{" "}
+                1200 NW 14th Terrace, Cape Coral, FL 33993
+              </p>
+
             </div>
           </div>
 

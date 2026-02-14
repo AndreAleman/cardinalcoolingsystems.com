@@ -248,6 +248,27 @@ export default function ContactPage({ params }: Props) {
                       </p>
                     </div>
                   </div>
+                  {/* Address */}
+<div className="flex items-start">
+  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 10s-6-4.5-6-10a6 6 0 1112 0c0 5.5-6 10-6 10z"
+      />
+    </svg>
+  </div>
+  <div className="ml-4">
+    <h3 className="text-lg font-semibold text-gray-900 mb-1">Our Address</h3>
+    <p className="text-gray-600">
+      1200 NW 14th Terrace<br />
+      Cape Coral, FL 33993<br />
+      United States
+    </p>
+  </div>
+</div>
 
                   {/* Email */}
                   <div className="flex items-start">

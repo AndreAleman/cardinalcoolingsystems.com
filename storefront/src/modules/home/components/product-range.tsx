@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Link2, CornerDownRight, Settings2, ShieldCheck, Thermometer } from "lucide-react"
+import { Link2, CornerDownRight, Settings2, ShieldCheck, Thermometer, Download } from "lucide-react"
 
 type Product = {
   id: string
@@ -49,13 +49,13 @@ export default function ProductRange({ products }: Props) {
 
   if (!products || products.length === 0) {
     return (
-      <section className="py-24 px-6 border-b border-slate-200 bg-slate-50">
+      <section className="py-24 px-6 border-b border-slate-200 bg-white">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl text-slate-900 font-medium tracking-tight mb-2">
-            Engineered Components
+            Featured Products
           </h2>
           <p className="text-slate-500 font-light">
-            Featured products will appear here once configured.
+            Products will appear here once configured.
           </p>
         </div>
       </section>
@@ -63,26 +63,22 @@ export default function ProductRange({ products }: Props) {
   }
 
   return (
-    <section className="py-24 px-6 border-b border-slate-200 bg-slate-50" id="products">
+    <section className="py-24 px-6 border-b border-slate-200 bg-white" id="products">
       <div className="max-w-7xl mx-auto space-y-12">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <h2 className="text-3xl md:text-4xl text-slate-900 font-medium tracking-tight mb-2">
-              Engineered Components
+            <h2 className="text-3xl md:text-4xl text-slate-900 font-semibold tracking-tight mb-2">
+              Featured Products
             </h2>
-            <p className="text-slate-500 font-light">
-              Modular systems designed for rapid deployment and longevity.
+            <p className="text-slate-600 text-base">
+              Featured sanitary fittings and valves for data centers and process lines. In stock and ready to ship
             </p>
           </div>
-          <a 
-            href="/line-card.pdf" 
-            download
-            className="text-slate-600 text-sm border-b border-slate-300 pb-1 hover:text-blue-600 hover:border-blue-600 transition-colors inline-block"
-          >
-            Download Line Card
-          </a>
+
+
+
         </div>
 
         {/* Bento Grid */}
@@ -101,7 +97,7 @@ export default function ProductRange({ products }: Props) {
                 <Link
                   key={product.id}
                   href={`/products/${product.handle}`}
-                  className={`md:col-span-2 bg-white border border-slate-200 rounded-sm p-8 hover:shadow-lg transition-all duration-300 group flex flex-col ${
+                  className={`md:col-span-2 bg-white border-2 border-slate-200 rounded-sm p-8 hover:shadow-xl hover:border-blue-300 transition-all duration-300 group flex flex-col ${
                     isReversed ? 'md:flex-row-reverse' : 'md:flex-row'
                   } gap-8 items-center overflow-hidden`}
                 >
@@ -113,24 +109,36 @@ export default function ProductRange({ products }: Props) {
                     
                     {/* Content */}
                     <div>
-                      <h3 className="text-xl text-slate-900 font-semibold mb-2 tracking-tight">
+                      <h3 className="text-2xl text-slate-900 font-semibold mb-2 tracking-tight">
                         {product.title}
                       </h3>
-                      <p className="text-sm text-slate-500 leading-relaxed font-light">
+                      <p className="text-base text-slate-600 leading-relaxed">
                         {product.subtitle}
                       </p>
                     </div>
                     
-                    {/* Specs/Price */}
-                    {product.price && (
-                      <div className="flex gap-2 flex-wrap">
-                        <span className="text-[10px] font-mono bg-slate-100 px-2 py-1 text-slate-500 rounded">
-                          {typeof product.price === 'number' 
-                            ? `PRICE: $${product.price.toFixed(2)}` 
-                            : product.price}
-                        </span>
-                      </div>
-                    )}
+                    {/* Price */}
+{product.price && (
+  <div className="flex items-center gap-3">
+    <span className="text-2xl font-bold text-slate-900">
+      {typeof product.price === 'number' 
+        ? `From $${product.price.toFixed(2)}`
+        : product.price}
+    </span>
+    <span className="text-xs text-slate-500 uppercase tracking-wide">
+      In Stock
+    </span>
+  </div>
+)}
+
+
+                    {/* View Product Link */}
+                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 group-hover:gap-3 transition-all">
+                      View Details
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
                   </div>
                   
                   {/* Image Container */}
@@ -156,7 +164,7 @@ export default function ProductRange({ products }: Props) {
               <Link
                 key={product.id}
                 href={`/products/${product.handle}`}
-                className="bg-white border border-slate-200 rounded-sm hover:shadow-lg transition-all duration-300 group overflow-hidden flex flex-col"
+                className="bg-white border-2 border-slate-200 rounded-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 group overflow-hidden flex flex-col"
               >
                 {/* Image Top */}
                 <div className="h-48 bg-slate-100 relative overflow-hidden">
@@ -171,16 +179,35 @@ export default function ProductRange({ products }: Props) {
                 </div>
                 
                 {/* Content */}
-                <div className="p-8 flex flex-col flex-grow">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg text-slate-900 font-medium tracking-tight">
+                <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg text-slate-900 font-semibold tracking-tight flex-1">
                       {product.title}
                     </h3>
-                    <Icon className="w-5 h-5 text-slate-400 flex-shrink-0 ml-2" strokeWidth={1.5} />
+                    <Icon className="w-5 h-5 text-slate-400 flex-shrink-0 ml-2 group-hover:text-blue-600 transition-colors" strokeWidth={1.5} />
                   </div>
-                  <p className="text-sm text-slate-500 leading-relaxed font-light">
+                  <p className="text-sm text-slate-600 leading-relaxed mb-4 flex-grow">
                     {product.subtitle}
                   </p>
+                  
+                  {/* Price & CTA */}
+{product.price ? (
+  <div className="flex items-center justify-between mt-auto">
+    <span className="text-xl font-bold text-slate-900">
+      {typeof product.price === 'number' 
+        ? `From $${product.price.toFixed(2)}`
+        : product.price}
+    </span>
+    <span className="text-sm text-blue-600 font-semibold group-hover:underline">
+      View →
+    </span>
+  </div>
+) : (
+  <span className="text-sm text-blue-600 font-semibold group-hover:underline mt-auto">
+    View Details →
+  </span>
+)}
+
                 </div>
               </Link>
             )

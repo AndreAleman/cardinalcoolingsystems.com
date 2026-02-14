@@ -3,7 +3,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Droplet } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export default function SanitubeSection() {
   return (
@@ -13,33 +13,26 @@ export default function SanitubeSection() {
           
           {/* Image with Logo Overlay */}
           <div className="relative h-[400px] w-full border border-slate-200 bg-slate-100 rounded-sm overflow-hidden group shadow-sm">
-<Image
-  src="/images/sanitube-team.png"
-  alt="Sanitube Stainless Steel - Authorized Distributor"
-  fill
-  unoptimized  // Add this
-  className="object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700"
-  sizes="(max-width: 1024px) 100vw, 50vw"
-/>
+            <Image
+              src="/images/sanitube-team.png"
+              alt="Sanitube Stainless Steel manufacturing facility and team"
+              fill
+              unoptimized
+              className="object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority // Add if this is above the fold
+            />
             
             {/* Logo Overlay */}
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur border border-slate-200 px-6 py-4 rounded-sm shadow-sm">
-              <div className="flex items-center gap-2">
-                {/* If you have the actual logo SVG, use it. Otherwise use icon + text */}
-                <div className="relative h-6 w-24">
-                  <Image
-                    src="/images/sanitube_logo.svg"
-                    alt="Sanitube Logo"
-                    fill
-                    className="object-contain"
-                    sizes="96px"
-                  />
-                </div>
-                {/* Fallback if logo doesn't load - you can remove this if logo works */}
-                {/* <Droplet className="w-6 h-6 text-blue-600" />
-                <span className="font-display font-bold text-slate-900 tracking-tight text-lg uppercase">
-                  SANITUBE
-                </span> */}
+            <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-sm border border-slate-200 px-6 py-4 rounded-sm shadow-md">
+              <div className="relative h-6 w-24">
+                <Image
+                  src="/images/sanitube_logo.svg"
+                  alt="Sanitube Logo"
+                  fill
+                  className="object-contain"
+                  sizes="96px"
+                />
               </div>
             </div>
           </div>
@@ -48,23 +41,23 @@ export default function SanitubeSection() {
           <div className="space-y-8 lg:pl-10">
             
             {/* Authorized Badge */}
-            <div className="inline-flex items-center gap-2 text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1 text-[10px] font-medium tracking-widest uppercase rounded-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+            <div className="inline-flex items-center gap-2 text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 text-[10px] font-semibold tracking-widest uppercase rounded-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
               Authorized Distributor
             </div>
             
             {/* Heading & Description */}
-            <div>
-              <h2 className="text-3xl lg:text-4xl text-slate-900 font-medium tracking-tight mb-4">
-                Proud Distributor of <br />
-                <span className="text-blue-600">Sanitube Stainless Steel</span>
+            <div className="space-y-4">
+              <h2 className="text-3xl lg:text-4xl text-slate-900 font-medium tracking-tight">
+                Proud Distributor of{' '}
+                <span className="text-blue-600 block mt-1">Sanitube Stainless Steel</span>
               </h2>
               
-              <p className="text-lg text-slate-500 font-light leading-relaxed">
+              <p className="text-lg text-slate-600 leading-relaxed">
                 Sanitube is a leading American manufacturer of sanitary-grade stainless steel tubes, valves, and fittings based in Lakeland, Florida.
               </p>
               
-              <p className="text-sm text-slate-400 font-light leading-relaxed mt-4">
+              <p className="text-sm text-slate-500 leading-relaxed">
                 Specializing in precision-engineered products meeting 3A specifications, serving pharmaceutical, beverage, dairy, HVAC, and industrial markets.
               </p>
             </div>
@@ -72,11 +65,11 @@ export default function SanitubeSection() {
             {/* CTA Button */}
             <div className="pt-2">
               <Link 
-                href="/store"
+                href="/us/store"
                 className="inline-flex items-center justify-center gap-3 bg-slate-900 text-white px-8 py-3.5 text-xs uppercase tracking-widest font-semibold hover:bg-blue-600 transition-colors shadow-sm rounded-sm group"
               >
                 View Sanitube Products
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" strokeWidth={2} />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
               </Link>
             </div>
           </div>

@@ -11,10 +11,12 @@ import {
   Hr,
 } from '@react-email/components';
 
+
 interface PackingSlipProps {
   orderNumber: string;
   orderDate: string;
   customerName: string;
+  clientPoNumber?: string; // Added client PO number field
   shippingAddress: {
     line1: string;
     line2?: string;
@@ -30,10 +32,12 @@ interface PackingSlipProps {
   }>;
 }
 
+
 export default function PackingSlip({
   orderNumber = "1001",
   orderDate = "2025-11-18",
   customerName = "John Doe",
+  clientPoNumber, // Added client PO number parameter
   shippingAddress = {
     line1: "123 Main St",
     city: "New York",
@@ -59,10 +63,12 @@ export default function PackingSlip({
             />
           </Section>
 
+
           {/* Header */}
           <Section style={styles.header}>
             <Text style={styles.title}>PACKING SLIP</Text>
           </Section>
+
 
           {/* Order Info */}
           <Section style={styles.section}>
@@ -70,9 +76,13 @@ export default function PackingSlip({
               <Column>
                 <Text style={styles.label}>Order #: {orderNumber}</Text>
                 <Text style={styles.label}>Date: {orderDate}</Text>
+                {clientPoNumber && (
+                  <Text style={styles.label}>Client PO #: {clientPoNumber}</Text>
+                )}
               </Column>
             </Row>
           </Section>
+
 
           {/* Ship To */}
           <Section style={styles.section}>
@@ -88,7 +98,9 @@ export default function PackingSlip({
             <Text style={styles.text}>{shippingAddress.country}</Text>
           </Section>
 
+
           <Hr style={styles.hr} />
+
 
           {/* Items Table */}
           <Section style={styles.section}>
@@ -106,6 +118,7 @@ export default function PackingSlip({
               </Column>
             </Row>
 
+
             {items.map((item, index) => (
               <Row key={index} style={styles.tableRow}>
                 <Column style={{ width: '40%' }}>
@@ -122,7 +135,9 @@ export default function PackingSlip({
             ))}
           </Section>
 
+
           <Hr style={styles.hr} />
+
 
           <Section style={styles.footer}>
             <Text style={styles.footerText}>Thank you for your order!</Text>
@@ -132,6 +147,7 @@ export default function PackingSlip({
     </Html>
   );
 }
+
 
 const styles = {
   body: {

@@ -62,16 +62,72 @@ export default async function Home({
 
 
   // Prepare products for the range section
-  const rangeProducts = collections
-    ?.flatMap(collection => collection.products || [])
+// Prepare products for the range section
+const rangeProducts =
+  collections
+    ?.flatMap((collection) => collection.products || [])
     ?.slice(0, 8)
-    ?.map((p) => ({
-      id: p.id,
-      title: p.title,
-      subtitle: p.subtitle ?? p.title ?? "Product",
-      image: p.thumbnail ?? "/images/placeholder.jpg",
-      handle: p.handle,
-    })) ?? []
+    ?.map((p) => {
+      const variants = p.variants || []
+
+      const pricedVariants = variants
+        .map((v: any) => {
+          const rawAmount = v.calculated_price?.calculated_amount
+
+          if (typeof rawAmount !== "number") {
+            return null
+          }
+
+          return {
+            variant: v,
+            amount: rawAmount,
+          }
+        })
+        .filter((x) => !!x)
+
+      let lowestPrice: number | undefined
+      let spec: string | undefined
+
+      if (pricedVariants.length > 0) {
+        const min = pricedVariants.reduce((acc, cur) =>
+          cur.amount < acc.amount ? cur : acc
+        )
+
+        // In new Medusa, amount is already in major units
+        lowestPrice = min.amount
+
+        const v = min.variant
+
+        const size =
+          v.metadata?.size ||
+          v.metadata?.nominal_size ||
+          v.metadata?.diameter
+
+        const material =
+          v.metadata?.material ||
+          p.metadata?.material ||
+          (p as any).material
+
+        const connection =
+          v.metadata?.connection ||
+          p.metadata?.connection
+
+        const parts = [size, material, connection].filter(Boolean)
+        spec = parts.join(" • ")
+      }
+
+      return {
+        id: p.id,
+        title: p.title,
+        subtitle: spec || p.subtitle || p.title || "Product",
+        image: p.thumbnail ?? "/images/placeholder.jpg",
+        handle: p.handle,
+        price: lowestPrice,
+      }
+    }) ?? []
+
+
+
 
 
 

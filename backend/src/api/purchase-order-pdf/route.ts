@@ -13,8 +13,8 @@ export async function GET(
   // ============================================
   
   const poData = {
-    poNumber: "PO-0003",
-    poDate: "01/05/2026",
+    poNumber: "PO-0005",
+    poDate: "02/10/2026",
     
     vendorName: "Sanitube",
     vendorAddress: {
@@ -26,54 +26,24 @@ export async function GET(
     
     shipTo: {
       name: "empirical foods, Inc. - SSC",
-      line1: "110 S Jennie Barker Road",
-      city: "Garden City, KS",
-      postal: "67846",
+      line1: "390 164th Street",
+      city: "South Sioux City, NE",
+      postal: "68776",
       country: "USA"
     },
     
     items: [
       { 
-        description: "Butt Weld Reducing Tee, 316T, 1in x 1/2in", 
-        sku: "7WRT6P-100050",
-        quantity: 1, 
-        unitPrice: 20.27
-      },
-      { 
-        description: "45deg Elbow BW Tube, 304T, 2 1/2in", 
-        sku: "2WK4P-250",
-        quantity: 4, 
-        unitPrice: 6.83
-      },
-            { 
-        description: "Butt Weld Eccentric Reducer, 304T, 4in x 2in", 
-        sku: "32W4P-400200",
-        quantity: 4, 
-        unitPrice: 29.59
-      },
-            { 
-        description: "90 deg Elbow BW Tube, 304T, 4in", 
-        sku: "2WC4P-400",
-        quantity: 5, 
-        unitPrice: 20.52
-      },
-            { 
-        description: "90 deg Elbow BW Tube, 304T, 2in", 
-        sku: "2WC4P-200",
-        quantity: 10, 
-        unitPrice: 6.00
-      },
-            { 
-        description: "90 deg Elbow BW Tube, 304T, 1in", 
+        description: "Butt Weld 90deg Elbow, 304, 1in", 
         sku: "2WC4P-100",
-        quantity: 4, 
-        unitPrice: 3.10
+        quantity: 6, 
+        unitPrice: 2.82
       },
-
+      
     ],
     
     
-    notes: "Please ship via UPS Ground. Contact us upon receipt."
+    notes: "Please ship via UPS 2 Day Air. Contact us upon receipt."
   };
 
   // ============================================
