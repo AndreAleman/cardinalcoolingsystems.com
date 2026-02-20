@@ -33,6 +33,7 @@
     "@medusajs/medusa": "2.8.8",
     "@medusajs/notification-sendgrid": "2.8.8",
     "@medusajs/payment-stripe": "2.8.8",
+    "@medusajs/pricing": "^2.13.1",
     "@medusajs/types": "^2.8.8",
     "@medusajs/ui": "^4.0.18",
     "@medusajs/workflow-engine-redis": "2.8.8",
