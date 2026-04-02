@@ -11,12 +11,12 @@ export async function GET(
   
     
   const dummyOrder = {
-    orderNumber: "1005",
+    orderNumber: "1009",
     orderDate: new Date().toLocaleDateString(),
     customerName: "empirical foods, Inc. - SSC",
-    clientPoNumber: "442850", // Added client PO number
+    clientPoNumber: "445506", // Added client PO number
     shippingAddress: {
-      line1: "390 164th Street",
+      line1: "6001 Dakota Ave",
       city: "South Sioux City, NE",
       postal: "68776",
       country: "USA"
@@ -24,10 +24,10 @@ export async function GET(
     items: [
       
             { 
-        title: "Butt Weld 90deg Elbow", 
-        variant:"304, 1in",
-        sku: "2WC4P-100",
-        quantity: 6, 
+        title: "Butt Weld Concentric Reducer", 
+        variant: "304, 2in x 1-1/2in",
+        sku: "31W4P-200150",
+        quantity: 4, 
       },
       
 

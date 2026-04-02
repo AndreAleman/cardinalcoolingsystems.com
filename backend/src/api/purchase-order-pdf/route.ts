@@ -13,8 +13,8 @@ export async function GET(
   // ============================================
   
   const poData = {
-    poNumber: "PO-0005",
-    poDate: "02/10/2026",
+    poNumber: "PO-0009",
+    poDate: "03/9/2026",
     
     vendorName: "Sanitube",
     vendorAddress: {
@@ -26,7 +26,7 @@ export async function GET(
     
     shipTo: {
       name: "empirical foods, Inc. - SSC",
-      line1: "390 164th Street",
+      line1: "6001 Dakota Ave",
       city: "South Sioux City, NE",
       postal: "68776",
       country: "USA"
@@ -34,10 +34,10 @@ export async function GET(
     
     items: [
       { 
-        description: "Butt Weld 90deg Elbow, 304, 1in", 
-        sku: "2WC4P-100",
-        quantity: 6, 
-        unitPrice: 2.82
+        description: "Concentric Reducer, 304 Stainless Steel, 2in x 1-1/2in", 
+        sku: "31W4P-200150",
+        quantity: 4, 
+        unitPrice: 6.20
       },
       
     ],

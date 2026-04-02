@@ -5,11 +5,10 @@ import { useState, useRef, useEffect } from "react"
 import { sdk } from "@lib/config"
 import { HttpTypes } from "@medusajs/types"
 
-// Static navigation items
 const staticNavigationItems = [
-  { label: "Blog", href: "/blog" },
+  { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
-  { label: "About Us", href: "/about" }
+  { label: "Blog", href: "/blog" },
 ]
 
 interface NavigationProps {
@@ -21,7 +20,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [activePath, setActivePath] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -29,18 +28,19 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
       try {
         const response = await sdk.store.category.list({
           include_descendants_tree: true,
-          fields: "id,name,handle,parent_category_id,category_children.id,category_children.name,category_children.handle,category_children.category_children.id,category_children.category_children.name,category_children.category_children.handle,category_children.category_children.category_children.id,category_children.category_children.category_children.name,category_children.category_children.category_children.handle"
+          fields:
+            "id,name,handle,parent_category_id,category_children.id,category_children.name,category_children.handle,category_children.category_children.id,category_children.category_children.name,category_children.category_children.handle,category_children.category_children.category_children.id,category_children.category_children.category_children.name,category_children.category_children.category_children.handle",
         })
-        
         const allCategories = response.product_categories || []
-        const parentCategories = allCategories.filter(cat => 
-          cat.parent_category_id === null || cat.parent_category_id === undefined
+        const parentCategories = allCategories.filter(
+          (cat) =>
+            cat.parent_category_id === null ||
+            cat.parent_category_id === undefined
         )
-        
         setCategories(parentCategories)
         setLoading(false)
       } catch (error) {
-        console.error("❌ Error loading categories:", error)
+        console.error("Error loading categories:", error)
         setLoading(false)
       }
     }
@@ -50,18 +50,19 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
     return () => clearInterval(intervalId)
   }, [])
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setActiveDropdown(null)
         setActivePath([])
       }
     }
-
     if (activeDropdown) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [activeDropdown])
 
@@ -72,46 +73,58 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
   }
 
   const handleCategoryClick = (categoryName: string, hasChildren: boolean) => {
-    if (hasChildren) {
-      setActivePath([categoryName])
-    }
+    if (hasChildren) setActivePath([categoryName])
   }
 
-  const handleSubcategoryClick = (parentName: string, categoryName: string, hasChildren: boolean) => {
-    if (hasChildren) {
-      setActivePath([parentName, categoryName])
-    }
+  const handleSubcategoryClick = (
+    parentName: string,
+    categoryName: string,
+    hasChildren: boolean
+  ) => {
+    if (hasChildren) setActivePath([parentName, categoryName])
   }
 
-  const handleThirdLevelClick = (grandparentName: string, parentName: string, categoryName: string, hasChildren: boolean) => {
-    if (hasChildren) {
-      setActivePath([grandparentName, parentName, categoryName])
-    }
+  const handleThirdLevelClick = (
+    grandparentName: string,
+    parentName: string,
+    categoryName: string,
+    hasChildren: boolean
+  ) => {
+    if (hasChildren) setActivePath([grandparentName, parentName, categoryName])
   }
 
-  const renderCategoryLevel = (categories: HttpTypes.StoreProductCategory[], level: number, parentPath: string[] = []) => {
-    const width = Math.max(180, 220 - (level * 15))
-    const leftOffset = level === 0 ? 0 : -1
-    
+  const renderCategoryLevel = (
+    cats: HttpTypes.StoreProductCategory[],
+    level: number,
+    parentPath: string[] = []
+  ) => {
+    const width = Math.max(180, 220 - level * 15)
+
     return (
-      <div 
-        className={`absolute ${level === 0 ? 'top-full left-0 mt-1' : 'top-0 left-full'} bg-white rounded-lg shadow-lg border border-gray-100 py-2`}
-        style={{ 
+      <div
+        className={`absolute ${level === 0 ? "top-full left-0 mt-2" : "top-0 left-full"} py-2`}
+        style={{
           width: `${width}px`,
-          marginLeft: level > 0 ? `${leftOffset}px` : '0',
-          zIndex: 50 + (level * 5)
+          backgroundColor: "#1a1a1a",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderTop: level === 0 ? "2px solid #E3000F" : "1px solid rgba(255,255,255,0.1)",
+          zIndex: 50 + level * 5,
+          marginLeft: level > 0 ? "-1px" : "0",
         }}
       >
-        {/* View All Link - Only for top level */}
         {level === 0 && (
-          <div className="border-b border-gray-100 mb-1">
+          <div style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }} className="mb-1">
             <Link
               href="/store"
-              className="flex items-center px-4 py-3 text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors duration-150"
-              onClick={() => {
-                setActiveDropdown(null)
-                setActivePath([])
-              }}
+              className="flex items-center px-4 py-3 text-sm font-semibold transition-colors duration-150"
+              style={{ color: "#E3000F" }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.backgroundColor = "rgba(227,0,15,0.08)")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.backgroundColor = "transparent")
+              }
+              onClick={() => { setActiveDropdown(null); setActivePath([]) }}
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -121,30 +134,31 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
           </div>
         )}
 
-        {categories.map((category) => {
+        {cats.map((category) => {
           const currentPath = [...parentPath, category.name]
           const isActive = activePath.length > level && activePath[level] === category.name
           const hasChildren = category.category_children && category.category_children.length > 0
-          
+
           return (
-            <div 
-              key={category.id}
-              className="relative"
-            >
+            <div key={category.id} className="relative">
               {hasChildren ? (
                 <div
                   onClick={() => {
-                    if (level === 0) {
-                      handleCategoryClick(category.name, hasChildren)
-                    } else if (level === 1) {
-                      handleSubcategoryClick(parentPath[0], category.name, hasChildren)
-                    } else if (level === 2) {
-                      handleThirdLevelClick(parentPath[0], parentPath[1], category.name, hasChildren)
-                    } else {
-                      setActivePath([...currentPath])
-                    }
+                    if (level === 0) handleCategoryClick(category.name, hasChildren)
+                    else if (level === 1) handleSubcategoryClick(parentPath[0], category.name, hasChildren)
+                    else if (level === 2) handleThirdLevelClick(parentPath[0], parentPath[1], category.name, hasChildren)
+                    else setActivePath([...currentPath])
                   }}
-                  className="flex items-center justify-between px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150 cursor-pointer"
+                  className="flex items-center justify-between px-4 py-3 text-sm cursor-pointer transition-colors duration-150"
+                  style={{ color: "rgba(255,255,255,0.75)" }}
+                  onMouseEnter={(e) => {
+                    ;(e.currentTarget as HTMLElement).style.color = "white"
+                    ;(e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.05)"
+                  }}
+                  onMouseLeave={(e) => {
+                    ;(e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)"
+                    ;(e.currentTarget as HTMLElement).style.backgroundColor = "transparent"
+                  }}
                 >
                   <span>{category.name}</span>
                   <svg className="w-3 h-3 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -154,19 +168,24 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
               ) : (
                 <Link
                   href={`/categories/${category.handle}`}
-                  className="flex items-center justify-between px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
-                  onClick={() => {
-                    setActiveDropdown(null)
-                    setActivePath([])
+                  className="flex items-center justify-between px-4 py-3 text-sm transition-colors duration-150"
+                  style={{ color: "rgba(255,255,255,0.75)" }}
+                  onMouseEnter={(e) => {
+                    ;(e.currentTarget as HTMLElement).style.color = "white"
+                    ;(e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.05)"
                   }}
+                  onMouseLeave={(e) => {
+                    ;(e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)"
+                    ;(e.currentTarget as HTMLElement).style.backgroundColor = "transparent"
+                  }}
+                  onClick={() => { setActiveDropdown(null); setActivePath([]) }}
                 >
                   <span>{category.name}</span>
                 </Link>
               )}
 
-              {hasChildren && isActive && category.category_children && (
-                renderCategoryLevel(category.category_children, level + 1, currentPath)
-              )}
+              {hasChildren && isActive && category.category_children &&
+                renderCategoryLevel(category.category_children, level + 1, currentPath)}
             </div>
           )
         })}
@@ -179,30 +198,32 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={toggleDropdown}
-          className="flex items-center space-x-1 text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2"
+          className="flex items-center space-x-1 text-sm font-medium tracking-wide transition-colors duration-200 py-2"
+          style={{ color: "rgba(255,255,255,0.85)" }}
+          onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
+          onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
         >
           <span>Shop</span>
-          <svg 
-            className={`w-4 h-4 ml-1 transition-transform duration-200 ${activeDropdown === "Shop" ? 'rotate-180' : ''}`}
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24" 
-            strokeWidth={1.5}
+          <svg
+            className={`w-4 h-4 ml-1 transition-transform duration-200 ${activeDropdown === "Shop" ? "rotate-180" : ""}`}
+            fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
           </svg>
         </button>
 
-        {!loading && categories.length > 0 && activeDropdown === "Shop" && (
-          renderCategoryLevel(categories, 0)
-        )}
+        {!loading && categories.length > 0 && activeDropdown === "Shop" &&
+          renderCategoryLevel(categories, 0)}
       </div>
 
       {staticNavigationItems.map((item) => (
         <Link
           key={item.label}
           href={item.href}
-          className="text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2"
+          className="text-sm font-medium tracking-wide transition-colors duration-200 py-2"
+          style={{ color: "rgba(255,255,255,0.85)" }}
+          onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
+          onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
         >
           {item.label}
         </Link>
