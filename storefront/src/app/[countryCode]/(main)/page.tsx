@@ -159,7 +159,7 @@ const rangeProducts =
 
   return (
     <>
-      <Hero recentPosts={recentPosts} countryCode={countryCode} />
+      <Hero/>
       <SanitaryProducts />
       <ProductRangeWrapper products={rangeProducts} />
       <SanitubeSection />
