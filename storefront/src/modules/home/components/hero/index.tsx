@@ -11,16 +11,34 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full object-cover object-center"
       />
 
-      {/* ── Product image — right side ── */}
-{/* ── Product image — right side ── */}
+
+
+{/* ── Grid overlay ── */}
+<div
+  className="absolute inset-0"
+  style={{
+backgroundColor: "rgba(0, 0, 0, 0.35)",
+backgroundImage: `
+  linear-gradient(to right, rgba(180, 30, 30, 0.10) .75px, transparent 1px),
+  linear-gradient(to bottom, rgba(180, 30, 30, 0.10) .75px, transparent 1px)
+`,
+    backgroundSize: "10px 10px",
+    zIndex: 1,
+  }}
+/>
+
+
+
+
 <img
-  src="/images/hero/image-9.png"
+  src="/images/hero/tcross.jpg"
   alt="Stainless steel cooling component"
   className="absolute top-[172px] right-20 w-[860px] h-[860px] object-contain pointer-events-none select-none"
-style={{
-  maskImage: "linear-gradient(to bottom, black 60%, transparent 70%)",
-  WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 70%)",
-}}
+  style={{
+    zIndex: 2,
+    maskImage: "linear-gradient(to bottom, black 60%, transparent 70%)",
+    WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 70%)",
+  }}
 />
 
       {/* ── Content ── */}

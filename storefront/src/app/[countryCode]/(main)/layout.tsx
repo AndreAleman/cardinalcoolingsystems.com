@@ -1,8 +1,7 @@
+import React from "react"
 import { Metadata } from "next"
-
 import Footer from "@modules/layout/templates/footer"
 import Nav from "@modules/layout/templates/nav"
-import HeaderSearchSection from "@modules/layout/components/header-search-section"
 import { getBaseURL } from "@lib/util/env"
 
 export const metadata: Metadata = {
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
   title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
   description: "Your premium source for stainless steel tubing, fittings, and valves",
   openGraph: {
-    title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems", 
+    title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
     description: "Your premium source for stainless steel tubing, fittings, and valves",
     url: getBaseURL(),
     siteName: "Cardinal Cooling Systems",
@@ -30,24 +29,20 @@ export const metadata: Metadata = {
     description: "Your premium source for stainless steel tubing, fittings, and valves",
   },
 }
+
 export default function PageLayout(props: { children: React.ReactNode }) {
   return (
     <>
-      {/* Main Navigation - Fixed at top */}
+      {/* Main Navigation - Fixed at top, transparent until scroll */}
       <Nav />
-      
-      {/* Search Section - Fixed below nav */}
-      <HeaderSearchSection />
-      
-      {/* Main Content - Add padding-top to account for fixed header + search */}
-      <main className="relative pt-32 lg:pt-36">
+
+      {/* Main Content - No top padding so hero sits under transparent nav */}
+      <main className="relative">
         {props.children}
       </main>
-      
+
       {/* Footer */}
       <Footer />
     </>
   )
 }
-
-

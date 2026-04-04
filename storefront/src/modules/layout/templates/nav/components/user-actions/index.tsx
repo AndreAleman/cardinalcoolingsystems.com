@@ -1,5 +1,4 @@
 "use client"
-
 import Link from "next/link"
 import { useCartCount } from "@lib/hooks/use-cart-count"
 
@@ -8,25 +7,10 @@ export default function UserActions() {
 
   return (
     <div className="hidden lg:flex items-center space-x-6">
-
-      {/* Search */}
-      <Link
-        href="/search"
-        className="flex items-center gap-2 text-sm font-medium tracking-wide transition-colors duration-200 py-2"
-        style={{ color: "rgba(255,255,255,0.85)" }}
-        onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
-        onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
-      >
-        <span>Search</span>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-        </svg>
-      </Link>
-
       {/* Cart */}
       <Link
         href="/cart"
-        className="flex items-center gap-2 text-sm font-medium tracking-wide transition-colors duration-200 py-2"
+        className="flex items-center gap-2 text-base font-medium tracking-wide transition-colors duration-200 py-2"
         style={{ color: "rgba(255,255,255,0.85)" }}
         onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
         onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
@@ -50,7 +34,7 @@ export default function UserActions() {
       {/* Account */}
       <Link
         href="/account"
-        className="flex items-center gap-2 text-sm font-medium tracking-wide transition-colors duration-200 py-2"
+        className="flex items-center gap-2 text-base font-medium tracking-wide transition-colors duration-200 py-2"
         style={{ color: "rgba(255,255,255,0.85)" }}
         onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
         onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
@@ -64,7 +48,7 @@ export default function UserActions() {
       {/* Request A Quote CTA */}
       <Link
         href="/contact"
-        className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold tracking-wide text-white transition-all duration-200"
+        className="flex items-center gap-2 px-5 py-2.5 text-base font-semibold tracking-wide text-white transition-all duration-200"
         style={{ backgroundColor: "#E3000F", border: "1px solid #E3000F" }}
         onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d")}
         onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#E3000F")}
@@ -74,7 +58,6 @@ export default function UserActions() {
           <path d="M2 6h8M7 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </Link>
-
     </div>
   )
 }
