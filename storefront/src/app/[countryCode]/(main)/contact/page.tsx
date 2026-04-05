@@ -1,6 +1,5 @@
 "use client"
 
-import { Metadata } from "next"
 import Link from "next/link"
 import { useState, FormEvent, useRef } from "react"
 
@@ -14,362 +13,294 @@ interface Props {
   params: { countryCode: string }
 }
 
+const faqs = [
+  {
+    q: "What industries do you serve?",
+    a: "We serve food processing, pharmaceuticals, brewing & beverage, biotechnology, and general industrial applications requiring sanitary stainless steel components.",
+  },
+  {
+    q: "Do you offer custom fabrication?",
+    a: "Yes, we work with trusted fabrication partners to provide custom solutions when standard fittings don't meet your specific requirements.",
+  },
+  {
+    q: "What are your minimum order quantities?",
+    a: "We accommodate both small prototype orders and large production runs. Contact us for specific quantities and pricing.",
+  },
+]
+
 export default function ContactPage({ params }: Props) {
   const { countryCode } = params
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setSubmitStatus('idle')
+    setSubmitStatus("idle")
 
     const formData = new FormData(e.currentTarget)
     const data = {
-      name: formData.get('name') as string,
-      lastName: formData.get('lastName') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      message: formData.get('message') as string
+      name: formData.get("name") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      message: formData.get("message") as string,
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'x-publishable-api-key': process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!
-        },
-        body: JSON.stringify(data)
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
+          },
+          body: JSON.stringify(data),
+        }
+      )
 
       if (response.ok) {
-        // ✅ ADD THIS: Track successful contact form submission
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           window.dataLayer = window.dataLayer || []
           window.dataLayer.push({
-            event: 'contact_form_submit',
-            form_type: 'general_contact',
+            event: "contact_form_submit",
+            form_type: "general_contact",
             user_email: data.email,
-            form_location: 'contact_page'
+            form_location: "contact_page",
           })
-          console.log('✅ Contact form submitted:', data.email)
+          console.log("✅ Contact form submitted:", data.email)
         }
-
-        setSubmitStatus('success')
+        setSubmitStatus("success")
         formRef.current?.reset()
       } else {
-        setSubmitStatus('error')
+        setSubmitStatus("error")
       }
     } catch (error) {
-      console.error('Contact form error:', error)
-      setSubmitStatus('error')
+      console.error("Contact form error:", error)
+      setSubmitStatus("error")
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const inputClass =
+    "w-full bg-gray-100 border-0 text-gray-900 placeholder-gray-400 px-4 py-3 text-sm outline-none transition-all duration-150 focus:ring-1 focus:ring-gray-900 focus:bg-white"
+
+  const iconBox = (
+    <div
+      className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5"
+      style={{ backgroundColor: "rgba(227,0,15,0.08)", borderRadius: "5px" }}
+    />
+  )
+
   return (
     <div className="bg-white">
-      {/* Hero Section */}
-      <section className="bg-gray-50 pt-32 pb-16">
-        <div className="content-container">
-          {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-            <Link href={`/${countryCode}`} className="hover:text-blue-600">
-              Home
-            </Link>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="text-gray-900 font-medium">Contact Us</span>
-          </nav>
 
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Get Expert Guidance
-            </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
-              Our technical experts are here to help you find the perfect sanitary fitting 
-              solution for your specific application. Contact us today.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* ── Main section: info left, form right ─────────────────────────── */}
+      <section className="pt-36 pb-24 px-6 lg:px-12 bg-white">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
-      {/* Contact Section - Form Left, Info Right */}
-      <section className="py-20 bg-white">
-        <div className="content-container">
-          <div className="grid lg:grid-cols-2 gap-16">
-            {/* Left Side - Contact Form */}
-            <div className="bg-gray-50 rounded-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Send Us a Message
-              </h2>
+            {/* Left — headline + contact info */}
+            <div>
+              {/* Breadcrumb */}
+              <nav className="flex items-center gap-2 text-sm mb-10" style={{ color: "#9ca3af" }}>
+                <Link href={`/${countryCode}`} className="hover:text-gray-900 transition-colors">Home</Link>
+                <span>/</span>
+                <span className="text-gray-900">Contact Us</span>
+              </nav>
 
-              {submitStatus === 'success' && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded text-green-800">
-                  Thank you! Your message has been sent successfully.
-                </div>
-              )}
+              <h1 className="font-sans text-4xl lg:text-5xl font-normal tracking-tight mb-4" style={{ color: "#111111" }}>
+                Get Expert Guidance
+              </h1>
+              <p className="text-sm font-light leading-relaxed mb-12 max-w-sm" style={{ color: "#6b7280" }}>
+                Our technical experts are here to help you find the perfect sanitary fitting solution for your specific application. Contact us today.
+              </p>
 
-              {submitStatus === 'error' && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded text-red-800">
-                  Sorry, there was an error sending your message. Please try again.
-                </div>
-              )}
+              {/* Contact items */}
+              <div className="space-y-8">
 
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-                {/* Name Fields */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name*
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      className="block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded"
-                    />
+                {/* Phone */}
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ backgroundColor: "rgba(227,0,15,0.08)", color: "#E3000F", borderRadius: "5px" }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                    </svg>
                   </div>
                   <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name*
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      required
-                      className="block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded"
-                    />
+                    <p className="text-sm font-semibold text-gray-900 mb-0.5">Call Us</p>
+                    <p className="text-xs text-gray-400 mb-1">Speak directly with our technical experts</p>
+                    <a href="tel:+16309479955" className="text-sm font-medium transition-colors" style={{ color: "#E3000F" }}>
+                      (630) 947-9955
+                    </a>
+                    <p className="text-xs text-gray-400 mt-0.5 uppercase tracking-widest">Mon–Fri 8:00 AM – 6:00 PM EST</p>
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ backgroundColor: "rgba(227,0,15,0.08)", color: "#E3000F", borderRadius: "5px" }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 mb-1">Our Address</p>
+                    <p className="text-sm font-light" style={{ color: "#6b7280" }}>
+                      1200 NW 14th Terrace<br />
+                      Cape Coral, FL 33993<br />
+                      United States
+                    </p>
                   </div>
                 </div>
 
                 {/* Email */}
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address*
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded"
-                  />
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ backgroundColor: "rgba(227,0,15,0.08)", color: "#E3000F", borderRadius: "5px" }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 mb-0.5">Email Us</p>
+                    <p className="text-xs text-gray-400 mb-1">Send us your technical questions</p>
+                    <a href="mailto:aleman@cardinalcoolingsystems.com" className="text-sm font-medium transition-colors" style={{ color: "#E3000F" }}>
+                      aleman@cardinalcoolingsystems.com
+                    </a>
+                    <p className="text-xs text-gray-400 mt-0.5 uppercase tracking-widest">We respond within 24 hours</p>
+                  </div>
                 </div>
 
-                {/* Phone */}
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    className="block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded"
-                  />
+              </div>
+            </div>
+
+            {/* Right — form */}
+            <div>
+              <h2 className="font-sans text-2xl font-normal tracking-tight mb-8" style={{ color: "#111111" }}>
+                Contact Us
+              </h2>
+
+              {submitStatus === "success" && (
+                <div className="mb-6 p-4 text-sm font-light" style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px", color: "#111" }}>
+                  ✓ Message sent. We'll follow up within one business day.
+                </div>
+              )}
+              {submitStatus === "error" && (
+                <div className="mb-6 p-4 text-sm font-light" style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px", color: "#E3000F" }}>
+                  Something went wrong. Please try again.
+                </div>
+              )}
+
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+
+                {/* Name row */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1.5">First Name</label>
+                    <input type="text" name="name" required placeholder="First Name" className={inputClass} style={{ borderRadius: "5px" }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1.5">Last Name</label>
+                    <input type="text" name="lastName" required placeholder="Last Name" className={inputClass} style={{ borderRadius: "5px" }} />
+                  </div>
                 </div>
 
-                {/* Message */}
+                {/* Email + Phone */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1.5">Work Email</label>
+                    <input type="email" name="email" required placeholder="name@company.com" className={inputClass} style={{ borderRadius: "5px" }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1.5">Phone (optional)</label>
+                    <input type="tel" name="phone" placeholder="(555) 123-4567" className={inputClass} style={{ borderRadius: "5px" }} />
+                  </div>
+                </div>
+
+                {/* Specifications */}
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message*
-                  </label>
+                  <label className="block text-xs text-gray-500 mb-1.5">Specifications</label>
                   <textarea
-                    id="message"
                     name="message"
                     required
-                    rows={4}
-                    className="block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded resize-none"
-                    placeholder="Tell us about your project or requirements..."
+                    rows={5}
+                    placeholder="Details regarding pressure, fittings, and estimated quantity..."
+                    className={`${inputClass} resize-none`}
+                    style={{ borderRadius: "5px" }}
                   />
                 </div>
 
-                {/* Submit Button */}
+                {/* Submit */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 rounded"
+                  className="flex items-center gap-3 px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#E3000F")}
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                  {isSubmitting ? "Sending…" : "Send Message"}
                   {!isSubmitting && (
-                    <svg 
-                      className="ml-2 w-4 h-4" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
+                    <span
+                      className="flex items-center justify-center w-6 h-6"
+                      style={{ backgroundColor: "rgba(0,0,0,0.15)", borderRadius: "4px" }}
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M17 8l4 4m0 0l-4 4m4-4H3" 
-                      />
-                    </svg>
+                      <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+                        <path d="M2 12L12 2M12 2H5M12 2v7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
                   )}
                 </button>
+
               </form>
-            </div>
-
-            {/* Right Side - Contact Information (Centered) */}
-            <div className="flex items-center justify-center">
-              <div className="max-w-md">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-                  Get in Touch
-                </h2>
-                
-                <div className="space-y-8">
-                  {/* Phone */}
-                  <div className="flex items-start">
-                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Call Us</h3>
-                      <p className="text-gray-600 mb-2">
-                        Speak directly with our technical experts
-                      </p>
-                      <a 
-                        href="tel:+6309479955" 
-                        className="text-blue-600 font-semibold hover:text-blue-700 transition-colors text-lg"
-                      >
-                        (630) 947-9955
-                      </a>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Mon-Fri 8:00 AM - 6:00 PM EST
-                      </p>
-                    </div>
-                  </div>
-                  {/* Address */}
-<div className="flex items-start">
-  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 10s-6-4.5-6-10a6 6 0 1112 0c0 5.5-6 10-6 10z"
-      />
-    </svg>
-  </div>
-  <div className="ml-4">
-    <h3 className="text-lg font-semibold text-gray-900 mb-1">Our Address</h3>
-    <p className="text-gray-600">
-      1200 NW 14th Terrace<br />
-      Cape Coral, FL 33993<br />
-      United States
-    </p>
-  </div>
-</div>
-
-                  {/* Email */}
-                  <div className="flex items-start">
-                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
-                      <p className="text-gray-600 mb-2">
-                        Send us your technical questions
-                      </p>
-                      <a 
-                        href="mailto:aleman@cardinalcoolingsystems.com" 
-                        className="text-blue-600 font-semibold hover:text-blue-700 transition-colors text-lg"
-                      >
-                        aleman@cardinalcoolingsystems.com
-                      </a>
-                      <p className="text-sm text-gray-500 mt-1">
-                        We respond within 24 hours
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="content-container">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+      {/* ── FAQ section ──────────────────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12 bg-white border-t" style={{ borderColor: "#f0f0f0" }}>
+        <div className="mx-auto max-w-[1440px]">
+          <h2 className="font-sans text-3xl font-normal tracking-tight mb-12" style={{ color: "#111111" }}>
             Frequently Asked Questions
           </h2>
 
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                What industries do you serve?
-              </h3>
-              <p className="text-gray-600">
-                We serve food processing, pharmaceuticals, brewing & beverage, biotechnology, 
-                and general industrial applications requiring sanitary stainless steel components.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Do you offer custom fabrication?
-              </h3>
-              <p className="text-gray-600">
-                Yes, we work with trusted fabrication partners to provide custom solutions 
-                when standard fittings don't meet your specific requirements.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                What are your minimum order quantities?
-              </h3>
-              <p className="text-gray-600">
-                We accommodate both small prototype orders and large production runs. 
-                Contact us for specific quantities and pricing.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {faqs.map((faq, idx) => (
+              <div
+                key={idx}
+                className="p-8 flex flex-col gap-4"
+                style={{ backgroundColor: "#fafafa", border: "1px solid #f0f0f0", borderRadius: "5px" }}
+              >
+                {/* Question mark icon */}
+                <div
+                  className="w-8 h-8 flex items-center justify-center"
+                  style={{ backgroundColor: "rgba(227,0,15,0.08)", color: "#E3000F", borderRadius: "5px" }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold" style={{ color: "#111111" }}>{faq.q}</h3>
+                <p className="text-sm font-light leading-relaxed" style={{ color: "#6b7280" }}>{faq.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-blue-600 text-white py-16">
-        <div className="content-container text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to Get Started?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Whether you need a single fitting or a complete system solution, 
-            our team is ready to help you succeed.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="tel:+6309479955"
-              className="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded hover:bg-gray-100 transition-colors"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              Call Now
-            </a>
-            <Link 
-              href={`/${countryCode}/categories`}
-              className="inline-flex items-center px-8 py-4 border-2 border-white text-white font-semibold rounded hover:bg-white hover:text-blue-600 transition-colors"
-            >
-              Browse Products
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

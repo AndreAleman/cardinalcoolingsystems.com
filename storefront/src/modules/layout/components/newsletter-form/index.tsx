@@ -1,5 +1,7 @@
 import { getCategoriesList } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import Logo from "@modules/layout/templates/nav/components/logo"
+import NewsletterForm from "@modules/layout/components/newsletter-form"
 
 export default async function Footer() {
   const { product_categories } = await getCategoriesList(0, 50)
@@ -22,15 +24,11 @@ export default async function Footer() {
         >
           {/* Company info + Logo */}
           <div className="lg:col-span-1">
-            <LocalizedClientLink href="/" className="inline-block mb-4">
-              <img
-                src="/images/logo/new-cardinal-cooling-logo.svg"
-                alt="Cardinal Cooling Systems"
-                className="h-12 w-auto"
-              />
+            <LocalizedClientLink href="/">
+              <Logo />
             </LocalizedClientLink>
             <p
-              className="text-sm leading-relaxed"
+              className="mt-4 text-sm leading-relaxed"
               style={{ color: "rgba(255,255,255,0.45)" }}
             >
               Premium stainless steel sanitary fittings for food processing,
@@ -136,6 +134,24 @@ export default async function Footer() {
           </div>
         </div>
 
+        {/* Newsletter signup */}
+        <div
+          className="py-10 border-b"
+          style={{ borderColor: "rgba(255,255,255,0.08)" }}
+        >
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <h3 className="text-base font-semibold text-white mb-1">
+                Stay Updated
+              </h3>
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Get the latest product updates and industry insights.
+              </p>
+            </div>
+            <NewsletterForm />
+          </div>
+        </div>
+
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 py-8">
 
@@ -163,13 +179,21 @@ export default async function Footer() {
             className="flex flex-wrap items-center gap-4 text-xs"
             style={{ color: "rgba(255,255,255,0.35)" }}
           >
-            <LocalizedClientLink href="/privacy-policy" className="hover:text-white transition-colors">
+            <LocalizedClientLink
+              href="/privacy-policy"
+              className="hover:text-white transition-colors"
+            >
               Privacy Policy
             </LocalizedClientLink>
-            <LocalizedClientLink href="/terms-of-service" className="hover:text-white transition-colors">
+            <LocalizedClientLink
+              href="/terms-of-service"
+              className="hover:text-white transition-colors"
+            >
               Terms of Service
             </LocalizedClientLink>
-            <span>© {currentYear} Cardinal Cooling Systems. All rights reserved.</span>
+            <span>
+              © {currentYear} Cardinal Cooling Systems. All rights reserved.
+            </span>
           </div>
 
         </div>

@@ -69,9 +69,9 @@ module.exports = {
       fontSize: {
         "3xl": "2rem",
       },
-      fontFamily: {
-        sans: ["IBM Plex Sans", "sans-serif"],
-      },
+fontFamily: {
+  sans: ["var(--font-ibm-plex-sans)", "sans-serif"],
+},
       keyframes: {
         ring: {
           "0%": { transform: "rotate(0deg)" },

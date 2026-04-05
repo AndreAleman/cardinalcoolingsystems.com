@@ -6,237 +6,217 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-  title: "About Us - Our Story & Mission",
+  title: "About Us | Cardinal Cooling Systems",
   description: "Learn about Cardinal Cooling Systems's commitment to providing premium sanitary stainless steel fittings for food processing, pharmaceuticals, and industrial applications.",
 }
+
+const values = [
+  {
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+      </svg>
+    ),
+    title: "Quality First",
+    description: "Every product meets the highest industry standards for sanitary applications. We never compromise on quality or safety.",
+  },
+  {
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+      </svg>
+    ),
+    title: "Technical Expertise",
+    description: "Deep knowledge of sanitary fitting applications across food processing, pharmaceuticals, and industrial environments.",
+  },
+  {
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+      </svg>
+    ),
+    title: "American Support",
+    description: "Responsive US-based support and technical guidance to help you find the right solution for your specific application needs.",
+  },
+]
+
+const industries = [
+  { name: "Food Processing", desc: "Sanitary fittings for dairy, beverage, and food production facilities." },
+  { name: "Pharmaceuticals", desc: "High-purity components for pharmaceutical and biotech manufacturing." },
+  { name: "Brewing & Beverage", desc: "Specialized fittings for breweries and beverage production lines." },
+  { name: "Industrial Cooling", desc: "Heavy-duty stainless components for data centers and process cooling." },
+]
 
 export default function AboutPage({ params }: Props) {
   const { countryCode } = params
 
   return (
-    <div className="bg-white">
-      {/* Hero Section */}
-      <section className="bg-gray-50 pt-32 pb-16">
-        <div className="content-container">
-          {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-            <Link href={`/${countryCode}`} className="hover:text-blue-600">
-              Home
-            </Link>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="text-gray-900 font-medium">About Us</span>
+    <div>
+
+      {/* ── Hero — dark ──────────────────────────────────────────────────── */}
+      <section className="pt-40 pb-20 px-6 lg:px-12" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="mx-auto max-w-[1440px]">
+          <nav className="flex items-center gap-2 text-sm mb-10" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <Link href={`/${countryCode}`} className="hover:text-white transition-colors">Home</Link>
+            <span>/</span>
+            <span style={{ color: "rgba(255,255,255,0.7)" }}>About Us</span>
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Content */}
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                Premium Quality, Trusted Reliability
+              <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
+                Our Story
+              </p>
+              <h1 className="font-sans text-4xl lg:text-6xl font-normal tracking-tight text-white leading-tight mb-6">
+                Premium Quality,<br />Trusted Reliability
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
-                For over two decades, we've been the trusted partner for businesses requiring 
-                the highest quality sanitary stainless steel fittings and components.
+              <p className="text-base font-light leading-relaxed max-w-md" style={{ color: "rgba(255,255,255,0.55)" }}>
+                Cardinal Cooling Systems was built to serve engineers who need reliable, certified stainless steel components — fast, at the right price, from people who know the product.
               </p>
             </div>
 
-            {/* Hero Image */}
-            <div className="relative">
+            {/* Hero image */}
+            <div className="relative h-80 lg:h-96 overflow-hidden" style={{ borderRadius: "5px" }}>
               <img
                 src="/images/about/about-main.jpg"
-                alt="About Cardinal Cooling Systems - Sanitary fittings expertise"
-                className="w-full h-[400px] object-cover rounded-lg shadow-lg"
+                alt="Cardinal Cooling Systems"
+                className="w-full h-full object-cover"
+                style={{ filter: "brightness(0.8)" }}
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Our Story Section */}
-      <section className="py-20">
-        <div className="content-container">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-              Our Story
-            </h2>
-            
-            <div className="prose prose-lg max-w-none text-gray-700">
-              <p className="text-lg mb-6">
-                Founded with a mission to provide superior sanitary stainless steel solutions, 
-                Cardinal Cooling Systems has grown from a small specialty supplier to a trusted partner 
-                for industries where precision and cleanliness are paramount.
+      {/* ── Our Story — white ────────────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12 bg-white">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
+                Who We Are
               </p>
-              
-              <p className="mb-6">
-                Our journey began when we recognized the need for reliable, high-quality 
-                sanitary fittings that could meet the demanding standards of food processing, 
-                pharmaceutical manufacturing, and biotechnology applications. Today, we serve 
-                clients across diverse industries with the same commitment to excellence.
+              <h2 className="font-sans text-3xl lg:text-4xl font-normal tracking-tight mb-6" style={{ color: "#111111" }}>
+                Built for engineers who can't afford to wait
+              </h2>
+            </div>
+            <div className="space-y-4 text-sm font-light leading-relaxed" style={{ color: "#555555" }}>
+              <p>
+                Founded with a mission to provide superior sanitary stainless steel solutions, Cardinal Cooling Systems has grown from a small specialty supplier to a trusted partner for industries where precision and cleanliness are paramount.
               </p>
-
-              <p className="mb-6">
-                Every product we supply undergoes rigorous quality control to ensure it meets 
-                or exceeds industry standards. We understand that in your industry, there's 
-                no room for compromise when it comes to sanitation, durability, and performance.
+              <p>
+                Our journey began when we recognized the need for reliable, high-quality sanitary fittings that could meet the demanding standards of food processing, pharmaceutical manufacturing, and data center cooling. Today, we serve clients across diverse industries with the same commitment to excellence.
+              </p>
+              <p>
+                We work with Sanitube — a leading American manufacturer based in Lakeland, Florida — giving our customers access to 3A certified 304 and 316L stainless fittings that ship in as little as one business day. When it comes to price and speed, we can't be beat.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="content-container">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+      {/* ── Values — light red tint ───────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12" style={{ backgroundColor: "rgba(227, 0, 15, 0.04)" }}>
+        <div className="mx-auto max-w-[1440px]">
+          <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
             Our Values
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Quality */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Quality First</h3>
-              <p className="text-gray-600">
-                Every product meets the highest industry standards for sanitary applications. 
-                We never compromise on quality or safety.
-              </p>
-            </div>
-
-            {/* Expertise */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 11.172V5L8 4z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Technical Expertise</h3>
-              <p className="text-gray-600">
-                Deep knowledge of sanitary fitting applications across food processing, 
-                pharmaceuticals, and industrial environments.
-              </p>
-            </div>
-
-            {/* Service */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Customer Service</h3>
-              <p className="text-gray-600">
-                Responsive support and technical guidance to help you find the right 
-                solution for your specific application needs.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Industries Section */}
-      <section className="py-20">
-        <div className="content-container">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
-            Industries We Serve
-          </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Food Processing */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Food Processing</h3>
-              <p className="text-gray-600 text-sm">
-                Sanitary fittings for dairy, beverage, and food production facilities.
-              </p>
-            </div>
-
-            {/* Pharmaceuticals */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 11.172V5L8 4z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Pharmaceuticals</h3>
-              <p className="text-gray-600 text-sm">
-                High-purity components for pharmaceutical and biotech manufacturing.
-              </p>
-            </div>
-
-            {/* Brewing */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h1a1 1 0 011 1v2a1 1 0 01-1 1h-1m-10-4h1a1 1 0 011 1v2a1 1 0 01-1 1H7m0 0H4a2 2 0 01-2-2v-6a2 2 0 012-2h12a2 2 0 012 2v6a2 2 0 01-2 2h-3M7 16v4a2 2 0 002 2h6a2 2 0 002-2v-4M7 16H4a2 2 0 01-2-2v-2a2 2 0 012-2h3v4z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Brewing & Beverage</h3>
-              <p className="text-gray-600 text-sm">
-                Specialized fittings for breweries and beverage production lines.
-              </p>
-            </div>
-
-            {/* Industrial */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Industrial</h3>
-              <p className="text-gray-600 text-sm">
-                Heavy-duty components for chemical processing and manufacturing.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section with Background Image */}
-      <section className="relative bg-blue-600 text-white py-16 overflow-hidden">
-        {/* Background Image Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url("/images/about/cta-background.jpg")',
-          }}
-        ></div>
-        
-        {/* Content */}
-        <div className="content-container text-center relative z-10">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to Work with Us?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Get in touch to discuss your sanitary fitting requirements. 
-            Our technical experts are ready to help you find the perfect solution.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href={`/${countryCode}/contact`}
-              className="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded hover:bg-gray-100 transition-colors"
-            >
-              Contact Us
-            </Link>
-            <Link 
-              href={`/${countryCode}/categories`}
-              className="inline-flex items-center px-8 py-4 border-2 border-white text-white font-semibold rounded hover:bg-white hover:text-blue-600 transition-colors"
-            >
-              Browse Products
-            </Link>
+          <h2 className="font-sans text-3xl font-normal tracking-tight mb-12" style={{ color: "#111111" }}>
+            What we stand for
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {values.map((v, idx) => (
+              <div
+                key={idx}
+                className="p-8 flex flex-col gap-4 bg-white"
+                style={{ border: "1px solid rgba(227,0,15,0.10)", borderRadius: "5px" }}
+              >
+                <div
+                  className="w-10 h-10 flex items-center justify-center"
+                  style={{ backgroundColor: "rgba(227,0,15,0.08)", color: "#E3000F", borderRadius: "5px" }}
+                >
+                  {v.icon}
+                </div>
+                <h3 className="text-base font-semibold" style={{ color: "#111111" }}>{v.title}</h3>
+                <p className="text-sm font-light leading-relaxed" style={{ color: "#555555" }}>{v.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* ── Industries — white ───────────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12 bg-white">
+        <div className="mx-auto max-w-[1440px]">
+          <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
+            Industries
+          </p>
+          <h2 className="font-sans text-3xl font-normal tracking-tight mb-12" style={{ color: "#111111" }}>
+            Industries we serve
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {industries.map((ind, idx) => (
+              <div
+                key={idx}
+                className="p-6 flex flex-col gap-3"
+                style={{ backgroundColor: "#fafafa", border: "1px solid #f0f0f0", borderRadius: "5px" }}
+              >
+                <div
+                  className="w-8 h-8 flex items-center justify-center"
+                  style={{ backgroundColor: "rgba(227,0,15,0.08)", color: "#E3000F", borderRadius: "5px" }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold" style={{ color: "#111111" }}>{ind.name}</h3>
+                <p className="text-xs font-light leading-relaxed" style={{ color: "#6b7280" }}>{ind.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA — dark ───────────────────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="mx-auto max-w-[1440px]">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+            <div>
+              <h2 className="font-sans text-3xl lg:text-4xl font-normal tracking-tight text-white mb-3">
+                Ready to work with us?
+              </h2>
+              <p className="text-sm font-light" style={{ color: "rgba(255,255,255,0.5)" }}>
+                Get in touch to discuss your requirements. Our team responds within one business day.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+              <Link
+                href={`/${countryCode}/contact`}
+                className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white transition-all duration-200"
+                style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+              >
+                Contact Us
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6h8M7 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+              <Link
+                href={`/${countryCode}/store`}
+                className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white transition-all duration-200"
+                style={{ border: "1px solid rgba(255,255,255,0.2)", borderRadius: "5px" }}
+              >
+                Browse Products
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6h8M7 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   )
 }
