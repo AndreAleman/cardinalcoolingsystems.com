@@ -27,31 +27,55 @@ export default async function StorePage({ searchParams, params }: Params) {
   return (
     <>
       {/* Hero */}
-      <section className="pt-40 pb-12 px-6 lg:px-12" style={{ backgroundColor: "rgba(227, 0, 15, 0.06)" }}>
-        <div className="mx-auto max-w-[1440px]">
-          <nav className="flex items-center gap-2 text-sm mb-8" style={{ color: "rgba(255,255,255,0.35)" }}>
-            <a href={`/${params.countryCode}`} className="hover:text-white transition-colors">Home</a>
-            <span>/</span>
-            <span style={{ color: "rgba(255,255,255,0.7)" }}>Shop</span>
-          </nav>
+<section
+  className="pt-40 pb-12 px-6 lg:px-12"
+  style={{ backgroundColor: "rgba(227, 0, 15, 0.06)" }}
+>
+  <div className="mx-auto max-w-[1440px]">
+    <nav
+      className="flex items-center gap-2 text-sm mb-8"
+      style={{ color: "rgba(0,0,0,0.45)" }}
+    >
+      <a
+        href={`/${params.countryCode}`}
+        className="hover:text-black transition-colors"
+      >
+        Home
+      </a>
+      <span>/</span>
+      <span style={{ color: "rgba(0,0,0,0.7)" }}>Shop</span>
+    </nav>
 
-          <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
-            All Products
-          </p>
-          <h1 className="font-sans text-4xl lg:text-6xl font-normal tracking-tight text-white leading-tight mb-4">
-            Shop All Products
-          </h1>
-          <p className="text-base font-light leading-relaxed max-w-2xl mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
-            Precision-engineered sanitary stainless steel products. From welded tubing to industrial valves and fittings.
-          </p>
-          <div className="flex flex-wrap gap-4 text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-            <span>✓ ASTM A269 &amp; A270 Standards</span>
-            <span>✓ 3A Certified</span>
-            <span>✓ 304 &amp; 316L Stainless</span>
-            <span>✓ Ships in 1 Business Day</span>
-          </div>
-        </div>
-      </section>
+    <p
+      className="text-xs font-normal tracking-widest uppercase mb-4"
+      style={{ color: "#E3000F" }}
+    >
+      All Products
+    </p>
+
+    <h1 className="font-sans text-4xl lg:text-6xl font-normal tracking-tight text-black leading-tight mb-4">
+      Shop All Products
+    </h1>
+
+    <p
+      className="text-base font-light leading-relaxed max-w-2xl mb-6"
+      style={{ color: "rgba(0,0,0,0.7)" }}
+    >
+      Precision-engineered sanitary stainless steel products. From welded tubing
+      to industrial valves and fittings.
+    </p>
+
+    <div
+      className="flex flex-wrap gap-4 text-xs"
+      style={{ color: "rgba(0,0,0,0.55)" }}
+    >
+      <span>✓ ASTM A269 &amp; A270 Standards</span>
+      <span>✓ 3A Certified</span>
+      <span>✓ 304 &amp; 316L Stainless</span>
+      <span>✓ Ships in 1 Business Day</span>
+    </div>
+  </div>
+</section>
 
       {/* Store */}
       <StoreTemplate
