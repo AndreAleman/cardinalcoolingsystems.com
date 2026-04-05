@@ -3,278 +3,236 @@ import { groq } from "next-sanity"
 import Link from "next/link"
 import { Metadata } from "next"
 
-// ✅ CANONICAL TAG AND METADATA ADDED HERE
 export const metadata: Metadata = {
   title: "Technical Resources & Industry Insights | Cardinal Cooling Systems Blog",
   description:
     "Expert articles on stainless steel sanitary fittings, tubing, and valves. Industry guides for data centers, HVAC, food processing, and pharmaceutical applications.",
   alternates: {
-    canonical: 'https://cardinalcoolingsystems.com/us/blog'
-  }
+    canonical: "https://cardinalcoolingsystems.com/us/blog",
+  },
 }
 
-// Type definitions
 interface Category {
   _id: string
   title: string
-  slug: {
-    current: string
-  }
+  slug: { current: string }
   description?: string
-  image?: {
-    asset?: {
-      _id: string
-      url: string
-    }
-    alt?: string
-  }
+  image?: { asset?: { _id: string; url: string }; alt?: string }
   postCount?: number
 }
 
 interface RecentPost {
   _id: string
   title: string
-  slug: {
-    current: string
-  }
+  slug: { current: string }
   publishedAt: string
   excerpt?: string
-  mainImage?: {
-    asset?: {
-      _id: string
-      url: string
-    }
-    alt?: string
-  }
+  mainImage?: { asset?: { _id: string; url: string }; alt?: string }
   categories?: Category[]
 }
 
-// GROQ queries
 const CATEGORIES_QUERY = groq`
   *[_type == "category"] | order(title asc) {
-    _id,
-    title,
-    slug,
-    description,
-    image{
-      asset->{
-        _id,
-        url
-      },
-      alt
-    },
+    _id, title, slug, description,
+    image{ asset->{ _id, url }, alt },
     "postCount": count(*[_type == "post" && references(^._id)])
   }
 `
 
 const RECENT_POSTS_QUERY = groq`
   *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...6] {
-    _id,
-    title,
-    slug,
-    publishedAt,
-    excerpt,
-    mainImage{
-      asset->{
-        _id,
-        url
-      },
-      alt
-    },
-    categories[]->{
-      title,
-      slug
-    }
+    _id, title, slug, publishedAt, excerpt,
+    mainImage{ asset->{ _id, url }, alt },
+    categories[]->{ title, slug }
   }
 `
 
 export default async function BlogCategoriesPage({ params }: { params: { countryCode: string } }) {
   const [categories, recentPosts] = await Promise.all([
     client.fetch(CATEGORIES_QUERY),
-    client.fetch(RECENT_POSTS_QUERY)
+    client.fetch(RECENT_POSTS_QUERY),
   ])
-  
+
   const { countryCode } = params
 
-  // ... rest of your existing code stays exactly the same
-
-
   return (
-    <div className="bg-white">
-      {/* Hero Section */}
-      <section className="bg-white pt-36 pb-16 lg:pt-40">
-        <div className="content-container">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight text-gray-900 mb-6">
-              Industry Expertise & Technical Resources
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Expert guidance on sanitary fittings, industry applications, and technical best practices 
-              for food processing, pharmaceuticals, brewing, and biotechnology operations.
-            </p>
-            <p className="text-lg text-gray-500">
-              Choose your industry to access specialized content and solutions
-            </p>
-          </div>
+    <div style={{ backgroundColor: "#0a0a0a" }}>
+
+      {/* ── Hero — dark ──────────────────────────────────────────────────── */}
+      <section className="pt-40 pb-20 px-6 lg:px-12" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="mx-auto max-w-[1440px]">
+          <nav className="flex items-center gap-2 text-sm mb-10" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <Link href={`/${countryCode}`} className="hover:text-white transition-colors">Home</Link>
+            <span>/</span>
+            <span style={{ color: "rgba(255,255,255,0.7)" }}>Blog</span>
+          </nav>
+
+          <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
+            Resources
+          </p>
+          <h1 className="font-sans text-4xl lg:text-6xl font-normal tracking-tight text-white leading-tight mb-6 max-w-3xl">
+            Industry Expertise &amp; Technical Resources
+          </h1>
+          <p className="text-base font-light leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.5)" }}>
+            Expert guidance on sanitary fittings, industry applications, and technical best practices
+            for data centers, food processing, pharmaceuticals, and industrial operations.
+          </p>
         </div>
       </section>
 
-      {/* Dynamic Categories from Sanity */}
-      <section className="bg-gray-50 py-16">
-        <div className="content-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Browse by Category</h2>
-            <p className="text-lg text-gray-600">
-              Find specialized content tailored to your specific industry requirements
-            </p>
-          </div>
+      {/* ── Categories — white ───────────────────────────────────────────── */}
+      <section className="py-20 px-6 lg:px-12 bg-white">
+        <div className="mx-auto max-w-[1440px]">
+          <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
+            Browse by Category
+          </p>
+          <h2 className="font-sans text-3xl font-normal tracking-tight mb-12" style={{ color: "#111111" }}>
+            Find content for your industry
+          </h2>
 
           {categories && categories.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {categories.map((category: Category) => (
                 <Link
                   key={category._id}
                   href={`/${countryCode}/blog/category/${category.slug.current}`}
-                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 border border-gray-200"
+                  className="group overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 bg-white flex flex-col"
+                  style={{ borderRadius: "5px" }}
                 >
-                  {/* Category Image */}
                   {category.image?.asset?.url && (
-                    <div className="aspect-video overflow-hidden">
+                    <div className="overflow-hidden" style={{ aspectRatio: "16/9" }}>
                       <img
                         src={category.image.asset.url}
                         alt={category.image.alt || category.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   )}
-                  
-                  <div className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                          {category.title}
-                        </h3>
-                        
-                        {/* Category description if available */}
-                        {category.description && (
-                          <p className="text-gray-600 text-sm leading-relaxed mb-3">
-                            {category.description}
-                          </p>
-                        )}
-                        
-                        {/* Post count */}
-                        {category.postCount !== undefined && (
-                          <div className="text-xs text-gray-500">
-                            {category.postCount} {category.postCount === 1 ? 'article' : 'articles'}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Arrow icon */}
-                      <div className="text-gray-400 group-hover:text-blue-600 transition-colors ml-4">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
+                  <div className="p-6 flex items-start justify-between flex-1">
+                    <div className="flex-1">
+                      <h3
+                        className="text-base font-semibold mb-2 transition-colors group-hover:text-red-600"
+                        style={{ color: "#111111" }}
+                      >
+                        {category.title}
+                      </h3>
+                      {category.description && (
+                        <p className="text-sm font-light leading-relaxed mb-3" style={{ color: "#6b7280" }}>
+                          {category.description}
+                        </p>
+                      )}
+                      {category.postCount !== undefined && (
+                        <p className="text-xs" style={{ color: "#9ca3af" }}>
+                          {category.postCount} {category.postCount === 1 ? "article" : "articles"}
+                        </p>
+                      )}
                     </div>
+                    <svg
+                      className="w-4 h-4 ml-4 mt-0.5 flex-shrink-0 transition-colors group-hover:text-red-600"
+                      style={{ color: "#9ca3af" }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
-            // Empty state when no categories exist
-            <div className="text-center py-12">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No categories yet</h3>
-              <p className="text-gray-600">Categories will appear here once you create them in your Studio.</p>
+            <div className="py-12 text-center">
+              <p className="text-sm font-light" style={{ color: "#9ca3af" }}>
+                Categories will appear here once created in your Studio.
+              </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Recent Posts Preview */}
+      {/* ── Recent Posts — light gray ─────────────────────────────────────── */}
       {recentPosts && recentPosts.length > 0 && (
-        <section className="bg-white py-16">
-          <div className="content-container">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Latest Articles</h2>
-              <p className="text-lg text-gray-600">
-                Stay updated with the newest technical insights and industry developments
-              </p>
+        <section className="py-20 px-6 lg:px-12" style={{ backgroundColor: "#f8f8f8" }}>
+          <div className="mx-auto max-w-[1440px]">
+            <div className="flex items-center justify-between mb-12">
+              <div>
+                <p className="text-xs font-normal tracking-widest uppercase mb-4" style={{ color: "#E3000F" }}>
+                  Latest
+                </p>
+                <h2 className="font-sans text-3xl font-normal tracking-tight" style={{ color: "#111111" }}>
+                  Recent articles
+                </h2>
+              </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {recentPosts.slice(0, 6).map((post: RecentPost) => (
-                <article 
+                <article
                   key={post._id}
-                  className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                  className="group bg-white border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col"
+                  style={{ borderRadius: "5px" }}
                 >
-                  {/* Featured Image */}
                   {post.mainImage?.asset?.url && (
-                    <div className="aspect-video overflow-hidden">
+                    <div className="overflow-hidden" style={{ aspectRatio: "16/9" }}>
                       <img
                         src={post.mainImage.asset.url}
                         alt={post.mainImage.alt || post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   )}
-                  
-                  <div className="p-6">
-                    {/* Category badge */}
+
+                  <div className="p-6 flex flex-col flex-1">
                     {post.categories && post.categories.length > 0 && (
-                      <div className="mb-3">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {post.categories[0].title}
-                        </span>
-                      </div>
+                      <span
+                        className="inline-block text-xs font-medium px-2.5 py-1 mb-3 w-fit"
+                        style={{
+                          backgroundColor: "rgba(227,0,15,0.08)",
+                          color: "#E3000F",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        {post.categories[0].title}
+                      </span>
                     )}
 
-                    {/* Title */}
-                    <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                    <h3 className="text-base font-semibold leading-snug mb-2 line-clamp-2 transition-colors group-hover:text-red-600" style={{ color: "#111111" }}>
                       <Link href={`/${countryCode}/blog/${post.slug.current}`}>
                         {post.title}
                       </Link>
                     </h3>
 
-                    {/* Excerpt */}
                     {post.excerpt && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                      <p className="text-sm font-light leading-relaxed line-clamp-2 mb-4 flex-1" style={{ color: "#6b7280" }}>
                         {post.excerpt}
                       </p>
                     )}
 
-                    {/* Date */}
-                    <div className="text-xs text-gray-500">
-                      {post.publishedAt && (
-                        <time dateTime={post.publishedAt}>
-                          {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </time>
-                      )}
-                    </div>
+                    {post.publishedAt && (
+                      <time
+                        dateTime={post.publishedAt}
+                        className="text-xs mt-auto"
+                        style={{ color: "#9ca3af" }}
+                      >
+                        {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </time>
+                    )}
                   </div>
                 </article>
               ))}
             </div>
 
-            {/* View All Posts Link */}
-            <div className="text-center mt-12">
-              <Link 
-                href={`/${countryCode}/blog/all`}
-                className="inline-flex items-center px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-300"
-              >
-                View All Articles
-                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
+            {/* Mobile view all */}
+
           </div>
         </section>
       )}
+
     </div>
   )
 }
