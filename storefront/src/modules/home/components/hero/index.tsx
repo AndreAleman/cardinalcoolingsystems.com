@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section className="relative w-full overflow-hidden lg:h-screen lg:min-h-[62rem]">
+    <section className="relative w-full overflow-hidden lg:h-[88vh] lg:min-h-[600px]">
       <img
         src="/images/hero/image-bg.jpg"
         alt=""

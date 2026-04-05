@@ -65,7 +65,7 @@ export default function UserActions({ onSearchClick }: UserActionsProps) {
       <Link
         href="/contact"
         className="flex items-center gap-2 px-5 py-2.5 text-[16px] font-normal tracking-wide transition-all duration-200"
-        style={{ backgroundColor: "white", color: "#B4000C", border: "1px solid white" }}
+        style={{ backgroundColor: "white", color: "#B4000C", border: "1px solid white", borderRadius: "5px" }}
         onMouseEnter={(e) => {
           ;(e.currentTarget as HTMLElement).style.backgroundColor = "#e8e8e8"
           ;(e.currentTarget as HTMLElement).style.borderColor = "#e8e8e8"

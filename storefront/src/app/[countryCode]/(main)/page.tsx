@@ -12,7 +12,7 @@ import MeiliSearchComponent from "@modules/search/components/meilisearch-compone
 import SanitubeSection from '@modules/home/components/suppliers'
 import { client } from "../../../../src/sanity/lib/client"
 import { groq } from "next-sanity"
-
+import TrustBanner from "@modules/home/components/trust-banner"
 
 
 export const metadata: Metadata = {
@@ -83,7 +83,7 @@ const rangeProducts =
             amount: rawAmount,
           }
         })
-        .filter((x) => !!x)
+        .filter((x) => !!x && x.amount > 0)
 
       let lowestPrice: number | undefined
       let spec: string | undefined
@@ -155,12 +155,13 @@ const rangeProducts =
     }
   ]
 
-
+console.log("prices:", rangeProducts.map(p => `${p.title}: ${p.price}`))
 
   return (
     <>
       <Hero/>
-      <SanitaryProducts />
+      <TrustBanner />
+
       <ProductRangeWrapper products={rangeProducts} />
       <SanitubeSection />
       
@@ -168,7 +169,7 @@ const rangeProducts =
 
 
      
-        {/*  <IndustriesSupport /> */}
+        {/*        <SanitaryProducts /><IndustriesSupport /> */}
 
 
 

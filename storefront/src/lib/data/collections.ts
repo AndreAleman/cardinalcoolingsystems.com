@@ -38,10 +38,10 @@ export const getCollectionsWithProducts = cache(
       .map((collection) => collection.id)
       .filter(Boolean) as string[]
 
-    const { response } = await getProductsList({
-      queryParams: { collection_id: collectionIds },
-      countryCode,
-    })
+const { response } = await getProductsList({
+  queryParams: { collection_id: collectionIds, limit: 50 } as any,
+  countryCode,
+})
 
     response.products.forEach((product) => {
       const collection = collections.find(

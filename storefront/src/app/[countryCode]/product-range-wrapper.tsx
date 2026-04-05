@@ -1,5 +1,4 @@
 "use client"
-
 import ProductRange from "@modules/home/components/product-range"
 
 type Product = {
@@ -8,6 +7,9 @@ type Product = {
   subtitle: string
   image: string
   handle: string
+  variantId?: string
+  price?: string | number
+  inStock?: boolean
 }
 
 type ProductRangeWrapperProps = {
