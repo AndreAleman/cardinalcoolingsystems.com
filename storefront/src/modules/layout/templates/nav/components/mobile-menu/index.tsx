@@ -19,39 +19,29 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // Fetch ALL categories with parent_category_id and children
         const response = await sdk.store.category.list({
           include_descendants_tree: true,
           fields: "id,name,handle,parent_category_id,category_children.id,category_children.name,category_children.handle,category_children.category_children.id,category_children.category_children.name,category_children.category_children.handle,category_children.category_children.category_children.id,category_children.category_children.category_children.name,category_children.category_children.category_children.handle"
         })
         
         const allCategories = response.product_categories || []
-        
-        // Filter client-side for categories where parent_category_id is null
         const parentCategories = allCategories.filter(cat => 
           cat.parent_category_id === null || cat.parent_category_id === undefined
         )
         
-        console.log('📦 Total categories fetched:', allCategories.length)
-        console.log('✅ Parent categories (parent_category_id = null):', parentCategories.length)
-        console.log('📋 Parent category names:', parentCategories.map(c => c.name))
-        
         setCategories(parentCategories)
         setLoading(false)
       } catch (error) {
-        console.error("❌ Error loading categories:", error)
+        console.error("Error loading categories:", error)
         setLoading(false)
       }
     }
 
     fetchCategories()
-
-    // Refetch every 5 minutes
     const intervalId = setInterval(fetchCategories, 300000)
     return () => clearInterval(intervalId)
   }, [])
 
-  // Static navigation items (non-shop items)
   const staticNavigationItems = [
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
@@ -75,7 +65,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
   }
 
   const renderCategoryLevel = (categories: HttpTypes.StoreProductCategory[], level: number) => {
-    const paddingLeft = 12 + (level * 4) // Base padding of 12 (3rem) + 4 per level (1rem)
+    const paddingLeft = 12 + (level * 4)
     const bgColor = level === 0 ? 'bg-gray-50' : level === 1 ? 'bg-gray-100' : level === 2 ? 'bg-gray-200' : 'bg-gray-300'
     const hoverBg = level === 0 ? 'hover:bg-gray-100' : level === 1 ? 'hover:bg-gray-200' : level === 2 ? 'hover:bg-gray-300' : 'hover:bg-gray-400'
     const textSize = level === 0 ? 'text-base' : level === 1 ? 'text-sm' : 'text-xs'
@@ -98,7 +88,6 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                   {category.name}
                 </Link>
                 
-                {/* Toggle arrow for subcategories */}
                 {hasChildren && (
                   <button
                     onClick={() => toggleCategory(category.name)}
@@ -117,7 +106,6 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                 )}
               </div>
               
-              {/* Recursive rendering of children */}
               {hasChildren && isExpanded && category.category_children && (
                 renderCategoryLevel(category.category_children, level + 1)
               )}
@@ -133,10 +121,10 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
       {/* Hamburger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
+        className="p-2 text-white hover:text-white/70 transition-colors duration-200"
         aria-label="Menu"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
           {isOpen ? (
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           ) : (
@@ -145,20 +133,16 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
         </svg>
       </button>
 
-      {/* Mobile Menu Overlay */}
       {isOpen && (
         <>
-          {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={() => setIsOpen(false)}
           />
           
-          {/* Menu Panel */}
-          <div className="fixed top-36 left-0 right-0 bg-white border-t border-gray-100 z-50 max-h-[calc(100vh-144px)] overflow-y-auto">
+          <div className="fixed top-20 left-0 right-0 bg-white border-t border-gray-100 z-50 max-h-[calc(100vh-144px)] overflow-y-auto">
             <nav className="py-6">
               
-              {/* Shop with Dynamic Categories */}
               <div className="border-b border-gray-100">
                 <div className="flex items-center">
                   <Link
@@ -169,7 +153,6 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                     Shop
                   </Link>
                   
-                  {/* Toggle button for categories */}
                   {!loading && categories.length > 0 && (
                     <button
                       onClick={() => toggleCategory("Shop")}
@@ -188,13 +171,11 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                   )}
                 </div>
                 
-                {/* Dynamic Categories Submenu */}
                 {!loading && categories.length > 0 && expandedCategories.has("Shop") && (
                   renderCategoryLevel(categories, 0)
                 )}
               </div>
 
-              {/* Static Navigation Items */}
               {staticNavigationItems.map((item) => (
                 <div key={item.label} className="border-b border-gray-100 last:border-0">
                   <Link

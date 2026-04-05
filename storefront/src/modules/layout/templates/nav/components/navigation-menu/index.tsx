@@ -198,14 +198,14 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={toggleDropdown}
-          className="flex items-center space-x-1 text-base font-medium tracking-wide transition-colors duration-200 py-2"
+          className="flex items-center space-x-1 text-[16px] font-normal tracking-wide transition-colors duration-200 py-2"
           style={{ color: "rgba(255,255,255,0.85)" }}
           onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
           onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
         >
           <span>Shop</span>
           <svg
-            className={`w-4 h-4 ml-1 transition-transform duration-200 ${activeDropdown === "Shop" ? "rotate-180" : ""}`}
+            className={`w-5 h-5 ml-1 transition-transform duration-200 ${activeDropdown === "Shop" ? "rotate-180" : ""}`}
             fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -220,7 +220,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
         <Link
           key={item.label}
           href={item.href}
-          className="text-base font-medium tracking-wide transition-colors duration-200 py-2"
+          className="text-16px] font-normal tracking-wide transition-colors duration-200 py-2"
           style={{ color: "rgba(255,255,255,0.85)" }}
           onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
           onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}

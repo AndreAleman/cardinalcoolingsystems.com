@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from "react"
+import { usePathname } from "next/navigation"
 import Logo from "./components/logo"
 import NavigationMenu from "./components/navigation-menu"
 import UserActions from "./components/user-actions"
@@ -56,21 +57,25 @@ export default function Nav({ className = "" }: NavProps) {
   const [showResults, setShowResults] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // ── Scroll detection ──────────────────────────────────────────────────────
+  // Detect current page — transparent nav only on home page
+  const pathname = usePathname()
+  const isHomePage = pathname === "/us" || pathname === "/"
+
+  // Scroll detection — triggers dark background after 20px
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // ── Focus input when search opens ─────────────────────────────────────────
+  // Focus search input when search opens
   useEffect(() => {
     if (searchOpen) {
       setTimeout(() => inputRef.current?.focus(), 50)
     }
   }, [searchOpen])
 
-  // ── Close search on Escape ────────────────────────────────────────────────
+  // Close search on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeSearch()
@@ -79,7 +84,7 @@ export default function Nav({ className = "" }: NavProps) {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  // ── MeiliSearch ───────────────────────────────────────────────────────────
+  // MeiliSearch — fetches results as user types
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setExpandedResults([])
@@ -136,12 +141,12 @@ export default function Nav({ className = "" }: NavProps) {
     }
   }, [])
 
+  // Debounce search by 300ms
   useEffect(() => {
     const id = setTimeout(() => performSearch(query), 300)
     return () => clearTimeout(id)
   }, [query, performSearch])
 
-  // ── Handlers ──────────────────────────────────────────────────────────────
   const closeSearch = () => {
     setSearchOpen(false)
     setQuery("")
@@ -165,9 +170,8 @@ export default function Nav({ className = "" }: NavProps) {
     window.location.href = `/store?q=${encodeURIComponent(query)}`
   }
 
-  // ── Background state ──────────────────────────────────────────────────────
-  // Transparent on top, dark metallic when scrolled or search open
-  const hasDarkBg = isScrolled || searchOpen
+  // Transparent only on home page before scroll — red everywhere else
+  const hasDarkBg = !isHomePage || isScrolled || searchOpen
 
   return (
     <header
@@ -180,7 +184,10 @@ export default function Nav({ className = "" }: NavProps) {
           : "1px solid transparent",
       }}
     >
-      <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
+      {/* Outer wrapper — centers content and adds horizontal padding */}
+      <div className="mx-auto max-w-[1440px] px-6 lg:px-2">
+
+        {/* Inner row — sets nav height and aligns children vertically */}
         <div className="relative flex items-center h-20 lg:h-24">
 
           {/* ── NORMAL STATE ───────────────────────────────────────────────── */}
@@ -189,7 +196,7 @@ export default function Nav({ className = "" }: NavProps) {
               searchOpen ? "opacity-0 pointer-events-none" : "opacity-100"
             }`}
           >
-            {/* Left — Navigation links */}
+            {/* Left — Navigation links (desktop only) */}
             <NavigationMenu className="hidden lg:flex flex-1" />
 
             {/* Center — Logo */}
@@ -197,32 +204,10 @@ export default function Nav({ className = "" }: NavProps) {
               <Logo />
             </div>
 
-            {/* Right — Search icon + user actions + mobile menu */}
-            <div className="flex items-center justify-end flex-1 gap-3 lg:gap-5">
-              {/* Search button */}
-              <button
-                onClick={() => setSearchOpen(true)}
-                aria-label="Open search"
-                className="hidden lg:flex items-center gap-1.5 text-white/90 hover:text-white transition-colors text-sm font-light tracking-wide"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.75}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                Search
-              </button>
-
-              <UserActions />
-              <MobileMenu className="lg:hidden ml-2" />
+            {/* Right — UserActions + mobile hamburger */}
+            <div className="flex items-center justify-end flex-1">
+              <UserActions onSearchClick={() => setSearchOpen(true)} />
+              <MobileMenu className="lg:hidden ml-4" />
             </div>
           </div>
 
@@ -234,7 +219,7 @@ export default function Nav({ className = "" }: NavProps) {
                 : "opacity-0 pointer-events-none"
             }`}
           >
-            {/* Logo — slides to left */}
+            {/* Logo stays on the left */}
             <div
               className={`flex-shrink-0 transition-all duration-300 ease-out ${
                 searchOpen ? "translate-x-0 opacity-100" : "translate-x-12 opacity-0"
@@ -259,7 +244,7 @@ export default function Nav({ className = "" }: NavProps) {
                              transition-all duration-200 rounded-sm"
                 />
 
-                {/* Inline clear */}
+                {/* Clear button — appears when query has text */}
                 {query && (
                   <button
                     onClick={() => {
@@ -350,7 +335,7 @@ export default function Nav({ className = "" }: NavProps) {
               </div>
             </div>
 
-            {/* Close (X) button */}
+            {/* Close button */}
             <button
               onClick={closeSearch}
               aria-label="Close search"
@@ -366,7 +351,7 @@ export default function Nav({ className = "" }: NavProps) {
         </div>
       </div>
 
-      {/* Click-outside to close results (not the whole search) */}
+      {/* Click-outside overlay to close search results dropdown */}
       {showResults && (
         <div
           className="fixed inset-0 z-40"
