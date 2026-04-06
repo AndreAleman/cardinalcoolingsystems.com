@@ -11,20 +11,18 @@ type ImageGalleryProps = {
 
 const ImageGallery = ({ images }: ImageGalleryProps) => {
   const logoPath = "/images/logo/new-cardinal-cooling-logo.svg"
-  
+
   // Filter out localhost images
-  const validImages = images?.filter(img => img?.url && !img.url.includes('localhost')) || []
-  
+  const validImages = images?.filter(img => img?.url && !img.url.includes("localhost")) || []
+
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [isZoomed, setIsZoomed] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const imageRef = useRef<HTMLDivElement>(null)
 
-  // Get the current selected image URL or fallback to logo
   const mainImageUrl = validImages[selectedIndex]?.url || logoPath
   const isLogo = !validImages[selectedIndex]?.url
 
-  // Handle mouse move for zoom effect
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!imageRef.current || isLogo) return
     const rect = imageRef.current.getBoundingClientRect()
@@ -36,32 +34,27 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
   return (
     <div className="flex flex-col items-center w-full max-w-[420px] mx-auto" id="pdp-image-gallery">
       {/* Main image */}
-      <div className={clsx(
-        "w-[400px] h-[440px] rounded mb-4 relative overflow-hidden flex items-center justify-center group",
-        {
-          "bg-white border-2 border-gray-300": isLogo,
-          "bg-ui-bg-subtle": !isLogo
-        }
-      )}>
+      <div
+        className="w-[400px] h-[440px] rounded mb-4 relative overflow-hidden flex items-center justify-center group"
+        style={{ backgroundColor: isLogo ? "#E3000F" : undefined }}
+      >
         <div
           ref={imageRef}
-          className={clsx(
-            "relative w-full h-full",
-            {
-              "cursor-zoom-in": !isLogo,
-              "cursor-default": isLogo
-            }
-          )}
+          className={clsx("relative w-full h-full", {
+            "cursor-zoom-in": !isLogo,
+            "cursor-default": isLogo,
+          })}
           onMouseMove={handleMouseMove}
           onMouseEnter={() => !isLogo && setIsZoomed(true)}
           onMouseLeave={() => setIsZoomed(false)}
         >
-          <ImageOrPlaceholder 
+          <ImageOrPlaceholder
             image={mainImageUrl}
             isZoomed={isZoomed}
             mousePosition={mousePosition}
           />
         </div>
+
         {/* Zoom hint */}
         {!isZoomed && !isLogo && mainImageUrl && (
           <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -80,15 +73,13 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
               <button
                 key={image.id}
                 className={clsx(
-                  "w-12 h-12 rounded overflow-hidden transition-all duration-100 flex-shrink-0 focus:outline-none",
+                  "w-12 h-12 rounded overflow-hidden transition-all duration-100 flex-shrink-0 focus:outline-none border-2",
                   {
-                    "bg-white border-2": isThumbLogo,
-                    "bg-ui-bg-subtle border-2": !isThumbLogo,
-                    "border-blue-600 ring-2 ring-blue-300": idx === selectedIndex,
-                    "border-gray-300": idx !== selectedIndex && isThumbLogo,
-                    "border-gray-200 opacity-80 hover:border-blue-400": idx !== selectedIndex && !isThumbLogo
+                    "border-red-600 ring-2 ring-red-300": idx === selectedIndex,
+                    "border-gray-200 opacity-80 hover:border-red-400": idx !== selectedIndex,
                   }
                 )}
+                style={isThumbLogo ? { backgroundColor: "#E3000F" } : { backgroundColor: "#f8f8f8" }}
                 aria-label={`Select image ${idx + 1}`}
                 type="button"
                 onClick={() => setSelectedIndex(idx)}
@@ -98,13 +89,12 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
                   alt={`Thumbnail ${idx + 1}`}
                   width={48}
                   height={48}
-                  className={clsx(
-                    "w-full h-full",
-                    {
-                      "object-cover": !isThumbLogo,
-                      "object-contain p-1": isThumbLogo
-                    }
-                  )}
+                  className="w-full h-full"
+                  style={{
+                    objectFit: isThumbLogo ? "contain" : "cover",
+                    padding: isThumbLogo ? "4px" : undefined,
+                    filter: isThumbLogo ? "brightness(0) invert(1)" : undefined,
+                  }}
                   draggable={false}
                 />
               </button>
@@ -116,11 +106,11 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
   )
 }
 
-const ImageOrPlaceholder = ({ 
+const ImageOrPlaceholder = ({
   image,
   isZoomed,
-  mousePosition 
-}: { 
+  mousePosition,
+}: {
   image?: string
   isZoomed: boolean
   mousePosition: { x: number; y: number }
@@ -135,10 +125,10 @@ const ImageOrPlaceholder = ({
   }, [image])
 
   return (
-    <div className={clsx(
-      "w-full h-full absolute inset-0",
-      { "bg-white": isLogo }
-    )}>
+    <div
+      className="w-full h-full absolute inset-0"
+      style={isLogo ? { backgroundColor: "#E3000F" } : {}}
+    >
       <Image
         src={imgSrc}
         alt="Product image"
@@ -147,26 +137,23 @@ const ImageOrPlaceholder = ({
           "absolute inset-0 w-full h-full transition-transform duration-300",
           {
             "object-cover": !isLogo,
-            "object-contain p-8": isLogo,
+            "object-contain p-10": isLogo,
             "scale-150": isZoomed && !isLogo,
           }
         )}
         style={
           isZoomed && !isLogo
-            ? {
-                transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
-              }
-            : { objectFit: isLogo ? "contain" : "cover" }
+            ? { transformOrigin: `${mousePosition.x}% ${mousePosition.y}%` }
+            : isLogo
+            ? { objectFit: "contain", filter: "brightness(0) invert(1)" }
+            : { objectFit: "cover" }
         }
         sizes="400px"
         quality={75}
-  onError={(e) => {
-    console.error("Image failed to load:", imgSrc)
-    console.error("Error details:", e)
-    setImgSrc(logoPath)
-    setIsLogo(true)
-  }}
-  onLoad={() => console.log("Image loaded successfully:", imgSrc)}
+        onError={() => {
+          setImgSrc(logoPath)
+          setIsLogo(true)
+        }}
       />
     </div>
   )
