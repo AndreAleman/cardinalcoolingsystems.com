@@ -31,7 +31,7 @@ export default async function Footer() {
               Cardinal Cooling Systems
             </LocalizedClientLink>
             <p className="mt-4 text-blue-100 text-sm leading-relaxed">
-              ffffffffPremium stainless steel sanitary fittings for food processing, 
+              Premium stainless steel sanitary fittings for food processing, 
               pharmaceuticals, brewing, and industrial applications. Quality you can trust.
             </p>
             

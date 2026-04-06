@@ -107,9 +107,6 @@ export default function AboutPage({ params }: Props) {
               <p>
                 Our journey began when we recognized the need for reliable, high-quality sanitary fittings that could meet the demanding standards of food processing, pharmaceutical manufacturing, and data center cooling. Today, we serve clients across diverse industries with the same commitment to excellence.
               </p>
-              <p>
-                We work with Sanitube — a leading American manufacturer based in Lakeland, Florida — giving our customers access to 3A certified 304 and 316L stainless fittings that ship in as little as one business day. When it comes to price and speed, we can't be beat.
-              </p>
             </div>
           </div>
         </div>

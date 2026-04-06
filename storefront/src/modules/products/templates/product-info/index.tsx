@@ -34,12 +34,6 @@ const ProductInfo = ({ product, sanity }: ProductInfoProps) => {
         {/* SKU Display - Dynamic with variant selection */}
         <ProductSKU product={product} />
 
-        <Text
-          className="text-medium text-ui-fg-subtle whitespace-pre-line"
-          data-testid="product-description"
-        >
-          {sanity?.content || product.description}
-        </Text>
       </div>
     </div>
   )

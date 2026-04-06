@@ -17,7 +17,8 @@ export const getProductsById = cache(async function ({
       {
         id: ids,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity,+categories.*,+categories.parent_category",},
+        fields: "*variants.calculated_price,+variants.inventory_quantity,+categories.*,+categories.parent_category,+description",
+      },
       { next: { tags: ["products"] } }
     )
     .then(({ products }) => products)
@@ -32,8 +33,7 @@ export const getProductByHandle = cache(async function (
       {
         handle,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories,*categories.parent_category",
-
+        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories,*categories.parent_category,+description",
       },
       { next: { tags: ["products"] } }
     )
@@ -54,7 +54,7 @@ export const getProductsList = cache(async function ({
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> {
   const limit = queryParams?.limit || 12
-  const validPageParam = Math.max(pageParam, 1);
+  const validPageParam = Math.max(pageParam, 1)
   const offset = (validPageParam - 1) * limit
   const region = await getRegion(countryCode)
 
@@ -64,6 +64,7 @@ export const getProductsList = cache(async function ({
       nextPage: null,
     }
   }
+
   return sdk.store.product
     .list(
       {
@@ -77,7 +78,6 @@ export const getProductsList = cache(async function ({
     )
     .then(({ products, count }) => {
       const nextPage = count > offset + limit ? pageParam + 1 : null
-
       return {
         response: {
           products,
@@ -89,10 +89,6 @@ export const getProductsList = cache(async function ({
     })
 })
 
-/**
- * This will fetch 100 products to the Next.js cache and sort them based on the sortBy parameter.
- * It will then return the paginated products based on the page and limit parameters.
- */
 export const getProductsListWithSort = cache(async function ({
   page = 0,
   queryParams,
@@ -109,7 +105,6 @@ export const getProductsListWithSort = cache(async function ({
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> {
   const limit = queryParams?.limit || 12
-
   const {
     response: { products, count },
   } = await getProductsList({
@@ -122,11 +117,8 @@ export const getProductsListWithSort = cache(async function ({
   })
 
   const sortedProducts = sortProducts(products, sortBy)
-
   const pageParam = (page - 1) * limit
-
   const nextPage = count > pageParam + limit ? pageParam + limit : null
-
   const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
 
   return {
