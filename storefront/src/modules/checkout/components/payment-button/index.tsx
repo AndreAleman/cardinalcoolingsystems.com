@@ -11,7 +11,6 @@ import { placeOrder } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { isManual, isPaypal, isStripe } from "@lib/constants"
 
-// ✅ ADD THIS: TypeScript declaration
 declare global {
   interface Window {
     dataLayer: any[]
@@ -47,10 +46,10 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       )
     case isManual(paymentSession?.provider_id):
       return (
-        <ManualTestPaymentButton 
-          notReady={notReady} 
+        <ManualTestPaymentButton
+          notReady={notReady}
           cart={cart}
-          data-testid={dataTestId} 
+          data-testid={dataTestId}
         />
       )
     case isPaypal(paymentSession?.provider_id):
@@ -100,26 +99,24 @@ const StripePaymentButton = ({
   const onPaymentCompleted = async () => {
     await placeOrder()
       .then(() => {
-        // ✅ ADD THIS: Track purchase after successful order
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           window.dataLayer = window.dataLayer || []
           window.dataLayer.push({
-            event: 'purchase',
+            event: "purchase",
             ecommerce: {
               transaction_id: cart.id,
               value: (cart.total || 0) / 100,
               tax: (cart.tax_total || 0) / 100,
               shipping: (cart.shipping_total || 0) / 100,
-              currency: 'USD',
-              items: cart.items?.map(item => ({
+              currency: "USD",
+              items: cart.items?.map((item) => ({
                 item_id: item.variant?.sku || item.variant_id,
                 item_name: item.title,
                 price: (item.unit_price || 0) / 100,
-                quantity: item.quantity
-              }))
-            }
+                quantity: item.quantity,
+              })),
+            },
           })
-          console.log('✅ Purchase tracked:', cart.id, '$' + (cart.total || 0) / 100)
         }
       })
       .catch((err) => {
@@ -173,25 +170,21 @@ const StripePaymentButton = ({
       .then(({ error, paymentIntent }) => {
         if (error) {
           const pi = error.payment_intent
-
           if (
             (pi && pi.status === "requires_capture") ||
             (pi && pi.status === "succeeded")
           ) {
             onPaymentCompleted()
           }
-
           setErrorMessage(error.message || null)
           return
         }
-
         if (
           (paymentIntent && paymentIntent.status === "requires_capture") ||
           paymentIntent.status === "succeeded"
         ) {
           return onPaymentCompleted()
         }
-
         return
       })
   }
@@ -230,26 +223,24 @@ const PayPalPaymentButton = ({
   const onPaymentCompleted = async () => {
     await placeOrder()
       .then(() => {
-        // ✅ ADD THIS: Track purchase after successful order
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           window.dataLayer = window.dataLayer || []
           window.dataLayer.push({
-            event: 'purchase',
+            event: "purchase",
             ecommerce: {
               transaction_id: cart.id,
               value: (cart.total || 0) / 100,
               tax: (cart.tax_total || 0) / 100,
               shipping: (cart.shipping_total || 0) / 100,
-              currency: 'USD',
-              items: cart.items?.map(item => ({
+              currency: "USD",
+              items: cart.items?.map((item) => ({
                 item_id: item.variant?.sku || item.variant_id,
                 item_name: item.title,
                 price: (item.unit_price || 0) / 100,
-                quantity: item.quantity
-              }))
-            }
+                quantity: item.quantity,
+              })),
+            },
           })
-          console.log('✅ Purchase tracked:', cart.id, '$' + (cart.total || 0) / 100)
         }
       })
       .catch((err) => {
@@ -263,6 +254,9 @@ const PayPalPaymentButton = ({
   const session = cart.payment_collection?.payment_sessions?.find(
     (s) => s.status === "pending"
   )
+
+  // Log full session data so we can see what key holds the PayPal order ID
+  console.log("🔵 PayPal session:", JSON.stringify(session, null, 2))
 
   const handlePayment = async (
     _data: OnApproveData,
@@ -294,7 +288,16 @@ const PayPalPaymentButton = ({
       <>
         <PayPalButtons
           style={{ layout: "horizontal" }}
-          createOrder={async () => session?.data.id as string}
+createOrder={async () => {
+  const orderId =
+    (session?.data?.paypalOrderId as string) ||
+    (session?.data?.id as string) ||
+    (session?.data?.order_id as string) ||
+    (session?.data?.paypal_order_id as string)
+  console.log("🔵 PayPal createOrder — orderId:", orderId)
+  console.log("🔵 PayPal session.data:", session?.data)
+  return orderId
+}}
           onApprove={handlePayment}
           disabled={notReady || submitting || isPending}
           data-testid={dataTestId}
@@ -308,11 +311,11 @@ const PayPalPaymentButton = ({
   }
 }
 
-const ManualTestPaymentButton = ({ 
+const ManualTestPaymentButton = ({
   notReady,
   cart,
   "data-testid": dataTestId,
-}: { 
+}: {
   notReady: boolean
   cart: HttpTypes.StoreCart
   "data-testid"?: string
@@ -323,26 +326,24 @@ const ManualTestPaymentButton = ({
   const onPaymentCompleted = async () => {
     await placeOrder()
       .then(() => {
-        // ✅ ADD THIS: Track purchase after successful order
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           window.dataLayer = window.dataLayer || []
           window.dataLayer.push({
-            event: 'purchase',
+            event: "purchase",
             ecommerce: {
               transaction_id: cart.id,
               value: (cart.total || 0) / 100,
               tax: (cart.tax_total || 0) / 100,
               shipping: (cart.shipping_total || 0) / 100,
-              currency: 'USD',
-              items: cart.items?.map(item => ({
+              currency: "USD",
+              items: cart.items?.map((item) => ({
                 item_id: item.variant?.sku || item.variant_id,
                 item_name: item.title,
                 price: (item.unit_price || 0) / 100,
-                quantity: item.quantity
-              }))
-            }
+                quantity: item.quantity,
+              })),
+            },
           })
-          console.log('✅ Purchase tracked:', cart.id, '$' + (cart.total || 0) / 100)
         }
       })
       .catch((err) => {

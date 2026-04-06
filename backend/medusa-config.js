@@ -29,8 +29,6 @@ console.log('  RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL)
 console.log('  RESEND_FROM:', process.env.RESEND_FROM)
 console.log('  CONSTANT VALUE:', RESEND_FROM_EMAIL)
 
-
-
 loadEnv(process.env.NODE_ENV, process.cwd());
 
 const medusaConfig = {
@@ -59,7 +57,7 @@ const medusaConfig = {
     vite: () => {
       return {
         server: {
-          allowedHosts: ["6d022dc49e0d.ngrok-free.app"], // replace for prod
+          allowedHosts: ["6d022dc49e0d.ngrok-free.app"],
         },
       };
     },
@@ -161,23 +159,31 @@ const medusaConfig = {
         ]
       }
     }] : []),
-    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
+    {
       key: Modules.PAYMENT,
       resolve: "@medusajs/medusa/payment",
       options: {
         providers: [
-          {
+          ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
             resolve: "@medusajs/medusa/payment-stripe",
             id: "stripe",
             options: {
               apiKey: STRIPE_API_KEY,
               webhookSecret: STRIPE_WEBHOOK_SECRET,
-              
+            }
+          }] : []),
+          {
+            resolve: "@rsc-labs/medusa-paypal-payment/providers/paypal-payment",
+            id: "paypal-payment",
+            options: {
+              oAuthClientId: process.env.PAYPAL_CLIENT_ID,
+              oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET,
+              environment: process.env.PAYPAL_IS_SANDBOX === "true" ? "sandbox" : "production",
             }
           }
         ],
       },
-    }] : []),
+    },
   ],
   plugins: [
     ...(MEILISEARCH_HOST && MEILISEARCH_ADMIN_KEY ? [{
@@ -192,12 +198,12 @@ const medusaConfig = {
             type: 'products',
             enabled: true,
             fields: [
-              'id', 
-              'title', 
-              'description', 
-              'handle', 
+              'id',
+              'title',
+              'description',
+              'handle',
               'thumbnail',
-              'metadata.parent_sku',  
+              'metadata.parent_sku',
               'variants',
               'variants.id',
               'variants.sku',
@@ -205,29 +211,29 @@ const medusaConfig = {
               'variants.options',
               'variants.options.value',
               'variants.options.option',
-              'variants.options.option.title', 
+              'variants.options.option.title',
               'variants.metadata.competitor_skus'
             ],
             indexSettings: {
               searchableAttributes: [
-                'title', 
-                'description', 
+                'title',
+                'description',
                 'metadata.parent_sku',
-                'variants.sku',         
+                'variants.sku',
                 'variants.title',
                 'variants.metadata.competitor_skus'
               ],
               displayedAttributes: [
-                'id', 
-                'handle', 
-                'title', 
-                'description', 
+                'id',
+                'handle',
+                'title',
+                'description',
                 'thumbnail',
                 'metadata.parent_sku',
                 'variants.sku',
                 'variants.title',
                 'variants.options.value',
-                'variants.options.option.title',    
+                'variants.options.option.title',
                 'variants.metadata.competitor_skus'
               ],
               filterableAttributes: ['id', 'handle', 'metadata.parent_sku'],
