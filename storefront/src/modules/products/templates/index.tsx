@@ -1,7 +1,5 @@
-import { PortableText } from "@portabletext/react"
 import React, { Suspense } from "react"
 import ImageGallery from "@modules/products/components/image-gallery"
-import DiscountTable from "@modules/products/components/discount-table"
 import ProductActions from "@modules/products/components/product-actions"
 import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductTabs from "@modules/products/components/product-tabs"
@@ -28,6 +26,7 @@ type ProductTemplateProps = {
   selectedVariant?: HttpTypes.StoreProductVariant | null
   sanity?: {
     description?: any[]
+    technicalDetails?: any[]
     content?: string
     tabs?: SanityTab[]
   }
@@ -43,111 +42,145 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
   if (!product || !product.id) {
     return notFound()
   }
-  
+
   const allTabs: SanityTab[] = []
-  if (sanity?.description && sanity.description.length > 0) {
+
+  // Product description from Medusa — plain text converted to PortableText block
+  if (product.description && product.description.trim().length > 0) {
     allTabs.push({
-      _key: 'product-description',
-      title: 'Product Description',
-      content: sanity.description
+      _key: "product-description-medusa",
+      title: "Product Description",
+      content: [
+        {
+          _type: "block",
+          _key: "desc-block",
+          style: "normal",
+          children: [{ _type: "span", _key: "desc-span", text: product.description }],
+          markDefs: [],
+        },
+      ],
     })
   }
+
+  // Technical Details from Sanity description field
+  if (sanity?.description && sanity.description.length > 0) {
+    allTabs.push({
+      _key: "product-description",
+      title: "Technical Details",
+      content: sanity.description,
+    })
+  }
+
+  // Technical Specifications from new Sanity technicalDetails field
+  if (sanity?.technicalDetails && sanity.technicalDetails.length > 0) {
+    allTabs.push({
+      _key: "technical-details",
+      title: "Technical Specifications",
+      content: sanity.technicalDetails,
+    })
+  }
+
+  // Any additional custom tabs from Sanity
   if (sanity?.tabs) {
     allTabs.push(...sanity.tabs)
   }
-  
-  const primaryCategory = product.categories?.[0]
 
-  // ✅ Build H1 with variant info if selected
   const variantInfo = selectedVariant?.options
     ?.map((opt: any) => opt.value)
     .filter(Boolean)
     .join(", ")
-  
-  const h1Text = variantInfo 
+
+  const h1Text = variantInfo
     ? `${product.title} - ${variantInfo}`
     : product.title
 
   return (
     <div className="bg-white">
       <ProductViewTracker product={product} selectedVariant={selectedVariant} />
+
       {/* Main Product Section */}
       <div className="content-container">
         <div className="max-w-6xl mx-auto">
+
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-sm pt-12 pb-1 border-b border-ui-border-base mb-1" aria-label="Breadcrumb">
-            <Link href="/" className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors">Home</Link>
-            <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            <Link href="/store" className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors">Products</Link>
+          <nav className="flex items-center gap-2 text-sm pt-12 pb-4 mb-4 border-b border-gray-100 flex-wrap" aria-label="Breadcrumb">
+            <Link href="/" className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>Home</Link>
+            <span style={{ color: "#d1d5db" }}>›</span>
+            <Link href="/store" className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>Products</Link>
             {product.categories && product.categories.length > 0 && (
               <>
-                <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                <Link href={`/categories/${product.categories[0].handle}`} className="text-ui-fg-subtle hover:text-ui-fg-base transition-colors">
+                <span style={{ color: "#d1d5db" }}>›</span>
+                <Link href={`/categories/${product.categories[0].handle}`} className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>
                   {product.categories[0].name}
                 </Link>
               </>
             )}
-            <svg className="w-4 h-4 text-ui-fg-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            <span className="text-ui-fg-base font-medium truncate">{product.title}</span>
+            <span style={{ color: "#d1d5db" }}>›</span>
+            <span className="truncate" style={{ color: "#111111" }}>{product.title}</span>
           </nav>
 
-          <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-8 py-8 lg:py-12">
-            {/* Left Column - Image Gallery */}
+          <div className="flex flex-col lg:flex-row lg:items-start gap-8 py-8 lg:py-12">
+
+            {/* Left — Image Gallery */}
             <div className="w-full lg:w-1/2">
               <div className="sticky top-8">
                 <ImageGallery images={product?.images || []} />
               </div>
             </div>
-            {/* Right Column - Product Details */}
+
+            {/* Right — Product Details */}
             <div className="w-full lg:w-1/2">
-              <div className="lg:sticky lg:top-8 space-y-8 lg:pl-4 lg:pr-8 xl:pr-12">
+              <div className="lg:sticky lg:top-8 space-y-6 lg:pl-4 lg:pr-8 xl:pr-12">
 
                 <ProductOnboardingCta />
 
-                {/* ✅ H1 TAG ADDED HERE */}
-                <h1 className="text-3xl lg:text-4xl font-bold text-ui-fg-base leading-tight">
+                {/* H1 */}
+                <h1 className="text-3xl lg:text-4xl font-semibold leading-tight" style={{ color: "#111111" }}>
                   {h1Text}
                 </h1>
 
-                {/* 3A CERTIFIED BADGE PLACEMENT */}
-                <div className="flex items-center space-x-2">
-                  <span className="inline-block bg-blue-900 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                    3A Certified
+                {/* Trust badges */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <div
+                    className="inline-flex items-center gap-2 px-3 py-1.5"
+                    style={{ backgroundColor: "rgba(227,0,15,0.08)", borderRadius: "5px" }}
+                  >
+                    <img src="/images/certifications/3a-logo.svg" alt="3-A Certified" className="h-5 w-auto" />
+                    <span className="text-xs font-medium" style={{ color: "#E3000F" }}>3A Certified</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5" style={{ backgroundColor: "#f8f8f8", color: "#6b7280", borderRadius: "5px" }}>
+                    304 &amp; 316L Stainless
                   </span>
-                  {/* Optionally add more trust badges here, eg. FISA, Fast Delivery */}
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5" style={{ backgroundColor: "#f8f8f8", color: "#6b7280", borderRadius: "5px" }}>
+                    Ships in 1 Business Day
+                  </span>
                 </div>
 
-                <div className="space-y-6">
-                  <ProductInfo
-                    product={product}
-                    sanity={{ content: sanity?.content ?? "" }}
-                  />
-                </div>
-                <div className="space-y-6">
-                  <Suspense fallback={
-                    <ProductActions
-                      disabled={true}
-                      product={product}
-                      region={region}
-                    />
-                  }>
-                    <ProductActionsWrapper id={product.id} region={region} selectedVariant={selectedVariant} />
-                  </Suspense>
-                </div>
-                
-                {/* Discount Table Placement */}
-                <DiscountTable />
+                {/* Product info (SKU, description) */}
+                <ProductInfo
+                  product={product}
+                  sanity={{ content: sanity?.content ?? "" }}
+                />
 
-                <div className="border-t border-ui-border-base pt-8">
+                {/* Product actions */}
+                <Suspense fallback={
+                  <ProductActions disabled={true} product={product} region={region} />
+                }>
+                  <ProductActionsWrapper id={product.id} region={region} selectedVariant={selectedVariant} />
+                </Suspense>
+
+                {/* Accordion tabs — Product Information + Shipping & Returns */}
+                <div className="border-t border-gray-100 pt-6">
                   <ProductTabs product={product} variant={selectedVariant} />
                 </div>
+
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Product Content Tabs */}
+      {/* Sanity content tabs — Product Description, Technical Details, custom tabs */}
       {allTabs.length > 0 && (
         <div className="bg-ui-bg-subtle">
           <div className="content-container">
@@ -161,15 +194,9 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
       {/* Related Products */}
       <div className="content-container">
         <div className="max-w-6xl mx-auto py-12">
-          <div className="space-y-8">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-ui-fg-base mb-2"></h2>
-              <p className="text-ui-fg-subtle"></p>
-            </div>
-            <Suspense fallback={<SkeletonRelatedProducts />}>
-              <RelatedProducts product={product} countryCode={countryCode} />
-            </Suspense>
-          </div>
+          <Suspense fallback={<SkeletonRelatedProducts />}>
+            <RelatedProducts product={product} countryCode={countryCode} />
+          </Suspense>
         </div>
       </div>
     </div>

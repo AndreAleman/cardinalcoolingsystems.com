@@ -3,6 +3,7 @@ import { Metadata } from "next"
 import Footer from "@modules/layout/templates/footer"
 import Nav from "@modules/layout/templates/nav"
 import { getBaseURL } from "@lib/util/env"
+import NavSpacer from "@modules/layout/components/nav-spacer"
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
@@ -35,9 +36,8 @@ export default function PageLayout(props: { children: React.ReactNode }) {
     <>
       {/* Main Navigation - Fixed at top, transparent until scroll */}
       <Nav />
-
-      {/* Main Content - No top padding so hero sits under transparent nav */}
       <main className="relative">
+        <NavSpacer />  {/* ← add this */}
         {props.children}
       </main>
 

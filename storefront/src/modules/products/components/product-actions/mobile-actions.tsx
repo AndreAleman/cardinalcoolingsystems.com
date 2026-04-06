@@ -1,11 +1,8 @@
-import { Dialog, Transition, Listbox } from "@headlessui/react"
-import { Button, clx } from "@medusajs/ui"
+import { Dialog, Transition } from "@headlessui/react"
 import React, { Fragment, useMemo } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
-import ChevronDown from "@modules/common/icons/chevron-down"
-import X from "@modules/common/icons/x"
-
+import { clx } from "@medusajs/ui"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 
@@ -34,99 +31,91 @@ const MobileActions: React.FC<MobileActionsProps> = ({
 }) => {
   const { state, open, close } = useToggleState()
 
-  const price = getProductPrice({
-    product: product,
-    variantId: variant?.id,
-  })
+  const price = getProductPrice({ product, variantId: variant?.id })
 
   const selectedPrice = useMemo(() => {
-    if (!price) {
-      return null
-    }
+    if (!price) return null
     const { variantPrice, cheapestPrice } = price
-
     return variantPrice || cheapestPrice || null
   }, [price])
 
   return (
     <>
-      <div
-        className={clx("lg:hidden inset-x-0 bottom-0 fixed z-50", {
-          "pointer-events-none": !show,
-        })}
-      >
+      {/* Sticky bottom bar */}
+      <div className={clx("lg:hidden inset-x-0 bottom-0 fixed z-50", { "pointer-events-none": !show })}>
         <Transition
           as={Fragment}
           show={show}
           enter="ease-in-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
+          enterFrom="opacity-0 translate-y-2"
+          enterTo="opacity-100 translate-y-0"
           leave="ease-in duration-300"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          leaveFrom="opacity-100 translate-y-0"
+          leaveTo="opacity-0 translate-y-2"
         >
           <div
-            className="bg-white flex flex-col gap-y-3 justify-center items-center text-large-regular p-4 h-full w-full border-t border-gray-200"
+            className="bg-white flex flex-col gap-y-3 p-4 border-t border-gray-100"
             data-testid="mobile-actions"
+            style={{ boxShadow: "0 -4px 24px rgba(0,0,0,0.08)" }}
           >
-            <div className="flex items-center gap-x-2">
-              <span data-testid="mobile-title">{product.title}</span>
-              <span>—</span>
-              {selectedPrice ? (
-                <div className="flex items-end gap-x-2 text-ui-fg-base">
+            {/* Product + price summary */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium truncate max-w-[60%]" style={{ color: "#111111" }} data-testid="mobile-title">
+                {product.title}
+              </span>
+              {selectedPrice && (
+                <div className="flex items-center gap-x-2 text-sm">
                   {selectedPrice.price_type === "sale" && (
-                    <p>
-                      <span className="line-through text-small-regular">
-                        {selectedPrice.original_price}
-                      </span>
-                    </p>
+                    <span className="line-through text-xs" style={{ color: "#9ca3af" }}>
+                      {selectedPrice.original_price}
+                    </span>
                   )}
-                  <span
-                    className={clx({
-                      "text-ui-fg-interactive":
-                        selectedPrice.price_type === "sale",
-                    })}
-                  >
+                  <span className="font-semibold" style={{ color: "#111111" }}>
                     {selectedPrice.calculated_price}
                   </span>
                 </div>
-              ) : (
-                <div></div>
               )}
             </div>
-            <div className="grid grid-cols-2 w-full gap-x-4">
-              <Button
+
+            {/* Buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
                 onClick={open}
-                variant="secondary"
-                className="w-full"
+                className="h-11 flex items-center justify-between px-3 text-sm font-medium border border-gray-200 bg-white transition-colors hover:border-gray-400"
+                style={{ borderRadius: "5px", color: "#111111" }}
                 data-testid="mobile-actions-button"
               >
-                <div className="flex items-center justify-between w-full">
-                  <span>
-                    {variant
-                      ? Object.values(options).join(" / ")
-                      : "Select Options"}
-                  </span>
-                  <ChevronDown />
-                </div>
-              </Button>
-              <Button
+                <span className="truncate">
+                  {variant ? Object.values(options).filter(Boolean).join(" / ") : "Select Options"}
+                </span>
+                <svg className="w-4 h-4 flex-shrink-0 ml-1" style={{ color: "#9ca3af" }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <button
                 onClick={handleAddToCart}
-                disabled={!inStock || !variant}
-                className="w-full"
-                isLoading={isAdding}
+                disabled={!inStock || !variant || isAdding}
+                className="h-11 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
                 data-testid="mobile-cart-button"
               >
-                {!variant
-                  ? "Select variant"
-                  : !inStock
-                  ? "Out of stock"
-                  : "Add to cart"}
-              </Button>
+                {isAdding ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : !variant ? (
+                  "Select variant"
+                ) : !inStock ? (
+                  "Out of stock"
+                ) : (
+                  "Add to cart"
+                )}
+              </button>
             </div>
           </div>
         </Transition>
       </div>
+
+      {/* Options modal */}
       <Transition appear show={state} as={Fragment}>
         <Dialog as="div" className="relative z-[75]" onClose={close}>
           <Transition.Child
@@ -138,111 +127,87 @@ const MobileActions: React.FC<MobileActionsProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-700 bg-opacity-75 backdrop-blur-sm" />
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
           </Transition.Child>
 
           <div className="fixed bottom-0 inset-x-0">
-            <div className="flex min-h-full h-full items-center justify-center text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4"
+              enterTo="opacity-100 translate-y-0"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 translate-y-4"
+            >
+              <Dialog.Panel
+                className="w-full bg-white overflow-hidden"
+                style={{ borderRadius: "10px 10px 0 0" }}
+                data-testid="mobile-actions-modal"
               >
-                <Dialog.Panel
-                  className="w-full h-full transform overflow-hidden text-left flex flex-col gap-y-3"
-                  data-testid="mobile-actions-modal"
-                >
-                  <div className="w-full flex justify-end pr-6">
-                    <button
-                      onClick={close}
-                      className="bg-white w-12 h-12 rounded-full text-ui-fg-base flex justify-center items-center"
-                      data-testid="close-modal-button"
-                    >
-                      <X />
-                    </button>
-                  </div>
-                  <div className="bg-white px-6 py-12">
-                    {(product.variants?.length ?? 0) > 1 && (
-                      <div className="flex flex-col gap-y-6">
-                        {(product.options || []).map((option) => {
-                          const optionValues = option.values || []
-                          const currentValue = options[option.title ?? ""]
-                          
-                          return (
-                            <div key={option.id} className="w-full">
-                              <Listbox
-                                value={currentValue}
-                                onChange={(value) => updateOptions(option.title ?? "", value)}
+                {/* Modal header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                  <p className="text-base font-medium" style={{ color: "#111111" }}>Select Options</p>
+                  <button
+                    onClick={close}
+                    className="p-1 transition-colors hover:text-gray-900"
+                    style={{ color: "#9ca3af" }}
+                    data-testid="close-modal-button"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Options */}
+                <div className="px-6 py-6">
+                  {(product.variants?.length ?? 0) > 1 && (
+                    <div className="flex flex-col gap-y-5">
+                      {(product.options || []).map((option) => {
+                        const optionValues = option.values || []
+                        const currentValue = options[option.title ?? ""]
+                        return (
+                          <div key={option.id}>
+                            <label className="block text-xs font-medium mb-2" style={{ color: "#6b7280" }}>
+                              {option.title}
+                            </label>
+                            <div className="relative">
+                              <select
+                                value={currentValue || ""}
+                                onChange={(e) => updateOptions(option.title ?? "", e.target.value)}
                                 disabled={optionsDisabled}
+                                className="w-full px-3 py-3 pr-9 text-sm border border-gray-200 bg-white focus:outline-none focus:border-gray-400 disabled:opacity-50 appearance-none"
+                                style={{ borderRadius: "5px", color: currentValue ? "#111111" : "#9ca3af" }}
                               >
-                                <div className="relative">
-                                  <Listbox.Label className="block text-sm font-medium text-gray-700 mb-2">
-                                    {option.title}
-                                  </Listbox.Label>
-                                  <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-3 pl-3 pr-10 text-left border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span className="block truncate">
-                                      {currentValue || "Select " + option.title}
-                                    </span>
-                                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                      <ChevronDown className="h-5 w-5 text-gray-400" />
-                                    </span>
-                                  </Listbox.Button>
-                                  <Transition
-                                    as={Fragment}
-                                    leave="transition ease-in duration-100"
-                                    leaveFrom="opacity-100"
-                                    leaveTo="opacity-0"
-                                  >
-                                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                      {optionValues.map((optionValue) => (
-                                        <Listbox.Option
-                                          key={optionValue.id}
-                                          value={optionValue.value}
-                                          className={({ active }) =>
-                                            clx(
-                                              "relative cursor-default select-none py-3 pl-3 pr-9",
-                                              active ? "bg-blue-100 text-blue-900" : "text-gray-900"
-                                            )
-                                          }
-                                        >
-                                          {({ selected }) => (
-                                            <>
-                                              <span
-                                                className={clx(
-                                                  "block truncate",
-                                                  selected ? "font-semibold" : "font-normal"
-                                                )}
-                                              >
-                                                {optionValue.value}
-                                              </span>
-                                              {selected && (
-                                                <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-blue-600">
-                                                  <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                  </svg>
-                                                </span>
-                                              )}
-                                            </>
-                                          )}
-                                        </Listbox.Option>
-                                      ))}
-                                    </Listbox.Options>
-                                  </Transition>
-                                </div>
-                              </Listbox>
+                                <option value="" disabled>Select {option.title}</option>
+                                {optionValues.map((ov) => (
+                                  <option key={ov.id} value={ov.value}>{ov.value}</option>
+                                ))}
+                              </select>
+                              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                <svg className="w-4 h-4" style={{ color: "#9ca3af" }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                              </div>
                             </div>
-                          )
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {/* Confirm button */}
+                  <button
+                    onClick={close}
+                    className="mt-6 w-full h-12 text-sm font-semibold text-white transition-all duration-200"
+                    style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+                  >
+                    Confirm Selection
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
         </Dialog>
       </Transition>

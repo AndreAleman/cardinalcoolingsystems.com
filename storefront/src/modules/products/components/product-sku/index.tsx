@@ -1,4 +1,3 @@
-// src/modules/products/components/product-sku/index.tsx
 "use client"
 
 import { useEffect, useState } from "react"
@@ -11,21 +10,16 @@ type ProductSKUProps = {
 export default function ProductSKU({ product }: ProductSKUProps) {
   const [selectedVariant, setSelectedVariant] = useState<HttpTypes.StoreProductVariant | null>(null)
 
-  // Listen for variant selection events
   useEffect(() => {
     const handleVariantChange = (event: CustomEvent) => {
       setSelectedVariant(event.detail.variant)
     }
-
-    window.addEventListener('variant-selected' as any, handleVariantChange)
-    
-    // Set default to first variant
+    window.addEventListener("variant-selected" as any, handleVariantChange)
     if (product.variants?.[0]) {
       setSelectedVariant(product.variants[0])
     }
-
     return () => {
-      window.removeEventListener('variant-selected' as any, handleVariantChange)
+      window.removeEventListener("variant-selected" as any, handleVariantChange)
     }
   }, [product])
 
@@ -34,21 +28,23 @@ export default function ProductSKU({ product }: ProductSKUProps) {
   const competitorSkus = selectedVariant.metadata?.competitor_skus as string[] | undefined
 
   return (
-    <div className="space-y-2 py-4 border-b border-ui-border-base">
-      {/* Your SKU */}
+    <div className="space-y-1.5 py-3 border-b border-gray-100">
+      {/* SKU */}
       <div className="flex items-center gap-2">
-        <span className="text-sm font-semibold text-ui-fg-base">SKU:</span>
-        <span className="text-sm text-ui-fg-subtle font-mono">{selectedVariant.sku}</span>
+        <span className="text-xs font-medium" style={{ color: "#9ca3af" }}>SKU:</span>
+        <span className="text-xs font-mono font-medium" style={{ color: "#111111" }}>
+          {selectedVariant.sku}
+        </span>
       </div>
 
       {/* Competitor SKUs */}
       {competitorSkus && competitorSkus.length > 0 && (
         <div className="flex items-start gap-2">
-          <span className="text-xs font-medium text-ui-fg-muted whitespace-nowrap">
-            Compatible Part Numbers:
+          <span className="text-xs font-medium whitespace-nowrap" style={{ color: "#9ca3af" }}>
+            Compatible:
           </span>
-          <span className="text-xs text-ui-fg-subtle font-mono">
-            {competitorSkus.join(' | ')}
+          <span className="text-xs font-mono" style={{ color: "#6b7280" }}>
+            {competitorSkus.join(" | ")}
           </span>
         </div>
       )}

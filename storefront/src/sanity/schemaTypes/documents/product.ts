@@ -8,26 +8,47 @@ const productSchema: DocumentDefinition = {
       name: "title",
       type: "string",
     },
-    // Updated description field to include table
     {
       name: "description",
-      title: "Product Description", 
+      title: "Product Description",
       type: "array",
       of: [
         { type: "block" },
-        { 
+        {
           type: "image",
           options: { hotspot: true },
           fields: [
             {
               name: "alt",
-              type: "string", 
+              type: "string",
               title: "Alternative Text",
             }
           ]
         },
-        // ADD THIS LINE - Now tables are supported!
         { type: "productTable" }
+      ],
+      group: "content",
+    },
+    // ← NEW: Technical Details field
+    {
+      name: "technicalDetails",
+      title: "Technical Details",
+      description: "Shown in the 'Technical Details' tab on the product page",
+      type: "array",
+      of: [
+        { type: "block" },
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            {
+              name: "alt",
+              type: "string",
+              title: "Alternative Text",
+            }
+          ]
+        },
+        { type: "productTable" },
       ],
       group: "content",
     },

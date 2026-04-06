@@ -15,60 +15,60 @@ interface BulkPricingModalProps {
 
 export default function BulkPricingModal({ isOpen, onClose }: BulkPricingModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setSubmitStatus('idle')
+    setSubmitStatus("idle")
 
     const formData = new FormData(e.currentTarget)
     const data = {
-      name: formData.get('name') as string,
-      lastName: formData.get('lastName') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      company: formData.get('company') as string,
-      message: `${formData.get('message') as string} - from discount table`
+      name: formData.get("name") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      company: formData.get("company") as string,
+      message: `${formData.get("message") as string} - from discount table`,
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'x-publishable-api-key': process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!
-        },
-        body: JSON.stringify(data)
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
+          },
+          body: JSON.stringify(data),
+        }
+      )
 
       if (response.ok) {
-        // ✅ Track successful bulk pricing form submission
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           window.dataLayer = window.dataLayer || []
           window.dataLayer.push({
-            event: 'bulk_pricing_form_submit',
-            form_type: 'bulk_pricing',
+            event: "bulk_pricing_form_submit",
+            form_type: "bulk_pricing",
             user_email: data.email,
             user_company: data.company,
-            form_location: 'product_page_discount_table'
+            form_location: "product_page_discount_table",
           })
-          console.log('✅ Bulk pricing form submitted:', data.email, data.company)
         }
-
-        setSubmitStatus('success')
+        setSubmitStatus("success")
         formRef.current?.reset()
         setTimeout(() => {
           onClose()
-          setSubmitStatus('idle')
+          setSubmitStatus("idle")
         }, 2000)
       } else {
-        setSubmitStatus('error')
+        setSubmitStatus("error")
       }
     } catch (error) {
-      console.error('Bulk pricing inquiry error:', error)
-      setSubmitStatus('error')
+      console.error("Bulk pricing inquiry error:", error)
+      setSubmitStatus("error")
     } finally {
       setIsSubmitting(false)
     }
@@ -76,198 +76,154 @@ export default function BulkPricingModal({ isOpen, onClose }: BulkPricingModalPr
 
   if (!isOpen) return null
 
+  const inputClass =
+    "w-full bg-gray-100 border-0 text-gray-900 placeholder-gray-400 px-4 py-3 text-sm outline-none transition-all duration-150 focus:ring-1 focus:ring-gray-900 focus:bg-white"
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
-      <div 
-        className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-28" style={{ backgroundColor: "rgba(0,0,0,0.6)" }} onClick={onClose}>
+      <div
+        className="bg-white max-w-lg w-full max-h-[90vh] overflow-y-auto"
+        style={{ borderRadius: "5px" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">Unlock Bulk Pricing</h2>
+        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-normal tracking-widest uppercase mb-0.5" style={{ color: "#E3000F" }}>
+              Volume Pricing
+            </p>
+            <h2 className="text-xl font-normal tracking-tight" style={{ color: "#111111" }}>
+              Unlock Bulk Pricing
+            </h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition"
+            className="p-1 transition-colors hover:text-gray-900"
+            style={{ color: "#9ca3af" }}
             aria-label="Close"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
-          {/* Free Shipping + B2B Notice */}
-          <p className="text-sm text-gray-600 mb-4 text-center">
-            Free shipping on orders $100+. Contact us below for exclusive B2B volume discounts.
+          {/* Subtext */}
+          <p className="text-sm font-light mb-5" style={{ color: "#6b7280" }}>
+            Free shipping on orders $100+. Fill out the form below for exclusive B2B volume discounts.
           </p>
 
-          {/* Blurred Discount Table Preview */}
-{/* Blurred Discount Table Preview */}
-<div className="relative mb-6">
-  <table className="w-full border border-gray-200">
-    <thead className="bg-gray-50">
-      <tr>
-        <th className="px-4 py-2 text-left text-sm font-medium">Discount %</th>
-        <th className="px-4 py-2 text-left text-sm font-medium">Qty Purchased</th>
-        <th className="px-4 py-2 text-left text-sm font-medium">Dollars Spent</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr className="border-t filter blur-md select-none pointer-events-none">
-        <td className="px-4 py-2 text-orange-600 font-bold">5%</td>
-        <td className="px-4 py-2">10+</td>
-        <td className="px-4 py-2">$100+</td>
-      </tr>
-      <tr className="border-t filter blur-md select-none pointer-events-none">
-        <td className="px-4 py-2 text-orange-600 font-bold">10%</td>
-        <td className="px-4 py-2">25+</td>
-        <td className="px-4 py-2">$250+</td>
-      </tr>
-    </tbody>
-  </table>
-  <div className="absolute inset-0 flex items-center justify-center">
-    <div className="bg-white/95 px-6 py-3 rounded-lg shadow-lg border border-gray-200">
-      <p className="text-sm font-semibold text-gray-900">
-        🔒 B2B Volume Pricing Available
-      </p>
-    </div>
-  </div>
-</div>
-
-
-          {/* Call Now Option */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-semibold text-gray-900">Prefer to talk now?</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  Call us directly for immediate assistance
-                </p>
-                <a 
-                  href="tel:+19418002334"
-                  className="inline-flex items-center mt-2 text-blue-600 font-semibold hover:text-blue-700 transition text-lg"
-                >
-                  (941) 800-2334
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
+          {/* Blurred discount preview */}
+          <div className="relative mb-6 overflow-hidden border border-gray-200" style={{ borderRadius: "5px" }}>
+            <table className="w-full text-sm">
+              <thead style={{ backgroundColor: "#f8f8f8" }}>
+                <tr>
+                  <th className="px-4 py-2.5 text-left text-xs font-medium" style={{ color: "#6b7280" }}>Discount</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-medium" style={{ color: "#6b7280" }}>Qty</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-medium" style={{ color: "#6b7280" }}>Spend</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                <tr className="blur-sm select-none pointer-events-none">
+                  <td className="px-4 py-2.5 font-semibold text-sm" style={{ color: "#E3000F" }}>5%</td>
+                  <td className="px-4 py-2.5 text-sm" style={{ color: "#374151" }}>10+</td>
+                  <td className="px-4 py-2.5 text-sm" style={{ color: "#374151" }}>$100+</td>
+                </tr>
+                <tr className="blur-sm select-none pointer-events-none">
+                  <td className="px-4 py-2.5 font-semibold text-sm" style={{ color: "#E3000F" }}>??%</td>
+                  <td className="px-4 py-2.5 text-sm" style={{ color: "#374151" }}>25+</td>
+                  <td className="px-4 py-2.5 text-sm" style={{ color: "#374151" }}>$300+</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="px-4 py-2 bg-white border border-gray-200 shadow-sm text-sm font-medium" style={{ borderRadius: "5px", color: "#111111" }}>
+                🔒 Submit the form to unlock
               </div>
             </div>
           </div>
 
-          {/* Status Messages */}
-          {submitStatus === 'success' && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded text-green-800">
-              Thank you! We'll contact you shortly with bulk pricing details.
+          {/* Call us */}
+          <div
+            className="flex items-start gap-3 p-4 mb-5"
+            style={{ backgroundColor: "rgba(227,0,15,0.04)", border: "1px solid rgba(227,0,15,0.12)", borderRadius: "5px" }}
+          >
+            <div
+              className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5"
+              style={{ backgroundColor: "rgba(227,0,15,0.08)", color: "#E3000F", borderRadius: "5px" }}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-medium mb-0.5" style={{ color: "#111111" }}>Prefer to talk now?</p>
+              <p className="text-xs font-light mb-1.5" style={{ color: "#6b7280" }}>Call us directly for immediate assistance</p>
+              <a href="tel:+16309479955" className="text-sm font-semibold transition-colors hover:opacity-80" style={{ color: "#E3000F" }}>
+                (630) 947-9955
+              </a>
+            </div>
+          </div>
+
+          {/* Status messages */}
+          {submitStatus === "success" && (
+            <div className="mb-5 p-4 text-sm font-light" style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px", color: "#111" }}>
+              ✓ Request received. We'll contact you shortly with bulk pricing details.
             </div>
           )}
-
-          {submitStatus === 'error' && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded text-red-800">
-              Sorry, there was an error. Please try again or call us directly.
+          {submitStatus === "error" && (
+            <div className="mb-5 p-4 text-sm font-light" style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px", color: "#E3000F" }}>
+              Something went wrong. Please try again or call us directly.
             </div>
           )}
 
           {/* Form */}
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-            {/* Name Fields */}
-            <div className="grid grid-cols-2 gap-4">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  First Name*
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  className="block w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
+                <label className="block text-xs font-medium mb-1.5" style={{ color: "#6b7280" }}>First Name *</label>
+                <input type="text" name="name" required placeholder="Jane" className={inputClass} style={{ borderRadius: "5px" }} />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                  Last Name*
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  required
-                  className="block w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
+                <label className="block text-xs font-medium mb-1.5" style={{ color: "#6b7280" }}>Last Name *</label>
+                <input type="text" name="lastName" required placeholder="Smith" className={inputClass} style={{ borderRadius: "5px" }} />
               </div>
             </div>
 
-            {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address*
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="block w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <label className="block text-xs font-medium mb-1.5" style={{ color: "#6b7280" }}>Email *</label>
+              <input type="email" name="email" required placeholder="jane@company.com" className={inputClass} style={{ borderRadius: "5px" }} />
             </div>
 
-            {/* Company */}
             <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-                Company Name*
-              </label>
-              <input
-                type="text"
-                id="company"
-                name="company"
-                required
-                className="block w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <label className="block text-xs font-medium mb-1.5" style={{ color: "#6b7280" }}>Company *</label>
+              <input type="text" name="company" required placeholder="Acme Corp" className={inputClass} style={{ borderRadius: "5px" }} />
             </div>
 
-            {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                className="block w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <label className="block text-xs font-medium mb-1.5" style={{ color: "#6b7280" }}>Phone <span className="font-light" style={{ color: "#9ca3af" }}>(optional)</span></label>
+              <input type="tel" name="phone" placeholder="+1 (800) 000-0000" className={inputClass} style={{ borderRadius: "5px" }} />
             </div>
 
-            {/* Message */}
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                Brief Message
-              </label>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: "#6b7280" }}>Message</label>
               <textarea
-                id="message"
                 name="message"
                 rows={3}
-                className="block w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 placeholder="Tell us about your bulk order requirements..."
+                className={`${inputClass} resize-none`}
+                style={{ borderRadius: "5px" }}
               />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full px-6 py-3 bg-orange-600 text-white font-bold rounded hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+              className="w-full py-3 text-sm font-medium text-white transition-all duration-200 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
             >
-              {isSubmitting ? 'Sending...' : 'Request Bulk Pricing'}
+              {isSubmitting ? "Sending…" : "Request Bulk Pricing →"}
             </button>
           </form>
         </div>
