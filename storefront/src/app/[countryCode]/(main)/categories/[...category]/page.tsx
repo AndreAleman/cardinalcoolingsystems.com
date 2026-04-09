@@ -35,11 +35,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (!product_categories || product_categories.length === 0) {
       return { title: "Category not found" }
     }
+    const mainCategory = product_categories[product_categories.length - 1]
     const title = product_categories.map((c: StoreProductCategory) => c.name).join(" | ")
-    const description = product_categories[product_categories.length - 1].description ?? `${title} category.`
+    const description = mainCategory.description ?? `${title} category.`
+
+    const seoTitle = (mainCategory.metadata?.seo_title as string) || `${title} | Cardinal Cooling Systems`
+    const seoDescription = (mainCategory.metadata?.seo_description as string) || description
+
     return {
-      title: `${title} | Cardinal Cooling Systems`,
-      description,
+      title: seoTitle,
+      description: seoDescription,
       alternates: {
         canonical: `https://cardinalcoolingsystems.com/${params.countryCode}/categories/${params.category.join("/")}`,
       },

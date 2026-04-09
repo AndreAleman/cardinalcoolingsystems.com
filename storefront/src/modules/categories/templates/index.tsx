@@ -38,6 +38,7 @@ export default function CategoryTemplate({
   }
 
   const categoryImage = getImage(category)
+  const seoContent = (category as any).metadata?.seo_content as string | undefined
 
   // All OTHER categories — exclude current one, shuffle for variety
   const otherCategories = allCategories
@@ -78,7 +79,6 @@ export default function CategoryTemplate({
             <p className="text-xs font-normal tracking-widest uppercase mb-5" style={{ color: "#E3000F" }}>
               Browse All Categories
             </p>
-
             <div
               className="flex gap-4 overflow-x-auto pb-3"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -90,11 +90,7 @@ export default function CategoryTemplate({
                     key={cat.id}
                     href={`/categories/${cat.handle}`}
                     className="group flex-none block overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300 bg-white"
-                    style={{
-                      borderRadius: "5px",
-                      // ~1.5 visible on mobile, ~2.5 on tablet, more on desktop
-                      width: "clamp(160px, 40vw, 220px)",
-                    }}
+                    style={{ borderRadius: "5px", width: "clamp(160px, 40vw, 220px)" }}
                   >
                     <div
                       className="overflow-hidden flex items-center justify-center"
@@ -108,14 +104,14 @@ export default function CategoryTemplate({
                           style={{ objectFit: "contain" }}
                         />
                       ) : (
-<div className="w-full h-full flex items-center justify-center p-8" style={{ backgroundColor: "#E3000F" }}>
-  <img
-    src="/images/logo/new-cardinal-cooling-logo.svg"
-    alt="Cardinal Cooling Systems"
-    className="w-full h-auto"
-    style={{ filter: "brightness(0) invert(1)" }}
-  />
-</div>
+                        <div className="w-full h-full flex items-center justify-center p-8" style={{ backgroundColor: "#E3000F" }}>
+                          <img
+                            src="/images/logo/new-cardinal-cooling-logo.svg"
+                            alt="Cardinal Cooling Systems"
+                            className="w-full h-auto"
+                            style={{ filter: "brightness(0) invert(1)" }}
+                          />
+                        </div>
                       )}
                     </div>
                     <div className="p-3">
@@ -152,6 +148,21 @@ export default function CategoryTemplate({
             </div>
           </div>
         </div>
+
+        {/* SEO content — below products to protect conversion rate */}
+        {seoContent && (
+          <div
+            className="py-12 border-t border-gray-100 max-w-3xl
+              [&_h1]:text-2xl [&_h1]:font-semibold [&_h1]:mb-4 [&_h1]:mt-0 [&_h1]:leading-tight
+              [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:leading-tight
+              [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-4
+              [&_ul]:mb-4 [&_ul]:pl-5
+              [&_li]:text-sm [&_li]:leading-relaxed [&_li]:mb-1 [&_li]:list-disc
+              [&_strong]:font-medium"
+            style={{ color: "#555555" }}
+            dangerouslySetInnerHTML={{ __html: seoContent }}
+          />
+        )}
 
       </div>
     </div>
