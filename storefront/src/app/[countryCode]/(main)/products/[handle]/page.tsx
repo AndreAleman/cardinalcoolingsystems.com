@@ -53,9 +53,7 @@ function findVariantByOptions(product: any, searchParams: Record<string, string>
     return variant.options?.every((opt: any) => {
       const optionName = opt.option.title.toLowerCase()
       let optionValue = opt.value.toLowerCase()
-      
       optionValue = optionValue.replace(/["'']/g, 'in').replace(/\s+/g, '')
-      
       const searchValue = searchParams[optionName]?.toLowerCase()
       return searchValue === optionValue
     })
@@ -82,27 +80,29 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     ?.map((opt: any) => `${opt.option.title}: ${opt.value}`)
     .join(", ") || ""
 
+  // Use custom SEO fields from metadata if available
+  const metaTitle = (product.metadata?.meta_title as string) || null
+  const metaDescription = (product.metadata?.meta_description as string) || null
+
   return {
-    title: optionString 
+    title: metaTitle || (optionString
       ? `${product.title} - ${optionString} | Cardinal Cooling Systems`
-      : `${product.title} | Cardinal Cooling Systems`,
-    description: optionString
+      : `${product.title} | Cardinal Cooling Systems`),
+    description: metaDescription || (optionString
       ? `${product.title} with ${optionString}. SKU: ${selectedVariant?.sku}. ${product.description || ''}`
-      : product.description || product.title,
-    
+      : product.description || product.title),
     alternates: {
       canonical: `https://cardinalcoolingsystems.com/${params.countryCode}/products/${handle}`
     },
-    
     openGraph: {
-      title: optionString 
+      title: metaTitle || (optionString
         ? `${product.title} - ${optionString}`
-        : product.title,
-      description: product.description || product.title,
-      images: selectedVariant?.thumbnail 
-        ? [selectedVariant.thumbnail] 
-        : product.thumbnail 
-          ? [product.thumbnail] 
+        : product.title),
+      description: metaDescription || product.description || product.title,
+      images: selectedVariant?.thumbnail
+        ? [selectedVariant.thumbnail]
+        : product.thumbnail
+          ? [product.thumbnail]
           : [],
     },
   }
@@ -123,11 +123,9 @@ export default async function ProductPage({ params, searchParams }: Props) {
   const sanity = (await client.getDocument(pricedProduct.id))
 
   const selectedVariant = findVariantByOptions(pricedProduct, searchParams)
-  
-  // ✅ CREATE PRODUCT SCHEMA - Adjusted for MedusaJS data structure
+
   const variant = selectedVariant || pricedProduct.variants?.[0]
-  
-  // Price is already in dollars (not cents) in calculated_amount
+
   const price = variant?.calculated_price?.calculated_amount
     ? variant.calculated_price.calculated_amount.toFixed(2)
     : null
@@ -159,12 +157,10 @@ export default async function ProductPage({ params, searchParams }: Props) {
     }
   }
 
-  // Add category - use the first (most specific) category
   if (pricedProduct.categories && pricedProduct.categories.length > 0) {
     productSchema.category = pricedProduct.categories[0].name
   }
 
-  // Add material from variant options if "Alloy" option exists
   const alloyOption = variant?.options?.find((opt: any) => opt.option.title === "Alloy")
   if (alloyOption) {
     productSchema.material = alloyOption.value
@@ -172,14 +168,12 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
   return (
     <>
-      {/* ✅ PRODUCT SCHEMA JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productSchema).replace(/</g, '\\u003c')
         }}
       />
-      
       <ProductTemplate
         product={pricedProduct}
         region={region}
