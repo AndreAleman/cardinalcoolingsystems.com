@@ -33,16 +33,13 @@ export const metadata: Metadata = {
 
 export default function PageLayout(props: { children: React.ReactNode }) {
   return (
-    <>
-      {/* Main Navigation - Fixed at top, transparent until scroll */}
+    <div className="flex flex-col min-h-screen">
       <Nav />
-      <main className="relative">
-        <NavSpacer />  {/* ← add this */}
+      <main className="relative flex flex-col flex-1">
+        <NavSpacer />
         {props.children}
       </main>
-
-      {/* Footer */}
       <Footer />
-    </>
+    </div>
   )
 }

@@ -61,19 +61,20 @@ const ImageOrPlaceholder = ({
   return (
     <div className={clx(
       "w-full h-full absolute inset-0",
-      { "bg-white": isLogo }
+      { "bg-red-600": isLogo }
     )}>
       <Image
         src={imgSrc}
         alt="Product thumbnail"
         fill
         className={clx(
-          "absolute inset-0 w-full h-full",
-          {
-            "object-cover object-center": !isLogo,
-            "object-contain object-center p-4": isLogo
-          }
-        )}
+  "absolute inset-0 w-full h-full",
+  {
+    "object-cover object-center": !isLogo,
+    "object-contain object-center p-4": isLogo
+  }
+)}
+style={isLogo ? { filter: "brightness(0) invert(1)" } : undefined}
         draggable={false}
         quality={50}
         sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"

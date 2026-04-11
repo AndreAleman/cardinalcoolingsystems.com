@@ -59,10 +59,10 @@ export default async function PaginatedProducts({
       count = 0
     }
   } else {
-    const queryParams: PaginatedProductsParams = {
-      limit: PRODUCT_LIMIT,
-      offset,
-    }
+const queryParams: PaginatedProductsParams = {
+  limit: PRODUCT_LIMIT,
+  offset: 0,  // getProductsListWithSort handles pagination in memory
+}
     if (collectionId) queryParams["collection_id"] = [collectionId]
     if (categoryId) queryParams["category_id"] = [categoryId]
     if (productsIds) queryParams["id"] = productsIds
@@ -88,11 +88,11 @@ export default async function PaginatedProducts({
   return (
     <>
       <ul
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-8 w-full"
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-8 w-full items-stretch"
         data-testid="products-list"
       >
         {products.map((p) => (
-          <li key={p.id} className="flex flex-col h-full">
+          <li key={p.id} className="flex flex-col">
             <ProductPreview product={p} region={region} />
           </li>
         ))}

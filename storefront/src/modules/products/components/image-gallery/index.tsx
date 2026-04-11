@@ -12,16 +12,20 @@ type ImageGalleryProps = {
 const ImageGallery = ({ images }: ImageGalleryProps) => {
   const logoPath = "/images/logo/new-cardinal-cooling-logo.svg"
 
-  // Filter out localhost images
   const validImages = images?.filter(img => img?.url && !img.url.includes("localhost")) || []
 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [isZoomed, setIsZoomed] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [mainImageFailed, setMainImageFailed] = useState(false)
   const imageRef = useRef<HTMLDivElement>(null)
 
   const mainImageUrl = validImages[selectedIndex]?.url || logoPath
-  const isLogo = !validImages[selectedIndex]?.url
+  const isLogo = !validImages[selectedIndex]?.url || mainImageFailed
+
+  useEffect(() => {
+    setMainImageFailed(false)
+  }, [selectedIndex])
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!imageRef.current || isLogo) return
@@ -52,6 +56,7 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
             image={mainImageUrl}
             isZoomed={isZoomed}
             mousePosition={mousePosition}
+            onLogoFallback={() => setMainImageFailed(true)}
           />
         </div>
 
@@ -110,10 +115,12 @@ const ImageOrPlaceholder = ({
   image,
   isZoomed,
   mousePosition,
+  onLogoFallback,
 }: {
   image?: string
   isZoomed: boolean
   mousePosition: { x: number; y: number }
+  onLogoFallback?: () => void
 }) => {
   const logoPath = "/images/logo/new-cardinal-cooling-logo.svg"
   const [imgSrc, setImgSrc] = useState(image || logoPath)
@@ -121,7 +128,7 @@ const ImageOrPlaceholder = ({
 
   useEffect(() => {
     setImgSrc(image || logoPath)
-    setIsLogo(!image)
+    setIsLogo(!image || image === logoPath)
   }, [image])
 
   return (
@@ -153,6 +160,7 @@ const ImageOrPlaceholder = ({
         onError={() => {
           setImgSrc(logoPath)
           setIsLogo(true)
+          onLogoFallback?.()
         }}
       />
     </div>
