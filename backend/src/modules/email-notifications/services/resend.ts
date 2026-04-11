@@ -12,6 +12,10 @@ import {
   CreateEmailOptions, 
 } from "resend"
 import { contactFormEmail } from "../templates/contact-form"
+import OrderPlacedTemplate from "../templates/order-placed"
+import AdminOrderTemplate from "../templates/admin-order"
+
+
 
 type ResendOptions = {
   api_key: string
@@ -28,10 +32,13 @@ type InjectedDependencies = {
 
 enum Templates {
   ORDER_PLACED = "order-placed",
+  ADMIN_ORDER = "admin-order",
   CONTACT_FORM = "contact-form",
 }
 
 const templates: {[key in Templates]?: (props: unknown) => React.ReactNode} = {
+  [Templates.ORDER_PLACED]: OrderPlacedTemplate,
+  [Templates.ADMIN_ORDER]: AdminOrderTemplate,
   [Templates.CONTACT_FORM]: contactFormEmail,
 }
 
@@ -88,6 +95,8 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     switch(template) {
       case Templates.ORDER_PLACED:
         return "Order Confirmation"
+      case Templates.ADMIN_ORDER:        // ← add here
+        return "New Order Received"      // ← and here
       case Templates.CONTACT_FORM:
         return "New Contact Form Submission"
       default:

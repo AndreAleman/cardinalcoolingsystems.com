@@ -26,7 +26,7 @@ export const AdminOrderTemplate: React.FC<AdminOrderTemplateProps> & {
   shippingAddress,
   preview = 'New order received - Admin notification'
 }) => {
-  const total = order.summary.raw_current_order_total.value.toFixed(2)
+  const total = Number(order.summary.raw_current_order_total.value).toFixed(2)
   const backendUrl = process.env.BACKEND_URL || 'http://localhost:9000'
   
   return (
@@ -71,7 +71,7 @@ export const AdminOrderTemplate: React.FC<AdminOrderTemplateProps> & {
             <Text key={item.id} style={styles.item}>
               • {item.product_title} ({item.variant_sku || 'N/A'})
               <br />
-              &nbsp;&nbsp;Qty: {item.quantity} × ${item.unit_price.toFixed(2)} = ${(item.quantity * item.unit_price).toFixed(2)}
+              &nbsp;&nbsp;Qty: {item.quantity} × ${Number(item.unit_price).toFixed(2)} = ${(item.quantity * Number(item.unit_price)).toFixed(2)}
             </Text>
           ))}
         </Section>

@@ -11,6 +11,15 @@ const staticNavigationItems = [
   { label: "Blog", href: "/blog" },
 ]
 
+const industryItems = [
+  {
+    label: "Data Centers",
+    href: "/us/data-center-cooling",
+    description: "Liquid cooling infrastructure for AI clusters & hyperscale facilities",
+  },
+  // Add more industries here as you build more landing pages
+]
+
 interface NavigationProps {
   className?: string
 }
@@ -22,6 +31,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
   const [loading, setLoading] = useState(true)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const industriesRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -52,10 +62,9 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      const clickedShop = dropdownRef.current?.contains(event.target as Node)
+      const clickedIndustries = industriesRef.current?.contains(event.target as Node)
+      if (!clickedShop && !clickedIndustries) {
         setActiveDropdown(null)
         setActivePath([])
       }
@@ -66,9 +75,9 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
     }
   }, [activeDropdown])
 
-  const toggleDropdown = (e: React.MouseEvent) => {
+  const toggleDropdown = (name: string) => (e: React.MouseEvent) => {
     e.preventDefault()
-    setActiveDropdown(activeDropdown === "Shop" ? null : "Shop")
+    setActiveDropdown(activeDropdown === name ? null : name)
     setActivePath([])
   }
 
@@ -195,9 +204,11 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
 
   return (
     <nav className={`flex items-center space-x-8 ${className}`}>
+
+      {/* Shop dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
-          onClick={toggleDropdown}
+          onClick={toggleDropdown("Shop")}
           className="flex items-center space-x-1 text-[16px] font-normal tracking-wide transition-colors duration-200 py-2"
           style={{ color: "rgba(255,255,255,0.85)" }}
           onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
@@ -216,11 +227,12 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
           renderCategoryLevel(categories, 0)}
       </div>
 
+      {/* Static nav items */}
       {staticNavigationItems.map((item) => (
         <Link
           key={item.label}
           href={item.href}
-          className="text-16px] font-normal tracking-wide transition-colors duration-200 py-2"
+          className="text-[16px] font-normal tracking-wide transition-colors duration-200 py-2"
           style={{ color: "rgba(255,255,255,0.85)" }}
           onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
           onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
@@ -228,6 +240,62 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
           {item.label}
         </Link>
       ))}
+
+      {/* Industries dropdown — same style as Shop */}
+      <div className="relative" ref={industriesRef}>
+        <button
+          onClick={toggleDropdown("Industries")}
+          className="flex items-center space-x-1 text-[16px] font-normal tracking-wide transition-colors duration-200 py-2"
+          style={{ color: "rgba(255,255,255,0.85)" }}
+          onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}
+          onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)")}
+        >
+          <span>Industries</span>
+          <svg
+            className={`w-5 h-5 ml-1 transition-transform duration-200 ${activeDropdown === "Industries" ? "rotate-180" : ""}`}
+            fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+
+        {activeDropdown === "Industries" && (
+          <div
+            className="absolute top-full left-0 mt-2 py-2"
+            style={{
+              width: 280,
+              backgroundColor: "#1a1a1a",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderTop: "2px solid #E3000F",
+              zIndex: 50,
+            }}
+          >
+            {industryItems.map((industry) => (
+              <Link
+                key={industry.href}
+                href={industry.href}
+                onClick={() => { setActiveDropdown(null); setActivePath([]) }}
+                className="flex flex-col px-4 py-3 transition-colors duration-150"
+                style={{ color: "rgba(255,255,255,0.75)", textDecoration: "none" }}
+                onMouseEnter={(e) => {
+                  ;(e.currentTarget as HTMLElement).style.color = "white"
+                  ;(e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.05)"
+                }}
+                onMouseLeave={(e) => {
+                  ;(e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)"
+                  ;(e.currentTarget as HTMLElement).style.backgroundColor = "transparent"
+                }}
+              >
+                <span className="text-base font-normal">{industry.label}</span>
+                <span className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  {industry.description}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
     </nav>
   )
 }

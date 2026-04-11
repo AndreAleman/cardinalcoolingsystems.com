@@ -17,7 +17,6 @@ import { StripeContext } from "@modules/checkout/components/payment-wrapper"
 import { initiatePaymentSession } from "@lib/data/cart"
 import PaymentTrustBadges from "@modules/checkout/components/payment-trust-badges"
 
-
 const Payment = ({
   cart,
   availablePaymentMethods,
@@ -29,6 +28,7 @@ const Payment = ({
     (paymentSession: any) => paymentSession.status === "pending"
   )
 
+  const [mounted, setMounted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [cardBrand, setCardBrand] = useState<string | null>(null)
@@ -73,7 +73,6 @@ const Payment = ({
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams)
       params.set(name, value)
-
       return params.toString()
     },
     [searchParams]
@@ -100,9 +99,7 @@ const Payment = ({
       if (!shouldInputCard) {
         return router.push(
           pathname + "?" + createQueryString("step", "review"),
-          {
-            scroll: false,
-          }
+          { scroll: false }
         )
       }
     } catch (err: any) {
@@ -111,6 +108,10 @@ const Payment = ({
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     setError(null)
@@ -172,7 +173,6 @@ const Payment = ({
                   <Text className="txt-medium-plus text-ui-fg-base mb-1">
                     Enter your card details:
                   </Text>
-
                   <CardElement
                     options={useOptions as StripeCardElementOptions}
                     onChange={(e) => {
@@ -184,7 +184,6 @@ const Payment = ({
                       setCardComplete(e.complete)
                     }}
                   />
-                      {/* ADD THIS LINE */}
                   <PaymentTrustBadges />
                 </div>
               )}
@@ -222,13 +221,13 @@ const Payment = ({
             data-testid="submit-payment-button"
           >
             {!activeSession && isStripeFunc(selectedPaymentMethod)
-              ? " Enter card details"
+              ? "Enter card details"
               : "Continue to review"}
           </Button>
         </div>
 
         <div className={isOpen ? "hidden" : "block"}>
-          {cart && paymentReady && activeSession ? (
+          {cart && paymentReady && activeSession && mounted ? (
             <div className="flex items-start gap-x-1 w-full">
               <div className="flex flex-col w-1/3">
                 <Text className="txt-medium-plus text-ui-fg-base mb-1">

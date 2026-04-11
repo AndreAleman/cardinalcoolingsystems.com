@@ -165,8 +165,6 @@ export default function Nav({ className = "" }: NavProps) {
   }
 
   const hasDarkBg = !isHomePage || isScrolled || searchOpen
-
-  // Announcement bar hides on scroll
   const showAnnouncement = !isScrolled && !searchOpen
 
   return (
@@ -180,7 +178,7 @@ export default function Nav({ className = "" }: NavProps) {
           : "1px solid transparent",
       }}
     >
-      {/* ── Announcement bar — hides on scroll ─────────────────────────── */}
+      {/* ── Announcement bar ── */}
       <div
         className="overflow-hidden transition-all duration-300 ease-out"
         style={{
@@ -199,13 +197,10 @@ export default function Nav({ className = "" }: NavProps) {
         </div>
       </div>
 
-      {/* Outer wrapper */}
       <div className="mx-auto max-w-[1440px] px-6 lg:px-2">
-
-        {/* Inner row */}
         <div className="relative flex items-center h-20 lg:h-24">
 
-          {/* ── NORMAL STATE ───────────────────────────────────────────────── */}
+          {/* ── NORMAL STATE ── */}
           <div
             className={`w-full flex items-center justify-between transition-all duration-300 ${
               searchOpen ? "opacity-0 pointer-events-none" : "opacity-100"
@@ -221,19 +216,13 @@ export default function Nav({ className = "" }: NavProps) {
             </div>
           </div>
 
-          {/* ── SEARCH OPEN STATE ──────────────────────────────────────────── */}
+          {/* ── SEARCH OPEN STATE ── */}
           <div
             className={`absolute inset-0 flex items-center transition-all duration-300 ${
-              searchOpen
-                ? "opacity-100 pointer-events-auto"
-                : "opacity-0 pointer-events-none"
+              searchOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
           >
-            <div
-              className={`flex-shrink-0 transition-all duration-300 ease-out ${
-                searchOpen ? "translate-x-0 opacity-100" : "translate-x-12 opacity-0"
-              }`}
-            >
+            <div className={`flex-shrink-0 transition-all duration-300 ease-out ${searchOpen ? "translate-x-0 opacity-100" : "translate-x-12 opacity-0"}`}>
               <Logo />
             </div>
 
@@ -253,12 +242,7 @@ export default function Nav({ className = "" }: NavProps) {
                 />
                 {query && (
                   <button
-                    onClick={() => {
-                      setQuery("")
-                      setExpandedResults([])
-                      setShowResults(false)
-                      inputRef.current?.focus()
-                    }}
+                    onClick={() => { setQuery(""); setExpandedResults([]); setShowResults(false); inputRef.current?.focus() }}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
                     aria-label="Clear"
                   >
@@ -270,23 +254,15 @@ export default function Nav({ className = "" }: NavProps) {
 
                 {showResults && query && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-[rgba(20,15,15,0.97)] border border-white/10 shadow-2xl z-50 max-h-80 overflow-y-auto rounded-sm">
-                    {isLoading && (
-                      <div className="p-4 text-center text-white/40 text-sm">Searching…</div>
-                    )}
+                    {isLoading && <div className="p-4 text-center text-white/40 text-sm">Searching…</div>}
                     {!isLoading && expandedResults.length === 0 && (
-                      <div className="p-4 text-center text-white/40 text-sm">
-                        No results for &ldquo;{query}&rdquo;
-                      </div>
+                      <div className="p-4 text-center text-white/40 text-sm">No results for &ldquo;{query}&rdquo;</div>
                     )}
                     {!isLoading && expandedResults.length > 0 && (
                       <div className="divide-y divide-white/5">
                         {expandedResults.map((result, idx) => {
-                          const variantOptions =
-                            result.variant.options
-                              ?.filter((o) => o.option?.title && o.value)
-                              .map((o) => o.value) ?? []
+                          const variantOptions = result.variant.options?.filter((o) => o.option?.title && o.value).map((o) => o.value) ?? []
                           const competitorSkus = result.variant.metadata?.competitor_skus
-
                           return (
                             <div
                               key={`${result.productId}-${result.variant.id}-${idx}`}
@@ -295,11 +271,7 @@ export default function Nav({ className = "" }: NavProps) {
                             >
                               <div className="w-12 h-12 bg-white/5 rounded flex-shrink-0 overflow-hidden">
                                 {result.productThumbnail ? (
-                                  <img
-                                    src={result.productThumbnail}
-                                    alt={result.productTitle}
-                                    className="w-full h-full object-contain"
-                                  />
+                                  <img src={result.productThumbnail} alt={result.productTitle} className="w-full h-full object-contain" />
                                 ) : (
                                   <svg className="w-full h-full text-white/20 p-2" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
@@ -309,28 +281,17 @@ export default function Nav({ className = "" }: NavProps) {
                               <div className="flex-1 min-w-0">
                                 <div className="text-white text-sm font-medium truncate">
                                   {result.productTitle}
-                                  {variantOptions.length > 0 && (
-                                    <span className="text-white/50 font-normal">
-                                      {" "}{variantOptions.join(", ")}
-                                    </span>
-                                  )}
+                                  {variantOptions.length > 0 && <span className="text-white/50 font-normal"> {variantOptions.join(", ")}</span>}
                                 </div>
-                                <div className="text-red-400 text-xs font-mono mt-0.5">
-                                  SKU: {result.variant.sku}
-                                </div>
+                                <div className="text-red-400 text-xs font-mono mt-0.5">SKU: {result.variant.sku}</div>
                                 {competitorSkus && competitorSkus.length > 0 && (
-                                  <div className="text-white/30 text-xs mt-0.5 truncate">
-                                    Compatible: {competitorSkus.join(", ")}
-                                  </div>
+                                  <div className="text-white/30 text-xs mt-0.5 truncate">Compatible: {competitorSkus.join(", ")}</div>
                                 )}
                               </div>
                             </div>
                           )
                         })}
-                        <button
-                          onClick={handleViewAll}
-                          className="w-full py-3 text-center text-red-400 hover:text-red-300 text-xs font-medium tracking-wide transition-colors"
-                        >
+                        <button onClick={handleViewAll} className="w-full py-3 text-center text-red-400 hover:text-red-300 text-xs font-medium tracking-wide transition-colors">
                           View all results for &ldquo;{query}&rdquo;
                         </button>
                       </div>
@@ -340,11 +301,7 @@ export default function Nav({ className = "" }: NavProps) {
               </div>
             </div>
 
-            <button
-              onClick={closeSearch}
-              aria-label="Close search"
-              className="flex-shrink-0 flex items-center gap-1.5 text-white/60 hover:text-white transition-colors text-sm font-light tracking-wide"
-            >
+            <button onClick={closeSearch} aria-label="Close search" className="flex-shrink-0 flex items-center gap-1.5 text-white/60 hover:text-white transition-colors text-sm font-light tracking-wide">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -355,12 +312,7 @@ export default function Nav({ className = "" }: NavProps) {
         </div>
       </div>
 
-      {showResults && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowResults(false)}
-        />
-      )}
+      {showResults && <div className="fixed inset-0 z-40" onClick={() => setShowResults(false)} />}
     </header>
   )
 }
