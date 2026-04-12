@@ -12,6 +12,7 @@ import ProductPrice from "../product-price"
 import BulkPricingModal from "../bulk-pricing-modal"
 import { addToCart } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
+import { useQuote } from "@lib/context/quote-context"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -43,6 +44,7 @@ export default function ProductActions({
   const [quantity, setQuantity] = useState(1)
   const [bulkModalOpen, setBulkModalOpen] = useState(false)
   const countryCode = useParams().countryCode as string
+  const { addToQuote } = useQuote()
 
   useEffect(() => {
     if (initialSelectedVariant) {
@@ -118,6 +120,18 @@ export default function ProductActions({
     return false
   }, [selectedVariant])
 
+  // Quote-only logic — variant-level takes precedence over product-level
+  const requiresQuote = !!(
+    selectedVariant?.metadata?.requires_quote === true ||
+    selectedVariant?.metadata?.requires_quote === "true" ||
+    product.metadata?.requires_quote === true ||
+    product.metadata?.requires_quote === "true"
+  )
+  const hasNoPrice = !!(
+    selectedVariant && !selectedVariant.calculated_price?.calculated_amount
+  )
+  const isQuoteOnly = requiresQuote || hasNoPrice
+
   const availableStock = useMemo(() => {
     if (!selectedVariant?.manage_inventory) return null
     return selectedVariant?.inventory_quantity || 0
@@ -164,6 +178,28 @@ export default function ProductActions({
     } finally {
       setIsAdding(false)
     }
+  }
+
+  const handleAddToQuote = () => {
+    if (!selectedVariant?.id) return
+    const variantOptions = selectedVariant.options
+      ?.filter((o: any) => o.option?.title && o.value)
+      .map((o: any) => ({ title: o.option.title as string, value: o.value as string }))
+    addToQuote({
+      productId: product.id!,
+      productTitle: product.title!,
+      productHandle: product.handle!,
+      productThumbnail: product.thumbnail ?? undefined,
+      variantId: selectedVariant.id,
+      variantTitle: selectedVariant.title ?? undefined,
+      variantSku: selectedVariant.sku ?? undefined,
+      variantOptions,
+      quantity,
+    })
+    toast.success(`✓ Added to quote request!`, {
+      position: "bottom-right",
+      autoClose: 3000,
+    })
   }
 
   const stockStatus = useMemo(() => {
@@ -230,7 +266,7 @@ export default function ProductActions({
         )}
 
         {/* Quantity + stock */}
-        {selectedVariant && inStock && (
+        {selectedVariant && (inStock || isQuoteOnly) && (
           <div className="flex flex-col gap-y-2">
             <p className="text-sm font-medium" style={{ color: "#111111" }}>Quantity</p>
             <div className="flex items-center justify-between">
@@ -277,58 +313,101 @@ export default function ProductActions({
         )}
 
         {/* Buttons */}
-        <div className="flex flex-col gap-y-3">
-          <div className="flex gap-3">
-            {/* Add to Cart */}
-            <button
-              onClick={handleAddToCart}
-              disabled={!inStock || !selectedVariant || !!disabled || isAdding}
-              className="flex-1 h-12 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
-              onMouseEnter={(e) => { if (!isAdding) (e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d" }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#E3000F" }}
-              data-testid="add-product-button"
+        {isQuoteOnly ? (
+          /* ── Quote-only layout ── */
+          <div className="flex flex-col gap-y-3">
+            {/* Informational notice */}
+            <div
+              className="flex items-start gap-2.5 px-3 py-2.5 text-sm"
+              style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px", color: "#374151" }}
             >
-              {isAdding ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  {!selectedVariant ? "Select options" : !inStock ? "Out of stock" : "Add To Cart"}
-                  {selectedVariant && inStock && (
-                    <span className="flex items-center justify-center w-5 h-5" style={{ backgroundColor: "rgba(0,0,0,0.15)", borderRadius: "4px" }}>
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                    </span>
-                  )}
-                </>
-              )}
-            </button>
-
-            {/* Unlock Bulk Pricing */}
-            <button
-              onClick={() => setBulkModalOpen(true)}
-              className="flex-1 h-12 flex items-center justify-center gap-2 text-sm font-semibold border-2 transition-all duration-200"
-              style={{ color: "#E3000F", borderColor: "#E3000F", borderRadius: "5px" }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(227,0,15,0.05)" }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent" }}
-            >
-              Unlock Bulk Pricing
-              <span className="flex items-center justify-center w-5 h-5" style={{ backgroundColor: "rgba(227,0,15,0.1)", borderRadius: "4px" }}>
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
+              <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#E3000F" }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+              </svg>
+              <span>
+                {hasNoPrice && !requiresQuote
+                  ? "Pricing for this product is custom. Submit a quote request and we'll get back to you within 1 business day."
+                  : "This product is available by quote only. Submit a request and we'll get back to you within 1 business day."}
               </span>
+            </div>
+
+            {/* Full-width Add to Quote button */}
+            <button
+              onClick={handleAddToQuote}
+              disabled={!selectedVariant || !!disabled}
+              className="w-full h-12 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+              onMouseEnter={(e) => { if (selectedVariant && !disabled) (e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d" }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#E3000F" }}
+              data-testid="add-to-quote-button"
+            >
+              <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+              </svg>
+              {!selectedVariant ? "Select options to quote" : "Add to Quote Request"}
             </button>
           </div>
+        ) : (
+          /* ── Normal layout ── */
+          <div className="flex flex-col gap-y-3">
+            <div className="flex gap-3">
+              {/* Add to Cart */}
+              <button
+                onClick={handleAddToCart}
+                disabled={!inStock || !selectedVariant || !!disabled || isAdding}
+                className="flex-1 h-12 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+                onMouseEnter={(e) => { if (!isAdding) (e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d" }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#E3000F" }}
+                data-testid="add-product-button"
+              >
+                {isAdding ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    {!selectedVariant ? "Select options" : !inStock ? "Out of stock" : "Add To Cart"}
+                    {selectedVariant && inStock && (
+                      <span className="flex items-center justify-center w-5 h-5" style={{ backgroundColor: "rgba(0,0,0,0.15)", borderRadius: "4px" }}>
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                      </span>
+                    )}
+                  </>
+                )}
+              </button>
 
-          <p className="text-xs text-center" style={{ color: "#9ca3af" }}>
-            Excludes freight shipments. Call or email for custom rates above 5%.
-          </p>
-        </div>
+              {/* Add to Quote */}
+              <button
+                onClick={handleAddToQuote}
+                disabled={!selectedVariant || !!disabled}
+                className="flex-1 h-12 flex items-center justify-center gap-2 text-sm font-semibold border-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ color: "#E3000F", borderColor: "#E3000F", borderRadius: "5px" }}
+                onMouseEnter={(e) => { if (!disabled && selectedVariant) (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(227,0,15,0.05)" }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent" }}
+                data-testid="add-to-quote-button"
+              >
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                </svg>
+                Add to Quote
+              </button>
+            </div>
 
-        {/* Trust badges */}
-        {selectedVariant && inStock && (
+            <p className="text-sm text-center" style={{ color: "#9ca3af" }}>
+              Need 10+ units?{" "}
+              <button
+                onClick={() => setBulkModalOpen(true)}
+                className="underline transition-colors duration-150 hover:text-gray-600"
+              >
+                Request bulk pricing
+              </button>
+            </p>
+          </div>
+        )}
+
+        {/* Trust badges — only for normal in-stock products */}
+        {selectedVariant && inStock && !isQuoteOnly && (
           <div className="flex flex-col gap-y-2 pt-2 border-t border-gray-100">
             <div className="flex items-center gap-x-2.5">
               <div className="w-6 h-6 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(227,0,15,0.08)", borderRadius: "4px" }}>

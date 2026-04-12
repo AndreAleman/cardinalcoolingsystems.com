@@ -2,6 +2,7 @@ import { getBaseURL } from "@lib/util/env"
 import { Metadata } from "next"
 import { IBM_Plex_Sans } from "next/font/google"
 import "styles/globals.scss"
+import ClientProviders from "./providers"
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -62,7 +63,9 @@ gtag('config', 'G-LJL2LPB4T5');`,
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
           }}
         />
-        <main className="relative">{props.children}</main>
+        <ClientProviders>
+          <main className="relative">{props.children}</main>
+        </ClientProviders>
       </body>
     </html>
   )
