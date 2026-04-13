@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? `${category.description.slice(0, 140)}`
       : `Expert articles and guides about ${category.title.toLowerCase()} for stainless steel sanitary fittings. ${postCount} technical resources.`,
     alternates: {
-      canonical: `https://cardinalcoolingsystems.com/us/blog/category/${slug}`,
+      canonical: `https://www.cardinalcoolingsystems.com/us/blog/category/${slug}`,
     },
   }
 }

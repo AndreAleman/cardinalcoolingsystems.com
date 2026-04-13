@@ -92,7 +92,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       ? `${product.title} with ${optionString}. SKU: ${selectedVariant?.sku}. ${product.description || ''}`
       : product.description || product.title),
     alternates: {
-      canonical: `https://cardinalcoolingsystems.com/${params.countryCode}/products/${handle}`
+      canonical: `https://www.cardinalcoolingsystems.com/${params.countryCode}/products/${handle}`
     },
     openGraph: {
       title: metaTitle || (optionString
@@ -143,7 +143,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
     },
     offers: {
       "@type": "Offer",
-      url: `https://cardinalcoolingsystems.com/${params.countryCode}/products/${params.handle}`,
+      url: `https://www.cardinalcoolingsystems.com/${params.countryCode}/products/${params.handle}`,
       priceCurrency: region.currency_code.toUpperCase(),
       price: price,
       availability: variant?.inventory_quantity && variant.inventory_quantity > 0

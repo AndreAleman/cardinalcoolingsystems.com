@@ -129,6 +129,17 @@ export async function middleware(request: NextRequest) {
     return new NextResponse('Forbidden', { status: 403 })
   }
 
+  // ✅ Canonical redirect: non-www → www (prevents duplicate indexing)
+  const host = request.headers.get('host') || ''
+  if (
+    host === 'cardinalcoolingsystems.com' &&
+    process.env.NODE_ENV === 'production'
+  ) {
+    const url = request.nextUrl.clone()
+    url.host = 'www.cardinalcoolingsystems.com'
+    return NextResponse.redirect(url, 301)
+  }
+
   // ✅ EXISTING CODE CONTINUES...
   const searchParams = request.nextUrl.searchParams
   const isOnboarding = searchParams.get("onboarding") === "true"

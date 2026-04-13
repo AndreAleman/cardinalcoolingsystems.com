@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   description:
     "Premium 304 & 316 stainless steel sanitary tubing, fittings, and valves for data centers, HVAC, and industrial cooling systems. 3A certified. Fast delivery.",
   alternates: {
-    canonical: 'https://cardinalcoolingsystems.com/us'
+    canonical: 'https://www.cardinalcoolingsystems.com/us'
   }
 }
 

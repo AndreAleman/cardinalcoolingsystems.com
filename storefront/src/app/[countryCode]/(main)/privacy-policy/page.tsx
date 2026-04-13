@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy | Cardinal Cooling Systems",
   description: "Our commitment to protecting your privacy and personal information. Learn how we collect, use, and protect your data when you shop for stainless steel fittings.",
   alternates: {
-    canonical: 'https://cardinalcoolingsystems.com/us/privacy-policy'
+    canonical: 'https://www.cardinalcoolingsystems.com/us/privacy-policy'
   }
 }
 
