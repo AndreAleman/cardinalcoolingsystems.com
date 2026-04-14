@@ -132,12 +132,12 @@ export async function middleware(request: NextRequest) {
   // ✅ Canonical redirect: non-www → www (prevents duplicate indexing)
   const host = request.headers.get('host') || ''
   if (
-    host === 'cardinalcoolingsystems.com' &&
+    (host === 'cardinalcoolingsystems.com' ||
+      host.startsWith('cardinalcoolingsystems.com:')) &&
     process.env.NODE_ENV === 'production'
   ) {
-    const url = request.nextUrl.clone()
-    url.host = 'www.cardinalcoolingsystems.com'
-    return NextResponse.redirect(url, 301)
+    const redirectUrl = `https://www.cardinalcoolingsystems.com${request.nextUrl.pathname}${request.nextUrl.search}`
+    return NextResponse.redirect(redirectUrl, 301)
   }
 
   // ✅ EXISTING CODE CONTINUES...
