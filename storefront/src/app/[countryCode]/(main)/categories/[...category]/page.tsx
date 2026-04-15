@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: seoTitle,
       description: seoDescription,
       alternates: {
-        canonical: `https://www.cardinalcoolingsystems.com/${params.countryCode}/categories/${params.category.join("/")}`,
+        canonical: `https://cardinalcoolingsystems.com/${params.countryCode}/categories/${params.category.join("/")}`,
       },
     }
   } catch {

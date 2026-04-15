@@ -129,14 +129,14 @@ export async function middleware(request: NextRequest) {
     return new NextResponse('Forbidden', { status: 403 })
   }
 
-  // ✅ Canonical redirect: non-www → www (prevents duplicate indexing)
+  // ✅ Canonical redirect: www → non-www (prevents duplicate indexing)
   const host = request.headers.get('host') || ''
   if (
-    (host === 'cardinalcoolingsystems.com' ||
-      host.startsWith('cardinalcoolingsystems.com:')) &&
+    (host === 'www.cardinalcoolingsystems.com' ||
+      host.startsWith('www.cardinalcoolingsystems.com:')) &&
     process.env.NODE_ENV === 'production'
   ) {
-    const redirectUrl = `https://www.cardinalcoolingsystems.com${request.nextUrl.pathname}${request.nextUrl.search}`
+    const redirectUrl = `https://cardinalcoolingsystems.com${request.nextUrl.pathname}${request.nextUrl.search}`
     return NextResponse.redirect(redirectUrl, 301)
   }
 

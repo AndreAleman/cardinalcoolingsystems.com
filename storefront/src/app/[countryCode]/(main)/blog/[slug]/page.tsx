@@ -168,7 +168,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${post.title} | Cardinal Cooling Systems Blog`,
     description: description || `Read our expert article about ${post.title.toLowerCase()}. Technical insights on stainless steel sanitary fittings.`,
     alternates: {
-      canonical: `https://www.cardinalcoolingsystems.com/us/blog/${slug}`
+      canonical: `https://cardinalcoolingsystems.com/us/blog/${slug}`
     },
     openGraph: post.mainImage?.asset?.url ? {
       images: [post.mainImage.asset.url],

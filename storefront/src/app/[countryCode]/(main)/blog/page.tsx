@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Expert articles on stainless steel sanitary fittings, tubing, and valves. Industry guides for data centers, HVAC, food processing, and pharmaceutical applications.",
   alternates: {
-    canonical: "https://www.cardinalcoolingsystems.com/us/blog",
+    canonical: "https://cardinalcoolingsystems.com/us/blog",
   },
 }
 

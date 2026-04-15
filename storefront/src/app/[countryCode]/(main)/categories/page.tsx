@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Product Categories | Cardinal Cooling Systems",
   description: "Browse our complete range of sanitary stainless steel products including tubes, valves, fittings, and more. Shop by category to find exactly what you need.",
   alternates: {
-    canonical: "https://www.cardinalcoolingsystems.com/us/categories",
+    canonical: "https://cardinalcoolingsystems.com/us/categories",
   },
 }
 
