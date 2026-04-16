@@ -223,8 +223,46 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
           </svg>
         </button>
 
-        {!loading && categories.length > 0 && activeDropdown === "Shop" &&
-          renderCategoryLevel(categories, 0)}
+        {activeDropdown === "Shop" && (
+          loading ? (
+            <div
+              className="absolute top-full left-0 mt-2 py-4 px-4"
+              style={{
+                width: 220,
+                backgroundColor: "#1a1a1a",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderTop: "2px solid #E3000F",
+                zIndex: 50,
+                color: "rgba(255,255,255,0.5)",
+                fontSize: 14,
+              }}
+            >
+              Loading…
+            </div>
+          ) : categories.length > 0 ? (
+            renderCategoryLevel(categories, 0)
+          ) : (
+            <div
+              className="absolute top-full left-0 mt-2 py-2"
+              style={{
+                width: 220,
+                backgroundColor: "#1a1a1a",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderTop: "2px solid #E3000F",
+                zIndex: 50,
+              }}
+            >
+              <Link
+                href="/store"
+                className="flex items-center px-4 py-3 text-base font-semibold"
+                style={{ color: "#E3000F" }}
+                onClick={() => { setActiveDropdown(null); setActivePath([]) }}
+              >
+                View All Products
+              </Link>
+            </div>
+          )
+        )}
       </div>
 
       {/* Static nav items */}
