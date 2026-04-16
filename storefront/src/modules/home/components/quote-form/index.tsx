@@ -96,7 +96,7 @@ export default function QuoteForm() {
       style={{ backgroundColor: "#f0f0f0" }}
       className="relative w-full overflow-hidden"
     >
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');`}</style>
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');` }} />
 
       {/* ── Desktop: image pinned to right edge behind content ── */}
       <div className="hidden lg:block absolute inset-0 pointer-events-none">
