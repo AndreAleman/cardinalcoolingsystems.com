@@ -11,10 +11,10 @@ export async function GET(
   
     
   const dummyOrder = {
-    orderNumber: "1009",
+    orderNumber: "1010",
     orderDate: new Date().toLocaleDateString(),
     customerName: "empirical foods, Inc. - SSC",
-    clientPoNumber: "445506", // Added client PO number
+    clientPoNumber: "449446", // Added client PO number
     shippingAddress: {
       line1: "6001 Dakota Ave",
       city: "South Sioux City, NE",

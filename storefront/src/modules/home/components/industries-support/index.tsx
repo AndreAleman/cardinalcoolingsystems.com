@@ -5,6 +5,7 @@ import Link from "next/link"
 const industries = [
   {
     id: "data-center-cooling",
+    href: "/us/data-center-cooling",
     title: "Data Center Cooling",
     subtitle: "Liquid Cooling Solutions",
     description: "High-performance stainless steel tubing for next-generation AI workloads and liquid cooling systems. Supporting the infrastructure powering tomorrow's technology.",
@@ -20,6 +21,7 @@ const industries = [
   },
   {
     id: "food-beverage",
+    href: "/us/contact",
     title: "Food & Beverage",
     subtitle: "Hygienic Processing Systems",
     description: "FDA-compliant sanitary fittings and tubing from brewery to bottling. Trusted by food processors for smooth, efficient production and minimal downtime.",
@@ -35,6 +37,7 @@ const industries = [
   },
   {
     id: "marine-desalination",
+    href: "/us/contact",
     title: "Marine & Desalination",
     subtitle: "Corrosion-Resistant Systems",
     description: "Engineered for harsh marine environments and desalination plants. Corrosion-resistant stainless steel solutions for global water treatment infrastructure.",
@@ -121,8 +124,8 @@ export default function IndustriesSupport() {
                 </div>
 
                 {/* Learn More Button */}
-                <Link 
-                  href={`/industries/${industry.id}`}
+                <Link
+                  href={industry.href}
                   className={`inline-flex items-center justify-center w-full px-6 py-3 ${industry.accentColor} text-white font-semibold rounded-lg ${industry.hoverColor} hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md`}
                 >
                   Learn More

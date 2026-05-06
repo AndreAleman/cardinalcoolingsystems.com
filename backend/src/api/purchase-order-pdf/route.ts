@@ -13,8 +13,8 @@ export async function GET(
   // ============================================
   
   const poData = {
-    poNumber: "PO-0009",
-    poDate: "03/9/2026",
+    poNumber: "PO-0010",
+    poDate: "04/16/2026",
     
     vendorName: "Sanitube",
     vendorAddress: {
@@ -34,7 +34,7 @@ export async function GET(
     
     items: [
       { 
-        description: "Concentric Reducer, 304 Stainless Steel, 2in x 1-1/2in", 
+        description: "Butt Weld Concentric Reducer, 304 Stainless Steel, 2in x 1-1/2in", 
         sku: "31W4P-200150",
         quantity: 4, 
         unitPrice: 6.20

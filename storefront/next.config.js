@@ -74,6 +74,17 @@ const nextConfig = {
   // ✅ REDIRECTS ADDED HERE
   async redirects() {
     return [
+      // Consolidate accidental /industries/* duplicates onto canonical /us/*
+      {
+        source: '/industries',
+        destination: '/us',
+        permanent: true,
+      },
+      {
+        source: '/industries/:path*',
+        destination: '/us/:path*',
+        permanent: true,
+      },
       // Blog redirect
       {
         source: '/us/blog/all',

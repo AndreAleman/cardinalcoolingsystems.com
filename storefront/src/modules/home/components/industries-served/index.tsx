@@ -195,7 +195,7 @@ export default function IndustriesServed() {
           </p>
 
           <Link
-            href="/industries"
+            href="/us"
             className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase transition-all duration-200 whitespace-nowrap"
             style={{ color: BRAND_RED }}
             onMouseEnter={(e) =>
