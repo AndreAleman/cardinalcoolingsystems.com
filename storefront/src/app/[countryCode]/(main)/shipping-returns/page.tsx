@@ -163,8 +163,8 @@ export default function ShippingReturns() {
 
         <h2>Warranty</h2>
         <p>
-          Colibri Connect LLC dba Cardinal Cooling Systems (herein called
-          Cardinal Cooling Systems) warrants the products described herein to be
+          Cardinal Cooling Systems LLC (herein called Cardinal Cooling Systems)
+          warrants the products described herein to be
           free from defects in material and workmanship for a period of ninety
           (90) days from date of shipment by Cardinal Cooling Systems under
           normal use and service. Cardinal Cooling Systems&apos;s sole
@@ -217,10 +217,9 @@ export default function ShippingReturns() {
 
         <h2>Contact Information</h2>
         <address>
-          <strong>Cardinal Cooling Systems</strong><br />
-          <em>(operated by Colibri Connect LLC dba Cardinal Cooling Systems)</em><br />
-          1200 NW 14th Terrace<br />
-          Cape Coral, FL 33993<br />
+          <strong>Cardinal Cooling Systems LLC</strong><br />
+          333 S.E. 2nd Avenue, Suite 2000<br />
+          Miami, FL 33131<br />
           USA
 
           <br />
