@@ -144,10 +144,10 @@ AdminOrderTemplate.PreviewProps = {
   shippingAddress: {
     first_name: 'John',
     last_name: 'Smith',
-    address_1: '1200 NW 14th Ter',
-    city: 'Cape Coral',
+    address_1: '333 S.E. 2nd Avenue, Suite 2000',
+    city: 'Miami',
     province: 'FL',
-    postal_code: '33993',
+    postal_code: '33131',
     country_code: 'US'
   }
 } as AdminOrderTemplateProps

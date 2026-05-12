@@ -38,7 +38,7 @@ export default async function Footer() {
               can trust.
             </p>
             <p className="mt-4 text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
-              Operated by Colibri Connect LLC dba Cardinal Cooling Systems
+              Cardinal Cooling Systems LLC
             </p>
           </div>
 
@@ -127,8 +127,8 @@ export default async function Footer() {
               <div>
                 <p className="font-semibold text-white mb-1">Address:</p>
                 <p style={{ color: "rgba(255,255,255,0.6)" }}>
-                  1200 NW 14th Terrace<br />
-                  Cape Coral, FL 33993<br />
+                  333 S.E. 2nd Avenue, Suite 2000<br />
+                  Miami, FL 33131<br />
                   United States
                 </p>
               </div>
