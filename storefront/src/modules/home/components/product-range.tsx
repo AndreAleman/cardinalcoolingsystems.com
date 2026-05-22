@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useState, useRef } from "react"
 
@@ -115,7 +116,7 @@ export default function ProductRange({ products }: Props) {
             onScroll={updateScrollState}
             className="flex gap-4 lg:gap-6 overflow-x-auto scrollbar-none scroll-smooth"
           >
-            {products.map((product) => (
+            {products.map((product, idx) => (
               <div
                 key={product.id}
                 data-card
@@ -128,10 +129,13 @@ export default function ProductRange({ products }: Props) {
                 >
                   <Link href={`/products/${product.handle}`} className="block w-full h-full">
                     {product.image ? (
-                      <img
+                      <Image
                         src={product.image}
                         alt={product.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 25vw"
+                        loading={idx < 2 ? "eager" : "lazy"}
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-100 flex items-center justify-center">

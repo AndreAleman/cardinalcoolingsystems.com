@@ -1,14 +1,18 @@
-"use client"
+import Image from "next/image"
 import Link from "next/link"
 
 export default function Hero() {
   return (
     <section className="relative w-full overflow-hidden lg:h-[88vh] lg:min-h-[600px]">
-      <img
+      <Image
         src="/images/hero/image-bg.jpg"
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover object-center"
+        fill
+        priority
+        fetchPriority="high"
+        sizes="100vw"
+        className="object-cover object-center"
       />
 
       <div
@@ -24,16 +28,23 @@ export default function Hero() {
         }}
       />
 
-      <img
-        src="/images/hero/tcross.jpg"
-        alt="Stainless steel cooling component"
-        className="hidden lg:block absolute top-[172px] right-20 w-[860px] h-[860px] object-contain pointer-events-none select-none"
+      <div
+        className="hidden lg:block absolute top-[172px] right-20 w-[860px] h-[860px] pointer-events-none select-none"
         style={{
           zIndex: 2,
           maskImage: "linear-gradient(to bottom, black 60%, transparent 70%)",
           WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 70%)",
         }}
-      />
+      >
+        <Image
+          src="/images/hero/tcross.jpg"
+          alt="Stainless steel cooling component"
+          width={860}
+          height={860}
+          sizes="860px"
+          className="w-full h-full object-contain"
+        />
+      </div>
 
       <div className="relative z-10 flex flex-col h-full px-6 lg:px-28">
         <div className="flex flex-col items-start gap-5 pt-24 pb-3 lg:my-auto max-w-[609px]">

@@ -112,8 +112,9 @@ export default function QuoteForm() {
             src="/images/quote-form.jpg"
             alt="Cardinal Cooling Systems industrial equipment"
             fill
+            loading="lazy"
+            sizes="(max-width: 1024px) 0vw, 50vw"
             className="object-cover object-left"
-            priority
           />
         </div>
       </div>
@@ -387,8 +388,9 @@ export default function QuoteForm() {
             src="/images/quote-form.jpg"
             alt="Cardinal Cooling Systems industrial equipment"
             fill
+            loading="lazy"
+            sizes="100vw"
             className="object-cover object-center"
-            priority
           />
         </div>
       </div>

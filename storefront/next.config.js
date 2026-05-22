@@ -18,12 +18,27 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+  },
   transpilePackages: ['framer-motion'],
   experimental: {
-    optimizePackageImports: ['framer-motion'],
+    optimizePackageImports: [
+      'framer-motion',
+      'lucide-react',
+      '@heroicons/react',
+      '@medusajs/icons',
+      '@medusajs/ui',
+      '@carbon/react',
+      'lodash',
+      'react-country-flag',
+      '@sanity/icons',
+    ],
     esmExternals: 'loose'
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https") ? "https" : "http",

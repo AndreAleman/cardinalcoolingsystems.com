@@ -141,10 +141,10 @@ export default async function Footer() {
 
           {/* Payment icons */}
           <div className="flex items-center gap-3">
-            <img src="/images/payments/visa.svg" alt="Visa" className="h-7 w-auto" />
-            <img src="/images/payments/mastercard.svg" alt="Mastercard" className="h-7 w-auto" />
-            <img src="/images/payments/amex.svg" alt="American Express" className="h-7 w-auto" />
-            <img src="/images/payments/discover.svg" alt="Discover" className="h-7 w-auto" />
+            <img src="/images/payments/visa.svg" alt="Visa" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
+            <img src="/images/payments/mastercard.svg" alt="Mastercard" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
+            <img src="/images/payments/amex.svg" alt="American Express" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
+            <img src="/images/payments/discover.svg" alt="Discover" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
           </div>
 
           {/* SSL */}
