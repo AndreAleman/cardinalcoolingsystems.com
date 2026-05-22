@@ -52,6 +52,8 @@ export default function WhyUs() {
         src="/images/vector.svg"
         alt=""
         aria-hidden="true"
+        loading="lazy"
+        decoding="async"
         className="absolute right-0 top-8 lg:top-0 h-full w-auto object-cover pointer-events-none select-none"
         style={{ opacity: 0.22, zIndex: 0 }}
       />

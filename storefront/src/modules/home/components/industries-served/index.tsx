@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 
 const BRAND_RED = "#E3000F"
@@ -50,16 +51,13 @@ export default function IndustriesServed() {
     >
       {/* Background image */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src="/images/industries/data-center-hero.jpg"
           alt="Data center with stainless steel cooling pipes"
-          className="w-full h-full object-cover object-center"
-          onError={(e) => {
-            const el = e.currentTarget.parentElement as HTMLDivElement
-            el.style.background =
-              "linear-gradient(135deg, #0a0a0a 0%, #1a0505 50%, #0a0a0a 100%)"
-            e.currentTarget.style.display = "none"
-          }}
+          fill
+          sizes="100vw"
+          loading="lazy"
+          className="object-cover object-center"
         />
       </div>
 

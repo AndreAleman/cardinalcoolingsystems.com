@@ -14,7 +14,7 @@ export default function SanitubeSection() {
           {/* Image with Logo Overlay */}
           <div className="relative h-[400px] w-full border border-slate-200 bg-slate-100 rounded-sm overflow-hidden group shadow-sm">
             <Image
-              src="/images/sanitube-team.png"
+              src="/images/sanitube-team.webp"
               alt="Sanitube Stainless Steel manufacturing facility and team"
               fill
               loading="lazy"
