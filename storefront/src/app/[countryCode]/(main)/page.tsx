@@ -4,8 +4,6 @@ import Hero from "@modules/home/components/hero"
 import TrustBanner from "@modules/home/components/trust-banner"
 import { getCollectionsWithProducts } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
-import { client } from "../../../../src/sanity/lib/client"
-import { groq } from "next-sanity"
 import { sdk } from "@lib/config"
 
 const ProductRangeWrapper = dynamic(() => import("../product-range-wrapper"))
@@ -30,32 +28,15 @@ export const metadata: Metadata = {
 }
 
 
-const RECENT_POSTS_QUERY = groq`
-  *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3] {
-    _id,
-    title,
-    slug,
-    excerpt,
-    mainImage{
-      asset->{
-        url
-      },
-      alt
-    }
-  }
-`
-
-
 export default async function Home({
   params: { countryCode },
 }: {
   params: { countryCode: string }
 }) {
   // Fetch data
-  const [collections, region, recentPosts, categoriesData] = await Promise.all([
+  const [collections, region, categoriesData] = await Promise.all([
     getCollectionsWithProducts(countryCode),
     getRegion(countryCode),
-    client.fetch(RECENT_POSTS_QUERY),
     sdk.store.category.list({
       fields: "id,name,handle,description,metadata,*products,products.id,products.thumbnail,products.images,products.images.url,products.images.rank",
     }),
