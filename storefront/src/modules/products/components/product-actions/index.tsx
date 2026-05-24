@@ -39,13 +39,26 @@ export default function ProductActions({
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [options, setOptions] = useState<Record<string, string | undefined>>({})
+  // Initialize options from the server-resolved variant (or the only variant)
+  // so the very first render — including SSR HTML — has the variant selected
+  // and shows "Add To Cart" rather than the "Select options" placeholder.
+  // Without this, Googlebot's static crawl of feed deeplinks (?size=...&alloy=...)
+  // sees a disabled placeholder and flags the page as missing a buy button.
+  const [options, setOptions] = useState<Record<string, string | undefined>>(() => {
+    if (initialSelectedVariant) {
+      return optionsAsKeymap(initialSelectedVariant.options) ?? {}
+    } else if (product.variants?.length === 1) {
+      return optionsAsKeymap(product.variants[0].options) ?? {}
+    }
+    return {}
+  })
   const [isAdding, setIsAdding] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [bulkModalOpen, setBulkModalOpen] = useState(false)
   const countryCode = useParams().countryCode as string
   const { addToQuote } = useQuote()
 
+  // Sync on subsequent prop changes (e.g. client-side navigation between variants).
   useEffect(() => {
     if (initialSelectedVariant) {
       const variantOptions = optionsAsKeymap(initialSelectedVariant.options)

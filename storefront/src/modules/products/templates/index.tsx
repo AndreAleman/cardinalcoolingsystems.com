@@ -164,7 +164,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
 
                 {/* Product actions */}
                 <Suspense fallback={
-                  <ProductActions disabled={true} product={product} region={region} />
+                  <ProductActions disabled={true} product={product} region={region} selectedVariant={selectedVariant} />
                 }>
                   <ProductActionsWrapper id={product.id} region={region} selectedVariant={selectedVariant} />
                 </Suspense>
