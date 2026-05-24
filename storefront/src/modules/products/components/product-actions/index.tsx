@@ -69,7 +69,12 @@ export default function ProductActions({
       const params = new URLSearchParams()
       selectedVariant.options?.forEach((opt: any) => {
         if (opt.option?.title && opt.value) {
-          const optionName = opt.option.title.toLowerCase()
+          // Strip parentheses (e.g. "Size (Tube OD)" -> "size") so URLs match
+          // the product-feed format and the server-side findVariantByOptions lookup.
+          const optionName = opt.option.title
+            .toLowerCase()
+            .replace(/\s*\([^)]*\)/g, "")
+            .trim()
           let optionValue = opt.value.toLowerCase()
           optionValue = optionValue.replace(/["'']/g, "in").replace(/\s+/g, "")
           params.set(optionName, optionValue)

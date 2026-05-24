@@ -44,17 +44,28 @@ export async function generateStaticParams() {
   return staticParams
 }
 
+// Must match the normalization in backend/src/workflows/steps/get-product-feed-items.ts
+// so feed deeplinks (e.g. ?size=1-1/2in&alloy=t304) resolve to a variant on landing.
+function normalizeOptionKey(title: string) {
+  return title.toLowerCase().replace(/\s*\([^)]*\)/g, '').trim()
+}
+
 function findVariantByOptions(product: any, searchParams: Record<string, string>) {
   if (!searchParams || Object.keys(searchParams).length === 0) {
     return null
   }
 
+  const normalizedSearch: Record<string, string> = {}
+  for (const [key, value] of Object.entries(searchParams)) {
+    normalizedSearch[normalizeOptionKey(key)] = value.toLowerCase()
+  }
+
   return product.variants?.find((variant: any) => {
     return variant.options?.every((opt: any) => {
-      const optionName = opt.option.title.toLowerCase()
+      const optionName = normalizeOptionKey(opt.option.title)
       let optionValue = opt.value.toLowerCase()
       optionValue = optionValue.replace(/["'']/g, 'in').replace(/\s+/g, '')
-      const searchValue = searchParams[optionName]?.toLowerCase()
+      const searchValue = normalizedSearch[optionName]
       return searchValue === optionValue
     })
   })
