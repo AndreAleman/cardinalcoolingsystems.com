@@ -101,10 +101,8 @@ export const POST = async (
         inventoryItemId = result[0].id
         await link.create({
           [Modules.PRODUCT]: { variant_id: variant.id },
-          [Modules.INVENTORY]: {
-            inventory_item_id: inventoryItemId,
-            required_quantity: 1,
-          },
+          [Modules.INVENTORY]: { inventory_item_id: inventoryItemId },
+          data: { required_quantity: 1 },
         })
       }
 
