@@ -136,8 +136,6 @@ export default async function Home({
     }
   ]
 
-  console.log("prices:", rangeProducts.map(p => `${p.title}: ${p.price}`))
-
   return (
     <>
       <Hero />

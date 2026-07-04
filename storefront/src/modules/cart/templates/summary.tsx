@@ -6,6 +6,7 @@ import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { captureEvent } from "@lib/util/posthog"
 import { HttpTypes } from "@medusajs/types"
 
 type SummaryProps = {
@@ -26,21 +27,6 @@ function getCheckoutStep(cart: HttpTypes.StoreCart) {
 
 const Summary = ({ cart }: SummaryProps) => {
   const step = getCheckoutStep(cart)
-    console.log('🔍 FULL CART DEBUG:', {
-    subtotal: cart.subtotal,
-    item_total: cart.item_total,
-    discount_total: cart.discount_total,
-    gift_card_total: cart.gift_card_total,
-    items: cart.items?.map(item => ({
-      id: item.id,
-      title: item.title,
-      quantity: item.quantity,
-      unit_price: item.unit_price,
-      subtotal: item.subtotal,
-      total: item.total,
-      tax_total: item.tax_total
-    }))
-  })
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -53,6 +39,14 @@ const Summary = ({ cart }: SummaryProps) => {
       <LocalizedClientLink
         href={"/checkout?step=" + step}
         data-testid="checkout-button"
+        onClick={() =>
+          captureEvent("checkout_started", {
+            cart_id: cart.id,
+            value: cart.total,
+            currency: cart.currency_code,
+            num_items: cart.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0,
+          })
+        }
       >
         <Button className="w-full h-10">Go to checkout</Button>
       </LocalizedClientLink>

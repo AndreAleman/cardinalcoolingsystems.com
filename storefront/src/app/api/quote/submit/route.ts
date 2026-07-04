@@ -330,36 +330,65 @@ export async function POST(req: NextRequest) {
 
     const adminEmail = process.env.QUOTE_ADMIN_EMAIL ?? "aleman@cardinalcoolingsystems.com"
 
-    // Send both emails + attempt draft order creation concurrently.
-    // Draft order is best-effort — its failure doesn't block the response.
-    const [, , draftOrder] = await Promise.all([
-      // Admin notification
+    // Run all three side-effects independently. A failure in any one of them
+    // (e.g. Resend can't deliver the customer's confirmation) must NOT sink the
+    // whole request — otherwise the customer sees an error even though the lead
+    // was captured. We only fail the request if the lead would reach no one.
+    const [adminSettled, customerSettled, draftSettled] = await Promise.allSettled([
+      // Admin notification — the primary lead-capture channel
       sendEmail(
         adminEmail,
         `New Quote Request from ${data.name}${data.company ? ` (${data.company})` : ""}`,
         buildAdminEmailHtml(data),
         data.email
       ),
-      // Customer confirmation
+      // Customer confirmation — nice-to-have, never fatal
       sendEmail(
         data.email,
         "Your quote request — Cardinal Cooling Systems",
         buildCustomerEmailHtml(data)
       ),
-      // Draft order in Medusa
+      // Draft order in Medusa — best-effort (createMedusaDraftOrder swallows its own errors)
       getMedusaRegionId().then((regionId) =>
         regionId ? createMedusaDraftOrder(data, regionId) : null
       ),
     ])
 
-    const draftOrderId = (draftOrder as { id?: string } | null)?.id ?? null
+    const adminEmailed = adminSettled.status === "fulfilled"
+    const customerEmailed = customerSettled.status === "fulfilled"
+    const draftOrderId =
+      draftSettled.status === "fulfilled"
+        ? (draftSettled.value as { id?: string } | null)?.id ?? null
+        : null
+
+    if (!adminEmailed) {
+      console.error("[Quote] Admin notification failed:", adminSettled.reason)
+    }
+    if (!customerEmailed) {
+      console.warn("[Quote] Customer confirmation failed (non-fatal):", customerSettled.reason)
+    }
     if (draftOrderId) {
       console.log(`[Quote] Draft order created: ${draftOrderId}`)
     } else {
       console.warn("[Quote] Draft order was not created (non-fatal)")
     }
 
-    return NextResponse.json({ success: true, draftOrderId })
+    // The lead is actionable only if it reached the team somehow: the admin
+    // notification email OR a Medusa draft order. If both failed, surface an
+    // error so the customer can reach us another way.
+    if (!adminEmailed && !draftOrderId) {
+      return NextResponse.json(
+        {
+          error:
+            "We couldn't submit your quote right now. Please email us directly at " +
+            adminEmail +
+            " and we'll respond right away.",
+        },
+        { status: 502 }
+      )
+    }
+
+    return NextResponse.json({ success: true, draftOrderId, customerEmailed })
   } catch (error) {
     console.error("Quote submit error:", error)
     return NextResponse.json(

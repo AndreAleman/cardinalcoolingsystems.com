@@ -20,38 +20,25 @@ type HitProps = {
 }
 
 const Hit = ({ hit, searchQuery }: HitProps) => {
-  console.log('🔍 === HIT DEBUG ===')
-  console.log('Search query:', searchQuery)
-  console.log('Product:', hit.title)
-  console.log('Variants count:', hit.variants?.length)
-  if (hit.variants?.[0]) {
-    console.log('First variant SKU:', hit.variants[0].sku)
-    console.log('First variant metadata:', hit.variants[0].metadata)
-  }
   // Find which variant matches the search query
-  const matchedVariant = searchQuery 
+  const matchedVariant = searchQuery
     ? hit.variants?.find(v => {
         const query = searchQuery.toLowerCase()
-        
+
         // Check if SKU matches
         if (v.sku?.toLowerCase().includes(query)) {
-          console.log('✅ SKU Match:', v.sku, 'for query:', query)
           return true
         }
-        
+
         // Check if competitor SKUs match
         const competitorSkus = v.metadata?.competitor_skus as string[] | undefined
         if (competitorSkus?.some(sku => sku.toLowerCase().includes(query))) {
-          console.log('✅ Competitor SKU Match:', competitorSkus, 'for query:', query)
           return true
         }
-        
+
         return false
       })
     : null
-
-  console.log('Search query:', searchQuery)
-  console.log('Matched variant:', matchedVariant?.sku)
 
   // Get variant display info (alloy + size)
   const getVariantOptions = (variant: HttpTypes.StoreProductVariant) => {

@@ -1,2 +1,6 @@
 .idea/
 b2b-starter/
+
+# Redis snapshots — runtime state, should never be committed
+*.rdb
+dump.rdb

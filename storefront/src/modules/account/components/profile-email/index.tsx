@@ -16,20 +16,18 @@ type MyInformationProps = {
 const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
   const [successState, setSuccessState] = React.useState(false)
 
-  // TODO: It seems we don't support updating emails now?
+  // Medusa manages the customer email via the auth identity, not the customer
+  // record — sdk.store.customer.update() does not accept `email`. Rather than
+  // silently pretend the change saved (the previous behaviour), surface an
+  // honest error so the customer doesn't believe their email was updated.
   const updateCustomerEmail = (
     _currentState: Record<string, unknown>,
-    formData: FormData
+    _formData: FormData
   ) => {
-    const customer = {
-      email: formData.get("email") as string,
-    }
-
-    try {
-      // await updateCustomer(customer)
-      return { success: true, error: null }
-    } catch (error: any) {
-      return { success: false, error: error.toString() }
+    return {
+      success: false,
+      error:
+        "Email changes aren't available here yet. Please contact us at aleman@cardinalcoolingsystems.com to update your account email.",
     }
   }
 

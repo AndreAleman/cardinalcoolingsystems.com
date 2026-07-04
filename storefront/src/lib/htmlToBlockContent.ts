@@ -35,6 +35,5 @@ export async function htmlToBlockContent(html: string): Promise<any[]> {
   // Add _key to blocks
   blocks = blocks.map((block: any) => (block._key ? block : {...block, _key: uuid()}))
 
-  console.log('Converted blocks:', blocks)
   return blocks
 }

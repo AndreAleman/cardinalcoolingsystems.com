@@ -45,8 +45,8 @@ export default async function Footer() {
               </p>
               <p className="text-sm text-blue-100">
                 <span className="font-medium">Phone:</span>{" "}
-                <a href="tel:+1234567890" className="hover:text-white transition-colors">
-                  (123) 456-7890
+                <a href="tel:+16309479955" className="hover:text-white transition-colors">
+                  (630) 947-9955
                 </a>
               </p>
             </div>
@@ -139,7 +139,7 @@ export default async function Footer() {
               </li>
               <li>
                 <LocalizedClientLink
-                  href="/technical-support"
+                  href="/contact"
                   className="text-blue-100 hover:text-white transition-colors text-sm"
                 >
                   Technical Support
@@ -147,7 +147,7 @@ export default async function Footer() {
               </li>
               <li>
                 <LocalizedClientLink
-                  href="/bulk-orders"
+                  href="/contact"
                   className="text-blue-100 hover:text-white transition-colors text-sm"
                 >
                   Bulk Orders
@@ -199,8 +199,8 @@ export default async function Footer() {
               >
                 Terms of Service
               </LocalizedClientLink>
-              <LocalizedClientLink 
-                href="/cookie-policy" 
+              <LocalizedClientLink
+                href="/privacy-policy"
                 className="hover:text-white transition-colors"
               >
                 Cookie Policy

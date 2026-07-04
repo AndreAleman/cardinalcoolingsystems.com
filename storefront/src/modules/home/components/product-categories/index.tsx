@@ -125,7 +125,7 @@ export default function ProductCategories({ categories }: Props) {
             return (
               <a
                 key={category.id}
-                href={`/categories/${category.handle}`}
+                href={`/us/categories/${category.handle}`}
                 className="group block overflow-hidden no-underline transition-shadow duration-200 hover:shadow-lg"
                 style={{
                   borderRadius: "5px",
@@ -206,7 +206,7 @@ export default function ProductCategories({ categories }: Props) {
 
           {/* All Category CTA card */}
           <a
-            href="/categories"
+            href="/us/categories"
             className="relative flex flex-col justify-end overflow-hidden no-underline transition-opacity duration-200 hover:opacity-90"
             style={{
               borderRadius: "5px",

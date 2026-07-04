@@ -10,6 +10,12 @@ export const searchClient = instantMeiliSearch(endpoint, apiKey)
 export const SEARCH_INDEX_NAME =
   process.env.NEXT_PUBLIC_INDEX_NAME || "products"
 
+// Raw endpoint + key for components that hit the Meilisearch REST API directly
+// (instead of via the instant-meilisearch client). Sourced from env so the key
+// is never frozen into the bundle/source and can be rotated without a code change.
+export const SEARCH_ENDPOINT = endpoint
+export const SEARCH_API_KEY = apiKey
+
 // If you want to use Algolia instead then uncomment the following lines, and delete the above lines
 // you should also install algoliasearch - yarn add algoliasearch
 

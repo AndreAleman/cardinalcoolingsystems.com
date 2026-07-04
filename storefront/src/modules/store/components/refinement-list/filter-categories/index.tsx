@@ -85,8 +85,7 @@ const FilterCategories = ({ setQueryParams, "data-testid": dataTestId }: FilterC
         })
         
         const products = response.products || []
-        console.log('📦 Products fetched:', products.length)
-        
+
         const materialSet = new Set<string>()
         const sizeSet = new Set<string>()
         
@@ -112,16 +111,10 @@ const FilterCategories = ({ setQueryParams, "data-testid": dataTestId }: FilterC
                 // Check if this is a size option (must have "size" in title)
                 if (titleLower.includes('size')) {
                   sizeSet.add(value)
-                  console.log('📏 Found size:', value, 'from option:', optionTitle)
                 }
                 // Check if this is a material/alloy option
                 else if (titleLower.includes('alloy') || titleLower.includes('material')) {
                   materialSet.add(value)
-                  console.log('🔩 Found material:', value, 'from option:', optionTitle)
-                }
-                // Log others for debugging
-                else {
-                  console.log('⚪ Skipped:', value, 'from option:', optionTitle)
                 }
               }
             })
@@ -144,10 +137,7 @@ const FilterCategories = ({ setQueryParams, "data-testid": dataTestId }: FilterC
             return a.localeCompare(b)
           })
           .map(value => ({ value, label: value }))
-        
-        console.log('✅ Materials found:', materialArray.length, materialArray)
-        console.log('✅ Sizes found:', sizeArray.length, sizeArray)
-        
+
         setMaterials(materialArray)
         setSizes(sizeArray)
         setLoadingOptions(false)

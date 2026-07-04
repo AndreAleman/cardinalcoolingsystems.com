@@ -27,21 +27,6 @@ export async function retrieveCart() {
       { next: { tags: ["cart"] }, ...getAuthHeaders() }
     )
     .then(({ cart }) => {
-      console.log(`🔍 CART RETRIEVED [${new Date().toLocaleTimeString()}]:`, {
-        cartId: cart.id,
-        subtotal: cart.subtotal,
-        item_total: cart.item_total,
-        shipping_total: cart.shipping_total,
-        total: cart.total,
-        items: cart.items?.map(item => ({
-          title: item.title,
-          quantity: item.quantity,
-          unit_price: item.unit_price,
-          subtotal: item.subtotal, // Item-level subtotal
-          total: item.total, // Item-level total
-          adjustments: item.adjustments // Promotions/discounts
-        }))
-      })
       return cart
     })
     .catch(() => {
@@ -234,11 +219,6 @@ export async function setShippingMethod({
   cartId: string
   shippingMethodId: string
 }) {
-  console.log(`🔍 BEFORE ADD SHIPPING METHOD [${new Date().toLocaleTimeString()}]:`, {
-    cartId,
-    shippingMethodId
-  })
-  
   return sdk.store.cart
     .addShippingMethod(
       cartId,
@@ -247,11 +227,6 @@ export async function setShippingMethod({
       getAuthHeaders()
     )
     .then(() => {
-      console.log(`🔍 AFTER ADD SHIPPING METHOD [${new Date().toLocaleTimeString()}]:`, {
-        cartId,
-        shippingMethodId,
-        message: "Shipping method added, cart will be revalidated"
-      })
       revalidateTag("cart")
     })
     .catch(medusaError)
@@ -392,8 +367,6 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
     // Force multiple revalidations to clear cache
     revalidateTag("cart")
     revalidateTag("fulfillment")
-    
-    console.log('✅ Address updated, cache revalidated')
   } catch (e: any) {
     return e.message
   }

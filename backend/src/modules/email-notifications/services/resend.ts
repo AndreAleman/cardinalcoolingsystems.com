@@ -14,6 +14,8 @@ import {
 import { contactFormEmail } from "../templates/contact-form"
 import OrderPlacedTemplate from "../templates/order-placed"
 import AdminOrderTemplate from "../templates/admin-order"
+import InviteUserEmail from "../templates/invite-user"
+import AdminUserRegisteredTemplate from "../templates/admin-user-registered"
 
 
 
@@ -34,12 +36,16 @@ enum Templates {
   ORDER_PLACED = "order-placed",
   ADMIN_ORDER = "admin-order",
   CONTACT_FORM = "contact-form",
+  INVITE_USER = "invite-user",
+  ADMIN_USER_REGISTERED = "admin-user-registered",
 }
 
 const templates: {[key in Templates]?: (props: unknown) => React.ReactNode} = {
   [Templates.ORDER_PLACED]: OrderPlacedTemplate,
   [Templates.ADMIN_ORDER]: AdminOrderTemplate,
   [Templates.CONTACT_FORM]: contactFormEmail,
+  [Templates.INVITE_USER]: InviteUserEmail as (props: unknown) => React.ReactNode,
+  [Templates.ADMIN_USER_REGISTERED]: AdminUserRegisteredTemplate as (props: unknown) => React.ReactNode,
 }
 
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
@@ -53,8 +59,6 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     options: ResendOptions
   ) {
     super()
-    console.log('🔍 RESEND OPTIONS:', options)  // Add this
-    console.log('🔍 FROM EMAIL:', options.from)  // Add this
     this.resendClient = new Resend(options.api_key)
     this.options = options
     this.logger = logger
@@ -99,6 +103,10 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         return "New Order Received"      // ← and here
       case Templates.CONTACT_FORM:
         return "New Contact Form Submission"
+      case Templates.INVITE_USER:
+        return "You've been invited to Cardinal Cooling Systems"
+      case Templates.ADMIN_USER_REGISTERED:
+        return "New customer registered"
       default:
         return "New Email"
     }

@@ -8,6 +8,8 @@ import {
 } from "@medusajs/framework"
 import { z } from "zod"
 import { InventorySync } from "./webhooks/inventory-sync/validators"
+import { ContactFormSchema } from "./store/contact/validators"
+import { CreateOrderDocumentsSchema } from "./admin/order-documents/validators"
 
 // Constant-time compare so the token check doesn't leak length/contents.
 function safeEqual(a: string, b: string): boolean {
@@ -56,6 +58,22 @@ export default defineMiddlewares({
       matcher: "/webhooks/inventory-sync",
       methods: ["POST"],
       middlewares: [authenticateInventorySync, validateAndTransformBody(InventorySync)],
+    },
+    {
+      // Public contact / RFQ / bulk-pricing endpoint. Route-folder middleware.ts
+      // files are NOT auto-loaded by Medusa v2, so the validator must be wired
+      // here — otherwise req.validatedBody is always undefined and the endpoint
+      // accepts arbitrary unvalidated input.
+      matcher: "/store/contact",
+      methods: ["POST"],
+      middlewares: [validateAndTransformBody(ContactFormSchema)],
+    },
+    {
+      // Authenticated admin tool: one payload → packing slip + PO PDFs + Stripe
+      // invoice. /admin/* is already auth-gated; this just validates the body.
+      matcher: "/admin/order-documents",
+      methods: ["POST"],
+      middlewares: [validateAndTransformBody(CreateOrderDocumentsSchema)],
     },
   ],
 })

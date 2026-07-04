@@ -11,15 +11,9 @@ const ProductDescriptionTab: React.FC<ProductDescriptionTabProps> = ({
   description,
   title = "Product Specifications"
 }) => {
-  console.log('🔍 ProductDescriptionTab - description:', description)
-  console.log('🔍 ProductDescriptionTab - description length:', description?.length)
-  
   if (!description) {
-    console.log('❌ No description found, component returning null')
     return null
   }
-
-  console.log('✅ Rendering ProductDescriptionTab with description')
 
   return (
     <div className="bg-ui-bg-subtle">

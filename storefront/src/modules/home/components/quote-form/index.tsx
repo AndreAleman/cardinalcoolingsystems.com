@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, FormEvent } from "react";
+import { captureEvent, identifyUser } from "@lib/util/posthog";
 
 type ProjectType = "Industrial" | "Data Center" | "Food & Sanitary" | null;
 
@@ -79,6 +80,21 @@ export default function QuoteForm() {
           form_location: "homepage_rfq",
         });
       }
+
+      // PostHog: track the form conversion and identify the lead by email
+      captureEvent("form_submitted", {
+        form_type: "rfq",
+        form_location: "homepage_rfq",
+        project_type: form.projectType,
+        email: form.email,
+      });
+      identifyUser(form.email, {
+        email: form.email,
+        first_name: form.firstName,
+        last_name: form.lastName,
+        phone: form.phone,
+        lead_project_type: form.projectType,
+      });
 
       setStatus("success");
       setForm(INITIAL_STATE);
@@ -375,7 +391,7 @@ export default function QuoteForm() {
                   className="underline underline-offset-2"
                   style={{ color: "#6b7280" }}
                 >
-                  sales@cardinalcoolingsystems.com
+                  aleman@cardinalcoolingsystems.com
                 </a>
               </p>
             </form>

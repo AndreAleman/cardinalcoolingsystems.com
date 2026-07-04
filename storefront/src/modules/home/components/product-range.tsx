@@ -61,7 +61,7 @@ export default function ProductRange({ products }: Props) {
             Featured Products
           </h2>
 <Link
-  href="/store"
+  href="/us/store"
   className="flex items-center gap-3 pl-5 pr-2 py-2 text-sm font-semibold text-white transition-all duration-200"
   style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d")}
@@ -127,7 +127,7 @@ export default function ProductRange({ products }: Props) {
                   className="relative overflow-hidden"
                   style={{ borderRadius: "5px", height: "260px" }}
                 >
-                  <Link href={`/products/${product.handle}`} className="block w-full h-full">
+                  <Link href={`/us/products/${product.handle}`} className="block w-full h-full">
                     {product.image ? (
                       <Image
                         src={product.image}
@@ -148,7 +148,7 @@ export default function ProductRange({ products }: Props) {
 
                   {/* Basket — always visible, bottom right */}
                   <Link
-                    href={`/products/${product.handle}`}
+                    href={`/us/products/${product.handle}`}
                     aria-label="View product"
                     className="absolute bottom-0 right-0 w-12 h-12 flex items-center justify-center text-white"
                     style={{ backgroundColor: "#E3000F", borderRadius: "5px 0 5px 0" }}
@@ -161,7 +161,7 @@ export default function ProductRange({ products }: Props) {
 
 {/* Text below image */}
 <div className="pt-4 px-1 flex flex-col">
-  <Link href={`/products/${product.handle}`}>
+  <Link href={`/us/products/${product.handle}`}>
     <h3 className="font-sans text-base font-semibold text-gray-900 leading-snug mb-1 group-hover:text-red-600 transition-colors duration-200 line-clamp-2 min-h-[2.5rem]">
       {product.title}
     </h3>

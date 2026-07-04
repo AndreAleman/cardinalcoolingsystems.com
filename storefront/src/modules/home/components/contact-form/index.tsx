@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react"
 import { ArrowRight } from "lucide-react"
+import { captureEvent, identifyUser } from "@lib/util/posthog"
 
 declare global {
   interface Window {
@@ -79,8 +80,22 @@ export default function ContactForm() {
             form_location: 'homepage',
             project_type: formData.projectType
           })
-          console.log('✅ Homepage contact form submitted:', formData.email)
         }
+
+        // PostHog: track the form conversion and identify the lead by email
+        captureEvent('form_submitted', {
+          form_type: 'homepage_contact',
+          form_location: 'homepage',
+          project_type: formData.projectType,
+          email: formData.email,
+        })
+        identifyUser(formData.email, {
+          email: formData.email,
+          first_name: formData.name,
+          last_name: formData.lastName,
+          phone: formData.phone,
+          lead_project_type: formData.projectType,
+        })
 
         setSubmitStatus('success')
         setFormData({

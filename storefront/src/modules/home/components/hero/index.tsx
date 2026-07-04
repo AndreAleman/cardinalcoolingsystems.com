@@ -60,7 +60,7 @@ export default function Hero() {
 
           <div className="flex items-center gap-4 mt-2">
             <Link
-              href="/store"
+              href="/us/store"
               className="flex items-center gap-2 px-6 py-3 text-base font-medium tracking-wide text-white transition-all duration-200"
               style={{ border: "1px solid rgba(255,255,255,0.7)" }}
             >
@@ -71,7 +71,7 @@ export default function Hero() {
             </Link>
 
             <Link
-              href="/contact"
+              href="/us/contact"
               className="flex items-center gap-2 px-6 py-3 text-base font-medium tracking-wide text-white transition-all duration-200"
               style={{ backgroundColor: "#E3000F", border: "1px solid #E3000F" }}
             >

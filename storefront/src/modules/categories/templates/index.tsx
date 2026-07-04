@@ -123,7 +123,11 @@ export default function CategoryTemplate({
   }
 
   const categoryImage = getImage(category)
-  const seoContent = category.metadata?.seo_content as string | undefined
+  // The page's single <h1> is the category name rendered in the dark header.
+  // CMS-authored SEO content sometimes starts with its own <h1>, which would
+  // produce a second H1 on the page — demote any <h1> here to <h2>.
+  const rawSeoContent = category.metadata?.seo_content as string | undefined
+  const seoContent = rawSeoContent?.replace(/<(\/?)h1(\b[^>]*)>/gi, "<$1h2$2>")
 
   // Parse FAQs
   let faqs: FaqItem[] = []

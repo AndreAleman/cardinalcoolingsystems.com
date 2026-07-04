@@ -1,31 +1,13 @@
 import { MetadataRoute } from 'next'
 import { getProductsList } from '@lib/data/products'
 import { listRegions } from '@lib/data/regions'
+import { listCategories } from '@lib/data/categories'
 import { client } from '../../sanity/lib/client'
 import { groq } from 'next-sanity'
 
-// Helper function to clean option values for URL
-function cleanOptionValue(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/"/g, 'in')
-    .replace(/'/g, 'ft')
-    .replace(/[^a-z0-9.]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-// Helper function to clean option names for URL
-function cleanOptionName(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/\s*\([^)]*\)/g, '-')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://cardinalcoolingsystems.com'
-  
+
   const regions = await listRegions()
   const countryCodes = regions
     ?.map((r) => r.countries?.map((c) => c.iso_2))
@@ -36,7 +18,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      // Canonical homepage is the localized route (bare "/" 307-redirects here)
+      url: `${baseUrl}/${countryCode}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
@@ -67,58 +50,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Get products
+  // Products — one canonical parent URL per product.
+  // (No variant/query-param URLs; a variant is not a separately indexable page.)
   const { response } = await getProductsList({
     countryCode,
-    queryParams: { 
+    queryParams: {
       limit: 9999,
-      fields: 'id,handle,updated_at,variants.id,variants.options.value,variants.options.option.title'
-    }
+      fields: 'id,handle,updated_at',
+    },
   })
 
-  const productUrls: MetadataRoute.Sitemap = []
+  const productUrls: MetadataRoute.Sitemap = response.products.map((product) => ({
+    url: `${baseUrl}/${countryCode}/products/${product.handle}`,
+    lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
 
-  response.products.forEach((product) => {
-    // Add parent product URL (canonical)
-    productUrls.push({
-      url: `${baseUrl}/${countryCode}/products/${product.handle}`,
-      lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
+  // Product categories (Medusa) — e.g. /us/categories/valves
+  const productCategories = await listCategories()
+
+  const categoryPageUrls: MetadataRoute.Sitemap = productCategories
+    .filter((category) => category.handle)
+    .map((category) => ({
+      url: `${baseUrl}/${countryCode}/categories/${category.handle}`,
+      lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.8,
-    })
+      priority: 0.7,
+    }))
 
-    // Add variant URLs
-    if (product.variants && product.variants.length > 1) {
-      product.variants.forEach((variant) => {
-        if (variant.options && variant.options.length > 0) {
-          const queryParams = variant.options
-            .map((opt: any) => {
-              if (!opt.option?.title || !opt.value) return null
-              
-              const optionName = cleanOptionName(opt.option.title)
-              const optionValue = cleanOptionValue(opt.value)
-              
-              return `${optionName}=${optionValue}`
-            })
-            .filter(Boolean)
-            .join('&amp;')  // ✅ FIXED: Use &amp; directly in the join
-
-          if (queryParams) {
-            const fullUrl = `${baseUrl}/${countryCode}/products/${product.handle}?${queryParams}`
-            
-            productUrls.push({
-              url: fullUrl,
-              lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
-              changeFrequency: 'weekly',
-              priority: 0.7,
-            })
-          }
-        }
-      })
-    }
-  })
-
-  // Get blog posts from Sanity
+  // Blog posts (Sanity)
   const blogPosts = await client.fetch(groq`
     *[_type == "post" && defined(slug.current)] {
       "slug": slug.current,
@@ -133,20 +94,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  // Get blog categories from Sanity
-  const categories = await client.fetch(groq`
+  // Blog categories (Sanity)
+  const blogCategories = await client.fetch(groq`
     *[_type == "category" && defined(slug.current)] {
       "slug": slug.current,
       _updatedAt
     }
   `)
 
-  const categoryUrls: MetadataRoute.Sitemap = categories.map((category: any) => ({
+  const blogCategoryUrls: MetadataRoute.Sitemap = blogCategories.map((category: any) => ({
     url: `${baseUrl}/${countryCode}/blog/category/${category.slug}`,
     lastModified: new Date(category._updatedAt),
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
-  return [...staticPages, ...productUrls, ...blogUrls, ...categoryUrls]
+  return [
+    ...staticPages,
+    ...productUrls,
+    ...categoryPageUrls,
+    ...blogUrls,
+    ...blogCategoryUrls,
+  ]
 }

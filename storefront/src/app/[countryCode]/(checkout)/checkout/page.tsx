@@ -18,15 +18,6 @@ const fetchCart = async () => {
     return notFound()
   }
 
-  // MEDUSA AI DEBUG STEP 1: Log the raw API response
-  console.log("🔍 RAW API CART RESPONSE:", {
-    subtotal: cart.subtotal,
-    total: cart.total,
-    shipping_total: cart.shipping_total,
-    tax_total: cart.tax_total,
-    discount_total: cart.discount_total
-  });
-
   if (cart?.items?.length) {
     const enrichedItems = await enrichLineItems(cart?.items, cart?.region_id!)
     return {

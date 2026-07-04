@@ -176,7 +176,7 @@ export default function IndustriesServed() {
           <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
             Not seeing your industry?{" "}
             <Link
-              href="/contact"
+              href="/us/contact"
               className="underline underline-offset-2 transition-colors duration-200"
               style={{ color: "rgba(255,255,255,0.55)" }}
               onMouseEnter={(e) =>

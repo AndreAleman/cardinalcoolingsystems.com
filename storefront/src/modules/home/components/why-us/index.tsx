@@ -77,7 +77,7 @@ export default function WhyUs() {
             </h2>
           </div>
           <Link
-            href="/contact"
+            href="/us/contact"
             className="flex items-center gap-2 px-6 py-3 text-sm font-medium w-fit transition-all duration-200 text-white"
             style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
             onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d")}

@@ -76,7 +76,7 @@ export default function UserActions({ onSearchClick }: UserActionsProps) {
 
       {/* Account — icon only */}
       <Link
-        href="/account"
+        href="/us/account"
         aria-label="Account"
         className="flex items-center transition-colors duration-200 py-2"
         style={{ color: "rgba(255,255,255,0.85)" }}
@@ -90,7 +90,7 @@ export default function UserActions({ onSearchClick }: UserActionsProps) {
 
       {/* Request A Quote CTA */}
       <Link
-        href="/contact"
+        href="/us/contact"
         className="flex items-center gap-2 px-5 py-2.5 text-[16px] font-normal tracking-wide transition-all duration-200"
         style={{ backgroundColor: "white", color: "#B4000C", border: "1px solid white", borderRadius: "5px" }}
         onMouseEnter={(e) => {

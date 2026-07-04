@@ -7,6 +7,7 @@ import UserActions from "./components/user-actions"
 import MobileMenu from "./components/mobile-menu"
 import QuotePanel from "@modules/quote/components/quote-panel"
 import CartPanel from "@modules/cart/components/cart-panel"
+import { SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_INDEX_NAME } from "@lib/search-client"
 
 interface SearchResult {
   id: string
@@ -91,13 +92,12 @@ export default function Nav({ className = "" }: NavProps) {
     setIsLoading(true)
     try {
       const response = await fetch(
-        "https://meilisearch-production-4381.up.railway.app/indexes/products/search",
+        `${SEARCH_ENDPOINT}/indexes/${SEARCH_INDEX_NAME}/search`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              "Bearer 1736a63c82c45518d38d9a8e8bd378885b15c79e85e03fbb4d65bba5e4f452e1",
+            Authorization: `Bearer ${SEARCH_API_KEY}`,
           },
           body: JSON.stringify({ q: searchQuery, limit: 20 }),
         }

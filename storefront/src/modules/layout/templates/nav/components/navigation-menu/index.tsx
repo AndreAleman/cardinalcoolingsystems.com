@@ -124,7 +124,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
         {level === 0 && (
           <div style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }} className="mb-1">
             <Link
-              href="/store"
+              href="/us/store"
               className="flex items-center px-4 py-3 text-base font-semibold transition-colors duration-150"
               style={{ color: "#E3000F" }}
               onMouseEnter={(e) =>
@@ -176,7 +176,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
                 </div>
               ) : (
                 <Link
-                  href={`/categories/${category.handle}`}
+                  href={`/us/categories/${category.handle}`}
                   className="flex items-center justify-between px-4 py-3 text-base transition-colors duration-150"
                   style={{ color: "rgba(255,255,255,0.75)" }}
                   onMouseEnter={(e) => {
@@ -253,7 +253,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
               }}
             >
               <Link
-                href="/store"
+                href="/us/store"
                 className="flex items-center px-4 py-3 text-base font-semibold"
                 style={{ color: "#E3000F" }}
                 onClick={() => { setActiveDropdown(null); setActivePath([]) }}
@@ -269,7 +269,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
       {staticNavigationItems.map((item) => (
         <Link
           key={item.label}
-          href={item.href}
+          href={`/us${item.href}`}
           className="text-[16px] font-normal tracking-wide transition-colors duration-200 py-2"
           style={{ color: "rgba(255,255,255,0.85)" }}
           onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "white")}

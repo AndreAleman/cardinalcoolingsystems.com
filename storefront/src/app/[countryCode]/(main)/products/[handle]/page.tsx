@@ -157,9 +157,16 @@ export default async function ProductPage({ params, searchParams }: Props) {
       url: `https://cardinalcoolingsystems.com/${params.countryCode}/products/${params.handle}`,
       priceCurrency: region.currency_code.toUpperCase(),
       price: price,
-      availability: variant?.inventory_quantity && variant.inventory_quantity > 0
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+      // Mirror the add-to-cart / product-actions in-stock logic:
+      // a variant is purchasable if it doesn't manage inventory, allows
+      // backorder, or has stock on hand. Only truly out-of-stock managed
+      // variants should report OutOfStock in structured data.
+      availability:
+        !variant?.manage_inventory ||
+        variant?.allow_backorder ||
+        (variant?.inventory_quantity || 0) > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
       seller: {
         "@type": "Organization",

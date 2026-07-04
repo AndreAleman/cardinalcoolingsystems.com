@@ -11,28 +11,25 @@ export async function GET(
   
     
   const dummyOrder = {
-    orderNumber: "1010",
+    orderNumber: "1013",
     orderDate: new Date().toLocaleDateString(),
     customerName: "empirical foods, Inc. - SSC",
-    clientPoNumber: "449446", // Added client PO number
+    clientPoNumber: "457223", // Added client PO number
     shippingAddress: {
-      line1: "6001 Dakota Ave",
+      line1: "390 164th St.",
       city: "South Sioux City, NE",
       postal: "68776",
       country: "USA"
     },
     items: [
       
-            { 
-        title: "Butt Weld Concentric Reducer", 
-        variant: "304, 2in x 1-1/2in",
-        sku: "31W4P-200150",
-        quantity: 4, 
+      { 
+        title: "Butt Weld Reducing Tee", 
+        variant: "316, 1in x 1/2in",
+        sku: "7WRT6P-100050",
+        quantity: 10, 
       },
-      
-
-
-    ]
+    ] 
   };
 
 

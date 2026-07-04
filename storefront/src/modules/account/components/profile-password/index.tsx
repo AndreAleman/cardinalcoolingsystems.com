@@ -15,8 +15,22 @@ type MyInformationProps = {
 const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
   const [successState, setSuccessState] = React.useState(false)
 
-  // TODO: Add support for password updates
-  const [state, formAction] = useFormState((() => {}) as any, {
+  // Self-service password change isn't wired up yet (Medusa requires the
+  // auth reset-token flow). The previous action was a no-op that returned
+  // `undefined`, which made `state` undefined on submit and crashed this page
+  // when reading `state.error`. Return a well-formed state with an honest
+  // message instead, so the form degrades gracefully.
+  const updatePassword = (
+    _currentState: Record<string, unknown>,
+    _formData: FormData
+  ) => ({
+    customer,
+    success: false,
+    error:
+      "Password changes aren't available here yet. Use “Forgot password” on the sign-in page, or contact aleman@cardinalcoolingsystems.com.",
+  })
+
+  const [state, formAction] = useFormState(updatePassword as any, {
     customer,
     success: false,
     error: null,

@@ -4,7 +4,7 @@ import Link from "next/link"
 export default function Logo() {
   return (
     <Link
-      href="/"
+      href="/us"
       className="flex items-center hover:opacity-80 transition-opacity duration-200 py-3 pr-6"
     >
       <Image

@@ -70,7 +70,6 @@ export default function ContactPage({ params }: Props) {
             user_email: data.email,
             form_location: "contact_page",
           })
-          console.log("✅ Contact form submitted:", data.email)
         }
         setSubmitStatus("success")
         formRef.current?.reset()

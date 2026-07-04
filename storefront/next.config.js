@@ -86,6 +86,20 @@ const nextConfig = {
   serverRuntimeConfig: {
     port: process.env.PORT || 3000
   },
+  // Keep Sanity Studio out of search engines even if the page-level
+  // <meta name="robots"> tag from next-sanity is ever removed
+  async headers() {
+    return [
+      {
+        source: '/studio',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
+        source: '/studio/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ]
+  },
   // ✅ REDIRECTS ADDED HERE
   async redirects() {
     return [

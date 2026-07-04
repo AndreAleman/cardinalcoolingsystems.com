@@ -33,7 +33,7 @@ export const getProductByHandle = cache(async function (
       {
         handle,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity,+variants.metadata,*categories,*categories.parent_category,+description,+metadata",
+        fields: "*variants.calculated_price,+variants.inventory_quantity,+variants.manage_inventory,+variants.allow_backorder,+variants.metadata,*categories,*categories.parent_category,+description,+metadata",
       },
       { next: { tags: ["products"] } }
     )

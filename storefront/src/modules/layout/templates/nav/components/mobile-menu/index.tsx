@@ -80,7 +80,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
             <div key={category.id}>
               <div className="flex items-center">
                 <Link
-                  href={`/categories/${category.handle}`}
+                  href={`/us/categories/${category.handle}`}
                   className={`block py-3 ${textSize} text-gray-600 ${hoverBg} hover:text-blue-600 transition-colors duration-150 flex-1`}
                   style={{ paddingLeft: `${paddingLeft * 4}px` }}
                   onClick={handleLinkClick}
@@ -146,7 +146,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
               <div className="border-b border-gray-100">
                 <div className="flex items-center">
                   <Link
-                    href="/store"
+                    href="/us/store"
                     className="block px-6 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150 flex-1"
                     onClick={handleLinkClick}
                   >
@@ -179,7 +179,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
               {staticNavigationItems.map((item) => (
                 <div key={item.label} className="border-b border-gray-100 last:border-0">
                   <Link
-                    href={item.href}
+                    href={`/us${item.href}`}
                     className="block px-6 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
                     onClick={handleLinkClick}
                   >
