@@ -231,7 +231,12 @@ export default function ProductActions({
   return (
     <>
       <ToastContainer />
-      <BulkPricingModal isOpen={bulkModalOpen} onClose={() => setBulkModalOpen(false)} />
+      <BulkPricingModal
+        isOpen={bulkModalOpen}
+        onClose={() => setBulkModalOpen(false)}
+        productTitle={product.title ?? undefined}
+        productSku={selectedVariant?.sku ?? undefined}
+      />
 
       <div className="flex flex-col gap-y-6" ref={actionsRef}>
 
