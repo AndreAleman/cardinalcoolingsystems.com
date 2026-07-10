@@ -27,7 +27,10 @@ export const AdminOrderTemplate: React.FC<AdminOrderTemplateProps> & {
   preview = 'New order received - Admin notification'
 }) => {
   const total = Number(order.summary.raw_current_order_total.value).toFixed(2)
-  const backendUrl = process.env.BACKEND_URL || 'http://localhost:9000'
+  const backendUrl =
+    process.env.BACKEND_PUBLIC_URL ??
+    process.env.RAILWAY_PUBLIC_DOMAIN_VALUE ??
+    'http://localhost:9000'
   
   return (
     <Base preview={preview}>

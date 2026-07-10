@@ -22,7 +22,10 @@ export const isAdminUserRegisteredData = (data: any): data is AdminUserRegistere
 export const AdminUserRegisteredTemplate: React.FC<AdminUserRegisteredProps> & {
   PreviewProps?: AdminUserRegisteredProps
 } = ({ user, preview = 'New user registration - Admin notification' }) => {
-  const backendUrl = process.env.BACKEND_URL || 'http://localhost:9000'
+  const backendUrl =
+    process.env.BACKEND_PUBLIC_URL ??
+    process.env.RAILWAY_PUBLIC_DOMAIN_VALUE ??
+    'http://localhost:9000'
   const userName = user.first_name && user.last_name 
     ? `${user.first_name} ${user.last_name}` 
     : 'No name provided'
