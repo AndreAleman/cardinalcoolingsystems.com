@@ -3,6 +3,8 @@
 import { useState, useRef } from "react"
 import { ArrowRight } from "lucide-react"
 import { captureEvent, identifyUser } from "@lib/util/posthog"
+import { filesToAttachments } from "@lib/util/attachments"
+import AttachmentInput from "@modules/common/components/attachment-input"
 
 declare global {
   interface Window {
@@ -28,6 +30,7 @@ export default function ContactForm() {
     message: "",
     projectType: ""
   })
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const formRef = useRef<HTMLFormElement>(null)
@@ -53,6 +56,8 @@ export default function ContactForm() {
     setSubmitStatus('idle')
 
     try {
+      const attachments = await filesToAttachments(attachedFiles)
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`, {
         method: 'POST',
         headers: {
@@ -65,7 +70,8 @@ export default function ContactForm() {
           email: formData.email,
           phone: formData.phone,
           message: formData.message,
-          projectType: formData.projectType
+          projectType: formData.projectType,
+          ...(attachments.length > 0 ? { attachments } : {})
         })
       })
 
@@ -88,6 +94,7 @@ export default function ContactForm() {
           form_location: 'homepage',
           project_type: formData.projectType,
           email: formData.email,
+          num_attachments: attachments.length,
         })
         identifyUser(formData.email, {
           email: formData.email,
@@ -106,6 +113,7 @@ export default function ContactForm() {
           message: "",
           projectType: ""
         })
+        setAttachedFiles([])
         formRef.current?.reset()
       } else {
         setSubmitStatus('error')
@@ -283,6 +291,14 @@ export default function ContactForm() {
               className="w-full bg-slate-50 border border-slate-200 text-slate-900 px-4 py-3 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors placeholder-slate-400 resize-none rounded-sm"
             />
           </div>
+
+          {/* Row 5: Attachments */}
+          <AttachmentInput
+            files={attachedFiles}
+            onChange={setAttachedFiles}
+            disabled={isSubmitting}
+            labelClassName="block text-xs font-medium text-slate-500 uppercase tracking-widest mb-2"
+          />
 
           {/* Submit Button */}
           <div className="pt-4">

@@ -66,6 +66,9 @@ export default defineMiddlewares({
       // accepts arbitrary unvalidated input.
       matcher: "/store/contact",
       methods: ["POST"],
+      // Attachments arrive base64-encoded in the JSON body (10MB raw cap in
+      // the validator), so the default body size limit is far too small.
+      bodyParser: { sizeLimit: "20mb" },
       middlewares: [validateAndTransformBody(ContactFormSchema)],
     },
     {

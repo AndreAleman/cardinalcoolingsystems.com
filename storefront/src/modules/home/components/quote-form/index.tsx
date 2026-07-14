@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState, FormEvent } from "react";
 import { captureEvent, identifyUser } from "@lib/util/posthog";
+import { filesToAttachments } from "@lib/util/attachments";
+import AttachmentInput from "@modules/common/components/attachment-input";
 
 type ProjectType = "Industrial" | "Data Center" | "Food & Sanitary" | null;
 
@@ -26,6 +28,7 @@ const INITIAL_STATE: FormState = {
 
 export default function QuoteForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -45,6 +48,8 @@ export default function QuoteForm() {
     setStatus("loading");
 
     try {
+      const attachments = await filesToAttachments(attachedFiles);
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`,
         {
@@ -63,6 +68,7 @@ export default function QuoteForm() {
             message: `Project Type: ${form.projectType}\n\nSpecifications:\n${
               form.specifications || "Not provided"
             }`,
+            ...(attachments.length > 0 ? { attachments } : {}),
           }),
         }
       );
@@ -87,6 +93,7 @@ export default function QuoteForm() {
         form_location: "homepage_rfq",
         project_type: form.projectType,
         email: form.email,
+        num_attachments: attachments.length,
       });
       identifyUser(form.email, {
         email: form.email,
@@ -98,6 +105,7 @@ export default function QuoteForm() {
 
       setStatus("success");
       setForm(INITIAL_STATE);
+      setAttachedFiles([]);
     } catch {
       setStatus("error");
       setErrorMsg("Something went wrong. Please try again or email us directly.");
@@ -341,6 +349,14 @@ export default function QuoteForm() {
                   style={{ borderRadius: "5px" }}
                 />
               </div>
+
+              {/* Attachments */}
+              <AttachmentInput
+                files={attachedFiles}
+                onChange={setAttachedFiles}
+                disabled={status === "loading"}
+                labelClassName="block text-[11px] font-medium tracking-widest uppercase mb-1.5 text-[#0a1628]"
+              />
 
               {/* Error message */}
               {(status === "error" || errorMsg) && (

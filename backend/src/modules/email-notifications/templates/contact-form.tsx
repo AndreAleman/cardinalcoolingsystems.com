@@ -17,6 +17,7 @@ type ContactFormEmailProps = {
   email: string
   phone?: string
   message: string
+  attachmentFilenames?: string[]
 }
 
 function ContactFormEmailComponent({
@@ -25,6 +26,7 @@ function ContactFormEmailComponent({
   email,
   phone,
   message,
+  attachmentFilenames,
 }: ContactFormEmailProps) {
   return (
     <Tailwind>
@@ -68,6 +70,17 @@ function ContactFormEmailComponent({
                 {message}
               </Text>
             </Section>
+
+            {attachmentFilenames && attachmentFilenames.length > 0 && (
+              <Section className="mb-4">
+                <Text className="text-sm text-gray-600 mb-1 font-semibold">
+                  Attachments ({attachmentFilenames.length}):
+                </Text>
+                <Text className="text-base text-gray-800 mt-0">
+                  {attachmentFilenames.join(", ")}
+                </Text>
+              </Section>
+            )}
           </Container>
 
           {/* Footer */}

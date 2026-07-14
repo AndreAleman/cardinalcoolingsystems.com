@@ -135,6 +135,12 @@ export type QuoteItemPayload = {
   quantity: number
 }
 
+export type QuoteAttachmentPayload = {
+  filename: string
+  content_type: string
+  content: string // base64
+}
+
 export type QuoteSubmitPayload = {
   name: string
   email: string
@@ -143,6 +149,30 @@ export type QuoteSubmitPayload = {
   timeline?: string
   notes?: string
   items: QuoteItemPayload[]
+  attachments?: QuoteAttachmentPayload[]
+}
+
+// Mirror the storefront file-input limits: 5 files, 10MB raw total
+// (base64 adds ~4/3 overhead, hence the character cap).
+const MAX_ATTACHMENTS = 5
+const MAX_ATTACHMENTS_TOTAL_BASE64_CHARS = 15 * 1024 * 1024
+
+function sanitizeAttachments(
+  attachments: QuoteAttachmentPayload[] | undefined
+): QuoteAttachmentPayload[] {
+  if (!Array.isArray(attachments)) return []
+  const valid = attachments.filter(
+    (a) =>
+      a &&
+      typeof a.filename === "string" &&
+      a.filename.length > 0 &&
+      a.filename.length <= 255 &&
+      typeof a.content === "string" &&
+      a.content.length > 0
+  )
+  const capped = valid.slice(0, MAX_ATTACHMENTS)
+  const total = capped.reduce((sum, a) => sum + a.content.length, 0)
+  return total <= MAX_ATTACHMENTS_TOTAL_BASE64_CHARS ? capped : []
 }
 
 function buildAdminEmailHtml(data: QuoteSubmitPayload): string {
@@ -229,6 +259,15 @@ function buildAdminEmailHtml(data: QuoteSubmitPayload): string {
           </td>
         </tr>` : ""}
 
+        ${data.attachments?.length ? `
+        <!-- Attachments -->
+        <tr>
+          <td style="padding:28px 32px 0;">
+            <h2 style="margin:0 0 12px;font-size:15px;font-weight:600;color:#111;text-transform:uppercase;letter-spacing:0.05em;">Attachments (${data.attachments.length})</h2>
+            <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">${data.attachments.map((a) => a.filename).join(", ")}</p>
+          </td>
+        </tr>` : ""}
+
         <!-- Footer -->
         <tr>
           <td style="padding:28px 32px 32px;">
@@ -294,7 +333,13 @@ function buildCustomerEmailHtml(data: QuoteSubmitPayload): string {
 </html>`
 }
 
-async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
+async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+  replyTo?: string,
+  attachments?: QuoteAttachmentPayload[]
+) {
   const apiKey = process.env.RESEND_API_KEY
   const from = process.env.RESEND_FROM_EMAIL ?? "contact@cardinalcoolingsystems.com"
 
@@ -302,6 +347,13 @@ async function sendEmail(to: string, subject: string, html: string, replyTo?: st
 
   const body: Record<string, unknown> = { from, to, subject, html }
   if (replyTo) body.reply_to = replyTo
+  if (attachments?.length) {
+    body.attachments = attachments.map((a) => ({
+      filename: a.filename,
+      content: a.content,
+      content_type: a.content_type,
+    }))
+  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -328,6 +380,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
+    const attachments = sanitizeAttachments(data.attachments)
+    // Keep the payload consistent with what actually gets attached, so the
+    // email's attachment list never names a file that was dropped.
+    data.attachments = attachments
+
     const adminEmail = process.env.QUOTE_ADMIN_EMAIL ?? "aleman@cardinalcoolingsystems.com"
 
     // Run all three side-effects independently. A failure in any one of them
@@ -340,7 +397,8 @@ export async function POST(req: NextRequest) {
         adminEmail,
         `New Quote Request from ${data.name}${data.company ? ` (${data.company})` : ""}`,
         buildAdminEmailHtml(data),
-        data.email
+        data.email,
+        attachments
       ),
       // Customer confirmation — nice-to-have, never fatal
       sendEmail(

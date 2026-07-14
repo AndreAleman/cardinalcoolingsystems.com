@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react"
 import { useQuote } from "@lib/context/quote-context"
 import { captureEvent, identifyUser } from "@lib/util/posthog"
+import { filesToAttachments } from "@lib/util/attachments"
+import AttachmentInput from "@modules/common/components/attachment-input"
 
 type View = "items" | "form" | "success"
 
@@ -35,6 +37,7 @@ export default function QuotePanel() {
   const [company, setCompany] = useState("")
   const [timeline, setTimeline] = useState("")
   const [notes, setNotes] = useState("")
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
 
   // Reset to items view when panel closes
   useEffect(() => {
@@ -70,10 +73,21 @@ export default function QuotePanel() {
     setSubmitting(true)
 
     try {
+      const attachments = await filesToAttachments(attachedFiles)
+
       const res = await fetch("/api/quote/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, company, timeline, notes, items: quoteItems }),
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          company,
+          timeline,
+          notes,
+          items: quoteItems,
+          ...(attachments.length > 0 ? { attachments } : {}),
+        }),
       })
 
       const data = await res.json()
@@ -88,6 +102,7 @@ export default function QuotePanel() {
         form_location: "quote_panel",
         num_products: quoteItems.length,
         num_units: quoteCount,
+        num_attachments: attachments.length,
         timeline,
         company,
         email,
@@ -101,6 +116,7 @@ export default function QuotePanel() {
 
       setView("success")
       clearQuote()
+      setAttachedFiles([])
     } catch (err) {
       setFormError(err instanceof Error ? err.message : "Something went wrong. Please try again.")
     } finally {
@@ -114,6 +130,7 @@ export default function QuotePanel() {
       setTimeout(() => {
         setView("items")
         setName(""); setEmail(""); setPhone(""); setCompany(""); setTimeline(""); setNotes("")
+        setAttachedFiles([])
       }, 300)
     }
   }
@@ -378,6 +395,14 @@ export default function QuotePanel() {
                   style={{ borderRadius: "5px", color: "#111111" }}
                 />
               </div>
+
+              {/* Attachments */}
+              <AttachmentInput
+                files={attachedFiles}
+                onChange={setAttachedFiles}
+                disabled={submitting}
+                labelClassName="block text-xs font-semibold uppercase tracking-wide mb-1.5 text-[#6b7280]"
+              />
 
               {formError && (
                 <p className="text-sm px-3 py-2.5" style={{ color: "#dc2626", backgroundColor: "#fef2f2", borderRadius: "5px", border: "1px solid #fecaca" }}>

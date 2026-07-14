@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 import { useState, FormEvent, useRef } from "react"
+import { filesToAttachments } from "@lib/util/attachments"
+import AttachmentInput from "@modules/common/components/attachment-input"
 
 declare global {
   interface Window {
@@ -32,6 +34,7 @@ export default function ContactPage({ params }: Props) {
   const { countryCode } = params
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
   const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -49,6 +52,8 @@ export default function ContactPage({ params }: Props) {
     }
 
     try {
+      const attachments = await filesToAttachments(attachedFiles)
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`,
         {
@@ -57,7 +62,9 @@ export default function ContactPage({ params }: Props) {
             "Content-Type": "application/json",
             "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(
+            attachments.length > 0 ? { ...data, attachments } : data
+          ),
         }
       )
 
@@ -72,6 +79,7 @@ export default function ContactPage({ params }: Props) {
           })
         }
         setSubmitStatus("success")
+        setAttachedFiles([])
         formRef.current?.reset()
       } else {
         setSubmitStatus("error")
@@ -240,6 +248,14 @@ export default function ContactPage({ params }: Props) {
                     style={{ borderRadius: "5px" }}
                   />
                 </div>
+
+                {/* Attachments */}
+                <AttachmentInput
+                  files={attachedFiles}
+                  onChange={setAttachedFiles}
+                  disabled={isSubmitting}
+                  labelClassName="block text-xs text-gray-500 mb-1.5"
+                />
 
                 {/* Submit */}
                 <button

@@ -141,6 +141,14 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
       }
     }
 
+    if (notification.attachments?.length) {
+      emailOptions.attachments = notification.attachments.map((attachment) => ({
+        content: attachment.content,
+        filename: attachment.filename,
+        contentType: attachment.content_type,
+      }))
+    }
+
     const { data, error } = await this.resendClient.emails.send(emailOptions)
 
     if (error || !data) {
