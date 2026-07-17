@@ -176,6 +176,7 @@ export default function Nav({ className = "" }: NavProps) {
       style={{
         backgroundColor: hasDarkBg ? "rgba(180, 0, 12, 0.95)" : "rgba(0, 0, 0, 0)",
         backdropFilter: hasDarkBg ? "blur(14px)" : "none",
+        WebkitBackdropFilter: hasDarkBg ? "blur(14px)" : "none",
         borderBottom: hasDarkBg
           ? "1px solid rgba(180, 50, 50, 0.18)"
           : "1px solid transparent",

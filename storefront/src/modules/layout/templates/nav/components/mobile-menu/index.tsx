@@ -38,8 +38,6 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
     }
 
     fetchCategories()
-    const intervalId = setInterval(fetchCategories, 300000)
-    return () => clearInterval(intervalId)
   }, [])
 
   const staticNavigationItems = [
@@ -142,7 +140,19 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
           
           <div className="fixed top-20 left-0 right-0 bg-white border-t border-gray-100 z-50 max-h-[calc(100vh-144px)] overflow-y-auto">
             <nav className="py-6">
-              
+
+              {/* Primary conversion CTA */}
+              <div className="px-6 pb-5 border-b border-gray-100">
+                <Link
+                  href="/us/contact"
+                  className="flex items-center justify-center w-full py-3.5 text-base font-semibold text-white"
+                  style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+                  onClick={handleLinkClick}
+                >
+                  Request a Quote
+                </Link>
+              </div>
+
               <div className="border-b border-gray-100">
                 <div className="flex items-center">
                   <Link

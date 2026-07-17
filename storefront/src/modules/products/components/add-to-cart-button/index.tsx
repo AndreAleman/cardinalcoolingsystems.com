@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"
 import { useParams } from "next/navigation"
 import { addToCart } from "@lib/data/cart"
+import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { captureEvent } from "@lib/util/posthog"
 import { HttpTypes } from "@medusajs/types"
 
@@ -57,6 +58,7 @@ export default function AddToCartButton({ product, variant }: AddToCartButtonPro
         quantity: 1,
         countryCode,
       })
+      notifyCartUpdated()
       captureEvent("add_to_cart", {
         product_id: product.id,
         product_title: product.title,

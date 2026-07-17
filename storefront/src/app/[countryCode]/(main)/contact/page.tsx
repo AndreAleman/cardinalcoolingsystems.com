@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState, FormEvent, useRef } from "react"
 import { filesToAttachments } from "@lib/util/attachments"
+import { captureEvent, identifyUser } from "@lib/util/posthog"
 import AttachmentInput from "@modules/common/components/attachment-input"
 
 declare global {
@@ -78,6 +79,16 @@ export default function ContactPage({ params }: Props) {
             form_location: "contact_page",
           })
         }
+        captureEvent("contact_form_submitted", {
+          form_location: "contact_page",
+          email: data.email,
+        })
+        identifyUser(data.email, {
+          email: data.email,
+          first_name: data.name,
+          last_name: data.lastName,
+          phone: data.phone,
+        })
         setSubmitStatus("success")
         setAttachedFiles([])
         formRef.current?.reset()

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useCartPanel } from "@lib/context/cart-panel-context"
 import { deleteLineItem, updateLineItem } from "@lib/data/cart"
+import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import Link from "next/link"
@@ -68,6 +69,7 @@ export default function CartPanel() {
     try {
       await updateLineItem({ lineId, quantity })
       await fetchCart()
+      notifyCartUpdated()
     } finally {
       setUpdatingId(null)
     }
@@ -78,6 +80,7 @@ export default function CartPanel() {
     try {
       await deleteLineItem(lineId)
       await fetchCart()
+      notifyCartUpdated()
     } finally {
       setUpdatingId(null)
     }

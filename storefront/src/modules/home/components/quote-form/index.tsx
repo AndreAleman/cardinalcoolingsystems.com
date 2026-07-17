@@ -95,6 +95,11 @@ export default function QuoteForm() {
         email: form.email,
         num_attachments: attachments.length,
       });
+      captureEvent("quote_requested", {
+        form_location: "homepage_rfq",
+        project_type: form.projectType,
+        email: form.email,
+      });
       identifyUser(form.email, {
         email: form.email,
         first_name: form.firstName,

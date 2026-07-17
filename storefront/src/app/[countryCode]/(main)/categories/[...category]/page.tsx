@@ -4,6 +4,7 @@ import { getCategoryByHandle, getCategoriesList, listCategories } from "@lib/dat
 import { listRegions } from "@lib/data/regions"
 import { StoreProductCategory, StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
+import ProductViewTracker from "@modules/common/components/product-view-tracker"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import Link from "next/link"
 
@@ -105,6 +106,13 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           </h1>
         </div>
       </section>
+
+      <ProductViewTracker
+        pageType="category"
+        id={mainCategory.id}
+        title={mainCategory.name}
+        handle={mainCategory.handle}
+      />
 
       <CategoryTemplate
         categories={product_categories}

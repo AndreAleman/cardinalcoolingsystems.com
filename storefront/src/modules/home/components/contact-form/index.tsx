@@ -96,6 +96,11 @@ export default function ContactForm() {
           email: formData.email,
           num_attachments: attachments.length,
         })
+        captureEvent('contact_form_submitted', {
+          form_location: 'homepage',
+          project_type: formData.projectType,
+          email: formData.email,
+        })
         identifyUser(formData.email, {
           email: formData.email,
           first_name: formData.name,

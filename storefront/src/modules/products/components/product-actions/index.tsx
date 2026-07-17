@@ -11,6 +11,7 @@ import MobileActions from "./mobile-actions"
 import ProductPrice from "../product-price"
 import BulkPricingModal from "../bulk-pricing-modal"
 import { addToCart } from "@lib/data/cart"
+import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { HttpTypes } from "@medusajs/types"
 import { useQuote } from "@lib/context/quote-context"
 
@@ -168,6 +169,7 @@ export default function ProductActions({
     setIsAdding(true)
     try {
       await addToCart({ variantId: selectedVariant.id, quantity, countryCode })
+      notifyCartUpdated()
       if (typeof window !== "undefined") {
         window.dataLayer = window.dataLayer || []
         window.dataLayer.push({

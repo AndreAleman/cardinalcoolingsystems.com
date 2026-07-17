@@ -107,6 +107,13 @@ export default function QuotePanel() {
         company,
         email,
       })
+      captureEvent("quote_requested", {
+        form_location: "quote_panel",
+        num_products: quoteItems.length,
+        num_units: quoteCount,
+        company,
+        email,
+      })
       identifyUser(email, {
         email,
         name,

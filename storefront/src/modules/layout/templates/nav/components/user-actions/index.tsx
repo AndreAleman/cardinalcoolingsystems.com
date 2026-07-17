@@ -15,6 +15,15 @@ export default function UserActions({ onSearchClick }: UserActionsProps) {
 
   return (
     <div className="hidden lg:flex items-center space-x-6">
+      {/* Request a Quote — persistent conversion CTA on every page */}
+      <Link
+        href="/us/contact"
+        className="px-4 py-2 text-sm font-medium tracking-wide text-white transition-opacity duration-200 hover:opacity-90"
+        style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+      >
+        Request a Quote
+      </Link>
+
       {/* Search */}
       <button
         onClick={onSearchClick}
