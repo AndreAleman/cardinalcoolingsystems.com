@@ -112,30 +112,6 @@ export default async function Home({
         }
       }) ?? []
 
-  // Tube category data
-  const tubeImages = [
-    {
-      id: "tube-1",
-      src: "/images/tube-detail.jpg",
-      alt: "Stainless steel tubing detail"
-    },
-    {
-      id: "tube-2",
-      src: "/images/industrial-equipment.jpg",
-      alt: "Industrial processing equipment"
-    },
-    {
-      id: "tube-3",
-      src: "/images/piping-system.jpg",
-      alt: "Outdoor piping system"
-    },
-    {
-      id: "tube-4",
-      src: "/images/steel-tank.jpg",
-      alt: "Stainless steel tank detail"
-    }
-  ]
-
   return (
     <>
       <Hero />
