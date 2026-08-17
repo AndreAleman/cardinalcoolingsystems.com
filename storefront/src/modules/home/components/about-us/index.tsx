@@ -62,6 +62,8 @@ export default function AboutUs({
     <img
       src="/images/about/about-main.jpg"
       alt="Industrial stainless steel equipment"
+      loading="lazy"
+      decoding="async"
       className="w-full h-full object-cover"
       onError={(e) => {
         const target = e.target as HTMLImageElement;
@@ -76,6 +78,8 @@ export default function AboutUs({
       <img
         src="/images/about/about-detail.jpg"
         alt="Stainless steel fittings detail"
+        loading="lazy"
+        decoding="async"
         className="w-full h-full object-cover"
         onError={(e ) => {
           const target = e.target as HTMLImageElement;

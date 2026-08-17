@@ -62,7 +62,7 @@ module.exports = {
         "3xl": "2rem",
       },
       fontFamily: {
-        sans: ["IBM Plex Sans", "sans-serif"],
+        sans: ["var(--font-ibm-plex-sans)", "IBM Plex Sans", "sans-serif"],
       },
       keyframes: {
         ring: {

@@ -24,6 +24,8 @@ const nextConfig = {
     esmExternals: 'loose'
   },
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 2678400,
     remotePatterns: [
       {
         protocol: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https") ? "https" : "http",
@@ -67,6 +69,19 @@ const nextConfig = {
         hostname: "bucket-production-02b9.up.railway.app",
       },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
+          },
+        ],
+      },
+    ]
   },
   serverRuntimeConfig: {
     port: process.env.PORT || 3000

@@ -227,14 +227,7 @@ const performSearch = useCallback(async (searchQuery: string) => {
                   {expandedResults.map((result, idx) => {
                     const variantOptions = getVariantOptions(result.variant);
                     const competitorSkus = result.variant.metadata?.competitor_skus;
-                      // ✅ ADD THIS DEBUG LOG
-                    console.log('Variant data:', {
-                      sku: result.variant.sku,
-                      hasOptions: !!result.variant.options,
-                      options: result.variant.options,
-                      variantOptions
-                    });
-                    
+
                     return (
                       <div
                         key={`${result.productId}-${result.variant.id}-${idx}`}

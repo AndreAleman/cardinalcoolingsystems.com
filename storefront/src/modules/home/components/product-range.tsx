@@ -16,8 +16,6 @@ type Props = {
 }
 
 export default function ProductRange({ products }: Props) {
-  console.log("ProductRange received products:", products.length) // Debug log
-
   // Use dynamic products - remove placeholder fallback
   const displayProducts = products.slice(0, 4)
 
@@ -89,6 +87,8 @@ export default function ProductRange({ products }: Props) {
                     <img
                       src={product.image}
                       alt={product.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                     />
                   ) : (

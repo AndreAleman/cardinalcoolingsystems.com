@@ -94,6 +94,8 @@ export default function SanitaryProducts({ products }: Props) {
               <img
                 src="/images/sanitary-products/sanitary-products.jpg"
                 alt="Industrial stainless steel equipment"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
