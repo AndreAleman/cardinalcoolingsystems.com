@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
           Privacy Policy
         </h1>
 <p className="text-lg text-gray-600">
-  Last updated: February 14, 2026
+  Last updated: August 20, 2026
 </p>
 
       </div>
@@ -53,6 +53,10 @@ export default function PrivacyPolicy() {
         <p>We use cookies to help us remember and process the items in your shopping cart, understand and save your preferences for future visits and compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future. We may contract with third-party service providers to assist us in better understanding our site visitors. These service providers are not permitted to use the information collected on our behalf except to help us conduct and improve our business.</p>
         <p>If you prefer, you can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies via your browser settings. Like most websites, if you turn your cookies off, some of our services may not function properly. However, you can still place orders over the telephone or by contacting customer service.</p>
 
+        <h2>Website visitor identification and marketing</h2>
+        <p>When you visit or log in to our website, cookies and similar technologies may be used by our online data partners or vendors to associate these activities with other personal information they or others have about you, including by association with your email. We (or service providers on our behalf) may then send communications and marketing to these email addresses. You may opt out of receiving this advertising by visiting <a href="https://app.retention.com/optout" target="_blank" rel="noopener noreferrer">https://app.retention.com/optout</a>.</p>
+        <p>You also have the option to opt out of the collection of your personal data in compliance with GDPR by visiting <a href="https://www.rb2b.com/rb2b-gdpr-opt-out" target="_blank" rel="noopener noreferrer">https://www.rb2b.com/rb2b-gdpr-opt-out</a>.</p>
+
         <h2>Do we disclose any information to outside parties?</h2>
         <p>We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information. This does not include trusted third parties who assist us in operating our website, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others rights, property, or safety. However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.</p>
 
@@ -78,9 +82,10 @@ export default function PrivacyPolicy() {
         <h2>Contacting Us</h2>
         <p>If there are any questions regarding this privacy policy, you may contact us using the information below.</p>
 <address>
-  <strong>Cardinal Cooling Systems LLC</strong><br />
-  333 S.E. 2nd Avenue, Suite 2000<br />
-  Miami, FL 33131<br />
+  <strong>Cardinal Cooling Systems</strong><br />
+  <em>(operated by Colibri Connect LLC dba Cardinal Cooling Systems)</em><br />
+  1200 NW 14th Terrace<br />
+  Cape Coral, FL 33993<br />
   USA<br />
   <a href="mailto:aleman@cardinalcoolingsystems.com">
     aleman@cardinalcoolingsystems.com
