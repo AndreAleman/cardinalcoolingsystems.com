@@ -3,6 +3,7 @@ import { useCompany } from "../../../hooks/companies"
 import { CompanyStatusBadge } from "../components/company-status-badge"
 import { DecideButtons } from "../components/decide-buttons"
 import { TeamMemberRow } from "../components/team-member-row"
+import { CompanyPriceList } from "../components/company-price-list"
 
 /*
   /app/companies/:companyId — the id is the segment after "companies".
@@ -33,6 +34,7 @@ const CompanyDetailPage = () => {
     ["Address", [company.address, company.city, company.state, company.zip].filter(Boolean).join(", ") || "—"],
     ["Currency", company.currency_code?.toUpperCase() || "—"],
     ["Welcome code", company.welcome_code || "—"],
+    ["Pricing", <CompanyPriceList company={company} />],
   ]
 
   return (

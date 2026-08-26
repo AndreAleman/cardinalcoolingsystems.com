@@ -22,6 +22,8 @@ export const Company = model.define("company", {
   status: model.enum(["pending", "approved", "declined"]).default("pending"),
   // The Welcome Code issued at signup, kept so the waiting screen can show it.
   welcome_code: model.text().nullable(),
+  // A Custom (override) Price List that is scoped to this Company's Customer Group.
+  price_list_id: model.text().nullable(),
   spending_limit_reset_frequency: model
     .enum(["never", "daily", "weekly", "monthly", "yearly"])
     .default("monthly"),

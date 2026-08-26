@@ -99,7 +99,7 @@ Vocabulary is defined in `CONTEXT.md`; decisions in `docs/adr/0001`–`0005`.
 
 ### Pricing and Spend Tiers
 72. As Cardinal, I want each Company attached to a Price List, so that different customers see different prices.
-73. As Cardinal, I want new Companies to start on the Standard Price List, so that setup is zero-touch.
+73. As Cardinal, I want new Companies to start on standard catalog prices, so that setup is zero-touch.
 74. As Cardinal, I want to attach a Custom Price List to a Company in Medusa Admin, so that negotiated deals show on the Dashboard.
 75. As a Team Member, I want a bar on the Dashboard showing this year's spend and how far to the next Spend Tier, so that I have a reason to consolidate orders here.
 76. As a Company, I want to move to Silver at $10,000 and Gold at $25,000 calendar-year spend automatically, so that nobody has to ask.
@@ -148,7 +148,7 @@ Vocabulary is defined in `CONTEXT.md`; decisions in `docs/adr/0001`–`0005`.
 
 **Invites** reuse Medusa's customer invite pattern: a signed token emailed to the coworker; accepting it creates the Customer and links a new Employee to the inviter's Company.
 
-**Price Lists** use Medusa's native Price List + Customer Group. Every Company owns exactly one Customer Group (the existing link); the Standard Price List is attached to a "Standard" group that new Companies join. Prices on the Dashboard are fetched with the Company's Customer Group context so the storefront never computes a price.
+**Price Lists** use Medusa's native Price List + Customer Group. Every Company owns exactly one Customer Group (the existing link). New Companies use the catalog's standard prices; an active Custom Price List is assigned to one Company and scoped to that Company's Customer Group. This keeps Welcome Codes company-scoped too — a shared "Standard" group would make one Company's code eligible for every Company in the group. Prices on the Dashboard are fetched with the Company's Customer Group context so the storefront never computes a price.
 
 **Quick Order** is a storefront component backed by two store routes: a product search (Meilisearch is already wired) returning variant, Company price and available inventory in one call; and a bulk add-to-cart (ported). The stock rule is a pure function: `quantity > available → quote-only`. The Quick Order list is persisted client-side, keyed by Company. "Review & pay" builds a Medusa cart from Buyable Lines only and hands off to the existing checkout with `po_number` in cart metadata; it is disabled while any Quote-Only Line is present. "Send as quote" creates a Quote Request from all lines including Quote-Only ones via a ported request-for-quote workflow that allows over-stock quantities.
 

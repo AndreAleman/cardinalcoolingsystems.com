@@ -12,6 +12,7 @@ export const adminCompanyFields = [
   "currency_code",
   "status",
   "welcome_code",
+  "price_list_id",
   "created_at",
   "employees.id",
   "employees.role",

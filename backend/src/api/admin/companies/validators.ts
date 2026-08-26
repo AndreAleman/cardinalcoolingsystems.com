@@ -17,3 +17,10 @@ export const AdminUpdateTeamMember = z
   })
   .strict();
 export type AdminUpdateTeamMemberType = z.infer<typeof AdminUpdateTeamMember>;
+
+export const AdminAssignCompanyPriceList = z
+  .object({
+    price_list_id: z.string().min(1).nullable(),
+  })
+  .strict();
+export type AdminAssignCompanyPriceListType = z.infer<typeof AdminAssignCompanyPriceList>;

@@ -12,6 +12,7 @@ const dashboardGate = [authenticate("customer", ["session", "bearer"]), ensureCo
 export const companyMiddlewares: MiddlewareRoute[] = [
   { matcher: "/store/dashboard", methods: ["GET"], middlewares: dashboardGate },
   { matcher: "/store/dashboard/team", methods: ["GET"], middlewares: dashboardGate },
+  { matcher: "/store/dashboard/variants/:id/price", methods: ["GET"], middlewares: dashboardGate },
   {
     matcher: "/store/dashboard/invites",
     methods: ["POST"],

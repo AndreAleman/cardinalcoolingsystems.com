@@ -32,6 +32,7 @@ export type AdminCompany = {
   currency_code?: string | null
   status: CompanyStatus
   welcome_code?: string | null
+  price_list_id?: string | null
   created_at: string
   employees?: AdminTeamMember[]
 }
@@ -54,6 +55,21 @@ export const useCompany = (id: string) =>
     queryFn: () => sdk.client.fetch<{ company: AdminCompany }>(`/admin/companies/${id}`),
   })
 
+export type AdminPriceList = {
+  id: string
+  title?: string
+  status?: "active" | "draft"
+  type?: "sale" | "override"
+}
+
+export const useCompanyPriceLists = () =>
+  useQuery({
+    queryKey: ["company-price-lists"],
+    queryFn: () => sdk.admin.priceList.list({ limit: 100, status: ["active"] }),
+    select: ({ price_lists }) =>
+      (price_lists as AdminPriceList[]).filter((priceList) => priceList.type === "override"),
+  })
+
 /* Approve or decline a Company. Invalidates every list and the detail. */
 export const useDecideCompany = (id: string) => {
   const queryClient = useQueryClient()
@@ -70,6 +86,24 @@ export const useDecideCompany = (id: string) => {
           ? `${company.name} approved — their dashboard is unlocked`
           : `${company.name} declined`
       )
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+/* A Custom Price List may belong to exactly one Company. */
+export const useAssignCompanyPriceList = (id: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (price_list_id: string | null) =>
+      sdk.client.fetch<{ company: AdminCompany }>(`/admin/companies/${id}/price-list`, {
+        method: "POST",
+        body: { price_list_id },
+      }),
+    onSuccess: ({ company }) => {
+      queryClient.invalidateQueries({ queryKey: companyKey(id) })
+      queryClient.invalidateQueries({ queryKey: ["companies"] })
+      toast.success(company.price_list_id ? "Custom Price List assigned" : "Company will use catalog prices")
     },
     onError: (err: Error) => toast.error(err.message),
   })
