@@ -17,6 +17,10 @@ export const Company = model.define("company", {
   country: model.text().nullable(),
   logo_url: model.text().nullable(),
   currency_code: model.text().nullable(),
+  // Pending until Cardinal approves the Company in Medusa Admin (ADR-0003).
+  status: model.enum(["pending", "approved", "declined"]).default("pending"),
+  // The Welcome Code issued at signup, kept so the waiting screen can show it.
+  welcome_code: model.text().nullable(),
   spending_limit_reset_frequency: model
     .enum(["never", "daily", "weekly", "monthly", "yearly"])
     .default("monthly"),

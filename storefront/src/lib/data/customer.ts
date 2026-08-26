@@ -7,6 +7,7 @@ import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { cache } from "react"
 import { getAuthHeaders, removeAuthToken, setAuthToken } from "./cookies"
+import { createCompany } from "./companies"
 
 export const getCustomer = cache(async function () {
   return await sdk.store.customer
@@ -29,6 +30,7 @@ export const updateCustomer = cache(async function (
 
 export async function signup(_currentState: unknown, formData: FormData) {
   const password = formData.get("password") as string
+  const companyName = ((formData.get("company_name") as string) || "").trim()
   const customerForm = {
     email: formData.get("email") as string,
     first_name: formData.get("first_name") as string,
@@ -58,10 +60,20 @@ export async function signup(_currentState: unknown, formData: FormData) {
     setAuthToken(typeof loginToken === 'string' ? loginToken : loginToken.location)
 
     revalidateTag("customer")
-    return createdCustomer
   } catch (error: any) {
     return error.toString()
   }
+
+  // A company name means "give me a Dashboard": create the Pending
+  // Company now so the Welcome Code shows the moment they land.
+  if (companyName) {
+    try {
+      await createCompany(companyName)
+    } catch (error: any) {
+      return `Your account was created, but the company could not be: ${error.toString()}`
+    }
+  }
+  return null
 }
 
 export async function login(_currentState: unknown, formData: FormData) {

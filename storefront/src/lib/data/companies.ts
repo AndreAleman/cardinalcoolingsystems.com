@@ -2,6 +2,7 @@
 
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
+import { revalidateTag } from "next/cache"
 import { cache } from "react"
 import { getAuthHeaders } from "./cookies"
 
@@ -17,7 +18,11 @@ export type Company = {
   country: string | null
   logo_url: string | null
   currency_code: string | null
+  status: CompanyStatus
+  welcome_code: string | null
 }
+
+export type CompanyStatus = "pending" | "approved" | "declined"
 
 export type TeamMemberRole = "member" | "manager" | "admin"
 
@@ -50,3 +55,21 @@ export const getCompany = cache(async function (): Promise<CompanyMembership | n
       return medusaError(err)
     })
 })
+
+export type CompanySignupResult = CompanyMembership & { welcome_code: string }
+
+/*
+  Create the signed-in customer's Company (Pending until Cardinal
+  approves it). Returns the Welcome Code so it can be shown at once.
+*/
+export async function createCompany(name: string): Promise<CompanySignupResult> {
+  const result = await sdk.client
+    .fetch<CompanySignupResult>("/store/companies", {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: { name },
+    })
+    .catch(medusaError)
+  revalidateTag("company")
+  return result
+}

@@ -60,6 +60,12 @@ const Register = ({ setCurrentView }: Props) => {
             data-testid="phone-input"
           />
           <Input
+            label="Company (get a company dashboard + 10% off)"
+            name="company_name"
+            autoComplete="organization"
+            data-testid="company-name-input"
+          />
+          <Input
             label="Password"
             name="password"
             required

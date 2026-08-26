@@ -153,3 +153,13 @@ export const isStripe = (providerId?: string) => {
 export const isPayPal = (providerId?: string) => {
   return providerId?.startsWith("pp_paypal")
 }
+
+
+/**
+ * Where "something needs Cardinal's attention" emails go (new Company,
+ * Quote Request, PO upload). Falls back to the contact-form inbox.
+ */
+export const CARDINAL_NOTIFY_EMAIL =
+  process.env.CARDINAL_NOTIFY_EMAIL ||
+  process.env.CONTACT_FORM_EMAIL ||
+  'aleman@cardinalcoolingsystems.com'

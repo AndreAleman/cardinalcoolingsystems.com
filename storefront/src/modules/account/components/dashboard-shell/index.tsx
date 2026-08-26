@@ -1,4 +1,6 @@
 import { CompanyMembership } from "@lib/data/companies"
+import PendingCompany from "../pending-company"
+import WelcomeCodeBanner from "../welcome-code-banner"
 
 type DashboardShellProps = {
   membership: CompanyMembership | null
@@ -6,8 +8,9 @@ type DashboardShellProps = {
 }
 
 /*
-  The one-page Dashboard's frame. Ticket #12 only names the Company;
-  later tickets stack Quick Order, Quotes, Orders and Team inside it.
+  The one-page Dashboard's frame: Company name, the Welcome Code while
+  it is live, and the waiting screen for a Pending Company. Later
+  tickets stack Quick Order, Quotes, Orders and Team inside it.
 */
 const DashboardShell = ({ membership, children }: DashboardShellProps) => {
   return (
@@ -26,7 +29,18 @@ const DashboardShell = ({ membership, children }: DashboardShellProps) => {
           </span>
         </div>
       )}
-      {children}
+      {membership?.company.status === "pending" ? (
+        <PendingCompany company={membership.company} />
+      ) : (
+        <>
+          {membership?.company.welcome_code && (
+            <div className="mb-6">
+              <WelcomeCodeBanner code={membership.company.welcome_code} />
+            </div>
+          )}
+          {children}
+        </>
+      )}
     </div>
   )
 }

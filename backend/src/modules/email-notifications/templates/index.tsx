@@ -5,13 +5,17 @@ import { InviteUserEmail, INVITE_USER, isInviteUserData } from './invite-user'
 import { OrderPlacedTemplate, ORDER_PLACED, isOrderPlacedTemplateData } from './order-placed'
 import { AdminOrderTemplate, ADMIN_ORDER, isAdminOrderData } from './admin-order'
 import { AdminUserRegisteredTemplate, ADMIN_USER_REGISTERED, isAdminUserRegisteredData } from './admin-user-registered'
-import { contactFormEmail } from './contact-form'  // ✅ Changed: removed other imports
+import { contactFormEmail } from './contact-form'
+import { CompanyWelcomeTemplate, COMPANY_WELCOME, isCompanyWelcomeData } from './company-welcome'
+import { CompanySignupAdminTemplate, COMPANY_SIGNUP_ADMIN, isCompanySignupAdminData } from './company-signup-admin'  // ✅ Changed: removed other imports
 
 export const EmailTemplates = {
   INVITE_USER,
   ORDER_PLACED,
   ADMIN_ORDER,
   ADMIN_USER_REGISTERED,
+  COMPANY_WELCOME,
+  COMPANY_SIGNUP_ADMIN,
   CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
@@ -58,6 +62,18 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         )
       }
       return <AdminUserRegisteredTemplate {...data} />
+
+    case EmailTemplates.COMPANY_WELCOME:
+      if (!isCompanyWelcomeData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.COMPANY_WELCOME}"`)
+      }
+      return <CompanyWelcomeTemplate {...data} />
+
+    case EmailTemplates.COMPANY_SIGNUP_ADMIN:
+      if (!isCompanySignupAdminData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.COMPANY_SIGNUP_ADMIN}"`)
+      }
+      return <CompanySignupAdminTemplate {...data} />
 
     case EmailTemplates.CONTACT_FORM:  // ✅ Simplified case
       console.log('[Templates] Using CONTACT_FORM template')

@@ -2,12 +2,13 @@ import type {
   AuthenticatedMedusaRequest,
   MedusaResponse,
 } from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 import { resolveCompanyContext } from "../../../../utils/company-context";
+import { loadCompanyForStore } from "../load-company";
 
 /*
   GET /store/companies/me — the signed-in Team Member's Company.
   Read-only, so no workflow. 404 when the customer is not a Team Member.
+  Works for a Pending Company on purpose: the waiting screen needs it.
 */
 export const GET = async (
   req: AuthenticatedMedusaRequest,
@@ -19,27 +20,6 @@ export const GET = async (
       .status(404)
       .json({ message: "You are not a Team Member of any Company" });
   }
-
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
-  const {
-    data: [company],
-  } = await query.graph({
-    entity: "company",
-    fields: [
-      "id",
-      "name",
-      "email",
-      "phone",
-      "address",
-      "city",
-      "state",
-      "zip",
-      "country",
-      "logo_url",
-      "currency_code",
-    ],
-    filters: { id: ctx.companyId },
-  });
-
+  const company = await loadCompanyForStore(req.scope, ctx.companyId);
   return res.json({ company, role: ctx.role });
 };
