@@ -18,11 +18,22 @@ export type SignupCompanyInput = {
   customer: { id: string; email: string; first_name?: string | null };
 };
 
+export type SignupCompanyOutput = {
+  company: { id: string; name: string; status: string };
+  welcome: { code: string; ends_at: string };
+};
+
 /*
   Signup: Pending Company + admin Team Member + Customer Group +
   Welcome Code, in one transaction. Emails are best-effort at the end.
 */
-export const signupCompanyWorkflow = createWorkflow(
+// Explicit generics: the inferred type is not portable under pnpm and
+// breaks declaration emit in `medusa build`.
+export const signupCompanyWorkflow = createWorkflow<
+  SignupCompanyInput,
+  SignupCompanyOutput,
+  []
+>(
   "signup-company",
   function (input: SignupCompanyInput) {
     validateNotTeamMemberStep({ customer_id: input.customer.id });
