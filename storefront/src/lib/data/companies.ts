@@ -46,7 +46,9 @@ export const getCompany = cache(async function (): Promise<CompanyMembership | n
     .fetch<CompanyMembership>("/store/companies/me", {
       method: "GET",
       headers,
-      next: { tags: ["company"] },
+      // Per-person data, and approval must show on the very next load:
+      // never let Next's fetch cache hold it.
+      cache: "no-store",
     })
     .catch((err) => {
       if (err?.status === 404) {

@@ -1,10 +1,9 @@
 import type { CompanyContext } from "./company-context";
+import type { CompanyStatus } from "../modules/company/types/status";
 
 export type CompanyGate =
   | { ok: true; context: CompanyContext; status: "approved" }
   | { ok: false; code: "no_company" | "company_pending" | "company_declined"; http: 403 | 404 };
-
-type CompanyStatus = "pending" | "approved" | "declined";
 
 /*
   Pure seam: may this Team Member use Dashboard data routes? Only an

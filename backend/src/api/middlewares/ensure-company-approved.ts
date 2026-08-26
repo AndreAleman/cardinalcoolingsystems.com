@@ -4,7 +4,8 @@ import type {
   MedusaResponse,
 } from "@medusajs/framework";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import { resolveCompanyContext } from "../../utils/company-context";
+import { CompanyContext, resolveCompanyContext } from "../../utils/company-context";
+import type { CompanyStatus } from "../../modules/company/types/status";
 import { gateCompany } from "../../utils/company-gate";
 
 /*
@@ -13,13 +14,16 @@ import { gateCompany } from "../../utils/company-gate";
   Run after authenticate("customer"). Not applied to
   GET /store/companies/me, which the waiting screen itself needs.
 */
+/* A request that passed ensureCompanyApproved. */
+export type CompanyRequest = AuthenticatedMedusaRequest & { company_context: CompanyContext };
+
 export const ensureCompanyApproved = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse,
   next: MedusaNextFunction
 ) => {
   const context = await resolveCompanyContext(req.scope, req.auth_context.actor_id);
-  let status: "pending" | "approved" | "declined" | null = null;
+  let status: CompanyStatus | null = null;
   if (context) {
     const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
     const {
@@ -35,7 +39,7 @@ export const ensureCompanyApproved = async (
   if (gate.ok === false) {
     return res.status(gate.http).json({ code: gate.code, message: gateMessage(gate.code) });
   }
-  (req as any).company_context = gate.context;
+  (req as CompanyRequest).company_context = gate.context;
   return next();
 };
 

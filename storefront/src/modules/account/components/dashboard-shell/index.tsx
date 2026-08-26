@@ -1,5 +1,6 @@
 import { CompanyMembership } from "@lib/data/companies"
 import PendingCompany from "../pending-company"
+import DeclinedCompany from "../declined-company"
 import WelcomeCodeBanner from "../welcome-code-banner"
 
 type DashboardShellProps = {
@@ -31,6 +32,8 @@ const DashboardShell = ({ membership, children }: DashboardShellProps) => {
       )}
       {membership?.company.status === "pending" ? (
         <PendingCompany company={membership.company} />
+      ) : membership?.company.status === "declined" ? (
+        <DeclinedCompany company={membership.company} />
       ) : (
         <>
           {membership?.company.welcome_code && (

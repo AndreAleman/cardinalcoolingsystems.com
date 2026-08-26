@@ -7,7 +7,8 @@ import { AdminOrderTemplate, ADMIN_ORDER, isAdminOrderData } from './admin-order
 import { AdminUserRegisteredTemplate, ADMIN_USER_REGISTERED, isAdminUserRegisteredData } from './admin-user-registered'
 import { contactFormEmail } from './contact-form'
 import { CompanyWelcomeTemplate, COMPANY_WELCOME, isCompanyWelcomeData } from './company-welcome'
-import { CompanySignupAdminTemplate, COMPANY_SIGNUP_ADMIN, isCompanySignupAdminData } from './company-signup-admin'  // ✅ Changed: removed other imports
+import { CompanySignupAdminTemplate, COMPANY_SIGNUP_ADMIN, isCompanySignupAdminData } from './company-signup-admin'
+import { CompanyDecidedTemplate, COMPANY_DECIDED, isCompanyDecidedData } from './company-decided'  // ✅ Changed: removed other imports
 
 export const EmailTemplates = {
   INVITE_USER,
@@ -16,6 +17,7 @@ export const EmailTemplates = {
   ADMIN_USER_REGISTERED,
   COMPANY_WELCOME,
   COMPANY_SIGNUP_ADMIN,
+  COMPANY_DECIDED,
   CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
@@ -74,6 +76,12 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.COMPANY_SIGNUP_ADMIN}"`)
       }
       return <CompanySignupAdminTemplate {...data} />
+
+    case EmailTemplates.COMPANY_DECIDED:
+      if (!isCompanyDecidedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.COMPANY_DECIDED}"`)
+      }
+      return <CompanyDecidedTemplate {...data} />
 
     case EmailTemplates.CONTACT_FORM:  // ✅ Simplified case
       console.log('[Templates] Using CONTACT_FORM template')

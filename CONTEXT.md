@@ -22,7 +22,11 @@ A Company that has signed up but Cardinal has not yet approved. Its Team Members
 _Avoid_: Unverified, inactive
 
 **Approved Company**:
-A Company that Cardinal has switched on. Its Dashboard is unlocked.
+A Company that Cardinal has switched on. Its Dashboard is unlocked. Never flipped back.
+
+**Declined Company**:
+A Company Cardinal has turned down. Its Team Members can still shop the public site. Cardinal may later reinstate it as Approved.
+_Avoid_: Rejected, blocked
 
 **Invite**:
 An email a Team Member sends to a coworker so they can join the Company.
