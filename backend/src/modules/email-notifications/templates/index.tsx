@@ -8,7 +8,8 @@ import { AdminUserRegisteredTemplate, ADMIN_USER_REGISTERED, isAdminUserRegister
 import { contactFormEmail } from './contact-form'
 import { CompanyWelcomeTemplate, COMPANY_WELCOME, isCompanyWelcomeData } from './company-welcome'
 import { CompanySignupAdminTemplate, COMPANY_SIGNUP_ADMIN, isCompanySignupAdminData } from './company-signup-admin'
-import { CompanyDecidedTemplate, COMPANY_DECIDED, isCompanyDecidedData } from './company-decided'  // ✅ Changed: removed other imports
+import { CompanyDecidedTemplate, COMPANY_DECIDED, isCompanyDecidedData } from './company-decided'
+import { CompanyInviteTemplate, COMPANY_INVITE, isCompanyInviteData } from './company-invite'
 
 export const EmailTemplates = {
   INVITE_USER,
@@ -18,6 +19,7 @@ export const EmailTemplates = {
   COMPANY_WELCOME,
   COMPANY_SIGNUP_ADMIN,
   COMPANY_DECIDED,
+  COMPANY_INVITE,
   CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
@@ -82,6 +84,12 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.COMPANY_DECIDED}"`)
       }
       return <CompanyDecidedTemplate {...data} />
+
+    case EmailTemplates.COMPANY_INVITE:
+      if (!isCompanyInviteData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.COMPANY_INVITE}"`)
+      }
+      return <CompanyInviteTemplate {...data} />
 
     case EmailTemplates.CONTACT_FORM:  // ✅ Simplified case
       console.log('[Templates] Using CONTACT_FORM template')

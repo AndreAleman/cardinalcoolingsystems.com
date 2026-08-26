@@ -75,3 +75,61 @@ export async function createCompany(name: string): Promise<CompanySignupResult> 
   revalidateTag("company")
   return result
 }
+
+export type TeamMember = {
+  id: string
+  role: TeamMemberRole
+  customer: { id: string; email: string; first_name: string | null; last_name: string | null } | null
+}
+export type OpenInvite = { id: string; email: string; expires_at: string }
+
+export const getTeam = cache(async function (): Promise<{ team: TeamMember[]; invites: OpenInvite[] } | null> {
+  const headers = getAuthHeaders()
+  if (!("authorization" in headers)) return null
+  return sdk.client
+    .fetch<{ team: TeamMember[]; invites: OpenInvite[] }>("/store/dashboard/team", {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    })
+    .catch(() => null)
+})
+
+/* Form action: invite a coworker by email. Returns an error string or null. */
+export async function inviteTeamMember(_state: unknown, formData: FormData): Promise<string | null> {
+  const email = ((formData.get("email") as string) || "").trim()
+  try {
+    await sdk.client.fetch("/store/dashboard/invites", {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: { email },
+    })
+    revalidateTag("company")
+    return null
+  } catch (error: any) {
+    return error?.message ?? "Could not send the invite"
+  }
+}
+
+export type InvitePreview = { email: string; company_name: string; expires_at: string }
+
+export async function getInvite(token: string): Promise<InvitePreview | null> {
+  return sdk.client
+    .fetch<{ invite: InvitePreview }>(`/store/companies/invites/${encodeURIComponent(token)}`, {
+      method: "GET",
+      cache: "no-store",
+    })
+    .then(({ invite }) => invite)
+    .catch(() => null)
+}
+
+export async function acceptInvite(token: string): Promise<CompanyMembership> {
+  const result = await sdk.client
+    .fetch<CompanyMembership>(`/store/companies/invites/${encodeURIComponent(token)}/accept`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+    })
+    .catch(medusaError)
+  revalidateTag("company")
+  return result
+}

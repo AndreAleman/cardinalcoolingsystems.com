@@ -14,7 +14,7 @@ export const adminCompanyFields = [
   "welcome_code",
   "created_at",
   "employees.id",
-  "employees.is_admin",
+  "employees.role",
   "employees.spending_limit",
   "employees.customer.id",
   "employees.customer.email",

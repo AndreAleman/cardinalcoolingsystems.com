@@ -4,10 +4,12 @@ import { sdk } from "../lib/sdk"
 
 export type { CompanyStatus } from "../../modules/company/types/status"
 import type { CompanyStatus } from "../../modules/company/types/status"
+import type { TeamMemberRole } from "../../modules/company/types/role"
+export type { TeamMemberRole }
 
 export type AdminTeamMember = {
   id: string
-  is_admin: boolean
+  role: TeamMemberRole
   spending_limit: number
   customer?: {
     id: string
@@ -68,6 +70,38 @@ export const useDecideCompany = (id: string) => {
           ? `${company.name} approved — their dashboard is unlocked`
           : `${company.name} declined`
       )
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+/* Change a Team Member's Role or Spending Limit. */
+export const useUpdateTeamMember = (companyId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (input: { teamMemberId: string; role?: TeamMemberRole; spending_limit?: number }) =>
+      sdk.client.fetch<{ team_member: AdminTeamMember }>(
+        `/admin/companies/${companyId}/team-members/${input.teamMemberId}`,
+        { method: "POST", body: { role: input.role, spending_limit: input.spending_limit } }
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: companyKey(companyId) })
+      queryClient.invalidateQueries({ queryKey: ["companies"] })
+      toast.success("Team member updated")
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+export const useRemoveTeamMember = (companyId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (teamMemberId: string) =>
+      sdk.client.fetch(`/admin/companies/${companyId}/team-members/${teamMemberId}`, { method: "DELETE" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: companyKey(companyId) })
+      queryClient.invalidateQueries({ queryKey: ["companies"] })
+      toast.success("Team member removed")
     },
     onError: (err: Error) => toast.error(err.message),
   })

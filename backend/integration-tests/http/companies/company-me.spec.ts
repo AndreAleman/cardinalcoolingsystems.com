@@ -68,8 +68,8 @@ medusaIntegrationTestRunner({
       });
 
       const [aEmployee, bEmployee] = await companyService.createEmployees([
-        { company_id: companyA.id, is_admin: true },
-        { company_id: companyB.id, is_admin: true },
+        { company_id: companyA.id, role: "admin" },
+        { company_id: companyB.id, role: "manager" },
       ]);
       await remoteLink.create({
         [COMPANY_MODULE]: { employee_id: aEmployee.id },
@@ -98,6 +98,7 @@ medusaIntegrationTestRunner({
         expect(res.data.company).toEqual(
           expect.objectContaining({ id: companyA.id, name: "Acme CDU" })
         );
+        expect(res.data.role).toBe("admin");
         expect(res.data.company.id).not.toBe(companyB.id);
         expect(JSON.stringify(res.data)).not.toContain(companyB.id);
       });

@@ -11,26 +11,26 @@ describe("companyContextFromCustomer", () => {
     expect(
       companyContextFromCustomer({
         id: "cus_1",
-        employee: { id: "emp_1", is_admin: true, company: null },
+        employee: { id: "emp_1", role: "admin", company: null },
       })
     ).toBeNull();
   });
 
-  it("returns the Company; a legacy is_admin Team Member is an admin", () => {
+  it("returns the Company and the Team Member's Role", () => {
     expect(
       companyContextFromCustomer({
         id: "cus_1",
-        employee: { id: "emp_1", is_admin: true, company: { id: "comp_A" } },
+        employee: { id: "emp_1", role: "admin", company: { id: "comp_A" } },
       })
     ).toEqual({ teamMemberId: "emp_1", companyId: "comp_A", role: "admin" });
   });
 
-  it("a Team Member without is_admin is a member", () => {
+  it("a manager is a manager", () => {
     expect(
       companyContextFromCustomer({
         id: "cus_1",
-        employee: { id: "emp_1", is_admin: false, company: { id: "comp_A" } },
+        employee: { id: "emp_1", role: "manager", company: { id: "comp_A" } },
       })!.role
-    ).toBe("member");
+    ).toBe("manager");
   });
 });

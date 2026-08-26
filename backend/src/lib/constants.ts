@@ -163,3 +163,8 @@ export const CARDINAL_NOTIFY_EMAIL =
   process.env.CARDINAL_NOTIFY_EMAIL ||
   process.env.CONTACT_FORM_EMAIL ||
   'aleman@cardinalcoolingsystems.com'
+
+/**
+ * Public storefront URL, used in emails that link back to the site.
+ */
+export const STOREFRONT_URL = process.env.STOREFRONT_URL || 'https://cardinalcoolingsystems.com'

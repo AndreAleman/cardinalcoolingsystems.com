@@ -1,6 +1,7 @@
 import { createFindParams } from "@medusajs/medusa/api/utils/validators";
 import { z } from "zod";
 import { COMPANY_STATUSES } from "../../../modules/company/types/status";
+import { TEAM_MEMBER_ROLES } from "../../../modules/company/types/role";
 
 export const AdminGetCompaniesParams = createFindParams({ limit: 50, offset: 0 }).merge(
   z.object({
@@ -8,3 +9,11 @@ export const AdminGetCompaniesParams = createFindParams({ limit: 50, offset: 0 }
   })
 );
 export type AdminGetCompaniesParamsType = z.infer<typeof AdminGetCompaniesParams>;
+
+export const AdminUpdateTeamMember = z
+  .object({
+    role: z.enum(TEAM_MEMBER_ROLES).optional(),
+    spending_limit: z.number().min(0).optional(),
+  })
+  .strict();
+export type AdminUpdateTeamMemberType = z.infer<typeof AdminUpdateTeamMember>;

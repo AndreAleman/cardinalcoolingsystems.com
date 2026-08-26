@@ -2,6 +2,7 @@ import { Container, Heading, Table, Text, Toaster } from "@medusajs/ui"
 import { useCompany } from "../../../hooks/companies"
 import { CompanyStatusBadge } from "../components/company-status-badge"
 import { DecideButtons } from "../components/decide-buttons"
+import { TeamMemberRow } from "../components/team-member-row"
 
 /*
   /app/companies/:companyId — the id is the segment after "companies".
@@ -63,17 +64,12 @@ const CompanyDetailPage = () => {
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Email</Table.HeaderCell>
               <Table.HeaderCell>Role</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {(company.employees ?? []).map((member) => (
-              <Table.Row key={member.id}>
-                <Table.Cell>
-                  {[member.customer?.first_name, member.customer?.last_name].filter(Boolean).join(" ") || "—"}
-                </Table.Cell>
-                <Table.Cell>{member.customer?.email ?? "—"}</Table.Cell>
-                <Table.Cell>{member.is_admin ? "admin" : "member"}</Table.Cell>
-              </Table.Row>
+              <TeamMemberRow key={member.id} companyId={company.id} member={member} />
             ))}
           </Table.Body>
         </Table>

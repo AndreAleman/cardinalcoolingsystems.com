@@ -1,7 +1,8 @@
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 import type { MedusaContainer } from "@medusajs/framework/types";
 
-export type TeamMemberRole = "member" | "manager" | "admin";
+import type { TeamMemberRole } from "../modules/company/types/role";
+export type { TeamMemberRole };
 
 export type CompanyContext = {
   teamMemberId: string;
@@ -13,7 +14,7 @@ type CustomerGraph = {
   id: string;
   employee?: {
     id: string;
-    is_admin?: boolean | null;
+    role?: TeamMemberRole | null;
     company?: { id: string } | null;
   } | null;
 } | null | undefined;
@@ -21,8 +22,6 @@ type CustomerGraph = {
 /*
   Pure seam: given the customer → employee → company graph, decide the
   Company context. Null means "not a Team Member of any Company".
-  Role is derived from the legacy is_admin flag until the role enum
-  (ticket #4) replaces it.
 */
 export function companyContextFromCustomer(
   customer: CustomerGraph
@@ -35,7 +34,7 @@ export function companyContextFromCustomer(
   return {
     teamMemberId: employee.id,
     companyId,
-    role: employee.is_admin ? "admin" : "member",
+    role: employee.role ?? "member",
   };
 }
 
@@ -53,7 +52,7 @@ export async function resolveCompanyContext(
     data: [customer],
   } = await query.graph({
     entity: "customer",
-    fields: ["id", "employee.id", "employee.is_admin", "employee.company.id"],
+    fields: ["id", "employee.id", "employee.role", "employee.company.id"],
     filters: { id: customerId },
   });
   return companyContextFromCustomer(customer as CustomerGraph);

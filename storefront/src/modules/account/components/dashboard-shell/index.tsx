@@ -1,4 +1,5 @@
-import { CompanyMembership } from "@lib/data/companies"
+import { CompanyMembership, getTeam } from "@lib/data/companies"
+import TeamSection from "../team-section"
 import PendingCompany from "../pending-company"
 import DeclinedCompany from "../declined-company"
 import WelcomeCodeBanner from "../welcome-code-banner"
@@ -13,7 +14,8 @@ type DashboardShellProps = {
   it is live, and the waiting screen for a Pending Company. Later
   tickets stack Quick Order, Quotes, Orders and Team inside it.
 */
-const DashboardShell = ({ membership, children }: DashboardShellProps) => {
+const DashboardShell = async ({ membership, children }: DashboardShellProps) => {
+  const teamData = membership?.company.status === "approved" ? await getTeam() : null
   return (
     <div data-testid="dashboard-shell">
       {membership && (
@@ -42,6 +44,11 @@ const DashboardShell = ({ membership, children }: DashboardShellProps) => {
             </div>
           )}
           {children}
+          {teamData && (
+            <div className="mt-10">
+              <TeamSection team={teamData.team} invites={teamData.invites} />
+            </div>
+          )}
         </>
       )}
     </div>
