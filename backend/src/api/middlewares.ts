@@ -10,6 +10,7 @@ import { z } from "zod"
 import { InventorySync } from "./webhooks/inventory-sync/validators"
 import { ContactFormSchema } from "./store/contact/validators"
 import { CreateOrderDocumentsSchema } from "./admin/order-documents/validators"
+import { webhookMiddlewares } from "./webhooks/quickbooks-inventory/middlewares"
 
 // Constant-time compare so the token check doesn't leak length/contents.
 function safeEqual(a: string, b: string): boolean {
@@ -44,6 +45,7 @@ function authenticateInventorySync(
 
 export default defineMiddlewares({
   routes: [
+    ...webhookMiddlewares,
     {
       matcher: "/product-feed",
       methods: ["GET"],
