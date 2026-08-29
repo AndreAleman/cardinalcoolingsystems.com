@@ -12,7 +12,7 @@
 // locations into one customer-facing availability number. SKUs with no match
 // are reported in `unknown_skus` rather than failing the whole batch.
 //
-// Response: { ok, updated, unknown_skus, errors }
+// Response: { updated, unknown_skus, errors }
 
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
@@ -142,5 +142,5 @@ export const POST = async (
     `[qb-inventory] updated=${updated} unknown=${unknown_skus.length} errors=${errors.length}`,
   )
 
-  res.status(200).json({ ok: true, updated, unknown_skus, errors })
+  res.status(200).json({ updated, unknown_skus, errors })
 }

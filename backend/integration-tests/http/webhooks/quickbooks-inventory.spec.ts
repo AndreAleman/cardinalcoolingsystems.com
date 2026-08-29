@@ -56,7 +56,7 @@ medusaIntegrationTestRunner({
         { updates: [{ sku: "SANITUBE-TEST-1", kc: 7, la: 11 }] },
         { headers: { authorization: "Bearer test-qb-token" } }
       );
-      expect(synced.data).toEqual(expect.objectContaining({ ok: true, updated: 1 }));
+      expect(synced.data).toEqual({ updated: 1, unknown_skus: [], errors: [] });
 
       const items = await api.get(
         "/admin/inventory-items",
