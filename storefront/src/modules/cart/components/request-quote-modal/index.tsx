@@ -18,7 +18,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button, Input, Textarea } from "@medusajs/ui"
 import { HttpTypes } from "@medusajs/types"
-import { submitGuestQuote } from "@lib/data/guest-quote"
+import { finalizeGuestQuote, submitGuestQuote } from "@lib/data/guest-quote"
 
 type Props = {
   customer?: HttpTypes.StoreCustomer | null
@@ -38,13 +38,16 @@ const RequestQuoteModal = ({ customer }: Props) => {
   const [phone, setPhone] = useState(customer?.phone ?? "")
   const [notes, setNotes] = useState("")
 
-  const close = () => {
+  const close = async () => {
     if (submitting) return
     setOpen(false)
     setError(null)
     if (sent) {
-      // Cart cookie is already cleared server-side — refresh now so the
-      // page reflects the empty cart only after the confirmation is read.
+      // The cart now belongs to the quote request. Clearing it here —
+      // not in the submit action — keeps the confirmation on screen
+      // until the buyer dismisses it (a revalidate during submit
+      // re-renders the page and unmounts this modal).
+      await finalizeGuestQuote().catch(() => {})
       router.refresh()
     }
   }

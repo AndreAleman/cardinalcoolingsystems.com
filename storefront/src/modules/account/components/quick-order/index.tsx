@@ -192,6 +192,22 @@ export default function QuickOrder({
     [lines, invoicePaymentEnabled]
   )
 
+  /* "Both paths are one click" (spec story 26): even when every line is
+     payable, the buyer can send the whole list as a Quote Request. */
+  const [quoteEverything, setQuoteEverything] = useState(false)
+  const reviewPlan: CartPlan = useMemo(
+    () =>
+      quoteEverything
+        ? {
+            ...plan,
+            path: "quote_only",
+            payLines: [],
+            quoteLines: [...plan.payLines, ...plan.quoteLines],
+          }
+        : plan,
+    [plan, quoteEverything]
+  )
+
   const addRowToOrder = (line: PortalCartLine) => {
     addLine(line)
     toast.success(`Added ${line.qty}× ${line.sku}`)
@@ -749,12 +765,31 @@ export default function QuickOrder({
                     } will be sent to Cardinal as a Quote Request.`}
               </p>
             )}
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-3">
+              {plan.payLines.length > 0 &&
+                plan.path !== "quote_all" &&
+                plan.path !== "quote_only" && (
+                  <Button
+                    variant="secondary"
+                    size="large"
+                    className="h-12 px-6 text-[18px]"
+                    onClick={() => {
+                      setQuoteEverything(true)
+                      setReviewOpen(true)
+                    }}
+                    data-testid="quick-order-quote-instead"
+                  >
+                    Submit Quote Request
+                  </Button>
+                )}
               <Button
                 variant="primary"
                 size="large"
                 className="h-12 px-8 text-[18px] bg-green-600 hover:bg-green-700"
-                onClick={() => setReviewOpen(true)}
+                onClick={() => {
+                  setQuoteEverything(false)
+                  setReviewOpen(true)
+                }}
                 data-testid="quick-order-submit"
               >
                 {plan.path === "invoice" && "Place Order"}
@@ -770,8 +805,11 @@ export default function QuickOrder({
 
       <OrderReviewDrawer
         open={reviewOpen}
-        onClose={() => setReviewOpen(false)}
-        plan={plan}
+        onClose={() => {
+          setReviewOpen(false)
+          setQuoteEverything(false)
+        }}
+        plan={reviewPlan}
         addresses={addresses}
         countryCode={countryCode}
         currencyCode={currencyCode}

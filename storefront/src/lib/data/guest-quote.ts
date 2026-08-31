@@ -44,7 +44,15 @@ export async function submitGuestQuote(
     })
     .catch(medusaError)
 
+  // Deliberately NO cart clear / revalidate here: that re-renders the
+  // page and unmounts the modal, wiping the persistent confirmation the
+  // buyer is supposed to read. finalizeGuestQuote runs on close instead.
+  return { success: true }
+}
+
+/* Called when the buyer dismisses the confirmation: the cart now
+   belongs to the quote request, so clear it and refresh the page. */
+export async function finalizeGuestQuote(): Promise<void> {
   removeCartId()
   revalidateTag("cart")
-  return { success: true }
 }
