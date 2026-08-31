@@ -56,6 +56,10 @@ type Props = {
   addresses: HttpTypes.StoreCustomerAddress[]
   countryCode: string
   currencyCode: string
+  /* PO Upload prefills: the PO's number and the "Also quote: …" note
+     carrying its unmatched lines. Never overwrite what the buyer typed. */
+  poPrefill?: string
+  notesPrefill?: string
   /* Runs the actual submissions; resolves with what happened. */
   onSubmit: (extras: DrawerSubmitExtras) => Promise<SubmitOutcome>
   /* Redirect to the standard checkout (mixed checkout path). */
@@ -77,6 +81,8 @@ export default function OrderReviewDrawer({
   addresses,
   countryCode,
   currencyCode,
+  poPrefill,
+  notesPrefill,
   onSubmit,
   onGoToCheckout,
 }: Props) {
@@ -109,6 +115,18 @@ export default function OrderReviewDrawer({
   const isPureCheckout = plan.path === "checkout" && plan.quoteLines.length === 0
 
   const totalUnits = lines.reduce((sum, l) => sum + l.qty, 0)
+
+  // PO Upload prefills — fill only fields the buyer hasn't typed in.
+  useEffect(() => {
+    if (poPrefill) {
+      setPoNumber((current) => current || poPrefill)
+    }
+  }, [poPrefill])
+  useEffect(() => {
+    if (notesPrefill) {
+      setNotes((current) => current || notesPrefill)
+    }
+  }, [notesPrefill])
 
   // Reset back to items after the slide-out finishes — except from
   // success, which persists until "Done".

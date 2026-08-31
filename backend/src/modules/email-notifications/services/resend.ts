@@ -88,6 +88,8 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
       }
       case EmailTemplates.QUOTE_RECEIVED:
         return "We received your Quote Request"
+      case EmailTemplates.PO_UPLOADED:
+        return "PO uploaded — check the read-out"
       case EmailTemplates.QUOTE_READY:
         return "Your Quote is ready to review"
       case EmailTemplates.QUOTE_ACCEPTED_CLIENT:

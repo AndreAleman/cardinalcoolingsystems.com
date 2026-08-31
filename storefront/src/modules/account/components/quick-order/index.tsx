@@ -28,6 +28,7 @@ import { capturePortalEvent } from "@lib/util/portal-analytics"
 import { usePortalCart } from "@lib/context/portal-cart-context"
 import {
   searchPortalProducts,
+  getPortalProductsByVariantIds,
   submitPortalInvoiceOrder,
   submitPortalDepositOrder,
   submitPortalQuoteRequest,
@@ -49,10 +50,12 @@ import {
   type PortalCartLine,
 } from "./money-rules"
 import {
+  buildVariantRowMap,
   productVariantToRow,
   rowToCartLine,
   type VariantRow,
 } from "./variant-info"
+import PoUpload, { type PoLoadedPayload } from "./po-upload"
 
 type Props = {
   countryCode: string
@@ -90,6 +93,10 @@ export default function QuickOrder({
   const [favView, setFavView] = useState<"all" | "favorites">("all")
   const [reviewOpen, setReviewOpen] = useState(false)
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null)
+  // Prefills a PO Upload hands to the review drawer: the PO's number and
+  // an "Also quote: …" note carrying its unmatched lines.
+  const [poPrefill, setPoPrefill] = useState("")
+  const [notesPrefill, setNotesPrefill] = useState("")
 
   const favoriteVariantIds = useMemo(
     () => new Set(favorites.map((f) => f.variantId)),
@@ -188,6 +195,49 @@ export default function QuickOrder({
   const addRowToOrder = (line: PortalCartLine) => {
     addLine(line)
     toast.success(`Added ${line.qty}× ${line.sku}`)
+  }
+
+  /* ---- PO Upload → Quick Order ---- */
+
+  /*
+    "Load into Quick Order": hydrate the matched variants through the
+    same live-price/stock fetch Order Again and Favorites use, so
+    price, stock, and Quote-Only detection all behave normally; carry
+    unmatched lines in the quote-note prefill (the portal cart has no
+    free-text lines — quote submissions are variant_id + qty only).
+  */
+  const handlePoLoad = async (
+    payload: PoLoadedPayload
+  ): Promise<{ loadedCount: number }> => {
+    let loadedCount = 0
+
+    if (payload.matched.length) {
+      const products = await getPortalProductsByVariantIds(
+        payload.matched.map((m) => m.variantId),
+        countryCode
+      )
+      const rowMap = buildVariantRowMap(products)
+      for (const m of payload.matched) {
+        const row = rowMap[m.variantId]
+        if (row) {
+          addLine(rowToCartLine(row, m.quantity))
+          loadedCount++
+        }
+      }
+    }
+
+    const noteEntries = payload.unmatched.map(
+      (u) => `Also quote: ${u.quantity}× ${u.description}`
+    )
+    if (payload.poNumber) {
+      setPoPrefill(payload.poNumber)
+    }
+    if (noteEntries.length) {
+      const note = noteEntries.join("\n")
+      setNotesPrefill((prev) => (prev ? `${prev}\n${note}` : note))
+    }
+
+    return { loadedCount }
   }
 
   /* ---- Submission ---- */
@@ -296,6 +346,8 @@ export default function QuickOrder({
       po: extras.po_number,
     })
     clear()
+    setPoPrefill("")
+    setNotesPrefill("")
     router.refresh()
     return outcome
   }
@@ -519,6 +571,10 @@ export default function QuickOrder({
         </Button>
       </form>
 
+      {/* PO Upload — drop a purchase order, verify the Read-Out, load it
+          into this same table, then use the normal submit buttons. */}
+      <PoUpload currencyCode={currencyCode} onLoad={handlePoLoad} />
+
       <div className="flex items-center gap-3">
         <span className="text-[16px] font-medium text-neutral-600">Show:</span>
         <Button
@@ -719,6 +775,8 @@ export default function QuickOrder({
         addresses={addresses}
         countryCode={countryCode}
         currencyCode={currencyCode}
+        poPrefill={poPrefill}
+        notesPrefill={notesPrefill}
         onSubmit={handleReviewSubmit}
         onGoToCheckout={goToCheckout}
       />

@@ -17,6 +17,7 @@ import { QuoteAcceptedClientTemplate, QUOTE_ACCEPTED_CLIENT, isQuoteAcceptedClie
 import { ApprovalRequestedTemplate, APPROVAL_REQUESTED, isApprovalRequestedData } from './approval-requested'
 import { RequestApprovedTemplate, REQUEST_APPROVED, isRequestApprovedData } from './request-approved'
 import { RequestRejectedTemplate, REQUEST_REJECTED, isRequestRejectedData } from './request-rejected'
+import { PoUploadedTemplate, PO_UPLOADED, isPoUploadedData } from './po-uploaded'
 
 export const EmailTemplates = {
   INVITE_USER,
@@ -34,6 +35,7 @@ export const EmailTemplates = {
   APPROVAL_REQUESTED,
   REQUEST_APPROVED,
   REQUEST_REJECTED,
+  PO_UPLOADED,
   CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
@@ -116,6 +118,12 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.QUOTE_RECEIVED}"`)
       }
       return <QuoteReceivedTemplate {...data} />
+
+    case EmailTemplates.PO_UPLOADED:
+      if (!isPoUploadedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.PO_UPLOADED}"`)
+      }
+      return <PoUploadedTemplate {...data} />
 
     case EmailTemplates.QUOTE_READY:
       if (!isQuoteReadyData(data)) {

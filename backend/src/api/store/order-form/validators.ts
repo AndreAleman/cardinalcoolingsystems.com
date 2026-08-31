@@ -55,6 +55,20 @@ export const QuoteCart = z.object({
 
 export type QuoteCartType = z.infer<typeof QuoteCart>;
 
+export const PoUpload = z.object({
+  filename: z.string().min(1).max(255),
+  mime_type: z.enum([
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+  ]),
+  // ~15 MB of base64. PDFs of purchase orders are typically well under.
+  file_base64: z.string().min(1).max(20_000_000),
+});
+
+export type PoUploadType = z.infer<typeof PoUpload>;
+
 export const GuestQuote = z.object({
   cart_id: z.string().min(1, "cart_id is required"),
   email: z.string().email("A valid email is required").max(320),

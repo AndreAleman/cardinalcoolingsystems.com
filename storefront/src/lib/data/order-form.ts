@@ -107,6 +107,67 @@ export type SubmitLine = {
   quantity: number
 }
 
+/* ---- PO Upload (CONTEXT.md) ---- */
+
+export type PoReadOutVariant = {
+  id: string
+  sku: string | null
+  title: string | null
+  /* Cardinal's base USD price — the price that applies (never the PO's). */
+  unit_price: number | null
+  weight_lbs: number | null
+}
+
+export type PoReadOutLine = {
+  description: string
+  quantity: number
+  /* The PO's own price, if the reader found one. */
+  unit_price: number | null
+  variant: PoReadOutVariant | null
+  /* PO price is LOWER than Cardinal's (a higher one is silently ignored). */
+  price_alarm: boolean
+  unmatched: boolean
+}
+
+export type PoReadOut = {
+  po_number: string | null
+  file_url: string | null
+  lines: PoReadOutLine[]
+}
+
+export type PoUploadResult = PoReadOut | { error: string }
+
+/*
+  PO Upload: send the buyer's purchase-order document (PDF/image, as
+  base64) to the AI reader; it answers with a PO Read-Out for the buyer
+  to verify. Errors come back as { error } rather than a throw so the
+  server's message (e.g. "reader not configured") reaches the client
+  verbatim — Next.js masks thrown server-action errors in production.
+*/
+export async function uploadPurchaseOrder(file: {
+  name: string
+  type: string
+  base64: string
+}): Promise<PoUploadResult> {
+  try {
+    return await sdk.client.fetch<PoReadOut>("/store/order-form/po-upload", {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: {
+        filename: file.name,
+        mime_type: file.type,
+        file_base64: file.base64,
+      },
+    })
+  } catch (err: any) {
+    const message =
+      err?.response?.data?.message ||
+      err?.message ||
+      "We couldn't read that file. Please try again."
+    return { error: String(message) }
+  }
+}
+
 export type CartAddressPayload = {
   first_name?: string
   last_name?: string

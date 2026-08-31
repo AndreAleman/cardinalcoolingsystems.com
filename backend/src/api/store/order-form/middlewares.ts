@@ -9,6 +9,7 @@ import {
   GuestQuote,
   PlaceDepositOrder,
   PlaceInvoiceOrder,
+  PoUpload,
   QuoteCart,
   RequestQuote,
 } from "./validators";
@@ -30,6 +31,13 @@ export const orderFormMiddlewares: MiddlewareRoute[] = [
     matcher: "/store/order-form/guest-quote",
     methods: ["POST"],
     middlewares: [validateAndTransformBody(GuestQuote)],
+  },
+  {
+    matcher: "/store/order-form/po-upload",
+    methods: ["POST"],
+    middlewares: [...dashboardGate, validateAndTransformBody(PoUpload)],
+    // Base64 PDFs blow past the default JSON body cap.
+    bodyParser: { sizeLimit: "20mb" },
   },
   {
     matcher: "/store/order-form/quote-cart",

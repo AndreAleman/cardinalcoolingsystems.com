@@ -14,7 +14,8 @@ export function capturePortalEvent(
   event:
     | "portal_order_placed"
     | "portal_quote_requested"
-    | "portal_quote_accepted",
+    | "portal_quote_accepted"
+    | "po_uploaded",
   props: PortalEventProps
 ): void {
   if (typeof window === "undefined") return

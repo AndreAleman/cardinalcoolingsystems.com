@@ -161,6 +161,16 @@ override anything below that conflicts:
   (list exported to `zero-price-skus.csv`).
 - Sales-manager approval, Locations, subdomains, ad-hoc SKU entry, OEM
   cross-references, Sortly/atl_stock, and invoice PDFs are NOT ported.
+- **PO Upload (slice 3) shipped 2026-08-31**: `POST
+  /store/order-form/po-upload` (base64 PDF/image) reads the document
+  with Claude (`claude-opus-5`, structured output; stubbed in tests via
+  `PO_READER_STUB_JSON`), matches lines exact-by-token against catalog
+  SKUs (`utils/po-match.ts` — part numbers hide inside description
+  text), returns the PO Read-Out (Price Alarms, unmatched flags),
+  stores the original in the file provider, and emails Cardinal
+  (`po-uploaded` template). The Dashboard drop zone loads matched lines
+  into Quick Order; unmatched lines ride in the quote note. Requires
+  `ANTHROPIC_API_KEY`.
 
 **Delivery is in five slices**, each reviewed and released on its own (see Out of Scope for what each excludes). The slices are: (1) Companies, approval, invites, roles, Price Lists, the Dashboard with Quick Order + stock rule + Quote Requests/Quotes + Favorites + Order Again + Orders, Medusa Admin pages, approvals and Spending Limits switched off; (2) Deposit Threshold, Deposit, Balance Invoice, ACH; (3) PO Upload; (4) Spend Tiers, Referral, Win-Back, Reorder Nudge; (5) marketing homepage section and landing page.
 
