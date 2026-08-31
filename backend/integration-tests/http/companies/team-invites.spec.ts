@@ -49,7 +49,7 @@ medusaIntegrationTestRunner({
       bo = await mk("bo@acme.test", "Bo");
       mallory = await mk("mallory@evil.test", "Mallory");
 
-      const signup = await api.post("/store/companies", { name: "Acme CDU" }, headersOf(ada));
+      const signup = await api.post("/store/companies", { name: "Acme CDU", phone: "555-0100" }, headersOf(ada));
       company = signup.data.company;
       await api.post(`/admin/companies/${company.id}/approve`, {}, adminHeaders);
     });
@@ -124,7 +124,7 @@ medusaIntegrationTestRunner({
       });
 
       it("a Pending Company cannot invite yet", async () => {
-        const pending = await api.post("/store/companies", { name: "Not Yet Inc" }, headersOf(mallory));
+        const pending = await api.post("/store/companies", { name: "Not Yet Inc", phone: "555-0104" }, headersOf(mallory));
         expect(pending.data.company.status).toBe("pending");
         const res = await api
           .post("/store/dashboard/invites", { email: "x@y.test" }, headersOf(mallory))

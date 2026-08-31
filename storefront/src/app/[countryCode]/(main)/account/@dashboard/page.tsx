@@ -7,6 +7,7 @@ import { listOrders } from "@lib/data/orders"
 import { getCompany } from "@lib/data/companies"
 import DashboardShell from "@modules/account/components/dashboard-shell"
 import BuyerPortal from "@modules/account/components/buyer-portal"
+import RequestPortalAccess from "@modules/account/components/request-portal-access"
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -40,6 +41,7 @@ export default async function OverviewTemplate({ params }: Props) {
 
   return (
     <DashboardShell membership={membership}>
+      {!membership && <RequestPortalAccess customer={customer} />}
       <Overview customer={customer} orders={orders} />
     </DashboardShell>
   )

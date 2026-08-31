@@ -2,7 +2,12 @@ import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
 import { COMPANY_MODULE } from "../../../modules/company";
 import CompanyModuleService from "../../../modules/company/service";
 
-type Input = { name: string; email: string; currency_code?: string };
+type Input = {
+  name: string;
+  email: string;
+  phone?: string;
+  currency_code?: string;
+};
 
 export const createPendingCompanyStep = createStep(
   "create-pending-company",
@@ -11,6 +16,7 @@ export const createPendingCompanyStep = createStep(
     const company = await companyService.createCompanies({
       name: input.name,
       email: input.email,
+      phone: input.phone,
       currency_code: input.currency_code ?? "usd",
       status: "pending",
     });

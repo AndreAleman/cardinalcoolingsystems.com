@@ -108,7 +108,7 @@ medusaIntegrationTestRunner({
       });
 
       company = (
-        await api.post("/store/companies", { name: "Alpha Cooling" }, headersOf(ada))
+        await api.post("/store/companies", { name: "Alpha Cooling", phone: "555-0101" }, headersOf(ada))
       ).data.company;
       const companyService = container.resolve(COMPANY_MODULE) as any;
       await companyService.updateCompanies([
