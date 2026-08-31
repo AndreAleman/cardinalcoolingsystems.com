@@ -62,6 +62,15 @@ const medusaConfig = {
       resolve: "./src/modules/company",
     },
     {
+      resolve: "./src/modules/approval",
+    },
+    {
+      resolve: "./src/modules/quote",
+    },
+    {
+      resolve: "./src/modules/favorite",
+    },
+    {
       resolve: "./src/modules/sanity",
       options: {
         api_token: process.env.SANITY_API_TOKEN,

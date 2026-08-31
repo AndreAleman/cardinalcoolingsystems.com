@@ -7,6 +7,7 @@ import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { cache } from "react"
 import { getAuthHeaders, removeAuthToken, setAuthToken } from "./cookies"
+import { acceptInvite, createCompany } from "./companies"
 
 export const getCustomer = cache(async function () {
   return await sdk.store.customer
@@ -29,6 +30,7 @@ export const updateCustomer = cache(async function (
 
 export async function signup(_currentState: unknown, formData: FormData) {
   const password = formData.get("password") as string
+  const companyName = ((formData.get("company_name") as string) || "").trim()
   const customerForm = {
     email: formData.get("email") as string,
     first_name: formData.get("first_name") as string,
@@ -58,10 +60,20 @@ export async function signup(_currentState: unknown, formData: FormData) {
     setAuthToken(typeof loginToken === 'string' ? loginToken : loginToken.location)
 
     revalidateTag("customer")
-    return createdCustomer
   } catch (error: any) {
     return error.toString()
   }
+
+  // A company name means "give me a Dashboard": create the Pending
+  // Company now so the Welcome Code shows the moment they land.
+  if (companyName) {
+    try {
+      await createCompany(companyName)
+    } catch (error: any) {
+      return `Your account was created, but the company could not be: ${error.toString()}`
+    }
+  }
+  return null
 }
 
 export async function login(_currentState: unknown, formData: FormData) {
@@ -158,4 +170,72 @@ export const updateCustomerAddress = async (
     .catch((err) => {
       return { success: false, error: err.toString() }
     })
+}
+
+/*
+  Sign in, or create the account first if it does not exist yet.
+  Used by invite acceptance: the email is fixed to the invite's.
+*/
+async function signInOrRegister(input: {
+  email: string
+  password: string
+  first_name?: string
+  last_name?: string
+}) {
+  try {
+    const token = await sdk.auth.login("customer", "emailpass", {
+      email: input.email,
+      password: input.password,
+    })
+    setAuthToken(typeof token === "string" ? token : token.location)
+    revalidateTag("customer")
+    return
+  } catch {
+    /* no account yet, or wrong password — try to create */
+  }
+  const regToken = await sdk.auth.register("customer", "emailpass", {
+    email: input.email,
+    password: input.password,
+  })
+  await sdk.store.customer.create(
+    { email: input.email, first_name: input.first_name, last_name: input.last_name },
+    {},
+    { authorization: `Bearer ${regToken}` }
+  )
+  const token = await sdk.auth.login("customer", "emailpass", {
+    email: input.email,
+    password: input.password,
+  })
+  setAuthToken(typeof token === "string" ? token : token.location)
+  revalidateTag("customer")
+}
+
+/*
+  Invite accept page. Not signed in: sign in with the invite's email
+  (creating the account if it is new), then join. Signed in: just join.
+*/
+export async function acceptInviteSignup(_state: unknown, formData: FormData) {
+  const token = formData.get("token") as string
+  const email = formData.get("email") as string
+  const password = formData.get("password") as string
+
+  if (!("authorization" in getAuthHeaders())) {
+    try {
+      await signInOrRegister({
+        email,
+        password,
+        first_name: formData.get("first_name") as string,
+        last_name: formData.get("last_name") as string,
+      })
+    } catch (error: any) {
+      return "Could not sign you in. If you already have an account with this email, use its password."
+    }
+  }
+
+  try {
+    await acceptInvite(token)
+  } catch (error: any) {
+    return error.toString()
+  }
+  redirect("/account")
 }

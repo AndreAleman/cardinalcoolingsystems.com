@@ -8,7 +8,9 @@ export const Employee = model.define("employee", {
     })
     .primaryKey(),
   spending_limit: model.bigNumber().default(0),
-  is_admin: model.boolean().default(false),
+  // Team Member Role. Every new person is admin for now; member and
+  // manager exist for later (approvals, scoped visibility).
+  role: model.enum(["member", "manager", "admin"]).default("admin"),
   company: model.belongsTo(() => Company, {
     mappedBy: "employees",
   }),

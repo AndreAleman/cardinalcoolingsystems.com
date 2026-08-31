@@ -1,6 +1,5 @@
 "use client"
 
-import { QuoteProvider } from "@lib/context/quote-context"
 import { CartPanelProvider } from "@lib/context/cart-panel-context"
 
 export default function ClientProviders({
@@ -8,9 +7,5 @@ export default function ClientProviders({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <CartPanelProvider>
-      <QuoteProvider>{children}</QuoteProvider>
-    </CartPanelProvider>
-  )
+  return <CartPanelProvider>{children}</CartPanelProvider>
 }

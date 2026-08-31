@@ -11,6 +11,14 @@ import { InventorySync } from "./webhooks/inventory-sync/validators"
 import { ContactFormSchema } from "./store/contact/validators"
 import { CreateOrderDocumentsSchema } from "./admin/order-documents/validators"
 import { webhookMiddlewares } from "./webhooks/quickbooks-inventory/middlewares"
+import { companyMiddlewares } from "./store/companies/middlewares"
+import { adminCompanyMiddlewares } from "./admin/companies/middlewares"
+import { orderFormMiddlewares } from "./store/order-form/middlewares"
+import { storeQuotesMiddlewares } from "./store/quotes/middlewares"
+import { adminQuotesMiddlewares } from "./admin/quotes/middlewares"
+import { storeApprovalsMiddlewares } from "./store/approvals/middlewares"
+import { adminApprovalsMiddlewares } from "./admin/approvals/middlewares"
+import { adminOrdersMiddlewares } from "./admin/orders/middlewares"
 
 // Constant-time compare so the token check doesn't leak length/contents.
 function safeEqual(a: string, b: string): boolean {
@@ -46,6 +54,14 @@ function authenticateInventorySync(
 export default defineMiddlewares({
   routes: [
     ...webhookMiddlewares,
+    ...companyMiddlewares,
+    ...adminCompanyMiddlewares,
+    ...orderFormMiddlewares,
+    ...storeQuotesMiddlewares,
+    ...adminQuotesMiddlewares,
+    ...storeApprovalsMiddlewares,
+    ...adminApprovalsMiddlewares,
+    ...adminOrdersMiddlewares,
     {
       matcher: "/product-feed",
       methods: ["GET"],

@@ -1,3 +1,4 @@
+import type { TeamMemberRole } from "./role";
 import { CustomerDTO, CustomerGroupDTO } from "@medusajs/framework/types";
 
 export interface CompanyDTO {
@@ -21,7 +22,7 @@ export interface CompanyDTO {
 export interface EmployeeDTO extends CustomerDTO {
   id: string;
   spending_limit: number;
-  is_admin: boolean;
+  role: TeamMemberRole;
   company_id: string;
   company?: CompanyDTO;
   customer?: CustomerDTO;

@@ -34,7 +34,12 @@ const nextConfig = {
       'react-country-flag',
       '@sanity/icons',
     ],
-    esmExternals: 'loose'
+    esmExternals: 'loose',
+    serverActions: {
+      // PO Upload sends the buyer's PDF/image as base64 (≤15MB file ≈ 20MB
+      // encoded) through a server action; the default limit is 1MB.
+      bodySizeLimit: '25mb',
+    },
   },
   images: {
     formats: ['image/avif', 'image/webp'],

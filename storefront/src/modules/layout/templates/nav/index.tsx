@@ -5,7 +5,6 @@ import Logo from "./components/logo"
 import NavigationMenu from "./components/navigation-menu"
 import UserActions from "./components/user-actions"
 import MobileMenu from "./components/mobile-menu"
-import QuotePanel from "@modules/quote/components/quote-panel"
 import CartPanel from "@modules/cart/components/cart-panel"
 import { SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_INDEX_NAME } from "@lib/search-client"
 
@@ -319,7 +318,6 @@ export default function Nav({ className = "" }: NavProps) {
       {showResults && <div className="fixed inset-0 z-40" onClick={() => setShowResults(false)} />}
     </header>
 
-    <QuotePanel />
     <CartPanel />
     </>
   )
