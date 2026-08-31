@@ -64,7 +64,7 @@ One part and one quantity in the Quick Order table.
 An Order Line whose quantity is at or under the stock on hand. It shows a price and can be paid for.
 
 **Quote-Only Line**:
-An Order Line whose quantity is over the stock on hand (including zero stock). It cannot be paid for; it can only go into a Quote Request.
+An Order Line that cannot be paid for and can only go into a Quote Request: quantity over the stock on hand (including zero stock), or a part with no price or no weight on file.
 
 **Quote Request**:
 A list of Order Lines a Team Member sends to Cardinal to be priced. Cardinal answers with a Quote.
@@ -87,17 +87,26 @@ The on-screen table of what Cardinal read from a PO Upload, shown to the buyer t
 A warning on a PO Read-Out line where the PO's price is lower than the Company's price. A PO price that is higher is silently replaced with the Company's price.
 
 **Order**:
-Order Lines the Company has committed to buy. Under the Deposit Threshold it is paid in full by card. At or over it, it is paid by Deposit plus Balance Invoice.
+Order Lines the Company has committed to buy. How it is paid follows the Money Rules (ADR-0006).
 _Avoid_: Purchase, checkout
 
-**Deposit Threshold**:
-The order total ($10,000) at and above which an Order is paid by Deposit and Balance Invoice instead of in full.
+**Money Rules**:
+How an Order is paid (ADR-0006). Invoice Company: billed offline, any size. Otherwise: 120 lbs or less — paid in full at checkout; over 120 lbs under $7,500 — must be a Quote Request; over 120 lbs at $7,500+ — placed unpaid with a 50% Deposit due.
+
+**Invoice Company**:
+A Company Cardinal has switched to invoice payment (decided at approval time, in Medusa Admin). Its orders are placed with no card screen and billed offline.
+
+**Freight Line**:
+120 lbs of total shipment weight — the UPS parcel limit. Above it, freight must be quoted unless the order is $7,500+ (freight free) or the Company pays by invoice.
 
 **Deposit**:
-Half of an Order's total, paid up front by card or ACH.
+Half of a heavy $7,500+ Order's total, collected up front by a Stripe invoice Cardinal sends from admin.
 
 **Balance Invoice**:
-The invoice for the other half of an Order, sent after the Deposit and paid later.
+The invoice for the other half, sent after the goods arrive, due in 30 days.
+
+**Guest Quote**:
+A Quote Request from a visitor with no account: they fill the public cart, click "Request a Quote", and type their name, email, and company. It lands in the same admin queue as portal quotes.
 
 **ACH**:
 A bank-transfer payment made through a Stripe invoice, outside the site. Choosing ACH places the Order as awaiting payment.

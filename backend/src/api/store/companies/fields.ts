@@ -13,4 +13,7 @@ export const COMPANY_FIELDS = [
   "currency_code",
   "status",
   "welcome_code",
+  // The Dashboard picks the "Place Order" path from this: ON = invoice
+  // order, OFF = checkout / deposit / quote per the money rules.
+  "invoice_payment_enabled",
 ];

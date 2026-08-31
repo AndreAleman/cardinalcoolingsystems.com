@@ -134,6 +134,34 @@ Vocabulary is defined in `CONTEXT.md`; decisions in `docs/adr/0001`–`0005`.
 
 ## Implementation Decisions
 
+**Revised 2026-08-31 (owner-approved; see ADR-0006).** These decisions
+override anything below that conflicts:
+
+- **The public site stays exactly as it is** — guests keep browsing and
+  buying in-stock parts; nothing is hidden and no auth wall is added.
+  The Dashboard is an additive door for approved Companies.
+- **Money rules replace the $10,000 Deposit Threshold** (ADR-0006):
+  invoice Companies (per-Company `invoice_payment_enabled`, set at
+  approval) are billed offline for every order; otherwise ≤120 lbs pays
+  in full at checkout, >120 lbs under $7,500 must be quoted, >120 lbs at
+  $7,500+ is placed unpaid with a 50% deposit due (Stripe invoices sent
+  manually from admin; balance net 30 after arrival). The freight rule
+  applies to guest checkout too.
+- **Guest quotes**: visitors quote from the public cart with typed-in
+  name/email/company via `POST /store/order-form/guest-quote`. The
+  legacy admin-credential quote route, localStorage quote drawer, and
+  draft-order-based admin quotes page are removed.
+- **Mixed carts split** (one click, two submissions): payable lines take
+  the pay path; quote-only lines (over stock, no price, no weight, or
+  flagged) go off as a separate Quote Request.
+- **Every new Team Member is auto-admin once Cardinal approves the
+  Company**; approvals and spending limits ship built but inert.
+- **The 120 $0-priced variants** stay quote-only with clearer wording
+  ("Price unavailable — quote only") until the owner fixes the prices
+  (list exported to `zero-price-skus.csv`).
+- Sales-manager approval, Locations, subdomains, ad-hoc SKU entry, OEM
+  cross-references, Sortly/atl_stock, and invoice PDFs are NOT ported.
+
 **Delivery is in five slices**, each reviewed and released on its own (see Out of Scope for what each excludes). The slices are: (1) Companies, approval, invites, roles, Price Lists, the Dashboard with Quick Order + stock rule + Quote Requests/Quotes + Favorites + Order Again + Orders, Medusa Admin pages, approvals and Spending Limits switched off; (2) Deposit Threshold, Deposit, Balance Invoice, ACH; (3) PO Upload; (4) Spend Tiers, Referral, Win-Back, Reorder Nudge; (5) marketing homepage section and landing page.
 
 **Reference implementation.** The B2B modules, links, workflows, middlewares, admin pages and storefront components are ported from the Accurate Forklift build (a sibling repo derived from the same Medusa B2B starter), minus its subdomain/tenant layer (ADR-0004). Anything that exists there and fits is copied, not rewritten.

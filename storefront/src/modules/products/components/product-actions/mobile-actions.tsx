@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react"
+import Link from "next/link"
 import React, { Fragment, useMemo } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
@@ -16,6 +17,8 @@ type MobileActionsProps = {
   isAdding?: boolean
   show: boolean
   optionsDisabled: boolean
+  isQuoteOnly?: boolean
+  countryCode?: string
 }
 
 const MobileActions: React.FC<MobileActionsProps> = ({
@@ -28,6 +31,8 @@ const MobileActions: React.FC<MobileActionsProps> = ({
   isAdding,
   show,
   optionsDisabled,
+  isQuoteOnly,
+  countryCode,
 }) => {
   const { state, open, close } = useToggleState()
 
@@ -93,23 +98,34 @@ const MobileActions: React.FC<MobileActionsProps> = ({
                 </svg>
               </button>
 
-              <button
-                onClick={handleAddToCart}
-                disabled={!inStock || !variant || isAdding}
-                className="h-11 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
-                data-testid="mobile-cart-button"
-              >
-                {isAdding ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : !variant ? (
-                  "Select variant"
-                ) : !inStock ? (
-                  "Out of stock"
-                ) : (
-                  "Add to cart"
-                )}
-              </button>
+              {isQuoteOnly ? (
+                <Link
+                  href={`/${countryCode}/contact`}
+                  className="h-11 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200"
+                  style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+                  data-testid="mobile-request-quote-link"
+                >
+                  Request a quote
+                </Link>
+              ) : (
+                <button
+                  onClick={handleAddToCart}
+                  disabled={!inStock || !variant || isAdding}
+                  className="h-11 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+                  data-testid="mobile-cart-button"
+                >
+                  {isAdding ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : !variant ? (
+                    "Select variant"
+                  ) : !inStock ? (
+                    "Out of stock"
+                  ) : (
+                    "Add to cart"
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </Transition>

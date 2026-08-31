@@ -1,19 +1,18 @@
-import { 
+import {
   AbstractNotificationProviderService,
   MedusaError,
 } from "@medusajs/framework/utils"
-import { 
+import {
   Logger,
-  ProviderSendNotificationDTO, 
+  ProviderSendNotificationDTO,
   ProviderSendNotificationResultsDTO,
 } from "@medusajs/framework/types"
-import { 
+import {
   Resend,
-  CreateEmailOptions, 
+  CreateEmailOptions,
 } from "resend"
-import { contactFormEmail } from "../templates/contact-form"
-import OrderPlacedTemplate from "../templates/order-placed"
-import AdminOrderTemplate from "../templates/admin-order"
+import type { ReactNode } from "react"
+import { EmailTemplates, generateEmailTemplate } from "../templates"
 
 
 
@@ -30,18 +29,6 @@ type InjectedDependencies = {
   logger: Logger
 }
 
-enum Templates {
-  ORDER_PLACED = "order-placed",
-  ADMIN_ORDER = "admin-order",
-  CONTACT_FORM = "contact-form",
-}
-
-const templates: {[key in Templates]?: (props: unknown) => React.ReactNode} = {
-  [Templates.ORDER_PLACED]: OrderPlacedTemplate,
-  [Templates.ADMIN_ORDER]: AdminOrderTemplate,
-  [Templates.CONTACT_FORM]: contactFormEmail,
-}
-
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
   static identifier = "notification-resend"
   private resendClient: Resend
@@ -49,12 +36,10 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
   private logger: Logger
 
   constructor(
-    { logger }: InjectedDependencies, 
+    { logger }: InjectedDependencies,
     options: ResendOptions
   ) {
     super()
-    console.log('🔍 RESEND OPTIONS:', options)  // Add this
-    console.log('🔍 FROM EMAIL:', options.from)  // Add this
     this.resendClient = new Resend(options.api_key)
     this.options = options
     this.logger = logger
@@ -75,30 +60,44 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     }
   }
 
-  getTemplate(template: Templates) {
-    if (this.options.html_templates?.[template]) {
-      return this.options.html_templates[template].content
-    }
-    const allowedTemplates = Object.keys(templates)
-
-    if (!allowedTemplates.includes(template)) {
-      return null
-    }
-
-    return templates[template]
-  }
-
-  getTemplateSubject(template: Templates) {
+  getTemplateSubject(template: string, data: unknown) {
     if (this.options.html_templates?.[template]?.subject) {
       return this.options.html_templates[template].subject
     }
     switch(template) {
-      case Templates.ORDER_PLACED:
+      case EmailTemplates.ORDER_PLACED:
         return "Order Confirmation"
-      case Templates.ADMIN_ORDER:        // ← add here
-        return "New Order Received"      // ← and here
-      case Templates.CONTACT_FORM:
+      case EmailTemplates.ADMIN_ORDER:
+        return "New Order Received"
+      case EmailTemplates.CONTACT_FORM:
         return "New Contact Form Submission"
+      case EmailTemplates.OPERATOR_NOTIFIED: {
+        const requestType = (data as any)?.requestType
+        switch (requestType) {
+          case "quote":
+            return "New Quote Request"
+          case "quote-accepted":
+            return "Quote accepted — new order ready"
+          case "quote-rejected":
+            return "Quote rejected by customer"
+          case "quote-message":
+            return "Customer replied on a Quote"
+          default:
+            return "New order placed"
+        }
+      }
+      case EmailTemplates.QUOTE_RECEIVED:
+        return "We received your Quote Request"
+      case EmailTemplates.QUOTE_READY:
+        return "Your Quote is ready to review"
+      case EmailTemplates.QUOTE_ACCEPTED_CLIENT:
+        return "Your order is confirmed"
+      case EmailTemplates.APPROVAL_REQUESTED:
+        return "A request needs your approval"
+      case EmailTemplates.REQUEST_APPROVED:
+        return "Your request was approved"
+      case EmailTemplates.REQUEST_REJECTED:
+        return "Your request was rejected"
       default:
         return "New Email"
     }
@@ -107,29 +106,35 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
   async send(
     notification: ProviderSendNotificationDTO
   ): Promise<ProviderSendNotificationResultsDTO> {
-    const template = this.getTemplate(notification.template as Templates)
-
-    if (!template) {
-      this.logger.error(`Couldn't find an email template for ${notification.template}`)
-      return {}
-    }
-
     const commonOptions = {
       from: this.options.from,
       to: [notification.to],
-      subject: this.getTemplateSubject(notification.template as Templates),
+      subject: this.getTemplateSubject(notification.template, notification.data),
     }
 
     let emailOptions: CreateEmailOptions
-    if (typeof template === "string") {
+    const htmlTemplate = this.options.html_templates?.[notification.template]?.content
+    if (htmlTemplate) {
       emailOptions = {
         ...commonOptions,
-        html: template,
+        html: htmlTemplate,
       }
     } else {
+      // React Email templates are registered by key in
+      // ../templates/index.tsx (generateEmailTemplate validates the
+      // payload with the template's isXData guard).
+      let reactBody: ReactNode
+      try {
+        reactBody = generateEmailTemplate(notification.template, notification.data)
+      } catch (err: any) {
+        this.logger.error(
+          `Couldn't find an email template for ${notification.template} (${err?.message ?? err})`
+        )
+        return {}
+      }
       emailOptions = {
         ...commonOptions,
-        react: template(notification.data),
+        react: reactBody,
       }
     }
 

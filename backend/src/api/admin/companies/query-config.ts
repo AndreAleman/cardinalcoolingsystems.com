@@ -13,6 +13,7 @@ export const adminCompanyFields = [
   "status",
   "welcome_code",
   "price_list_id",
+  "invoice_payment_enabled",
   "created_at",
   "employees.id",
   "employees.role",

@@ -7,6 +7,7 @@ import { adminCompanyQueryConfig } from "./query-config";
 import {
   AdminAssignCompanyPriceList,
   AdminGetCompaniesParams,
+  AdminSetInvoicePayment,
   AdminUpdateTeamMember,
 } from "./validators";
 import { createSelectParams } from "@medusajs/medusa/api/utils/validators";
@@ -31,6 +32,11 @@ export const adminCompanyMiddlewares: MiddlewareRoute[] = [
     matcher: "/admin/companies/:id/price-list",
     methods: ["POST"],
     middlewares: [validateAndTransformBody(AdminAssignCompanyPriceList), retrieveQuery],
+  },
+  {
+    matcher: "/admin/companies/:id/invoice-payment",
+    methods: ["POST"],
+    middlewares: [validateAndTransformBody(AdminSetInvoicePayment), retrieveQuery],
   },
   {
     matcher: "/admin/companies/:id/team-members/:teamMemberId",

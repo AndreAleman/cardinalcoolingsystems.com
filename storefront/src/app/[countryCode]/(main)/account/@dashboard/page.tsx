@@ -6,20 +6,37 @@ import { getCustomer } from "@lib/data/customer"
 import { listOrders } from "@lib/data/orders"
 import { getCompany } from "@lib/data/companies"
 import DashboardShell from "@modules/account/components/dashboard-shell"
+import BuyerPortal from "@modules/account/components/buyer-portal"
 
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Order everything for your company from one page.",
 }
 
-export default async function OverviewTemplate() {
+type Props = {
+  params: { countryCode: string }
+}
+
+export default async function OverviewTemplate({ params }: Props) {
   const customer = await getCustomer().catch(() => null)
-  const orders = (await listOrders().catch(() => null)) || null
   const membership = await getCompany()
 
   if (!customer) {
     notFound()
   }
+
+  // Approved Company → the one-page buyer portal. Everyone else
+  // (retail customers, pending/declined Companies) keeps the classic
+  // overview; DashboardShell shows the pending/declined screens itself.
+  if (membership?.company.status === "approved") {
+    return (
+      <DashboardShell membership={membership}>
+        <BuyerPortal membership={membership} countryCode={params.countryCode} />
+      </DashboardShell>
+    )
+  }
+
+  const orders = (await listOrders().catch(() => null)) || null
 
   return (
     <DashboardShell membership={membership}>

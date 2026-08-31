@@ -6,12 +6,14 @@ import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import RequestQuoteModal from "@modules/cart/components/request-quote-modal"
 import { HttpTypes } from "@medusajs/types"
 
 type SummaryProps = {
   cart: HttpTypes.StoreCart & {
     promotions: HttpTypes.StorePromotion[]
   }
+  customer?: HttpTypes.StoreCustomer | null
 }
 
 function getCheckoutStep(cart: HttpTypes.StoreCart) {
@@ -24,7 +26,7 @@ function getCheckoutStep(cart: HttpTypes.StoreCart) {
   }
 }
 
-const Summary = ({ cart }: SummaryProps) => {
+const Summary = ({ cart, customer }: SummaryProps) => {
   const step = getCheckoutStep(cart)
     console.log('🔍 FULL CART DEBUG:', {
     subtotal: cart.subtotal,
@@ -56,6 +58,7 @@ const Summary = ({ cart }: SummaryProps) => {
       >
         <Button className="w-full h-10">Go to checkout</Button>
       </LocalizedClientLink>
+      <RequestQuoteModal customer={customer} />
     </div>
   )
 }

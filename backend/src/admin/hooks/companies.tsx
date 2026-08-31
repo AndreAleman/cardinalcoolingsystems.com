@@ -33,6 +33,7 @@ export type AdminCompany = {
   status: CompanyStatus
   welcome_code?: string | null
   price_list_id?: string | null
+  invoice_payment_enabled?: boolean
   created_at: string
   employees?: AdminTeamMember[]
 }
@@ -104,6 +105,29 @@ export const useAssignCompanyPriceList = (id: string) => {
       queryClient.invalidateQueries({ queryKey: companyKey(id) })
       queryClient.invalidateQueries({ queryKey: ["companies"] })
       toast.success(company.price_list_id ? "Custom Price List assigned" : "Company will use catalog prices")
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+/* Turn invoice payment on or off for a Company. ON: every order any
+   size is placed unpaid and billed offline. */
+export const useSetInvoicePayment = (id: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (enabled: boolean) =>
+      sdk.client.fetch<{ company: AdminCompany }>(`/admin/companies/${id}/invoice-payment`, {
+        method: "POST",
+        body: { enabled },
+      }),
+    onSuccess: ({ company }) => {
+      queryClient.invalidateQueries({ queryKey: companyKey(id) })
+      queryClient.invalidateQueries({ queryKey: ["companies"] })
+      toast.success(
+        company.invoice_payment_enabled
+          ? `${company.name} can now pay by invoice`
+          : `${company.name} pays by the standard payment rules`
+      )
     },
     onError: (err: Error) => toast.error(err.message),
   })

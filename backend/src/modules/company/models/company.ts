@@ -27,6 +27,10 @@ export const Company = model.define("company", {
   spending_limit_reset_frequency: model
     .enum(["never", "daily", "weekly", "monthly", "yearly"])
     .default("monthly"),
+  // Cardinal decides at approval time whether this Company may pay by
+  // invoice. ON: every order any size is placed unpaid and billed offline.
+  // OFF: the weight/total payment rules apply (see utils/payment-rules).
+  invoice_payment_enabled: model.boolean().default(false),
   employees: model.hasMany(() => Employee),
   invites: model.hasMany(() => CompanyInvite),
 });

@@ -10,6 +10,13 @@ import { CompanyWelcomeTemplate, COMPANY_WELCOME, isCompanyWelcomeData } from '.
 import { CompanySignupAdminTemplate, COMPANY_SIGNUP_ADMIN, isCompanySignupAdminData } from './company-signup-admin'
 import { CompanyDecidedTemplate, COMPANY_DECIDED, isCompanyDecidedData } from './company-decided'
 import { CompanyInviteTemplate, COMPANY_INVITE, isCompanyInviteData } from './company-invite'
+import { OperatorNotifiedTemplate, OPERATOR_NOTIFIED, isOperatorNotifiedData } from './operator-notified'
+import { QuoteReceivedTemplate, QUOTE_RECEIVED, isQuoteReceivedData } from './quote-received'
+import { QuoteReadyTemplate, QUOTE_READY, isQuoteReadyData } from './quote-ready'
+import { QuoteAcceptedClientTemplate, QUOTE_ACCEPTED_CLIENT, isQuoteAcceptedClientData } from './quote-accepted-client'
+import { ApprovalRequestedTemplate, APPROVAL_REQUESTED, isApprovalRequestedData } from './approval-requested'
+import { RequestApprovedTemplate, REQUEST_APPROVED, isRequestApprovedData } from './request-approved'
+import { RequestRejectedTemplate, REQUEST_REJECTED, isRequestRejectedData } from './request-rejected'
 
 export const EmailTemplates = {
   INVITE_USER,
@@ -20,6 +27,13 @@ export const EmailTemplates = {
   COMPANY_SIGNUP_ADMIN,
   COMPANY_DECIDED,
   COMPANY_INVITE,
+  OPERATOR_NOTIFIED,
+  QUOTE_RECEIVED,
+  QUOTE_READY,
+  QUOTE_ACCEPTED_CLIENT,
+  APPROVAL_REQUESTED,
+  REQUEST_APPROVED,
+  REQUEST_REJECTED,
   CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
@@ -90,6 +104,48 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.COMPANY_INVITE}"`)
       }
       return <CompanyInviteTemplate {...data} />
+
+    case EmailTemplates.OPERATOR_NOTIFIED:
+      if (!isOperatorNotifiedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.OPERATOR_NOTIFIED}"`)
+      }
+      return <OperatorNotifiedTemplate {...data} />
+
+    case EmailTemplates.QUOTE_RECEIVED:
+      if (!isQuoteReceivedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.QUOTE_RECEIVED}"`)
+      }
+      return <QuoteReceivedTemplate {...data} />
+
+    case EmailTemplates.QUOTE_READY:
+      if (!isQuoteReadyData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.QUOTE_READY}"`)
+      }
+      return <QuoteReadyTemplate {...data} />
+
+    case EmailTemplates.QUOTE_ACCEPTED_CLIENT:
+      if (!isQuoteAcceptedClientData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.QUOTE_ACCEPTED_CLIENT}"`)
+      }
+      return <QuoteAcceptedClientTemplate {...data} />
+
+    case EmailTemplates.APPROVAL_REQUESTED:
+      if (!isApprovalRequestedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.APPROVAL_REQUESTED}"`)
+      }
+      return <ApprovalRequestedTemplate {...data} />
+
+    case EmailTemplates.REQUEST_APPROVED:
+      if (!isRequestApprovedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.REQUEST_APPROVED}"`)
+      }
+      return <RequestApprovedTemplate {...data} />
+
+    case EmailTemplates.REQUEST_REJECTED:
+      if (!isRequestRejectedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.REQUEST_REJECTED}"`)
+      }
+      return <RequestRejectedTemplate {...data} />
 
     case EmailTemplates.CONTACT_FORM:  // ✅ Simplified case
       console.log('[Templates] Using CONTACT_FORM template')

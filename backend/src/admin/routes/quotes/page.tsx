@@ -1,189 +1,135 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { DocumentText } from "@medusajs/icons"
-import {
-  Badge,
-  Container,
-  Heading,
-  Table,
-  Text,
-  Tooltip,
-} from "@medusajs/ui"
-import { useQuoteRequests, QuoteDraftOrder } from "../../hooks/quotes"
+import { Button, Container, Heading, Table, Text, Toaster } from "@medusajs/ui"
+import { useState } from "react"
+import { QuoteStatus, useQuotes } from "../../hooks/quotes"
+import { formatAmount, formatDate } from "../../lib/format"
+import { QuoteStatusBadge } from "./components/quote-status-badge"
 
-// ── helpers ──────────────────────────────────────────────────────────────────
+const FILTERS: { label: string; statuses?: QuoteStatus[] }[] = [
+  { label: "Needs action", statuses: ["pending_merchant"] },
+  { label: "Sent", statuses: ["pending_customer"] },
+  { label: "Closed", statuses: ["accepted", "customer_rejected", "merchant_rejected"] },
+  { label: "All" },
+]
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  })
-}
+const QuotesPage = () => {
+  const [filter, setFilter] = useState<(typeof FILTERS)[number]>(FILTERS[3])
+  const { data, isPending } = useQuotes()
 
-function TimelineBadge({ timeline }: { timeline?: string }) {
-  if (!timeline) return <Text className="text-ui-fg-muted text-xs">—</Text>
-  const color =
-    timeline.toLowerCase().includes("soon") ||
-    timeline.toLowerCase().includes("asap")
-      ? "red"
-      : timeline.toLowerCase().includes("week")
-      ? "orange"
-      : "grey"
-  return (
-    <Badge rounded="full" size="2xsmall" color={color}>
-      {timeline}
-    </Badge>
+  const quotes = (data?.quotes ?? []).filter(
+    (quote) => !filter.statuses || filter.statuses.includes(quote.status)
   )
-}
-
-function ItemsSummary({ items }: { items: QuoteDraftOrder["items"] }) {
-  if (!items?.length) return <Text className="text-ui-fg-muted text-xs">—</Text>
-
-  const summary = items
-    .map((i) => `${i.variant?.sku ?? i.title} ×${i.quantity}`)
-    .join(", ")
-
-  const label = `${items.length} ${items.length === 1 ? "item" : "items"}`
 
   return (
-    <Tooltip content={summary}>
-      <Text className="text-ui-fg-base text-xs cursor-default underline decoration-dotted underline-offset-2">
-        {label}
-      </Text>
-    </Tooltip>
-  )
-}
-
-// ── page ─────────────────────────────────────────────────────────────────────
-
-const QuotesRoute = () => {
-  const { draft_orders, isLoading, refetch } = useQuoteRequests()
-
-  return (
-    <Container className="flex flex-col p-0 overflow-hidden">
-      {/* Header */}
-      <div className="p-6 flex items-center justify-between border-b border-ui-border-base">
-        <div>
-          <Heading className="font-sans font-medium h1-core">
-            Quote Requests
-          </Heading>
-          <Text className="text-ui-fg-muted text-sm mt-0.5">
-            {isLoading ? "Loading…" : `${draft_orders.length} pending`}
-          </Text>
-        </div>
-        <button
-          onClick={() => refetch()}
-          className="text-xs text-ui-fg-muted hover:text-ui-fg-base transition-colors"
-        >
-          ↻ Refresh
-        </button>
-      </div>
-
-      {/* Table */}
-      {!isLoading && draft_orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-2">
-          <DocumentText className="text-ui-fg-muted" />
-          <Text className="text-ui-fg-muted text-sm">No quote requests yet</Text>
-          <Text className="text-ui-fg-subtle text-xs">
-            Submitted quotes from the storefront will appear here.
-          </Text>
-        </div>
-      ) : (
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>#</Table.HeaderCell>
-              <Table.HeaderCell>Customer</Table.HeaderCell>
-              <Table.HeaderCell>Company</Table.HeaderCell>
-              <Table.HeaderCell>Items</Table.HeaderCell>
-              <Table.HeaderCell>Timeline</Table.HeaderCell>
-              <Table.HeaderCell>Notes</Table.HeaderCell>
-              <Table.HeaderCell>Submitted</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {draft_orders.map((order) => (
-              <Table.Row
-                key={order.id}
-                className="cursor-pointer hover:bg-ui-bg-subtle transition-colors"
-                onClick={() =>
-                  (window.location.href = `/app/orders/${order.id}`)
-                }
+    <>
+      <Container className="flex flex-col p-0 overflow-hidden">
+        <div className="px-6 py-4 flex items-center justify-between border-b border-ui-border-base">
+          <div>
+            <Heading className="font-sans font-medium h1-core">Quotes</Heading>
+            <Text size="small" leading="compact" className="text-ui-fg-subtle">
+              Price pending quotes, then send them back to the customer.
+            </Text>
+          </div>
+          <div className="flex gap-1">
+            {FILTERS.map((f) => (
+              <Button
+                key={f.label}
+                size="small"
+                variant={f.label === filter.label ? "secondary" : "transparent"}
+                onClick={() => setFilter(f)}
               >
-                {/* Display ID */}
-                <Table.Cell>
-                  <Text className="text-ui-fg-base text-sm font-medium">
-                    #{order.display_id}
-                  </Text>
-                </Table.Cell>
-
-                {/* Customer email + phone */}
-                <Table.Cell>
-                  <Text className="text-ui-fg-base text-sm">{order.email}</Text>
-                  {order.metadata?.phone && (
-                    <Text className="text-ui-fg-muted text-xs">
-                      {order.metadata.phone}
-                    </Text>
-                  )}
-                </Table.Cell>
-
-                {/* Company */}
-                <Table.Cell>
-                  <Text className="text-ui-fg-base text-sm">
-                    {order.metadata?.company || (
-                      <span className="text-ui-fg-muted">—</span>
-                    )}
-                  </Text>
-                </Table.Cell>
-
-                {/* Items */}
-                <Table.Cell>
-                  <ItemsSummary items={order.items} />
-                </Table.Cell>
-
-                {/* Timeline */}
-                <Table.Cell>
-                  <TimelineBadge timeline={order.metadata?.timeline} />
-                </Table.Cell>
-
-                {/* Notes — truncated */}
-                <Table.Cell className="max-w-[200px]">
-                  {order.metadata?.notes ? (
-                    <Tooltip content={order.metadata.notes}>
-                      <Text className="text-ui-fg-muted text-xs truncate cursor-default underline decoration-dotted underline-offset-2 block max-w-[180px]">
-                        {order.metadata.notes}
-                      </Text>
-                    </Tooltip>
-                  ) : (
-                    <Text className="text-ui-fg-muted text-xs">—</Text>
-                  )}
-                </Table.Cell>
-
-                {/* Date */}
-                <Table.Cell>
-                  <Text className="text-ui-fg-muted text-sm">
-                    {formatDate(order.created_at)}
-                  </Text>
-                </Table.Cell>
-
-                {/* Status */}
-                <Table.Cell>
-                  <Badge
-                    rounded="full"
-                    size="2xsmall"
-                    color={order.status === "open" ? "blue" : "green"}
-                  >
-                    {order.status}
-                  </Badge>
-                </Table.Cell>
-              </Table.Row>
+                {f.label}
+              </Button>
             ))}
-          </Table.Body>
-        </Table>
-      )}
-    </Container>
+          </div>
+        </div>
+
+        {isPending ? (
+          <div className="px-6 py-4">
+            <Text size="small" className="text-ui-fg-subtle">Loading…</Text>
+          </div>
+        ) : quotes.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-2">
+            <DocumentText className="text-ui-fg-muted" />
+            <Text className="text-ui-fg-muted text-sm">No quotes here</Text>
+            <Text className="text-ui-fg-subtle text-xs">
+              Quotes requested from the storefront will appear on this page.
+            </Text>
+          </div>
+        ) : (
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Quote</Table.HeaderCell>
+                <Table.HeaderCell>Customer</Table.HeaderCell>
+                <Table.HeaderCell>Company</Table.HeaderCell>
+                <Table.HeaderCell>Total</Table.HeaderCell>
+                <Table.HeaderCell>Created</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {quotes.map((quote) => {
+                const customerName = [
+                  quote.customer?.first_name,
+                  quote.customer?.last_name,
+                ]
+                  .filter(Boolean)
+                  .join(" ")
+                return (
+                  <Table.Row
+                    key={quote.id}
+                    className="cursor-pointer hover:bg-ui-bg-subtle transition-colors"
+                    onClick={() => (window.location.href = `/app/quotes/${quote.id}`)}
+                  >
+                    <Table.Cell>
+                      <Text size="small" weight="plus" className="text-ui-fg-base">
+                        #{quote.draft_order?.display_id ?? "—"}
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text size="small" className="text-ui-fg-base">
+                        {quote.customer?.email ?? "—"}
+                      </Text>
+                      {customerName && (
+                        <Text size="xsmall" className="text-ui-fg-muted">
+                          {customerName}
+                        </Text>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text size="small">
+                        {quote.customer?.employee?.company?.name || (
+                          <span className="text-ui-fg-muted">—</span>
+                        )}
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text size="small" className="tabular-nums">
+                        {formatAmount(
+                          quote.draft_order?.total,
+                          quote.draft_order?.currency_code
+                        )}
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text size="small" className="text-ui-fg-muted">
+                        {formatDate(quote.created_at)}
+                      </Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <QuoteStatusBadge status={quote.status} />
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              })}
+            </Table.Body>
+          </Table>
+        )}
+      </Container>
+      <Toaster />
+    </>
   )
 }
 
@@ -192,4 +138,4 @@ export const config = defineRouteConfig({
   icon: DocumentText,
 })
 
-export default QuotesRoute
+export default QuotesPage

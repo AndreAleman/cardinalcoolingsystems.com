@@ -24,11 +24,6 @@ import {
   MEILISEARCH_ADMIN_KEY
 } from 'lib/constants';
 
-console.log('🔍 CHECKING ENV VARIABLES:')
-console.log('  RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL)
-console.log('  RESEND_FROM:', process.env.RESEND_FROM)
-console.log('  CONSTANT VALUE:', RESEND_FROM_EMAIL)
-
 loadEnv(process.env.NODE_ENV, process.cwd());
 
 const medusaConfig = {
@@ -65,6 +60,15 @@ const medusaConfig = {
   modules: [
     {
       resolve: "./src/modules/company",
+    },
+    {
+      resolve: "./src/modules/approval",
+    },
+    {
+      resolve: "./src/modules/quote",
+    },
+    {
+      resolve: "./src/modules/favorite",
     },
     {
       resolve: "./src/modules/sanity",
@@ -249,5 +253,4 @@ const medusaConfig = {
   ]
 };
 
-console.log(JSON.stringify(medusaConfig, null, 2));
 export default defineConfig(medusaConfig);

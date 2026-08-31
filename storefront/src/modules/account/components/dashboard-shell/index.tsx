@@ -1,4 +1,5 @@
 import { CompanyMembership, getTeam } from "@lib/data/companies"
+import { getApprovalSettings } from "@lib/data/dashboard"
 import TeamSection from "../team-section"
 import PendingCompany from "../pending-company"
 import DeclinedCompany from "../declined-company"
@@ -15,7 +16,9 @@ type DashboardShellProps = {
   tickets stack Quick Order, Quotes, Orders and Team inside it.
 */
 const DashboardShell = async ({ membership, children }: DashboardShellProps) => {
-  const teamData = membership?.company.status === "approved" ? await getTeam() : null
+  const isApproved = membership?.company.status === "approved"
+  const teamData = isApproved ? await getTeam() : null
+  const approvalSettings = isApproved ? await getApprovalSettings() : null
   return (
     <div data-testid="dashboard-shell">
       {membership && (
@@ -46,7 +49,12 @@ const DashboardShell = async ({ membership, children }: DashboardShellProps) => 
           {children}
           {teamData && (
             <div className="mt-10">
-              <TeamSection team={teamData.team} invites={teamData.invites} />
+              <TeamSection
+                team={teamData.team}
+                invites={teamData.invites}
+                role={membership?.role}
+                requiresAdminApproval={approvalSettings?.requires_admin_approval}
+              />
             </div>
           )}
         </>

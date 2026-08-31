@@ -18,6 +18,13 @@ export const AdminUpdateTeamMember = z
   .strict();
 export type AdminUpdateTeamMemberType = z.infer<typeof AdminUpdateTeamMember>;
 
+export const AdminSetInvoicePayment = z
+  .object({
+    enabled: z.boolean(),
+  })
+  .strict();
+export type AdminSetInvoicePaymentType = z.infer<typeof AdminSetInvoicePayment>;
+
 export const AdminAssignCompanyPriceList = z
   .object({
     price_list_id: z.string().min(1).nullable(),

@@ -4,6 +4,7 @@ import { CompanyStatusBadge } from "../components/company-status-badge"
 import { DecideButtons } from "../components/decide-buttons"
 import { TeamMemberRow } from "../components/team-member-row"
 import { CompanyPriceList } from "../components/company-price-list"
+import { CompanyInvoicePayment } from "../components/company-invoice-payment"
 
 /*
   /app/companies/:companyId — the id is the segment after "companies".
@@ -35,6 +36,7 @@ const CompanyDetailPage = () => {
     ["Currency", company.currency_code?.toUpperCase() || "—"],
     ["Welcome code", company.welcome_code || "—"],
     ["Pricing", <CompanyPriceList company={company} />],
+    ["Invoice payment", <CompanyInvoicePayment company={company} />],
   ]
 
   return (

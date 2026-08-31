@@ -426,6 +426,13 @@ export async function placeOrder() {
     redirect(`/${countryCode}/order/confirmed/${cartRes?.order.id}`)
   }
 
+  // Completion refused (e.g. the freight/quote NOT_ALLOWED rule): show
+  // the server's message verbatim instead of a generic failure.
+  const completionError = (cartRes as any)?.error
+  if (completionError?.message) {
+    throw new Error(completionError.message)
+  }
+
   return cartRes.cart
 }
 
