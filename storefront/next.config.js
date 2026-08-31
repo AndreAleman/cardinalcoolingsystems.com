@@ -18,9 +18,22 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+  },
   transpilePackages: ['framer-motion'],
   experimental: {
-    optimizePackageImports: ['framer-motion'],
+    optimizePackageImports: [
+      'framer-motion',
+      'lucide-react',
+      '@heroicons/react',
+      '@medusajs/icons',
+      '@medusajs/ui',
+      '@carbon/react',
+      'lodash',
+      'react-country-flag',
+      '@sanity/icons',
+    ],
     esmExternals: 'loose',
     serverActions: {
       // PO Upload sends the buyer's PDF/image as base64 (≤15MB file ≈ 20MB
@@ -29,6 +42,8 @@ const nextConfig = {
     },
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https") ? "https" : "http",
@@ -75,6 +90,20 @@ const nextConfig = {
   },
   serverRuntimeConfig: {
     port: process.env.PORT || 3000
+  },
+  // Keep Sanity Studio out of search engines even if the page-level
+  // <meta name="robots"> tag from next-sanity is ever removed
+  async headers() {
+    return [
+      {
+        source: '/studio',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
+        source: '/studio/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ]
   },
   // ✅ REDIRECTS ADDED HERE
   async redirects() {

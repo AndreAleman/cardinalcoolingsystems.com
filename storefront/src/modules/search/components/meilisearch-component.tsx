@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_INDEX_NAME } from "@lib/search-client";
 
 interface SearchResult {
   id: string;
@@ -38,13 +39,13 @@ const MeiliSearchComponent = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('https://meilisearch-production-4381.up.railway.app/indexes/products/search', {
+      const response = await fetch(`${SEARCH_ENDPOINT}/indexes/${SEARCH_INDEX_NAME}/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 1736a63c82c45518d38d9a8e8bd378885b15c79e85e03fbb4d65bba5e4f452e1'
+          'Authorization': `Bearer ${SEARCH_API_KEY}`
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           q: searchQuery,
           limit: 10
         })

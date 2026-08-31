@@ -1,24 +1,16 @@
 import { Metadata } from "next"
+import dynamic from "next/dynamic"
 import Hero from "@modules/home/components/hero"
-import ProductRangeWrapper from "../product-range-wrapper"
-import ProductCategorySection from "@modules/home/components/product-category-section"
-import IndustriesSupport from "@modules/home/components/industries-support"
-import SanitaryProducts from "@modules/home/components/sanitary-products"
-import AboutUs from "@modules/home/components/about-us"
-import ContactForm from "@modules/home/components/contact-form"
+import TrustBanner from "@modules/home/components/trust-banner"
 import { getCollectionsWithProducts } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
-import MeiliSearchComponent from "@modules/search/components/meilisearch-component"
-import SanitubeSection from '@modules/home/components/suppliers'
-import { client } from "../../../../src/sanity/lib/client"
-import { groq } from "next-sanity"
-import TrustBanner from "@modules/home/components/trust-banner"
-import WhyUs from "@modules/home/components/why-us"
-import IndustriesServed from "@modules/home/components/industries-served"
-import ProductCategories from "@modules/home/components/product-categories"
 import { sdk } from "@lib/config"
-import QuoteForm from "@modules/home/components/quote-form"
-import { Quote } from "lucide-react"
+
+const ProductRangeWrapper = dynamic(() => import("../product-range-wrapper"))
+const IndustriesServed = dynamic(() => import("@modules/home/components/industries-served"))
+const ProductCategories = dynamic(() => import("@modules/home/components/product-categories"))
+const WhyUs = dynamic(() => import("@modules/home/components/why-us"))
+const QuoteForm = dynamic(() => import("@modules/home/components/quote-form"))
 
 
 
@@ -36,32 +28,15 @@ export const metadata: Metadata = {
 }
 
 
-const RECENT_POSTS_QUERY = groq`
-  *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3] {
-    _id,
-    title,
-    slug,
-    excerpt,
-    mainImage{
-      asset->{
-        url
-      },
-      alt
-    }
-  }
-`
-
-
 export default async function Home({
   params: { countryCode },
 }: {
   params: { countryCode: string }
 }) {
   // Fetch data
-  const [collections, region, recentPosts, categoriesData] = await Promise.all([
+  const [collections, region, categoriesData] = await Promise.all([
     getCollectionsWithProducts(countryCode),
     getRegion(countryCode),
-    client.fetch(RECENT_POSTS_QUERY),
     sdk.store.category.list({
       fields: "id,name,handle,description,metadata,*products,products.id,products.thumbnail,products.images,products.images.url,products.images.rank",
     }),
@@ -136,32 +111,6 @@ export default async function Home({
           price: lowestPrice,
         }
       }) ?? []
-
-  // Tube category data
-  const tubeImages = [
-    {
-      id: "tube-1",
-      src: "/images/tube-detail.jpg",
-      alt: "Stainless steel tubing detail"
-    },
-    {
-      id: "tube-2",
-      src: "/images/industrial-equipment.jpg",
-      alt: "Industrial processing equipment"
-    },
-    {
-      id: "tube-3",
-      src: "/images/piping-system.jpg",
-      alt: "Outdoor piping system"
-    },
-    {
-      id: "tube-4",
-      src: "/images/steel-tank.jpg",
-      alt: "Stainless steel tank detail"
-    }
-  ]
-
-  console.log("prices:", rangeProducts.map(p => `${p.title}: ${p.price}`))
 
   return (
     <>

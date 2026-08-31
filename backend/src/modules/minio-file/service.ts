@@ -161,18 +161,19 @@ class MinioFileProviderService extends AbstractFileProviderService {
     try {
       const parsedFilename = path.parse(file.filename)
       const fileKey = `${parsedFilename.name}-${ulid()}${parsedFilename.ext}`
-      const content = Buffer.from(file.content, 'binary')
+      const content = Buffer.from(file.content, 'base64')
 
-      // Upload file with public-read access
+      // Upload file. Send only Content-Type: any x-amz-* header (ACL / metadata)
+      // gets folded into the SigV4 signed set and is rewritten by Railway's edge
+      // proxy in transit, breaking the signature. Public read is granted by the
+      // bucket policy set in initializeBucket(), not a per-object ACL.
       await this.client.putObject(
         this.bucket,
         fileKey,
         content,
         content.length,
         {
-          'Content-Type': file.mimeType,
-          'x-amz-meta-original-filename': file.filename,
-          'x-amz-acl': 'public-read'
+          'Content-Type': file.mimeType
         }
       )
 

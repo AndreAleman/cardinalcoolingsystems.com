@@ -38,8 +38,6 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
     }
 
     fetchCategories()
-    const intervalId = setInterval(fetchCategories, 300000)
-    return () => clearInterval(intervalId)
   }, [])
 
   const staticNavigationItems = [
@@ -80,7 +78,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
             <div key={category.id}>
               <div className="flex items-center">
                 <Link
-                  href={`/categories/${category.handle}`}
+                  href={`/us/categories/${category.handle}`}
                   className={`block py-3 ${textSize} text-gray-600 ${hoverBg} hover:text-blue-600 transition-colors duration-150 flex-1`}
                   style={{ paddingLeft: `${paddingLeft * 4}px` }}
                   onClick={handleLinkClick}
@@ -142,11 +140,23 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
           
           <div className="fixed top-20 left-0 right-0 bg-white border-t border-gray-100 z-50 max-h-[calc(100vh-144px)] overflow-y-auto">
             <nav className="py-6">
-              
+
+              {/* Primary conversion CTA */}
+              <div className="px-6 pb-5 border-b border-gray-100">
+                <Link
+                  href="/us/contact"
+                  className="flex items-center justify-center w-full py-3.5 text-base font-semibold text-white"
+                  style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+                  onClick={handleLinkClick}
+                >
+                  Request a Quote
+                </Link>
+              </div>
+
               <div className="border-b border-gray-100">
                 <div className="flex items-center">
                   <Link
-                    href="/store"
+                    href="/us/store"
                     className="block px-6 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150 flex-1"
                     onClick={handleLinkClick}
                   >
@@ -179,7 +189,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
               {staticNavigationItems.map((item) => (
                 <div key={item.label} className="border-b border-gray-100 last:border-0">
                   <Link
-                    href={item.href}
+                    href={`/us${item.href}`}
                     className="block px-6 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
                     onClick={handleLinkClick}
                   >

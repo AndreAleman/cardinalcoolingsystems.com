@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 
-const PHONE = "(630) 967-9955"
+const PHONE = "(630) 947-9955"
 const EMAIL = "sales@cardinalcoolingsystems.com"
 
 function useInView(threshold = 0.15) {
@@ -46,7 +46,7 @@ const products = [
   {
     title: "Stainless Steel Tubing",
     copy: "Engineered for thermal cycling and high flow rates in chilled water and dielectric cooling loops. 304 & 316L, 3-A certified.",
-    href: "/us/categories/tube",
+    href: "/us/categories/tubes",
     // Add your own images here: category photo first, then a product thumbnail from Medusa CDN
     images: [
       "/images/categories/tubing.jpg",
@@ -83,7 +83,7 @@ const products = [
   {
     title: "Spray Balls & CIP",
     copy: "Automated weld ferrules and CIP devices for orbital-welded, contamination-free cooling loops in high-density AI clusters.",
-    href: "/us/categories/specialty",
+    href: "/us/categories/spray-balls",
     images: [
       "/images/categories/spray-balls.jpg",
       "/images/data-center/products/spray-balls.jpg",

@@ -11,9 +11,11 @@ declare global {
 interface BulkPricingModalProps {
   isOpen: boolean
   onClose: () => void
+  productTitle?: string
+  productSku?: string
 }
 
-export default function BulkPricingModal({ isOpen, onClose }: BulkPricingModalProps) {
+export default function BulkPricingModal({ isOpen, onClose, productTitle, productSku }: BulkPricingModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const formRef = useRef<HTMLFormElement>(null)
@@ -24,13 +26,27 @@ export default function BulkPricingModal({ isOpen, onClose }: BulkPricingModalPr
     setSubmitStatus("idle")
 
     const formData = new FormData(e.currentTarget)
+
+    // Capture the product the customer was viewing so the inquiry email
+    // identifies the part — the discount-table modal is always opened from a
+    // specific product page.
+    const productUrl = typeof window !== "undefined" ? window.location.href : ""
+    const productContext = [
+      productTitle ? `Product: ${productTitle}` : null,
+      productSku ? `SKU: ${productSku}` : null,
+      productUrl ? `Page: ${productUrl}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n")
+
+    const baseMessage = (formData.get("message") as string) || ""
     const data = {
       name: formData.get("name") as string,
       lastName: formData.get("lastName") as string,
       email: formData.get("email") as string,
       phone: formData.get("phone") as string,
       company: formData.get("company") as string,
-      message: `${formData.get("message") as string} - from discount table`,
+      message: `${baseMessage} - from discount table${productContext ? `\n\n${productContext}` : ""}`,
     }
 
     try {
@@ -55,6 +71,8 @@ export default function BulkPricingModal({ isOpen, onClose }: BulkPricingModalPr
             user_email: data.email,
             user_company: data.company,
             form_location: "product_page_discount_table",
+            item_name: productTitle,
+            item_sku: productSku,
           })
         }
         setSubmitStatus("success")

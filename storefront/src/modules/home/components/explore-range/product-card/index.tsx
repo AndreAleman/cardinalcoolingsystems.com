@@ -18,7 +18,7 @@ export default function ProductCard({ product, region }: ProductCardProps) {
 
   return (
     <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-      <Link href={`/products/${productHandle}`} className="block">
+      <Link href={`/us/products/${productHandle}`} className="block">
         {/* Product Image */}
         <div className="aspect-square bg-gray-100 relative overflow-hidden">
           <Image

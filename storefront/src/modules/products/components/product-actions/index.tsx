@@ -11,6 +11,7 @@ import MobileActions from "./mobile-actions"
 import ProductPrice from "../product-price"
 import BulkPricingModal from "../bulk-pricing-modal"
 import { addToCart } from "@lib/data/cart"
+import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { HttpTypes } from "@medusajs/types"
 import Link from "next/link"
 
@@ -39,12 +40,25 @@ export default function ProductActions({
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const [options, setOptions] = useState<Record<string, string | undefined>>({})
+  // Initialize options from the server-resolved variant (or the only variant)
+  // so the very first render — including SSR HTML — has the variant selected
+  // and shows "Add To Cart" rather than the "Select options" placeholder.
+  // Without this, Googlebot's static crawl of feed deeplinks (?size=...&alloy=...)
+  // sees a disabled placeholder and flags the page as missing a buy button.
+  const [options, setOptions] = useState<Record<string, string | undefined>>(() => {
+    if (initialSelectedVariant) {
+      return optionsAsKeymap(initialSelectedVariant.options) ?? {}
+    } else if (product.variants?.length === 1) {
+      return optionsAsKeymap(product.variants[0].options) ?? {}
+    }
+    return {}
+  })
   const [isAdding, setIsAdding] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [bulkModalOpen, setBulkModalOpen] = useState(false)
   const countryCode = useParams().countryCode as string
 
+  // Sync on subsequent prop changes (e.g. client-side navigation between variants).
   useEffect(() => {
     if (initialSelectedVariant) {
       const variantOptions = optionsAsKeymap(initialSelectedVariant.options)
@@ -68,7 +82,12 @@ export default function ProductActions({
       const params = new URLSearchParams()
       selectedVariant.options?.forEach((opt: any) => {
         if (opt.option?.title && opt.value) {
-          const optionName = opt.option.title.toLowerCase()
+          // Strip parentheses (e.g. "Size (Tube OD)" -> "size") so URLs match
+          // the product-feed format and the server-side findVariantByOptions lookup.
+          const optionName = opt.option.title
+            .toLowerCase()
+            .replace(/\s*\([^)]*\)/g, "")
+            .trim()
           let optionValue = opt.value.toLowerCase()
           optionValue = optionValue.replace(/["'']/g, "in").replace(/\s+/g, "")
           params.set(optionName, optionValue)
@@ -149,6 +168,7 @@ export default function ProductActions({
     setIsAdding(true)
     try {
       await addToCart({ variantId: selectedVariant.id, quantity, countryCode })
+      notifyCartUpdated()
       if (typeof window !== "undefined") {
         window.dataLayer = window.dataLayer || []
         window.dataLayer.push({
@@ -190,7 +210,12 @@ export default function ProductActions({
   return (
     <>
       <ToastContainer />
-      <BulkPricingModal isOpen={bulkModalOpen} onClose={() => setBulkModalOpen(false)} />
+      <BulkPricingModal
+        isOpen={bulkModalOpen}
+        onClose={() => setBulkModalOpen(false)}
+        productTitle={product.title ?? undefined}
+        productSku={selectedVariant?.sku ?? undefined}
+      />
 
       <div className="flex flex-col gap-y-6" ref={actionsRef}>
 

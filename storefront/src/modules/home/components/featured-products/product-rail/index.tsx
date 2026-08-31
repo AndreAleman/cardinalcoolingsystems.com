@@ -115,7 +115,7 @@ export default function ProductRail({
               return (
                 <Link
                   key={product.id}
-                  href={`/products/${product.handle}`}
+                  href={`/us/products/${product.handle}`}
                   className="md:col-span-2 bg-white border border-slate-200 p-8 hover:shadow-lg transition-all duration-300 group flex flex-col md:flex-row gap-8 items-center overflow-hidden"
                 >
                   <div className="flex-1 space-y-6 relative z-10">
@@ -159,7 +159,7 @@ export default function ProductRail({
             return (
               <Link
                 key={product.id}
-                href={`/products/${product.handle}`}
+                href={`/us/products/${product.handle}`}
                 className="bg-white border border-slate-200 hover:shadow-lg transition-all duration-300 group overflow-hidden flex flex-col"
               >
                 <div className="h-48 bg-slate-100 relative overflow-hidden">

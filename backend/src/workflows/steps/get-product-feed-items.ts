@@ -67,7 +67,9 @@ export const getProductFeedItemsStep = createStep(
           "thumbnail",
           "images.*",
           "status",
+          "metadata",
           "variants.*",
+          "variants.metadata",
           "variants.calculated_price.*",
           "variants.options.*",
           "variants.options.option.*",
@@ -96,6 +98,15 @@ export const getProductFeedItemsStep = createStep(
 
       for (const product of products) {
         if (!product.variants.length) {continue}
+
+        // Per Google Merchant Center policy (support.google.com/merchants/answer/10249082):
+        // "Websites that only allow a customer to request a quote are not supported."
+        // Skip the entire product if it's flagged quote-only at the product level.
+        const productRequiresQuote =
+          product.metadata?.requires_quote === true ||
+          product.metadata?.requires_quote === "true"
+        if (productRequiresQuote) {continue}
+
         const salesChannel = product.sales_channels?.find((channel) => {
           return channel?.stock_locations?.some((location) => {
             return location?.address?.country_code.toLowerCase() === countryCode
@@ -108,13 +119,30 @@ export const getProductFeedItemsStep = createStep(
         }) : undefined
 
         for (const variant of product.variants) {
+          // Skip variant-level quote-only items.
+          const variantRequiresQuote =
+            variant.metadata?.requires_quote === true ||
+            variant.metadata?.requires_quote === "true"
+          if (variantRequiresQuote) {continue}
+
           // @ts-ignore
           const calculatedPrice = variant.calculated_price as CalculatedPriceSet
+
+          // Skip variants with no calculated price for this currency.
+          // Per policy, advertised products must be purchasable; price must also be
+          // consistent between feed and landing page.
+          if (
+            !calculatedPrice ||
+            calculatedPrice.calculated_amount === undefined ||
+            calculatedPrice.calculated_amount === null ||
+            Number.isNaN(Number(calculatedPrice.calculated_amount))
+          ) {continue}
+
           const hasOriginalPrice = calculatedPrice?.original_amount !== calculatedPrice?.calculated_amount
-          const originalPrice = hasOriginalPrice ? calculatedPrice.original_amount : 
+          const originalPrice = hasOriginalPrice ? calculatedPrice.original_amount :
             calculatedPrice.calculated_amount
           const salePrice = hasOriginalPrice ? calculatedPrice.calculated_amount : undefined
-          const stockStatus = !variant.manage_inventory ? "in stock" : 
+          const stockStatus = !variant.manage_inventory ? "in stock" :
             !availability?.[variant.id]?.availability ? "out of stock" : "in stock"
 
           // Determine if product has identifiers

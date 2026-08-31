@@ -1,5 +1,6 @@
 import { getCategoriesList } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import NewsletterForm from "@modules/layout/components/newsletter-form"
 
 export default async function Footer() {
   const { product_categories } = await getCategoriesList(0, 50)
@@ -38,7 +39,7 @@ export default async function Footer() {
               can trust.
             </p>
             <p className="mt-4 text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
-              Operated by Colibri Connect LLC dba Cardinal Cooling Systems
+              Cardinal Cooling Systems LLC
             </p>
           </div>
 
@@ -127,12 +128,30 @@ export default async function Footer() {
               <div>
                 <p className="font-semibold text-white mb-1">Address:</p>
                 <p style={{ color: "rgba(255,255,255,0.6)" }}>
-                  1200 NW 14th Terrace<br />
-                  Cape Coral, FL 33993<br />
+                  333 S.E. 2nd Avenue, Suite 2000<br />
+                  Miami, FL 33131<br />
                   United States
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Newsletter signup — email-capture / re-engagement hook */}
+        <div
+          className="py-10 border-b"
+          style={{ borderColor: "rgba(255,255,255,0.08)" }}
+        >
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <h3 className="text-base font-semibold text-white mb-1">
+                Stay Updated
+              </h3>
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Product updates, lead-time news, and cooling-industry insights.
+              </p>
+            </div>
+            <NewsletterForm />
           </div>
         </div>
 
@@ -141,10 +160,10 @@ export default async function Footer() {
 
           {/* Payment icons */}
           <div className="flex items-center gap-3">
-            <img src="/images/payments/visa.svg" alt="Visa" className="h-7 w-auto" />
-            <img src="/images/payments/mastercard.svg" alt="Mastercard" className="h-7 w-auto" />
-            <img src="/images/payments/amex.svg" alt="American Express" className="h-7 w-auto" />
-            <img src="/images/payments/discover.svg" alt="Discover" className="h-7 w-auto" />
+            <img src="/images/payments/visa.svg" alt="Visa" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
+            <img src="/images/payments/mastercard.svg" alt="Mastercard" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
+            <img src="/images/payments/amex.svg" alt="American Express" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
+            <img src="/images/payments/discover.svg" alt="Discover" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
           </div>
 
           {/* SSL */}

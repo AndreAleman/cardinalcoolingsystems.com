@@ -3,6 +3,8 @@
 import { useState, useMemo } from "react"
 import { useParams } from "next/navigation"
 import { addToCart } from "@lib/data/cart"
+import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
+import { captureEvent } from "@lib/util/posthog"
 import { HttpTypes } from "@medusajs/types"
 
 type AddToCartButtonProps = {
@@ -55,6 +57,15 @@ export default function AddToCartButton({ product, variant }: AddToCartButtonPro
         variantId: selectedVariant.id,
         quantity: 1,
         countryCode,
+      })
+      notifyCartUpdated()
+      captureEvent("add_to_cart", {
+        product_id: product.id,
+        product_title: product.title,
+        variant_id: selectedVariant.id,
+        variant_title: selectedVariant.title,
+        quantity: 1,
+        country: countryCode,
       })
     } catch (error) {
       console.error("Error adding to cart:", error)

@@ -255,9 +255,6 @@ const PayPalPaymentButton = ({
     (s) => s.status === "pending"
   )
 
-  // Log full session data so we can see what key holds the PayPal order ID
-  console.log("🔵 PayPal session:", JSON.stringify(session, null, 2))
-
   const handlePayment = async (
     _data: OnApproveData,
     actions: OnApproveActions
@@ -294,8 +291,6 @@ createOrder={async () => {
     (session?.data?.id as string) ||
     (session?.data?.order_id as string) ||
     (session?.data?.paypal_order_id as string)
-  console.log("🔵 PayPal createOrder — orderId:", orderId)
-  console.log("🔵 PayPal session.data:", session?.data)
   return orderId
 }}
           onApprove={handlePayment}

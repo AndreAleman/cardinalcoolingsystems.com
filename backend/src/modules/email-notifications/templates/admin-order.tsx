@@ -27,7 +27,10 @@ export const AdminOrderTemplate: React.FC<AdminOrderTemplateProps> & {
   preview = 'New order received - Admin notification'
 }) => {
   const total = Number(order.summary.raw_current_order_total.value).toFixed(2)
-  const backendUrl = process.env.BACKEND_URL || 'http://localhost:9000'
+  const backendUrl =
+    process.env.BACKEND_PUBLIC_URL ??
+    process.env.RAILWAY_PUBLIC_DOMAIN_VALUE ??
+    'http://localhost:9000'
   
   return (
     <Base preview={preview}>
@@ -144,10 +147,10 @@ AdminOrderTemplate.PreviewProps = {
   shippingAddress: {
     first_name: 'John',
     last_name: 'Smith',
-    address_1: '1200 NW 14th Ter',
-    city: 'Cape Coral',
+    address_1: '333 S.E. 2nd Avenue, Suite 2000',
+    city: 'Miami',
     province: 'FL',
-    postal_code: '33993',
+    postal_code: '33131',
     country_code: 'US'
   }
 } as AdminOrderTemplateProps

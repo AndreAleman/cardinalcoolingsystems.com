@@ -1,4 +1,4 @@
-"use client"
+import Image from "next/image"
 
 export default function TrustBanner() {
   return (
@@ -16,13 +16,13 @@ export default function TrustBanner() {
           <div className="w-px h-6 bg-white/15 flex-shrink-0" />
           <div className="flex items-center justify-around flex-1 gap-8">
             <a href="https://empiricalfoods.com/" target="_blank" rel="noopener noreferrer">
-              <img src="/images/logos/empirical.png" alt="Empirical" className="h-10 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+              <Image src="/images/logos/empirical.png" alt="Empirical" width={140} height={40} loading="lazy" className="h-10 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
             </a>
             <a href="https://nabsupply.com/" target="_blank" rel="noopener noreferrer">
-              <img src="/images/logos/north-american.png" alt="North American Builders Supply" className="h-10 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+              <Image src="/images/logos/north-american.png" alt="North American Builders Supply" width={140} height={40} loading="lazy" className="h-10 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
             </a>
             <a href="https://lawlessgroup.com/" target="_blank" rel="noopener noreferrer">
-              <img src="/images/logos/lawless.png" alt="Lawless Group" className="h-10 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+              <Image src="/images/logos/lawless.png" alt="Lawless Group" width={140} height={40} loading="lazy" className="h-10 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
             </a>
           </div>
         </div>
@@ -35,13 +35,13 @@ export default function TrustBanner() {
           <div className="overflow-x-auto scrollbar-none -mx-6 px-6">
             <div className="flex items-center gap-10 w-max mx-auto">
               <a href="https://empiricalfoods.com/" target="_blank" rel="noopener noreferrer">
-                <img src="/images/logos/empirical.png" alt="Empirical" className="h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+                <Image src="/images/logos/empirical.png" alt="Empirical" width={112} height={32} loading="lazy" className="h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
               </a>
               <a href="https://nabsupply.com/" target="_blank" rel="noopener noreferrer">
-                <img src="/images/logos/north-american.png" alt="North American Builders Supply" className="h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+                <Image src="/images/logos/north-american.png" alt="North American Builders Supply" width={112} height={32} loading="lazy" className="h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
               </a>
               <a href="https://lawlessgroup.com/" target="_blank" rel="noopener noreferrer">
-                <img src="/images/logos/lawless.png" alt="Lawless Group" className="h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
+                <Image src="/images/logos/lawless.png" alt="Lawless Group" width={112} height={32} loading="lazy" className="h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-200" />
               </a>
             </div>
           </div>

@@ -44,17 +44,28 @@ export async function generateStaticParams() {
   return staticParams
 }
 
+// Must match the normalization in backend/src/workflows/steps/get-product-feed-items.ts
+// so feed deeplinks (e.g. ?size=1-1/2in&alloy=t304) resolve to a variant on landing.
+function normalizeOptionKey(title: string) {
+  return title.toLowerCase().replace(/\s*\([^)]*\)/g, '').trim()
+}
+
 function findVariantByOptions(product: any, searchParams: Record<string, string>) {
   if (!searchParams || Object.keys(searchParams).length === 0) {
     return null
   }
 
+  const normalizedSearch: Record<string, string> = {}
+  for (const [key, value] of Object.entries(searchParams)) {
+    normalizedSearch[normalizeOptionKey(key)] = value.toLowerCase()
+  }
+
   return product.variants?.find((variant: any) => {
     return variant.options?.every((opt: any) => {
-      const optionName = opt.option.title.toLowerCase()
+      const optionName = normalizeOptionKey(opt.option.title)
       let optionValue = opt.value.toLowerCase()
       optionValue = optionValue.replace(/["'']/g, 'in').replace(/\s+/g, '')
-      const searchValue = searchParams[optionName]?.toLowerCase()
+      const searchValue = normalizedSearch[optionName]
       return searchValue === optionValue
     })
   })
@@ -146,9 +157,16 @@ export default async function ProductPage({ params, searchParams }: Props) {
       url: `https://cardinalcoolingsystems.com/${params.countryCode}/products/${params.handle}`,
       priceCurrency: region.currency_code.toUpperCase(),
       price: price,
-      availability: variant?.inventory_quantity && variant.inventory_quantity > 0
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+      // Mirror the add-to-cart / product-actions in-stock logic:
+      // a variant is purchasable if it doesn't manage inventory, allows
+      // backorder, or has stock on hand. Only truly out-of-stock managed
+      // variants should report OutOfStock in structured data.
+      availability:
+        !variant?.manage_inventory ||
+        variant?.allow_backorder ||
+        (variant?.inventory_quantity || 0) > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
       seller: {
         "@type": "Organization",

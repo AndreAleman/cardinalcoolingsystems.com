@@ -1,8 +1,10 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
 import { useCartPanel } from "@lib/context/cart-panel-context"
 import { deleteLineItem, updateLineItem } from "@lib/data/cart"
+import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import Link from "next/link"
@@ -67,6 +69,7 @@ export default function CartPanel() {
     try {
       await updateLineItem({ lineId, quantity })
       await fetchCart()
+      notifyCartUpdated()
     } finally {
       setUpdatingId(null)
     }
@@ -77,6 +80,7 @@ export default function CartPanel() {
     try {
       await deleteLineItem(lineId)
       await fetchCart()
+      notifyCartUpdated()
     } finally {
       setUpdatingId(null)
     }
@@ -87,9 +91,11 @@ export default function CartPanel() {
   const subtotal = cart?.subtotal ?? cart?.item_total ?? 0
   const currencyCode = cart?.currency_code ?? "usd"
 
-  // Build the storefront-relative checkout URL — countryCode from cookie not available
-  // here, so we link to /cart (full page) for checkout flow
-  const cartPageUrl = "/us/cart"
+  // Derive countryCode from the current path (first segment, e.g. "/us/...")
+  // so the cart link points to the right locale rather than a hardcoded "/us".
+  const pathname = usePathname()
+  const countryCode = pathname?.split("/").filter(Boolean)[0] || "us"
+  const cartPageUrl = `/${countryCode}/cart`
 
   return (
     <>
@@ -122,7 +128,7 @@ export default function CartPanel() {
             <svg className="w-5 h-5" style={{ color: "#E3000F" }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
-            <h2 className="text-base font-semibold" style={{ color: "#111111" }}>Your Cart</h2>
+            <div className="text-base font-semibold" style={{ color: "#111111" }}>Your Cart</div>
             {itemCount > 0 && (
               <span
                 className="text-white text-xs font-semibold px-2 py-0.5 leading-none"
@@ -214,7 +220,7 @@ export default function CartPanel() {
                       <div className="flex items-start justify-between gap-2">
                         {handle ? (
                           <Link
-                            href={`/products/${handle}`}
+                            href={`/us/products/${handle}`}
                             onClick={closeCartPanel}
                             className="text-sm font-medium leading-snug hover:underline"
                             style={{ color: "#111111" }}

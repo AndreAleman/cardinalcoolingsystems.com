@@ -31,9 +31,43 @@ export const metadata: Metadata = {
   },
 }
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Cardinal Cooling Systems LLC",
+  alternateName: "Cardinal Cooling Systems",
+  legalName: "Cardinal Cooling Systems LLC",
+  url: "https://cardinalcoolingsystems.com",
+  logo: "https://cardinalcoolingsystems.com/images/og-image.jpeg",
+  email: "aleman@cardinalcoolingsystems.com",
+  telephone: "+1-630-947-9955",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "333 S.E. 2nd Avenue, Suite 2000",
+    addressLocality: "Miami",
+    addressRegion: "FL",
+    postalCode: "33131",
+    addressCountry: "US",
+  },
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: "+1-630-947-9955",
+      email: "aleman@cardinalcoolingsystems.com",
+      contactType: "customer service",
+      areaServed: "US",
+      availableLanguage: ["English"],
+    },
+  ],
+}
+
 export default function PageLayout(props: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       <Nav />
       <main className="relative flex flex-col flex-1">
         <NavSpacer />

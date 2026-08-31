@@ -104,13 +104,13 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
 
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm pt-12 pb-4 mb-4 border-b border-gray-100 flex-wrap" aria-label="Breadcrumb">
-            <Link href="/" className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>Home</Link>
+            <Link href="/us" className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>Home</Link>
             <span style={{ color: "#d1d5db" }}>›</span>
-            <Link href="/store" className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>Products</Link>
+            <Link href="/us/store" className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>Products</Link>
             {product.categories && product.categories.length > 0 && (
               <>
                 <span style={{ color: "#d1d5db" }}>›</span>
-                <Link href={`/categories/${product.categories[0].handle}`} className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>
+                <Link href={`/us/categories/${product.categories[0].handle}`} className="transition-colors hover:text-gray-900" style={{ color: "#9ca3af" }}>
                   {product.categories[0].name}
                 </Link>
               </>
@@ -164,7 +164,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
 
                 {/* Product actions */}
                 <Suspense fallback={
-                  <ProductActions disabled={true} product={product} region={region} />
+                  <ProductActions disabled={true} product={product} region={region} selectedVariant={selectedVariant} />
                 }>
                   <ProductActionsWrapper id={product.id} region={region} selectedVariant={selectedVariant} />
                 </Suspense>

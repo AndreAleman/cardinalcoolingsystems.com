@@ -132,15 +132,11 @@ export default function TermsOfService() {
 
         <h2>Contact Information</h2>
         <address>
-          <strong>Cardinal Cooling Systems</strong>
+          <strong>Cardinal Cooling Systems LLC</strong>
           <br />
-          <em>
-            (operated by Colibri Connect LLC dba Cardinal Cooling Systems)
-          </em>
+          333 S.E. 2nd Avenue, Suite 2000
           <br />
-          1200 NW 14th Terrace
-          <br />
-          Cape Coral, FL 33993
+          Miami, FL 33131
           <br />
           USA
           <br />

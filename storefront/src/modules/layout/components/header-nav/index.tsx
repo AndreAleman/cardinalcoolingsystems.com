@@ -29,11 +29,9 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
 
   // Debug: Component mounted
   useEffect(() => {
-    console.log('🎯 NavigationMenu component mounted!')
     setDebugInfo("Component mounted, attempting to fetch categories...")
-    
+
     const timer = setTimeout(() => {
-      console.log('🚀 Starting to fetch categories with SDK...')
       setDebugInfo("Calling SDK...")
       
       sdk.store.category.list({
@@ -41,8 +39,6 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
         include_descendants_tree: true,
         parent_category_id: null,
       }).then(({ product_categories }) => {
-        console.log('📦 Categories fetched:', product_categories?.length || 0, 'items')
-        console.log('📋 Categories data:', product_categories)
         setCategories(product_categories || [])
         setLoading(false)
         setDebugInfo(`Success! Found ${product_categories?.length || 0} categories`)
@@ -127,7 +123,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
         onMouseLeave={() => !loading && categories.length > 0 && handleMainMenuLeave()}
       >
         <Link
-          href="/store"
+          href="/us/store"
           className="flex items-center space-x-1 text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2"
         >
           <span>Shop</span>
@@ -148,7 +144,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
             {categories.map((category) => (
               <div key={category.id}>
                 <Link
-                  href={`/categories/${category.handle}`}
+                  href={`/us/categories/${category.handle}`}
                   className="flex items-center justify-between px-4 py-2 text-base text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
                 >
                   <span>{category.name}</span>
@@ -163,7 +159,7 @@ export default function NavigationMenu({ className = "" }: NavigationProps) {
       {staticNavigationItems.map((item) => (
         <Link
           key={item.label}
-          href={item.href}
+          href={`/us${item.href}`}
           className="text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2"
         >
           {item.label}

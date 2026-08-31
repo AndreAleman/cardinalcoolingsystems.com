@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { useState, FormEvent } from "react";
+import { captureEvent, identifyUser } from "@lib/util/posthog";
+import { filesToAttachments } from "@lib/util/attachments";
+import AttachmentInput from "@modules/common/components/attachment-input";
 
 type ProjectType = "Industrial" | "Data Center" | "Food & Sanitary" | null;
 
@@ -25,6 +28,7 @@ const INITIAL_STATE: FormState = {
 
 export default function QuoteForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -44,6 +48,8 @@ export default function QuoteForm() {
     setStatus("loading");
 
     try {
+      const attachments = await filesToAttachments(attachedFiles);
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`,
         {
@@ -62,6 +68,7 @@ export default function QuoteForm() {
             message: `Project Type: ${form.projectType}\n\nSpecifications:\n${
               form.specifications || "Not provided"
             }`,
+            ...(attachments.length > 0 ? { attachments } : {}),
           }),
         }
       );
@@ -80,8 +87,30 @@ export default function QuoteForm() {
         });
       }
 
+      // PostHog: track the form conversion and identify the lead by email
+      captureEvent("form_submitted", {
+        form_type: "rfq",
+        form_location: "homepage_rfq",
+        project_type: form.projectType,
+        email: form.email,
+        num_attachments: attachments.length,
+      });
+      captureEvent("quote_requested", {
+        form_location: "homepage_rfq",
+        project_type: form.projectType,
+        email: form.email,
+      });
+      identifyUser(form.email, {
+        email: form.email,
+        first_name: form.firstName,
+        last_name: form.lastName,
+        phone: form.phone,
+        lead_project_type: form.projectType,
+      });
+
       setStatus("success");
       setForm(INITIAL_STATE);
+      setAttachedFiles([]);
     } catch {
       setStatus("error");
       setErrorMsg("Something went wrong. Please try again or email us directly.");
@@ -112,8 +141,9 @@ export default function QuoteForm() {
             src="/images/quote-form.jpg"
             alt="Cardinal Cooling Systems industrial equipment"
             fill
+            loading="lazy"
+            sizes="(max-width: 1024px) 0vw, 50vw"
             className="object-cover object-left"
-            priority
           />
         </div>
       </div>
@@ -325,6 +355,14 @@ export default function QuoteForm() {
                 />
               </div>
 
+              {/* Attachments */}
+              <AttachmentInput
+                files={attachedFiles}
+                onChange={setAttachedFiles}
+                disabled={status === "loading"}
+                labelClassName="block text-[11px] font-medium tracking-widest uppercase mb-1.5 text-[#0a1628]"
+              />
+
               {/* Error message */}
               {(status === "error" || errorMsg) && (
                 <p className="text-xs font-medium" style={{ color: "#c0392b" }}>
@@ -374,7 +412,7 @@ export default function QuoteForm() {
                   className="underline underline-offset-2"
                   style={{ color: "#6b7280" }}
                 >
-                  sales@cardinalcoolingsystems.com
+                  aleman@cardinalcoolingsystems.com
                 </a>
               </p>
             </form>
@@ -387,8 +425,9 @@ export default function QuoteForm() {
             src="/images/quote-form.jpg"
             alt="Cardinal Cooling Systems industrial equipment"
             fill
+            loading="lazy"
+            sizes="100vw"
             className="object-cover object-center"
-            priority
           />
         </div>
       </div>

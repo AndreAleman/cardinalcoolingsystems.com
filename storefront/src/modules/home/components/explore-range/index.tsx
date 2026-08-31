@@ -88,7 +88,7 @@ export default function ProductRange({ products }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {displayProducts.map((product) => (
             <div key={product.id} className="group bg-white shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-              <Link href={`/products/${product.handle}`} className="block">
+              <Link href={`/us/products/${product.handle}`} className="block">
                 {/* Product Image */}
                 <div className="aspect-square bg-gray-100 relative overflow-hidden">
                   {product.image && product.image !== "/images/placeholder.jpg" ? (

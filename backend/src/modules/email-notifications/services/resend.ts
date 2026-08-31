@@ -71,6 +71,10 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         return "New Order Received"
       case EmailTemplates.CONTACT_FORM:
         return "New Contact Form Submission"
+      case EmailTemplates.INVITE_USER:
+        return "You've been invited to Cardinal Cooling Systems"
+      case EmailTemplates.ADMIN_USER_REGISTERED:
+        return "New customer registered"
       case EmailTemplates.OPERATOR_NOTIFIED: {
         const requestType = (data as any)?.requestType
         switch (requestType) {
@@ -138,6 +142,14 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         ...commonOptions,
         react: reactBody,
       }
+    }
+
+    if (notification.attachments?.length) {
+      emailOptions.attachments = notification.attachments.map((attachment) => ({
+        content: attachment.content,
+        filename: attachment.filename,
+        contentType: attachment.content_type,
+      }))
     }
 
     const { data, error } = await this.resendClient.emails.send(emailOptions)

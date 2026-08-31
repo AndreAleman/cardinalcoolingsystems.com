@@ -17,7 +17,7 @@ export default function NotFound() {
       </p>
       <Link
         className="flex gap-x-1 items-center group"
-        href="/"
+        href="/us"
       >
         <Text className="text-ui-fg-interactive">Go to frontpage</Text>
         <ArrowUpRightMini

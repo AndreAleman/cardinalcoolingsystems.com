@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { HttpTypes } from "@medusajs/types"
 
 type Props = {
@@ -124,7 +125,7 @@ export default function ProductCategories({ categories }: Props) {
             return (
               <a
                 key={category.id}
-                href={`/categories/${category.handle}`}
+                href={`/us/categories/${category.handle}`}
                 className="group block overflow-hidden no-underline transition-shadow duration-200 hover:shadow-lg"
                 style={{
                   borderRadius: "5px",
@@ -140,15 +141,13 @@ export default function ProductCategories({ categories }: Props) {
                   style={{ height: "210px", backgroundColor: "#dce5ee" }}
                 >
                   {imageUrl && (
-                    <img
+                    <Image
                       src={imageUrl}
                       alt={category.name}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block",
-                      }}
+                      fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                      loading="lazy"
+                      style={{ objectFit: "cover" }}
                     />
                   )}
                   {productCount > 0 && (
@@ -207,7 +206,7 @@ export default function ProductCategories({ categories }: Props) {
 
           {/* All Category CTA card */}
           <a
-            href="/categories"
+            href="/us/categories"
             className="relative flex flex-col justify-end overflow-hidden no-underline transition-opacity duration-200 hover:opacity-90"
             style={{
               borderRadius: "5px",
@@ -221,6 +220,8 @@ export default function ProductCategories({ categories }: Props) {
               src="/images/category-group.svg"
               alt=""
               aria-hidden="true"
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               style={{ opacity: 0.75 }}
             />

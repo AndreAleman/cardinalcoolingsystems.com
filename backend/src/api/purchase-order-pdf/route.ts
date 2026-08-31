@@ -13,8 +13,8 @@ export async function GET(
   // ============================================
   
   const poData = {
-    poNumber: "PO-0010",
-    poDate: "04/16/2026",
+    poNumber: "PO-1013",
+    poDate: "06/16/2026",
     
     vendorName: "Sanitube",
     vendorAddress: {
@@ -26,7 +26,7 @@ export async function GET(
     
     shipTo: {
       name: "empirical foods, Inc. - SSC",
-      line1: "6001 Dakota Ave",
+      line1: "390 164th St.",
       city: "South Sioux City, NE",
       postal: "68776",
       country: "USA"
@@ -34,16 +34,16 @@ export async function GET(
     
     items: [
       { 
-        description: "Butt Weld Concentric Reducer, 304 Stainless Steel, 2in x 1-1/2in", 
-        sku: "31W4P-200150",
-        quantity: 4, 
-        unitPrice: 6.20
+        description: "Butt Weld Reducing Tee, 316, 1in x 1/2in", 
+        sku: "7WRT6P-100050",
+        quantity: 10, 
+        unitPrice: 22.70
       },
       
     ],
     
     
-    notes: "Please ship via UPS 2 Day Air. Contact us upon receipt."
+    notes: "Standard Shipping. Please send tracking number when available."
   };
 
   // ============================================

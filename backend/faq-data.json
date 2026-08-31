@@ -1,248 +1,828 @@
 {
   "fittings": [
-    {"question": "What materials are your sanitary fittings made from?", "answer": "Our sanitary fittings are manufactured from 304 and 316L stainless steel. 316L is recommended for more corrosive environments or applications involving chlorides, while 304 is suitable for most standard food, beverage, and dairy applications."},
-    {"question": "Are your sanitary fittings compatible with CIP and SIP systems?", "answer": "Yes, all our sanitary fittings are designed with smooth internal surfaces that are fully compatible with Clean-In-Place (CIP) and Sterilize-In-Place (SIP) cleaning systems. Their crevice-free design prevents bacterial buildup and ensures thorough cleaning."},
-    {"question": "What industries are sanitary stainless steel fittings used in?", "answer": "Our sanitary fittings are widely used in food and beverage processing, pharmaceutical manufacturing, dairy production, biotechnology, and cosmetic production. Any industry requiring hygienic, contamination-free fluid handling benefits from sanitary stainless steel fittings."},
-    {"question": "Do you carry both tube fittings and pipe fittings?", "answer": "Yes, we carry a complete range of both sanitary tube fittings and sanitary pipe fittings. Tube fittings are sized to OD tubing dimensions common in sanitary systems, while pipe fittings follow standard pipe schedules. Our team can help you select the correct type for your application."}
+    {
+      "question": "What are sanitary fittings?",
+      "answer": "Sanitary fittings are cleanable stainless steel tube connections — elbows, tees, reducers, clamps, ferrules, caps, and gaskets — used to join process lines without crevices, threads, or pockets where bacteria could collect. They are polished to a 32Ra or finer finish and clean in place, which is why they are used in data center cooling, food, beverage, dairy, and pharmaceutical systems."
+    },
+    {
+      "question": "What are sanitary fittings made of?",
+      "answer": "Most sanitary fittings are made of 304 or 316L stainless steel because it is corrosion-resistant, naturally antimicrobial, and easy to clean. 316L adds molybdenum for better resistance to chlorides, glycol, and deionized water and is preferred for cooling and high-purity service."
+    },
+    {
+      "question": "What is the difference between tri-clamp and sanitary fittings?",
+      "answer": "Tri-clamp is a type of sanitary fitting, not a separate category. All tri-clamp fittings are sanitary fittings, but sanitary fittings also include welded, bevel-seat, and I-Line styles. Tri-clamp is simply the most common because it disassembles tool-free for cleaning."
+    },
+    {
+      "question": "How are sanitary fittings sized?",
+      "answer": "Sanitary fittings are sized by the outside diameter (OD) of the tube they connect to, not the flange or clamp width, in sizes from ½\" to 12\". Always measure the tube OD to avoid ordering a fitting that is a half-inch too large."
+    },
+    {
+      "question": "What is the difference between 304 and 316L sanitary fittings?",
+      "answer": "304 is the economical choice for general sanitary and water service. 316L adds molybdenum for superior corrosion resistance against chlorides, glycol, deionized water, and aggressive cleaners, making it the standard for cooling loops and pharmaceutical systems."
+    },
+    {
+      "question": "Are sanitary fittings 3-A certified?",
+      "answer": "Yes. Cardinal's sanitary fittings are manufactured to 3-A sanitary standards with a 32Ra polished finish, and mill test reports are available for full material traceability."
+    }
   ],
   "clamp-fittings": [
-    {"question": "What is the difference between tri-clamp and Tri-Clover fittings?", "answer": "Tri-clamp and Tri-Clover refer to the same connection style — Tri-Clover is a brand name that became a generic industry term. Both use the same ferrule-gasket-clamp assembly and are fully interchangeable as long as they share the same clamp size standard (typically ISO or IDF)."},
-    {"question": "What gasket materials are available for clamp fittings?", "answer": "We offer clamp gaskets in EPDM, Viton (FKM), PTFE, and silicone. EPDM is the most common choice for water-based and steam applications, Viton is preferred for chemical resistance, and PTFE is used in highly aggressive or high-temperature environments."},
-    {"question": "How do I determine the correct clamp size for my tubing?", "answer": "Clamp size is determined by the OD of the ferrule, not the tube OD. Common sizes range from 0.5\" to 6\" clamp. For example, a 1.5\" clamp fits 1\" and 1.5\" tubing — always verify the ferrule OD when selecting clamps and gaskets."},
-    {"question": "Are your clamp fittings 3-A certified?", "answer": "Our sanitary clamp fittings meet 3-A Sanitary Standards requirements and are manufactured from 304 and 316L stainless steel with the surface finishes required for hygienic service. Contact us if you need documentation for your specific compliance requirements."}
+    {
+      "question": "What is the difference between tri-clamp and Tri-Clover fittings?",
+      "answer": "Tri-clamp and Tri-Clover refer to the same connection style — Tri-Clover is a brand name that became a generic industry term. Both use the same ferrule-gasket-clamp assembly and are fully interchangeable as long as they share the same clamp size standard (typically ISO or IDF)."
+    },
+    {
+      "question": "What gasket materials are available for clamp fittings?",
+      "answer": "We offer clamp gaskets in EPDM, Viton (FKM), PTFE, and silicone. EPDM is the most common choice for water-based and steam applications, Viton is preferred for chemical resistance, and PTFE is used in highly aggressive or high-temperature environments."
+    },
+    {
+      "question": "How do I determine the correct clamp size for my tubing?",
+      "answer": "Clamp size is determined by the OD of the ferrule, not the tube OD. Common sizes range from 0.5\" to 6\" clamp. For example, a 1.5\" clamp fits 1\" and 1.5\" tubing — always verify the ferrule OD when selecting clamps and gaskets."
+    },
+    {
+      "question": "Are your clamp fittings 3-A certified?",
+      "answer": "Our sanitary clamp fittings meet 3-A Sanitary Standards requirements and are manufactured from 304 and 316L stainless steel with the surface finishes required for hygienic service. Contact us if you need documentation for your specific compliance requirements."
+    }
   ],
   "clamps": [
-    {"question": "What types of sanitary clamps do you carry?", "answer": "We carry single-pin clamps for standard pressure applications, heavy-duty double-bolt clamps for high-pressure service, and wing nut clamps for quick-release applications. All are available in 304 and 316L stainless steel."},
-    {"question": "What pressure ratings do sanitary clamps support?", "answer": "Standard single-pin clamps are typically rated for pressures up to 150 PSI depending on size and gasket material. High-pressure double-bolted clamps can handle significantly higher pressures. Always verify pressure ratings with your specific clamp size and application requirements."},
-    {"question": "How do I ensure my sanitary clamp creates a proper seal?", "answer": "Proper sealing requires a clean, undamaged gasket seated correctly in the ferrule groove, ferrules that are properly aligned, and the clamp tightened to the recommended torque. Inspect gaskets regularly and replace them if they show signs of wear, cracking, or deformation."},
-    {"question": "Can I use the same clamp for different tube sizes?", "answer": "Clamps are sized to fit specific ferrule ODs. While some clamp sizes can accommodate two adjacent tube sizes (e.g., a 1.5\" clamp fits both 1\" and 1.5\" ferrules), you cannot use a single clamp across very different tube sizes. Always match the clamp to the ferrule OD."}
+    {
+      "question": "What types of sanitary clamps do you carry?",
+      "answer": "We carry single-pin clamps for standard pressure applications, heavy-duty double-bolt clamps for high-pressure service, and wing nut clamps for quick-release applications. All are available in 304 and 316L stainless steel."
+    },
+    {
+      "question": "What pressure ratings do sanitary clamps support?",
+      "answer": "Standard single-pin clamps are typically rated for pressures up to 150 PSI depending on size and gasket material. High-pressure double-bolted clamps can handle significantly higher pressures. Always verify pressure ratings with your specific clamp size and application requirements."
+    },
+    {
+      "question": "How do I ensure my sanitary clamp creates a proper seal?",
+      "answer": "Proper sealing requires a clean, undamaged gasket seated correctly in the ferrule groove, ferrules that are properly aligned, and the clamp tightened to the recommended torque. Inspect gaskets regularly and replace them if they show signs of wear, cracking, or deformation."
+    },
+    {
+      "question": "Can I use the same clamp for different tube sizes?",
+      "answer": "Clamps are sized to fit specific ferrule ODs. While some clamp sizes can accommodate two adjacent tube sizes (e.g., a 1.5\" clamp fits both 1\" and 1.5\" ferrules), you cannot use a single clamp across very different tube sizes. Always match the clamp to the ferrule OD."
+    }
   ],
   "clamp-adapters": [
-    {"question": "What connection types can clamp adapters transition to?", "answer": "Our clamp adapters can transition from tri-clamp ends to NPT threaded, bevel seat, butt-weld, and male/female threaded connections. This makes it easy to integrate sanitary clamp piping with existing threaded or welded equipment."},
-    {"question": "Are clamp adapters available in both 304 and 316L stainless?", "answer": "Yes, our clamp adapters are available in both 304 and 316L stainless steel. 316L is recommended for applications involving chlorides, acids, or more aggressive cleaning chemicals, while 304 is suitable for standard sanitary applications."},
-    {"question": "Can I use a clamp adapter to connect to NPT pipe fittings?", "answer": "Yes, our NPT to tri-clamp adapters allow you to connect standard NPT threaded pipe directly into a sanitary clamp system. These are commonly used when integrating pumps, sensors, or utility connections that have NPT ports into a sanitary tri-clamp process line."},
-    {"question": "What sizes of clamp adapters are available?", "answer": "We carry clamp adapters ranging from 0.5\" to 4\" clamp sizes with various NPT thread sizes on the opposite end. For custom size combinations or less common transitions, please contact us and we can help source the right fitting for your system."}
+    {
+      "question": "What connection types can clamp adapters transition to?",
+      "answer": "Our clamp adapters can transition from tri-clamp ends to NPT threaded, bevel seat, butt-weld, and male/female threaded connections. This makes it easy to integrate sanitary clamp piping with existing threaded or welded equipment."
+    },
+    {
+      "question": "Are clamp adapters available in both 304 and 316L stainless?",
+      "answer": "Yes, our clamp adapters are available in both 304 and 316L stainless steel. 316L is recommended for applications involving chlorides, acids, or more aggressive cleaning chemicals, while 304 is suitable for standard sanitary applications."
+    },
+    {
+      "question": "Can I use a clamp adapter to connect to NPT pipe fittings?",
+      "answer": "Yes, our NPT to tri-clamp adapters allow you to connect standard NPT threaded pipe directly into a sanitary clamp system. These are commonly used when integrating pumps, sensors, or utility connections that have NPT ports into a sanitary tri-clamp process line."
+    },
+    {
+      "question": "What sizes of clamp adapters are available?",
+      "answer": "We carry clamp adapters ranging from 0.5\" to 4\" clamp sizes with various NPT thread sizes on the opposite end. For custom size combinations or less common transitions, please contact us and we can help source the right fitting for your system."
+    }
   ],
   "crosses": [
-    {"question": "What is a sanitary cross fitting used for?", "answer": "A sanitary cross fitting creates a four-way junction in a process line, allowing flow to be split or distributed to multiple branches simultaneously. They are commonly used in CIP distribution manifolds, process skids, and systems where one inlet needs to supply multiple outlets."},
-    {"question": "Are cross fittings harder to clean than tees?", "answer": "Cross fittings require careful attention during CIP because the four-way geometry can create flow shadows where cleaning solution may not reach. Proper CIP design with adequate flow velocity and correct nozzle positioning ensures complete coverage of all four ports."},
-    {"question": "What materials are your cross fittings made from?", "answer": "Our sanitary cross fittings are manufactured from 304 and 316L stainless steel with a sanitary interior finish. All wetted surfaces meet the smooth finish requirements for hygienic processing applications."},
-    {"question": "Do cross fittings come in reducing configurations?", "answer": "Yes, reducing cross fittings are available where one or more branches are a smaller diameter than the main run. This is useful when you need to connect a smaller branch instrument or utility line into a larger main process line."}
+    {
+      "question": "What is a sanitary cross fitting used for?",
+      "answer": "A sanitary cross fitting creates a four-way junction in a process line, allowing flow to be split or distributed to multiple branches simultaneously. They are commonly used in CIP distribution manifolds, process skids, and systems where one inlet needs to supply multiple outlets."
+    },
+    {
+      "question": "Are cross fittings harder to clean than tees?",
+      "answer": "Cross fittings require careful attention during CIP because the four-way geometry can create flow shadows where cleaning solution may not reach. Proper CIP design with adequate flow velocity and correct nozzle positioning ensures complete coverage of all four ports."
+    },
+    {
+      "question": "What materials are your cross fittings made from?",
+      "answer": "Our sanitary cross fittings are manufactured from 304 and 316L stainless steel with a sanitary interior finish. All wetted surfaces meet the smooth finish requirements for hygienic processing applications."
+    },
+    {
+      "question": "Do cross fittings come in reducing configurations?",
+      "answer": "Yes, reducing cross fittings are available where one or more branches are a smaller diameter than the main run. This is useful when you need to connect a smaller branch instrument or utility line into a larger main process line."
+    }
   ],
   "clamp-ferrules": [
-    {"question": "What is the difference between a weld ferrule and a stub ferrule?", "answer": "A weld ferrule (also called a weld neck ferrule) is designed to be butt-welded to tubing and has a tube OD shoulder for proper fit-up. A stub ferrule is a shorter version used where space is limited. Both create the clamp connection point when welded to the tube end."},
-    {"question": "What stainless grades are your ferrules available in?", "answer": "Our clamp ferrules are available in 304 and 316L stainless steel. 316L is preferred in pharmaceutical and aggressive chemical applications, while 304 is commonly used in food, beverage, and dairy applications. Both grades meet 3-A surface finish requirements."},
-    {"question": "How are clamp ferrules attached to tubing?", "answer": "Clamp ferrules are typically butt-welded to the tube end using TIG welding. The ferrule is matched to the tube OD, tack welded in place, then fully welded with a sanitary interior weld that is ground and polished to a smooth, crevice-free finish."},
-    {"question": "Can I buy ferrules separately from the clamp and gasket?", "answer": "Yes, we sell ferrules, clamps, and gaskets separately so you can source exactly what you need. This is useful when you need replacement parts or are building out a new system incrementally. We also offer complete clamp connection kits."}
+    {
+      "question": "What is a clamp ferrule?",
+      "answer": "A clamp ferrule is a flanged stainless steel fitting that is welded to the end of sanitary tube. Two ferrules, a gasket between them, and a tri-clamp form a tri-clamp joint — a leak-tight, tool-free connection that can be opened for cleaning. Ferrules are the most common way to terminate a tube for a sanitary clamp connection."
+    },
+    {
+      "question": "What is the difference between a long weld and short weld ferrule?",
+      "answer": "A long weld ferrule has extra tube length behind the flange, giving more room to weld and align the joint. A short weld ferrule has a shorter body for tight spaces. Both use the same tri-clamp flange; the choice is about welding access and available room."
+    },
+    {
+      "question": "What is a heavy wall ferrule used for?",
+      "answer": "A heavy wall (tank weld) ferrule has a thicker wall and longer body, typically welded into a tank or vessel as an outlet or used in higher-pressure service. Its extra material makes it easier to weld into heavier equipment."
+    },
+    {
+      "question": "How are clamp ferrules sized?",
+      "answer": "Clamp ferrules are sized by the outside diameter (OD) of the tube they weld to, not the flange. The flange OD is always larger than the tube size, so always specify by tube OD, from ½\" to 12\"."
+    },
+    {
+      "question": "What is the pressure rating of a tri-clamp ferrule?",
+      "answer": "The pressure limit of a tri-clamp joint is set by the clamp, not the ferrule — the clamp is the weak point. Using a higher-strength clamp such as a double-pin heavy-duty clamp raises the rated pressure of the same ferrule connection."
+    },
+    {
+      "question": "Do clamp ferrules need orbital welding?",
+      "answer": "Orbital welding is recommended for the cleanest, most repeatable ferrule joint, especially in high-purity work, and automatic weld ferrules have long tangents made for orbital equipment. Manual TIG welding is also common for standard sanitary and cooling installations."
+    }
   ],
   "clamp-eccentric-reducers": [
-    {"question": "What is the advantage of an eccentric reducer over a concentric reducer?", "answer": "An eccentric reducer keeps the bottom of the bore flat (or the top flat depending on orientation), which prevents air pockets from forming in horizontal piping and ensures complete drainage. Concentric reducers keep both ends centered but can trap air or liquid at the transition point in horizontal runs."},
-    {"question": "When should I use a clamp eccentric reducer?", "answer": "Use eccentric reducers on horizontal pump suction lines to prevent air entrainment, at low points in the system where complete drainage is required, and anywhere you need to transition between tube sizes while maintaining a flat bottom for gravity drainage."},
-    {"question": "What sizes of clamp eccentric reducers do you carry?", "answer": "We carry clamp eccentric reducers in common sanitary tube size combinations from 1\" x 0.75\" up to 4\" x 3\". Custom size combinations may be available — contact us with your specific requirements."},
-    {"question": "Are eccentric reducers compatible with CIP systems?", "answer": "Yes, our clamp eccentric reducers are designed for full CIP compatibility. The smooth internal surface and proper orientation (flat bottom down in horizontal runs) ensures cleaning solution flows completely through the reducer without pooling or creating dead zones."}
+    {
+      "question": "What is the advantage of an eccentric reducer over a concentric reducer?",
+      "answer": "An eccentric reducer keeps the bottom of the bore flat (or the top flat depending on orientation), which prevents air pockets from forming in horizontal piping and ensures complete drainage. Concentric reducers keep both ends centered but can trap air or liquid at the transition point in horizontal runs."
+    },
+    {
+      "question": "When should I use a clamp eccentric reducer?",
+      "answer": "Use eccentric reducers on horizontal pump suction lines to prevent air entrainment, at low points in the system where complete drainage is required, and anywhere you need to transition between tube sizes while maintaining a flat bottom for gravity drainage."
+    },
+    {
+      "question": "What sizes of clamp eccentric reducers do you carry?",
+      "answer": "We carry clamp eccentric reducers in common sanitary tube size combinations from 1\" x 0.75\" up to 4\" x 3\". Custom size combinations may be available — contact us with your specific requirements."
+    },
+    {
+      "question": "Are eccentric reducers compatible with CIP systems?",
+      "answer": "Yes, our clamp eccentric reducers are designed for full CIP compatibility. The smooth internal surface and proper orientation (flat bottom down in horizontal runs) ensures cleaning solution flows completely through the reducer without pooling or creating dead zones."
+    }
   ],
   "clamp-concentric-reducers": [
-    {"question": "What is a clamp concentric reducer used for?", "answer": "Clamp concentric reducers connect two different tube sizes while keeping both centerlines aligned. They are used in vertical runs, at pump discharges, and anywhere you need to transition between tube sizes without the drainage concerns that require an eccentric reducer."},
-    {"question": "How do I choose between a concentric and eccentric reducer?", "answer": "Use a concentric reducer in vertical piping or where drainage and air removal are not concerns. Use an eccentric reducer in horizontal piping where you need to prevent air pockets on suction lines or ensure complete drainage. When in doubt, an eccentric reducer is the safer hygienic choice."},
-    {"question": "Are clamp concentric reducers removable without cutting welds?", "answer": "Yes — that is one of the key advantages of clamp-style reducers. The tri-clamp ends allow you to install or remove the reducer without any welding or cutting. This supports flexible system layouts and makes maintenance, cleaning verification, and system modifications much easier."},
-    {"question": "What material options are available for concentric reducers?", "answer": "Our clamp concentric reducers are available in 304 and 316L stainless steel. All internal surfaces are finished to sanitary standards to support CIP cleaning and prevent contamination in hygienic processing systems."}
+    {
+      "question": "What is a clamp concentric reducer used for?",
+      "answer": "Clamp concentric reducers connect two different tube sizes while keeping both centerlines aligned. They are used in vertical runs, at pump discharges, and anywhere you need to transition between tube sizes without the drainage concerns that require an eccentric reducer."
+    },
+    {
+      "question": "How do I choose between a concentric and eccentric reducer?",
+      "answer": "Use a concentric reducer in vertical piping or where drainage and air removal are not concerns. Use an eccentric reducer in horizontal piping where you need to prevent air pockets on suction lines or ensure complete drainage. When in doubt, an eccentric reducer is the safer hygienic choice."
+    },
+    {
+      "question": "Are clamp concentric reducers removable without cutting welds?",
+      "answer": "Yes — that is one of the key advantages of clamp-style reducers. The tri-clamp ends allow you to install or remove the reducer without any welding or cutting. This supports flexible system layouts and makes maintenance, cleaning verification, and system modifications much easier."
+    },
+    {
+      "question": "What material options are available for concentric reducers?",
+      "answer": "Our clamp concentric reducers are available in 304 and 316L stainless steel. All internal surfaces are finished to sanitary standards to support CIP cleaning and prevent contamination in hygienic processing systems."
+    }
   ],
   "clamp-caps": [
-    {"question": "What is a sanitary clamp cap used for?", "answer": "Clamp caps are used to positively close off unused tri-clamp ports, instrument connections, or dead-end lines. They are commonly used during pressure testing, when temporarily isolating a branch, or to cap unused ports on tanks and process vessels."},
-    {"question": "Are clamp caps reusable?", "answer": "Yes, stainless steel clamp caps are fully reusable and designed for repeated assembly and disassembly. Simply replace the gasket when it shows signs of wear. This makes them cost-effective for applications where ports need to be opened and closed frequently."},
-    {"question": "Do clamp caps require a gasket?", "answer": "Yes, clamp caps require a compatible tri-clamp gasket to create a proper seal. The gasket material should match your process requirements — EPDM for most water and steam applications, Viton for chemical resistance, or PTFE for aggressive environments."},
-    {"question": "What sizes of clamp caps are available?", "answer": "We carry sanitary clamp caps from 0.5\" to 6\" clamp sizes in 304 and 316L stainless steel. All caps are manufactured to standard clamp dimensions and are compatible with any tri-clamp ferrule of the same size."}
+    {
+      "question": "What is a sanitary clamp cap used for?",
+      "answer": "Clamp caps are used to positively close off unused tri-clamp ports, instrument connections, or dead-end lines. They are commonly used during pressure testing, when temporarily isolating a branch, or to cap unused ports on tanks and process vessels."
+    },
+    {
+      "question": "Are clamp caps reusable?",
+      "answer": "Yes, stainless steel clamp caps are fully reusable and designed for repeated assembly and disassembly. Simply replace the gasket when it shows signs of wear. This makes them cost-effective for applications where ports need to be opened and closed frequently."
+    },
+    {
+      "question": "Do clamp caps require a gasket?",
+      "answer": "Yes, clamp caps require a compatible tri-clamp gasket to create a proper seal. The gasket material should match your process requirements — EPDM for most water and steam applications, Viton for chemical resistance, or PTFE for aggressive environments."
+    },
+    {
+      "question": "What sizes of clamp caps are available?",
+      "answer": "We carry sanitary clamp caps from 0.5\" to 6\" clamp sizes in 304 and 316L stainless steel. All caps are manufactured to standard clamp dimensions and are compatible with any tri-clamp ferrule of the same size."
+    }
   ],
   "laterals-and-wyes": [
-    {"question": "What is the difference between a lateral and a wye fitting?", "answer": "A lateral branches off at a 45-degree angle from the main run, while a wye has a Y-shaped geometry that splits flow into two equal branches at an angle. Both reduce turbulence compared to standard tees, but their geometry makes them better suited for different flow scenarios and space constraints."},
-    {"question": "Why would I choose a lateral or wye over a standard tee?", "answer": "Laterals and wyes create a gentler flow transition that reduces product shear, turbulence, and pressure drop. This makes them ideal for viscous products, shear-sensitive materials, and systems where drainability is a priority. They are also preferred in CIP systems where smooth flow is essential for effective cleaning."},
-    {"question": "Are sanitary laterals and wyes CIP compatible?", "answer": "Yes, our stainless steel sanitary laterals and wyes are fully CIP compatible. Their angular geometry actually promotes better CIP flow through branch lines compared to straight tees, helping ensure thorough cleaning of all wetted surfaces."},
-    {"question": "What materials are laterals and wyes manufactured from?", "answer": "Our sanitary laterals and wyes are manufactured from 304 and 316L stainless steel with polished internal surfaces meeting sanitary finish requirements. 316L is available for pharmaceutical and higher-corrosion applications."}
+    {
+      "question": "What is the difference between a lateral and a wye fitting?",
+      "answer": "A lateral branches off at a 45-degree angle from the main run, while a wye has a Y-shaped geometry that splits flow into two equal branches at an angle. Both reduce turbulence compared to standard tees, but their geometry makes them better suited for different flow scenarios and space constraints."
+    },
+    {
+      "question": "Why would I choose a lateral or wye over a standard tee?",
+      "answer": "Laterals and wyes create a gentler flow transition that reduces product shear, turbulence, and pressure drop. This makes them ideal for viscous products, shear-sensitive materials, and systems where drainability is a priority. They are also preferred in CIP systems where smooth flow is essential for effective cleaning."
+    },
+    {
+      "question": "Are sanitary laterals and wyes CIP compatible?",
+      "answer": "Yes, our stainless steel sanitary laterals and wyes are fully CIP compatible. Their angular geometry actually promotes better CIP flow through branch lines compared to straight tees, helping ensure thorough cleaning of all wetted surfaces."
+    },
+    {
+      "question": "What materials are laterals and wyes manufactured from?",
+      "answer": "Our sanitary laterals and wyes are manufactured from 304 and 316L stainless steel with polished internal surfaces meeting sanitary finish requirements. 316L is available for pharmaceutical and higher-corrosion applications."
+    }
   ],
   "45-clamp-elbows": [
-    {"question": "When should I use a 45-degree elbow instead of a 90-degree elbow?", "answer": "Use a 45-degree elbow when you need a gradual direction change to reduce pressure drop and turbulence. They are ideal for high-flow systems, viscous products, and CIP lines where minimizing pressure loss is important. Two 45-degree elbows can replace one 90-degree elbow with significantly less pressure drop."},
-    {"question": "Are 45-degree clamp elbows compatible with standard tri-clamp ferrules?", "answer": "Yes, our 45-degree clamp elbows have standard tri-clamp ends that are compatible with any matching size tri-clamp ferrule, gasket, and clamp. They integrate seamlessly into existing clamp-style sanitary systems."},
-    {"question": "What sizes are available for 45-degree clamp elbows?", "answer": "We carry 45-degree clamp elbows from 0.5\" to 4\" clamp sizes in both 304 and 316L stainless steel. The smooth interior finish is maintained through the bend to ensure full CIP cleanability."},
-    {"question": "Can 45-degree elbows be used in CIP return lines?", "answer": "Yes, 45-degree clamp elbows are excellent for CIP return lines because their reduced pressure drop helps maintain the flow velocity needed for effective cleaning. Their tri-clamp ends also allow easy removal for inspection or system modification."}
+    {
+      "question": "When should I use a 45-degree elbow instead of a 90-degree elbow?",
+      "answer": "Use a 45-degree elbow when you need a gradual direction change to reduce pressure drop and turbulence. They are ideal for high-flow systems, viscous products, and CIP lines where minimizing pressure loss is important. Two 45-degree elbows can replace one 90-degree elbow with significantly less pressure drop."
+    },
+    {
+      "question": "Are 45-degree clamp elbows compatible with standard tri-clamp ferrules?",
+      "answer": "Yes, our 45-degree clamp elbows have standard tri-clamp ends that are compatible with any matching size tri-clamp ferrule, gasket, and clamp. They integrate seamlessly into existing clamp-style sanitary systems."
+    },
+    {
+      "question": "What sizes are available for 45-degree clamp elbows?",
+      "answer": "We carry 45-degree clamp elbows from 0.5\" to 4\" clamp sizes in both 304 and 316L stainless steel. The smooth interior finish is maintained through the bend to ensure full CIP cleanability."
+    },
+    {
+      "question": "Can 45-degree elbows be used in CIP return lines?",
+      "answer": "Yes, 45-degree clamp elbows are excellent for CIP return lines because their reduced pressure drop helps maintain the flow velocity needed for effective cleaning. Their tri-clamp ends also allow easy removal for inspection or system modification."
+    }
   ],
   "90-clamp-elbows": [
-    {"question": "What is the interior radius of a standard sanitary 90-degree clamp elbow?", "answer": "Standard sanitary 90-degree clamp elbows are manufactured as short-radius elbows. For applications requiring lower pressure drop and smoother flow, we recommend considering sweep elbows (long-radius) which have a larger centerline radius and are better for high-flow or viscous product applications."},
-    {"question": "Are 90-degree clamp elbows available in both 304 and 316L stainless?", "answer": "Yes, we carry 90-degree clamp elbows in both 304 and 316L stainless steel. The interior surfaces are polished to a sanitary finish that meets 3-A requirements and supports effective CIP cleaning without product buildup in the bend."},
-    {"question": "What sizes of 90-degree clamp elbows do you stock?", "answer": "We stock 90-degree clamp elbows from 0.5\" to 4\" clamp sizes. Larger sizes and special configurations may be available on request. All sizes feature standard tri-clamp ends compatible with any matching ferrule and clamp."},
-    {"question": "How do 90-degree clamp elbows compare to butt-weld elbows?", "answer": "Clamp elbows can be easily disassembled for cleaning inspection, CIP verification, and system modifications — a major advantage in hygienic applications. Butt-weld elbows provide a more permanent, leak-resistant joint with no gasket to replace and are preferred where access for cleaning is not needed."}
+    {
+      "question": "What is the interior radius of a standard sanitary 90-degree clamp elbow?",
+      "answer": "Standard sanitary 90-degree clamp elbows are manufactured as short-radius elbows. For applications requiring lower pressure drop and smoother flow, we recommend considering sweep elbows (long-radius) which have a larger centerline radius and are better for high-flow or viscous product applications."
+    },
+    {
+      "question": "Are 90-degree clamp elbows available in both 304 and 316L stainless?",
+      "answer": "Yes, we carry 90-degree clamp elbows in both 304 and 316L stainless steel. The interior surfaces are polished to a sanitary finish that meets 3-A requirements and supports effective CIP cleaning without product buildup in the bend."
+    },
+    {
+      "question": "What sizes of 90-degree clamp elbows do you stock?",
+      "answer": "We stock 90-degree clamp elbows from 0.5\" to 4\" clamp sizes. Larger sizes and special configurations may be available on request. All sizes feature standard tri-clamp ends compatible with any matching ferrule and clamp."
+    },
+    {
+      "question": "How do 90-degree clamp elbows compare to butt-weld elbows?",
+      "answer": "Clamp elbows can be easily disassembled for cleaning inspection, CIP verification, and system modifications — a major advantage in hygienic applications. Butt-weld elbows provide a more permanent, leak-resistant joint with no gasket to replace and are preferred where access for cleaning is not needed."
+    }
   ],
   "bevel-seat-fittings": [
-    {"question": "What industries use bevel seat fittings?", "answer": "Bevel seat fittings are widely used in dairy processing, food manufacturing, beverage production, and pharmaceutical systems where high-pressure capability and metal-to-metal sealing are required. They are the preferred connection style in many traditional dairy plant designs."},
-    {"question": "What is the difference between bevel seat and tri-clamp connections?", "answer": "Bevel seat connections use a threaded hex nut to draw two beveled ferrules together for a metal-to-metal seal. Tri-clamp connections use a separate clamp and gasket for sealing. Bevel seat offers higher pressure ratings and a more rigid joint, while tri-clamp allows faster assembly and disassembly."},
-    {"question": "Do bevel seat fittings require gaskets?", "answer": "Bevel seat fittings can be used with or without gaskets. The beveled surfaces create a metal-to-metal seal on their own, but adding an optional bevel seat gasket (EPDM, Viton, or PTFE) improves leak tightness and compensates for minor surface irregularities or misalignment."},
-    {"question": "Are bevel seat fittings compatible with CIP cleaning?", "answer": "Yes, bevel seat fittings are fully CIP compatible. The metal-to-metal sealing surface and smooth interior finish support effective cleaning. The fittings can be disassembled for inspection and the flat sealing faces are easy to clean and inspect for wear."}
+    {
+      "question": "What industries use bevel seat fittings?",
+      "answer": "Bevel seat fittings are widely used in dairy processing, food manufacturing, beverage production, and pharmaceutical systems where high-pressure capability and metal-to-metal sealing are required. They are the preferred connection style in many traditional dairy plant designs."
+    },
+    {
+      "question": "What is the difference between bevel seat and tri-clamp connections?",
+      "answer": "Bevel seat connections use a threaded hex nut to draw two beveled ferrules together for a metal-to-metal seal. Tri-clamp connections use a separate clamp and gasket for sealing. Bevel seat offers higher pressure ratings and a more rigid joint, while tri-clamp allows faster assembly and disassembly."
+    },
+    {
+      "question": "Do bevel seat fittings require gaskets?",
+      "answer": "Bevel seat fittings can be used with or without gaskets. The beveled surfaces create a metal-to-metal seal on their own, but adding an optional bevel seat gasket (EPDM, Viton, or PTFE) improves leak tightness and compensates for minor surface irregularities or misalignment."
+    },
+    {
+      "question": "Are bevel seat fittings compatible with CIP cleaning?",
+      "answer": "Yes, bevel seat fittings are fully CIP compatible. The metal-to-metal sealing surface and smooth interior finish support effective cleaning. The fittings can be disassembled for inspection and the flat sealing faces are easy to clean and inspect for wear."
+    }
   ],
   "hex-nuts": [
-    {"question": "What is a bevel seat hex nut used for?", "answer": "Bevel seat hex nuts are the threaded fastening component of a bevel seat union assembly. The hex nut threads onto the threaded bevel ferrule and draws the plain and threaded ferrules together, compressing them to form a rigid, leak-resistant metal-to-metal sanitary connection."},
-    {"question": "What stainless steel grade are your hex nuts made from?", "answer": "Our sanitary hex nuts are manufactured from 304 and 316L stainless steel to match the ferrules they mate with. Using the same grade for nuts and ferrules prevents galvanic corrosion and ensures consistent performance throughout the service life of the connection."},
-    {"question": "How often should bevel seat hex nuts be replaced?", "answer": "Stainless steel hex nuts are very durable and can last for many years with proper care. Inspect the threads at each disassembly for signs of galling, deformation, or corrosion. Replace immediately if threads are damaged to prevent leaks or difficulty assembling the union."},
-    {"question": "Are your hex nuts compatible with all bevel seat ferrules?", "answer": "Our hex nuts are manufactured to standard bevel seat dimensions and are compatible with all matching-size bevel seat ferrules that follow the same standard. Always verify that the nut thread size and ferrule size match before ordering replacement hardware."}
+    {
+      "question": "What is a sanitary union hex nut?",
+      "answer": "A sanitary union hex nut is a hexagonal stainless steel nut with an internal Acme thread that draws a threaded bevel ferrule and a plain bevel ferrule together, forming a bevel seat union. It is the part that clamps and tensions the joint on a bevel seat (Acme thread) sanitary fitting."
+    },
+    {
+      "question": "Do bevel seat union nuts need a gasket?",
+      "answer": "No. The metal-to-metal contact between the plain and threaded bevel ferrule faces creates a positive, self-sealing shutoff without a gasket. A gasket can be added on request if extra sealing margin is wanted, but it is not required for the union to seal."
+    },
+    {
+      "question": "What material are these hex nuts made from?",
+      "answer": "Union hex nuts for bevel seat fittings are made from 304 stainless steel, even when the mating ferrules are available in 304 or 316L. The nut itself is a standard 304 component across the industry."
+    },
+    {
+      "question": "What is Acme thread and why is it used on these nuts?",
+      "answer": "Acme thread is a trapezoidal thread form that is simpler and more tolerant of contamination than fine machine threads, reducing the risk of jamming or galling in a process environment. It also distributes clamping load evenly across the joint, which is why it is the standard thread for sanitary bevel seat unions."
+    },
+    {
+      "question": "What sizes are sanitary union hex nuts available in?",
+      "answer": "Union hex nuts for bevel seat fittings are commonly available from 1\" to 4\", matching the tube OD of the ferrules they join."
+    },
+    {
+      "question": "What is the difference between a bevel seat union and a tri-clamp connection?",
+      "answer": "A bevel seat union threads a hex nut over two bevel ferrules for a rigid, self-sealing metal-to-metal joint, while a tri-clamp connection uses a gasket between two ferrules held by an external clamp. Bevel seat unions are common in legacy dairy and beverage lines and where a robust threaded joint is preferred; tri-clamp is the more common modern standard for fast, tool-free disassembly."
+    }
   ],
   "bevel-seat-caps": [
-    {"question": "What is a bevel seat end cap used for?", "answer": "Bevel seat end caps are used to permanently or temporarily close off the end of a bevel seat piping system. They are commonly used to cap unused ports, protect idle line ends during maintenance, and terminate dead-end branches in sanitary piping systems."},
-    {"question": "What types of bevel seat caps are available?", "answer": "We carry solid stainless steel bevel seat caps that thread directly onto a plain bevel seat ferrule, as well as sanitary acme thread caps and hex nut caps for different connection configurations. All are available in 304 and 316L stainless steel."},
-    {"question": "Do bevel seat caps require a gasket?", "answer": "Solid stainless bevel seat caps create a metal-to-metal seal that does not require a separate gasket. However, adding an optional bevel seat gasket can improve sealing performance, especially in systems with pressure fluctuations or where the sealing faces show slight wear."},
-    {"question": "Can bevel seat caps be reused multiple times?", "answer": "Yes, stainless steel bevel seat caps are fully reusable. They are designed for repeated assembly and disassembly as part of routine maintenance and cleaning procedures. Inspect the sealing surface at each use and replace if pitting or wear is visible."}
+    {
+      "question": "What is a bevel seat end cap used for?",
+      "answer": "Bevel seat end caps are used to permanently or temporarily close off the end of a bevel seat piping system. They are commonly used to cap unused ports, protect idle line ends during maintenance, and terminate dead-end branches in sanitary piping systems."
+    },
+    {
+      "question": "What types of bevel seat caps are available?",
+      "answer": "We carry solid stainless steel bevel seat caps that thread directly onto a plain bevel seat ferrule, as well as sanitary acme thread caps and hex nut caps for different connection configurations. All are available in 304 and 316L stainless steel."
+    },
+    {
+      "question": "Do bevel seat caps require a gasket?",
+      "answer": "Solid stainless bevel seat caps create a metal-to-metal seal that does not require a separate gasket. However, adding an optional bevel seat gasket can improve sealing performance, especially in systems with pressure fluctuations or where the sealing faces show slight wear."
+    },
+    {
+      "question": "Can bevel seat caps be reused multiple times?",
+      "answer": "Yes, stainless steel bevel seat caps are fully reusable. They are designed for repeated assembly and disassembly as part of routine maintenance and cleaning procedures. Inspect the sealing surface at each use and replace if pitting or wear is visible."
+    }
   ],
   "bevel-seat-gaskets": [
-    {"question": "What gasket materials are available for bevel seat fittings?", "answer": "We offer bevel seat gaskets in EPDM, Viton (FKM), and PTFE. EPDM is the most common choice for water, steam, and mild cleaning chemicals. Viton offers superior resistance to oils, fuels, and aggressive chemicals. PTFE is used in highly corrosive or very high-temperature applications."},
-    {"question": "Are bevel seat gaskets required or optional?", "answer": "Bevel seat gaskets are technically optional — the beveled metal-to-metal contact provides a seal on its own. However, gaskets are strongly recommended in sanitary applications to ensure leak-tight performance under pressure cycling, thermal expansion, and vibration, and to compensate for minor surface wear."},
-    {"question": "How often should bevel seat gaskets be replaced?", "answer": "Gasket replacement frequency depends on your process conditions, cleaning chemical exposure, and temperature cycles. As a general guideline, inspect gaskets at every disassembly and replace immediately if you see cracking, deformation, swelling, or surface degradation. Regular replacement prevents unexpected leaks."},
-    {"question": "Can I use a tri-clamp gasket in a bevel seat fitting?", "answer": "No — bevel seat gaskets have a specific beveled profile designed to fit the angled seating faces of bevel seat ferrules. They are not interchangeable with flat tri-clamp gaskets. Always use the correct gasket style for your fitting type to ensure proper sealing and hygienic performance."}
+    {
+      "question": "What is a bevel seat gasket?",
+      "answer": "A bevel seat gasket is a flat sealing ring placed between two ferrule or bevel-seat fitting faces to create a leak-tight, sanitary connection. It seals when the joint is drawn together, and is available in EPDM, PTFE, Viton, silicone, and Buna to suit different fluids and temperatures."
+    },
+    {
+      "question": "What material gasket should I use for my application?",
+      "answer": "EPDM is the economical default for water, steam, and general sanitary service but should not be used with oils or solvents. PTFE resists nearly any chemical and works well with water and steam long-term. Viton handles oils and higher temperatures. Silicone suits food-contact and wide-temperature use. Match the gasket to the fluid it will contact."
+    },
+    {
+      "question": "How do I select the right gasket thickness for tri-clamp fittings?",
+      "answer": "Standard tri-clamp gaskets are typically ⅛\" (0.125\") thick for most sizes; some flanged and ANSI-pattern gaskets also come in 1/16\". Use the thickness that matches your ferrule and clamp style, and avoid overtightening, which can cause a gasket to warp or leak."
+    },
+    {
+      "question": "What is an envelope gasket?",
+      "answer": "An envelope gasket has a PTFE outer shell wrapped around an EPDM or Viton core. It combines the chemical inertness of PTFE with the flexibility and sealing memory of the core material, making it a good choice for aggressive or high-purity media."
+    },
+    {
+      "question": "Do gaskets have a pressure rating?",
+      "answer": "Gaskets themselves are not pressure rated; the pressure rating of a tri-clamp connection comes from the clamp used to hold the joint together. A higher-strength clamp raises the safe operating pressure of the same gasket and ferrule."
+    },
+    {
+      "question": "How often should sanitary gaskets be replaced?",
+      "answer": "Replace a gasket as soon as it shows compression set, cracking, discoloration, or leaking at the joint. High-cycle or high-temperature service wears gaskets faster, so inspect them on a regular schedule rather than waiting for a visible failure."
+    }
   ],
   "sanitary-butt-weld-fittings": [
-    {"question": "What are the advantages of butt weld fittings over clamp fittings?", "answer": "Butt weld fittings create permanent, leak-free joints with no gaskets to replace and no clamps to loosen over time. They are preferred in high-pressure, high-temperature, or high-cycle applications where joint reliability is critical. The welded seam also eliminates all potential leak points at the connection."},
-    {"question": "What welding process is used for butt weld sanitary fittings?", "answer": "Sanitary butt weld fittings are typically joined using TIG (GTAW) welding, which produces a clean, precise weld with minimal heat input. The inside of the weld is ground and polished to a smooth sanitary finish to eliminate crevices where bacteria could accumulate."},
-    {"question": "Are butt weld fittings available in both 304 and 316L stainless?", "answer": "Yes, all our butt weld sanitary fittings are available in 304 and 316L stainless steel. For pharmaceutical, biotech, and high-purity applications, 316L is recommended due to its improved corrosion resistance and lower carbon content that reduces weld sensitization risk."},
-    {"question": "Can butt weld fittings be used in CIP systems?", "answer": "Yes, butt weld fittings are excellent for CIP systems. The continuous, crevice-free interior surface produced by proper welding and finishing actually provides superior cleanability compared to clamp connections. There are no gaskets or crevices that can harbor bacteria or be difficult to clean."}
+    {
+      "question": "What are sanitary butt weld fittings?",
+      "answer": "Sanitary butt weld fittings are stainless steel tube fittings — elbows, tees, reducers, caps, and crosses — that are welded end-to-end to tube to form a permanent, crevice-free, leak-tight joint. Because there is no gasket or thread, they give the smoothest, most cleanable flow path and are used in permanent hygienic, high-purity, and liquid-cooling piping."
+    },
+    {
+      "question": "What is the difference between 304 and 316L butt weld fittings?",
+      "answer": "304 suits general sanitary service, while 316L adds molybdenum for better corrosion resistance against chlorides, glycol, and deionized water, and its lower carbon content welds more cleanly. For data center cooling loops and pharmaceutical lines, 316L is the standard choice."
+    },
+    {
+      "question": "When should I use butt weld fittings instead of tri-clamp fittings?",
+      "answer": "Use butt weld fittings for permanent runs that must stay leak-free and fully drainable — main headers, buried or embedded lines, and high-purity loops. Use tri-clamp fittings where the connection must be opened for cleaning, inspection, or reconfiguration. Most systems combine both."
+    },
+    {
+      "question": "Are these fittings 3-A certified?",
+      "answer": "Yes. Cardinal's sanitary butt weld fittings are manufactured to 3-A sanitary standards with a 32Ra polished interior finish, and every order includes mill test reports for full material traceability."
+    },
+    {
+      "question": "What sizes and wall thicknesses are available?",
+      "answer": "Sizes run from ½\" to 12\" tube OD. Typical walls are 0.065\" up to 3\", 0.083\" at 4\", and 0.109\" at 6–8\". Custom sizes, walls, and welded spool assemblies are available on request."
+    },
+    {
+      "question": "Can butt weld fittings be used in data center liquid cooling systems?",
+      "answer": "Yes. Welded 316L fittings are ideal for direct-to-chip and immersion cooling loops because the gasket-free, fully welded joint eliminates leak paths near live hardware and resists the deionized water and glycol coolants used in those loops."
+    }
   ],
   "45-elbows": [
-    {"question": "When should I use a butt weld 45-degree elbow instead of a 90-degree elbow?", "answer": "Use a 45-degree butt weld elbow when you want to minimize pressure drop and turbulence at a directional change. They are ideal for high-flow lines, pump discharge piping, and CIP systems. Two 45-degree elbows connected by a short tangent section can replace a 90-degree turn with much lower pressure loss."},
-    {"question": "What finish is applied to the interior of butt weld elbows?", "answer": "Our butt weld 45-degree elbows are manufactured with a smooth interior sanitary finish (typically 32 Ra or better). After welding, the interior weld is ground and polished to match this finish, ensuring there are no crevices or rough spots that could harbor bacteria or impede cleaning."},
-    {"question": "Are butt weld 45-degree elbows compatible with standard tube sizes?", "answer": "Yes, our butt weld elbows are manufactured to standard sanitary tube OD dimensions and are compatible with matching size sanitary tubing and other butt weld fittings. Confirm tube OD and wall thickness when ordering to ensure a proper fit-up for welding."},
-    {"question": "Do butt weld elbows require any special preparation before welding?", "answer": "Proper fit-up is critical for a sanitary weld. The tube end and elbow should be cut square, deburred, and cleaned of any oils or contaminants before welding. A weld backing ring or proper gap control helps ensure full penetration without creating a crevice on the interior surface."}
+    {
+      "question": "When should I use a butt weld 45-degree elbow instead of a 90-degree elbow?",
+      "answer": "Use a 45-degree butt weld elbow when you want to minimize pressure drop and turbulence at a directional change. They are ideal for high-flow lines, pump discharge piping, and CIP systems. Two 45-degree elbows connected by a short tangent section can replace a 90-degree turn with much lower pressure loss."
+    },
+    {
+      "question": "What finish is applied to the interior of butt weld elbows?",
+      "answer": "Our butt weld 45-degree elbows are manufactured with a smooth interior sanitary finish (typically 32 Ra or better). After welding, the interior weld is ground and polished to match this finish, ensuring there are no crevices or rough spots that could harbor bacteria or impede cleaning."
+    },
+    {
+      "question": "Are butt weld 45-degree elbows compatible with standard tube sizes?",
+      "answer": "Yes, our butt weld elbows are manufactured to standard sanitary tube OD dimensions and are compatible with matching size sanitary tubing and other butt weld fittings. Confirm tube OD and wall thickness when ordering to ensure a proper fit-up for welding."
+    },
+    {
+      "question": "Do butt weld elbows require any special preparation before welding?",
+      "answer": "Proper fit-up is critical for a sanitary weld. The tube end and elbow should be cut square, deburred, and cleaned of any oils or contaminants before welding. A weld backing ring or proper gap control helps ensure full penetration without creating a crevice on the interior surface."
+    }
   ],
   "90-elbows": [
-    {"question": "What is the difference between a short-radius and long-radius 90-degree butt weld elbow?", "answer": "A short-radius elbow has a centerline radius equal to 1x the tube OD, while a long-radius (sweep) elbow has a centerline radius of 1.5x the OD. Long-radius elbows have lower pressure drop, less turbulence, and better cleanability, making them preferred in most sanitary applications."},
-    {"question": "Are butt weld 90-degree elbows available in 316L stainless?", "answer": "Yes, we carry 90-degree butt weld elbows in both 304 and 316L stainless steel. 316L is recommended for pharmaceutical, biotech, and any application involving chlorides or aggressive cleaning chemicals due to its improved corrosion resistance."},
-    {"question": "What wall thickness should I specify for butt weld elbows?", "answer": "Wall thickness should match your tubing specification. Common sanitary tube wall thicknesses are 0.065\" and 0.083\". Matching the wall thickness of the fitting to the tube ensures a flush interior surface at the weld joint, which is essential for sanitary cleanability."},
-    {"question": "How should the interior weld be finished on a 90-degree butt weld elbow?", "answer": "After welding, the interior of the joint should be ground flush and polished to match the base material finish (typically 32 Ra micro-inch or better for sanitary service). Any concavity, undercut, or porosity at the weld must be repaired to ensure a smooth, fully cleanable surface."}
+    {
+      "question": "What is the difference between a short-radius and long-radius 90-degree butt weld elbow?",
+      "answer": "A short-radius elbow has a centerline radius equal to 1x the tube OD, while a long-radius (sweep) elbow has a centerline radius of 1.5x the OD. Long-radius elbows have lower pressure drop, less turbulence, and better cleanability, making them preferred in most sanitary applications."
+    },
+    {
+      "question": "Are butt weld 90-degree elbows available in 316L stainless?",
+      "answer": "Yes, we carry 90-degree butt weld elbows in both 304 and 316L stainless steel. 316L is recommended for pharmaceutical, biotech, and any application involving chlorides or aggressive cleaning chemicals due to its improved corrosion resistance."
+    },
+    {
+      "question": "What wall thickness should I specify for butt weld elbows?",
+      "answer": "Wall thickness should match your tubing specification. Common sanitary tube wall thicknesses are 0.065\" and 0.083\". Matching the wall thickness of the fitting to the tube ensures a flush interior surface at the weld joint, which is essential for sanitary cleanability."
+    },
+    {
+      "question": "How should the interior weld be finished on a 90-degree butt weld elbow?",
+      "answer": "After welding, the interior of the joint should be ground flush and polished to match the base material finish (typically 32 Ra micro-inch or better for sanitary service). Any concavity, undercut, or porosity at the weld must be repaired to ensure a smooth, fully cleanable surface."
+    }
   ],
   "adapters": [
-    {"question": "What types of butt weld adapters are available?", "answer": "We carry butt weld adapters that transition from a weld end to tri-clamp ferrule ends, NPT male or female threaded ends, bevel seat ends, and flanged ends. These allow welded stainless tube systems to connect to valves, pumps, instruments, and other equipment with different connection styles."},
-    {"question": "Can I use a butt weld adapter to connect to threaded valves?", "answer": "Yes, butt weld to NPT adapters allow you to weld directly into a sanitary tube system and connect to NPT-threaded valves, sensors, pumps, or other equipment. This is a common solution when integrating off-the-shelf industrial components into a sanitary piping system."},
-    {"question": "Are butt weld adapters available for all tube sizes?", "answer": "We carry butt weld adapters in common sanitary tube sizes from 0.5\" to 4\" OD. The adapter end matches standard sanitary tube OD for proper weld fit-up, while the connection end (clamp, NPT, bevel seat) is available in corresponding sizes. Contact us for specific size combinations."},
-    {"question": "What stainless grades are butt weld adapters available in?", "answer": "Our butt weld adapters are available in 304 and 316L stainless steel. For applications requiring consistency throughout the system, we recommend specifying the same grade for all wetted components including the adapter, tube, and the equipment it connects to."}
+    {
+      "question": "What is a tri-clamp adapter?",
+      "answer": "A tri-clamp adapter is a stainless steel fitting with a sanitary clamp connection on one end and a different connection type, such as NPT thread, BSP thread, hose barb, camlock, or flange, on the other. It bridges hygienic clamp piping to threaded pumps, instruments, or existing equipment."
+    },
+    {
+      "question": "What is the difference between NPT and BSP adapters?",
+      "answer": "NPT (National Pipe Thread) is the tapered thread standard used in the US and seals as it tightens. BSP (British Standard Pipe) is common outside the US and comes in a tapered BSPT or parallel BSPP form; BSPP requires a gasket or O-ring to seal since the threads themselves do not seal. NPT and BSP threads are not interchangeable even though they can look similar."
+    },
+    {
+      "question": "Are threaded adapters 3-A sanitary certified?",
+      "answer": "No. Any fitting with exposed threads cannot be 3-A certified because threads cannot be fully cleaned in place. Threaded adapters are used only at the transition point to non-sanitary equipment, with the sanitary clamp side maintaining the hygienic connection on the rest of the line."
+    },
+    {
+      "question": "What is the difference between male and female NPT adapters?",
+      "answer": "A male NPT adapter has external threads that screw into a female-threaded port, while a female NPT adapter has internal threads that accept a male-threaded pipe or fitting. Match the adapter's thread gender to the opposite gender on the equipment you are connecting to."
+    },
+    {
+      "question": "How are tri-clamp adapters sized?",
+      "answer": "A tri-clamp adapter has two independent sizes: the tube OD on the clamp side (matched to your sanitary line, ½\" to 12\") and the thread size on the NPT, BSP, or hose side, which is specified separately and does not need to match the clamp size."
+    },
+    {
+      "question": "Can adapters be used in data center cooling systems?",
+      "answer": "Yes. Tri-clamp adapters connect sanitary cooling loops to threaded CDU ports, pumps, and existing NPT or BSP infrastructure, letting a hygienic tri-clamp loop interface cleanly with equipment that only offers a threaded connection."
+    }
   ],
   "caps": [
-    {"question": "What is a butt weld cap used for?", "answer": "Butt weld caps permanently close the end of a stainless steel tube by welding onto the tube end. They are used to terminate dead-end branches, cap tank nozzles not currently in service, and seal future expansion points in a piping system. The domed or flat design creates a fully cleanable end closure."},
-    {"question": "Are butt weld caps available in both domed and flat styles?", "answer": "Yes, we carry both domed (elliptical) and flat butt weld caps. Domed caps are stronger under pressure and are preferred for pressurized systems. Flat caps are used in atmospheric or low-pressure applications and where space constraints require a minimal projection beyond the tube end."},
-    {"question": "Can a butt weld cap be removed after welding?", "answer": "Butt weld caps create a permanent joint once welded. To remove a butt weld cap, the weld must be cut. For applications where you may need future access to the capped end, consider using a clamp-style cap instead, which can be removed without cutting."},
-    {"question": "What wall thickness should butt weld caps be ordered in?", "answer": "Butt weld caps should match the wall thickness of the tubing they are welded to for proper fit-up and consistent interior surface. Common sanitary wall thicknesses are 0.065\" and 0.083\". Matching wall thickness ensures a flush interior weld with no crevice at the joint."}
+    {
+      "question": "What is a sanitary end cap?",
+      "answer": "A sanitary end cap is a stainless steel cap that seals the end of a tube or process line to prevent contamination, leakage, or ingress of foreign particles. It comes in a tri-clamp style that clamps on and removes tool-free, or a butt-weld style that is welded on permanently, both in 304 or 316L with a polished finish."
+    },
+    {
+      "question": "What is the difference between a tri-clamp end cap and a butt weld end cap?",
+      "answer": "A tri-clamp end cap clamps onto a ferruled tube end with a gasket and clamp, giving a non-permanent seal you can remove for access. A butt-weld end cap is welded directly to the tube for a permanent, leak-free closure. Choose clamp for access, weld for permanence."
+    },
+    {
+      "question": "What are stainless steel end caps used for?",
+      "answer": "Stainless steel end caps seal off inactive or unused process lines, close manifold and tank ports, cap a run during pressure testing, and protect an open tube end from contamination. They keep a hygienic system sealed and cleanable."
+    },
+    {
+      "question": "What sizes do sanitary end caps come in?",
+      "answer": "Sanitary end caps are available from ½\" to 12\", sized by tube outside diameter. Tri-clamp caps cover the full range, and butt-weld caps are common from 1\" to 8\" or larger."
+    },
+    {
+      "question": "What is the difference between 304 and 316L end caps?",
+      "answer": "304 suits general sanitary and water service, while 316L adds molybdenum for better corrosion resistance against chlorides, glycol, and deionized water and welds more cleanly. For data center cooling and marine or salt exposure, choose 316L."
+    },
+    {
+      "question": "Can end caps be custom machined?",
+      "answer": "Yes. Solid end caps can be machined and welded to add ports, fittings, or instrument connections, turning a plain cap into a custom manifold or termination for a specific application."
+    }
   ],
   "concentric-reducers": [
-    {"question": "When should I use a butt weld concentric reducer?", "answer": "Use a butt weld concentric reducer in vertical piping sections or horizontal sections where air removal and complete drainage are not concerns. They are the standard choice for transitioning between tube sizes in welded systems where the symmetric flow path is acceptable for your application."},
-    {"question": "What is the difference between a concentric and eccentric butt weld reducer?", "answer": "A concentric reducer keeps both pipe centerlines aligned — suitable for vertical runs or horizontal runs where drainage is not critical. An eccentric reducer offsets the centerlines so one side stays flat, preventing air pockets and ensuring complete drainage in horizontal piping — essential for pump suction lines."},
-    {"question": "Are butt weld reducers available in both 304 and 316L stainless?", "answer": "Yes, our butt weld concentric reducers are available in 304 and 316L stainless steel. Specify the grade to match your tubing and other system components. 316L is recommended for pharmaceutical, biotech, and aggressive cleaning chemical applications."},
-    {"question": "How do I specify a butt weld reducer — by tube OD or pipe size?", "answer": "Sanitary butt weld reducers are specified by tube OD (outer diameter), not by pipe schedule. For example, a 2\" x 1.5\" reducer connects 2\" OD tube to 1.5\" OD tube. Always confirm that both the large end and small end match your actual tube ODs when ordering."}
+    {
+      "question": "When should I use a butt weld concentric reducer?",
+      "answer": "Use a butt weld concentric reducer in vertical piping sections or horizontal sections where air removal and complete drainage are not concerns. They are the standard choice for transitioning between tube sizes in welded systems where the symmetric flow path is acceptable for your application."
+    },
+    {
+      "question": "What is the difference between a concentric and eccentric butt weld reducer?",
+      "answer": "A concentric reducer keeps both pipe centerlines aligned — suitable for vertical runs or horizontal runs where drainage is not critical. An eccentric reducer offsets the centerlines so one side stays flat, preventing air pockets and ensuring complete drainage in horizontal piping — essential for pump suction lines."
+    },
+    {
+      "question": "Are butt weld reducers available in both 304 and 316L stainless?",
+      "answer": "Yes, our butt weld concentric reducers are available in 304 and 316L stainless steel. Specify the grade to match your tubing and other system components. 316L is recommended for pharmaceutical, biotech, and aggressive cleaning chemical applications."
+    },
+    {
+      "question": "How do I specify a butt weld reducer — by tube OD or pipe size?",
+      "answer": "Sanitary butt weld reducers are specified by tube OD (outer diameter), not by pipe schedule. For example, a 2\" x 1.5\" reducer connects 2\" OD tube to 1.5\" OD tube. Always confirm that both the large end and small end match your actual tube ODs when ordering."
+    }
   ],
   "stub-ends": [
-    {"question": "What is the purpose of a stub end in sanitary piping?", "answer": "A stub end is a short fitting that is butt-welded to the tube end to create the gasket sealing face for a lap joint flange connection. The lap joint flange slides freely over the tube and bears against the stub end face, allowing the flange bolt holes to be easily aligned without rotating the tube itself."},
-    {"question": "What are the benefits of using stub ends with lap joint flanges?", "answer": "Stub ends with lap joint flanges allow the flange to rotate freely during assembly, making bolt hole alignment much easier. They also allow economical carbon steel flanges to be used while keeping all wetted surfaces in stainless steel. The gasket face is replaceable without replacing the entire flange."},
-    {"question": "Are your stub ends available in Type A configuration?", "answer": "Yes, we carry Type A stub ends which feature a full radius on the back face and are the most commonly specified type in sanitary applications. Type A stub ends provide the cleanest interior transition and are compatible with standard lap joint flanges."},
-    {"question": "What stainless grades are stub ends available in?", "answer": "Our stub ends are available in 304 and 316L stainless steel to match standard sanitary tubing. The stub end is the only wetted component in a lap joint flange assembly — the backing flange behind it can be carbon steel or any other material since it does not contact the process fluid."}
+    {
+      "question": "What is the purpose of a stub end in sanitary piping?",
+      "answer": "A stub end is a short fitting that is butt-welded to the tube end to create the gasket sealing face for a lap joint flange connection. The lap joint flange slides freely over the tube and bears against the stub end face, allowing the flange bolt holes to be easily aligned without rotating the tube itself."
+    },
+    {
+      "question": "What are the benefits of using stub ends with lap joint flanges?",
+      "answer": "Stub ends with lap joint flanges allow the flange to rotate freely during assembly, making bolt hole alignment much easier. They also allow economical carbon steel flanges to be used while keeping all wetted surfaces in stainless steel. The gasket face is replaceable without replacing the entire flange."
+    },
+    {
+      "question": "Are your stub ends available in Type A configuration?",
+      "answer": "Yes, we carry Type A stub ends which feature a full radius on the back face and are the most commonly specified type in sanitary applications. Type A stub ends provide the cleanest interior transition and are compatible with standard lap joint flanges."
+    },
+    {
+      "question": "What stainless grades are stub ends available in?",
+      "answer": "Our stub ends are available in 304 and 316L stainless steel to match standard sanitary tubing. The stub end is the only wetted component in a lap joint flange assembly — the backing flange behind it can be carbon steel or any other material since it does not contact the process fluid."
+    }
   ],
   "eccentric-reducers": [
-    {"question": "Why is an eccentric reducer required on pump suction lines?", "answer": "On horizontal pump suction lines, an eccentric reducer is installed with the flat side up. This prevents an air pocket from forming at the top of the reducer that could be drawn into the pump, causing cavitation, reduced performance, and potential pump damage. The flat top allows any air to pass through rather than collect."},
-    {"question": "How do I orient an eccentric reducer — flat side up or down?", "answer": "For pump suction lines, install with the flat side up to prevent air pockets. For drain lines or low points where complete liquid drainage is needed, install with the flat side down. The flat side indicates which side of the pipe centerline remains level — always think about what you are trying to prevent (air or liquid collection)."},
-    {"question": "Are butt weld eccentric reducers available in 316L stainless?", "answer": "Yes, we carry butt weld eccentric reducers in both 304 and 316L stainless steel. The interior surface is finished to sanitary standards on both the large and small ends, with a smooth transition through the reduction zone to maintain cleanability throughout the fitting."},
-    {"question": "What size combinations are available for eccentric reducers?", "answer": "We carry butt weld eccentric reducers in common adjacent sanitary tube size combinations from 1.5\" x 1\" up to 4\" x 3\". Larger size combinations and non-adjacent sizes may be available on request. Always specify both the large OD and small OD when ordering."}
+    {
+      "question": "Why is an eccentric reducer required on pump suction lines?",
+      "answer": "On horizontal pump suction lines, an eccentric reducer is installed with the flat side up. This prevents an air pocket from forming at the top of the reducer that could be drawn into the pump, causing cavitation, reduced performance, and potential pump damage. The flat top allows any air to pass through rather than collect."
+    },
+    {
+      "question": "How do I orient an eccentric reducer — flat side up or down?",
+      "answer": "For pump suction lines, install with the flat side up to prevent air pockets. For drain lines or low points where complete liquid drainage is needed, install with the flat side down. The flat side indicates which side of the pipe centerline remains level — always think about what you are trying to prevent (air or liquid collection)."
+    },
+    {
+      "question": "Are butt weld eccentric reducers available in 316L stainless?",
+      "answer": "Yes, we carry butt weld eccentric reducers in both 304 and 316L stainless steel. The interior surface is finished to sanitary standards on both the large and small ends, with a smooth transition through the reduction zone to maintain cleanability throughout the fitting."
+    },
+    {
+      "question": "What size combinations are available for eccentric reducers?",
+      "answer": "We carry butt weld eccentric reducers in common adjacent sanitary tube size combinations from 1.5\" x 1\" up to 4\" x 3\". Larger size combinations and non-adjacent sizes may be available on request. Always specify both the large OD and small OD when ordering."
+    }
   ],
   "hangers": [
-    {"question": "Why is proper pipe support critical in sanitary systems?", "answer": "Proper support prevents sag and stress on welds and clamp connections, maintains the correct drainage slope required for CIP and process drainability, and reduces vibration that can loosen clamp connections or fatigue welded joints over time. Inadequate support can compromise both system integrity and cleanability."},
-    {"question": "What spacing is recommended for sanitary tube hangers?", "answer": "Support spacing depends on tube size, wall thickness, fluid weight, and operating temperature. As a general guideline, 1\" to 2\" OD tubing typically requires support every 5 to 8 feet, while larger tubes may span longer distances. Your system design should follow applicable codes and manufacturer recommendations for your specific conditions."},
-    {"question": "Are your sanitary hangers compatible with CIP systems?", "answer": "Yes, our stainless steel sanitary hangers are designed to support CIP-compatible piping systems. The stainless construction resists corrosion from cleaning chemicals, and the design allows cleaning solution to drain away from the support contact points rather than pooling and causing corrosion under the hanger."},
-    {"question": "What materials are your sanitary hangers made from?", "answer": "Our sanitary hangers and pipe supports are manufactured from 304 and 316L stainless steel with hygienic hardware. All contact surfaces are smooth to prevent bacterial harborage and support easy cleaning during sanitation procedures."}
+    {
+      "question": "What are sanitary pipe hangers?",
+      "answer": "Sanitary pipe hangers are stainless steel brackets that support and secure hygienic tube or pipe while keeping it cleanable. They use a rubber, silicone, or Viton grommet to cushion the tube and eliminate crevices and exposed threads where debris could collect, and they mount to a wall or hang from a threaded rod."
+    },
+    {
+      "question": "What material are sanitary hangers made of?",
+      "answer": "Sanitary hangers are made from 304 or 316L stainless steel to match the corrosion resistance of the tubing they support. 316L is used in washdown, corrosive, or high-purity environments, with grommets in rubber, silicone, or high-temperature Viton."
+    },
+    {
+      "question": "What sizes do sanitary tube hangers come in?",
+      "answer": "Sanitary tube hangers are available from ½\" to 12\" to match tube or pipe outside diameter. They are sized to the tube OD, and both tube and pipe versions are offered."
+    },
+    {
+      "question": "How far apart should sanitary tube hangers be spaced?",
+      "answer": "Support spacing depends on tube size, wall thickness, and fluid weight, but sanitary tube is commonly supported every 5 to 10 feet and at every change of direction and heavy component. Closer spacing is used for larger, fluid-filled, or heated lines to control sag and thermal movement."
+    },
+    {
+      "question": "Why do sanitary hangers use grommets?",
+      "answer": "The grommet cushions the tube, absorbs vibration, allows the tube to expand and contract with temperature, and eliminates the metal-on-metal contact and crevices that could mar the tube or trap debris — keeping the support hygienic."
+    },
+    {
+      "question": "Can sanitary hangers be used in data center cooling systems?",
+      "answer": "Yes. Stainless hangers secure coolant supply and return lines across rack rows, isolate vibration, and allow thermal expansion as loops heat and cool, keeping high-density liquid-cooling piping stable and serviceable."
+    }
   ],
   "spray-balls": [
-    {"question": "What is the difference between a static and a rotating spray ball?", "answer": "A static spray ball has fixed holes that spray cleaning solution in a set pattern — simple, no moving parts, but requires adequate flow to achieve full coverage. A rotating or spinning spray ball uses the cleaning solution flow to rotate the ball, providing 360-degree coverage with potentially lower flow rates and better cleaning efficiency for large tanks."},
-    {"question": "How do I select the right spray ball size for my tank?", "answer": "Spray ball selection depends on tank diameter, height, and the flow rate of your CIP system. The spray ball coverage radius and flow requirements are calculated based on these parameters. As a general rule, larger tanks need larger spray balls or multiple spray balls to ensure complete coverage of all interior surfaces."},
-    {"question": "What materials are your spray balls made from?", "answer": "We offer spray balls in 304 and 316L stainless steel for sanitary and corrosion-resistant applications, as well as plastic (polypropylene or PVDF) for applications requiring chemical resistance to certain aggressive cleaning agents that would attack stainless steel."},
-    {"question": "Can spray balls be cleaned and reused?", "answer": "Yes, spray balls can be removed, inspected, and cleaned as part of regular maintenance. Periodically check the spray holes for blockages from mineral deposits or debris. Static spray balls are simple to clean, while rotating spray balls should be checked for free rotation and inspected for wear on the rotary joint."}
+    {
+      "question": "What is the difference between a static and a rotating spray ball?",
+      "answer": "A static spray ball has fixed holes that spray cleaning solution in a set pattern — simple, no moving parts, but requires adequate flow to achieve full coverage. A rotating or spinning spray ball uses the cleaning solution flow to rotate the ball, providing 360-degree coverage with potentially lower flow rates and better cleaning efficiency for large tanks."
+    },
+    {
+      "question": "How do I select the right spray ball size for my tank?",
+      "answer": "Spray ball selection depends on tank diameter, height, and the flow rate of your CIP system. The spray ball coverage radius and flow requirements are calculated based on these parameters. As a general rule, larger tanks need larger spray balls or multiple spray balls to ensure complete coverage of all interior surfaces."
+    },
+    {
+      "question": "What materials are your spray balls made from?",
+      "answer": "We offer spray balls in 304 and 316L stainless steel for sanitary and corrosion-resistant applications, as well as plastic (polypropylene or PVDF) for applications requiring chemical resistance to certain aggressive cleaning agents that would attack stainless steel."
+    },
+    {
+      "question": "Can spray balls be cleaned and reused?",
+      "answer": "Yes, spray balls can be removed, inspected, and cleaned as part of regular maintenance. Periodically check the spray holes for blockages from mineral deposits or debris. Static spray balls are simple to clean, while rotating spray balls should be checked for free rotation and inspected for wear on the rotary joint."
+    }
   ],
   "sight-glass": [
-    {"question": "What types of sanitary sight glass are available?", "answer": "We offer inline sight glasses that install directly in the pipe run, tri-clamp sight glasses with standard clamp connections for easy removal, and obround (oval) sight glasses for tank wall installations. Borosilicate glass is standard for its thermal shock resistance and chemical compatibility."},
-    {"question": "What is the maximum temperature and pressure for sanitary sight glasses?", "answer": "Temperature and pressure ratings vary by size and construction, but most sanitary sight glasses handle temperatures up to 300°F (149°C) and pressures up to 150 PSI. SIP-compatible models are available for steam sterilization. Always verify the rating for your specific model before installation."},
-    {"question": "Are sanitary sight glasses compatible with CIP cleaning?", "answer": "Yes, our sanitary sight glasses are designed for CIP compatibility. The borosilicate glass is resistant to most cleaning chemicals, and the stainless steel body has a smooth, crevice-free interior finish. Tri-clamp models can be removed for inspection and glass cleaning or replacement."},
-    {"question": "How do I replace the glass in a sanitary sight glass?", "answer": "Glass replacement involves disassembling the sight glass housing, removing the old glass and gaskets, inspecting the seating surfaces for damage, installing new glass with fresh gaskets, and reassembling to the specified torque. Always replace both the glass and the gaskets when performing glass replacement — never reuse old gaskets."}
+    {
+      "question": "What types of sanitary sight glass are available?",
+      "answer": "We offer inline sight glasses that install directly in the pipe run, tri-clamp sight glasses with standard clamp connections for easy removal, and obround (oval) sight glasses for tank wall installations. Borosilicate glass is standard for its thermal shock resistance and chemical compatibility."
+    },
+    {
+      "question": "What is the maximum temperature and pressure for sanitary sight glasses?",
+      "answer": "Temperature and pressure ratings vary by size and construction, but most sanitary sight glasses handle temperatures up to 300°F (149°C) and pressures up to 150 PSI. SIP-compatible models are available for steam sterilization. Always verify the rating for your specific model before installation."
+    },
+    {
+      "question": "Are sanitary sight glasses compatible with CIP cleaning?",
+      "answer": "Yes, our sanitary sight glasses are designed for CIP compatibility. The borosilicate glass is resistant to most cleaning chemicals, and the stainless steel body has a smooth, crevice-free interior finish. Tri-clamp models can be removed for inspection and glass cleaning or replacement."
+    },
+    {
+      "question": "How do I replace the glass in a sanitary sight glass?",
+      "answer": "Glass replacement involves disassembling the sight glass housing, removing the old glass and gaskets, inspecting the seating surfaces for damage, installing new glass with fresh gaskets, and reassembling to the specified torque. Always replace both the glass and the gaskets when performing glass replacement — never reuse old gaskets."
+    }
   ],
   "i-line-fittings": [
-    {"question": "What makes I-Line fittings different from standard tri-clamp fittings?", "answer": "I-Line fittings use interlocking male and female ferrule profiles rather than flat-face ferrules, providing superior alignment and significantly greater rigidity than tri-clamp connections. This makes them ideal for high-vibration, high-pressure, and systems where maintaining precise alignment under stress is critical."},
-    {"question": "Are I-Line fittings compatible with tri-clamp fittings?", "answer": "No — I-Line fittings use a different ferrule profile and require I-Line specific clamps and gaskets. They are not interchangeable with standard tri-clamp components. However, I-Line to tri-clamp adapters are available to connect I-Line systems to standard clamp piping."},
-    {"question": "What industries typically use I-Line fittings?", "answer": "I-Line fittings are widely used in dairy processing, brewery, and beverage applications where the robust connection handles the vibration from pumps and agitators better than standard tri-clamp. They are also used in pharmaceutical and biotech applications requiring high-pressure capability."},
-    {"question": "What materials are I-Line fittings available in?", "answer": "Our I-Line fittings are manufactured from 304 and 316L stainless steel with polished interior surfaces meeting sanitary standards. 316L is available for pharmaceutical and corrosive applications. All I-Line components — ferrules, clamps, and gaskets — should be sourced in matching sizes."}
+    {
+      "question": "What makes I-Line fittings different from standard tri-clamp fittings?",
+      "answer": "I-Line fittings use interlocking male and female ferrule profiles rather than flat-face ferrules, providing superior alignment and significantly greater rigidity than tri-clamp connections. This makes them ideal for high-vibration, high-pressure, and systems where maintaining precise alignment under stress is critical."
+    },
+    {
+      "question": "Are I-Line fittings compatible with tri-clamp fittings?",
+      "answer": "No — I-Line fittings use a different ferrule profile and require I-Line specific clamps and gaskets. They are not interchangeable with standard tri-clamp components. However, I-Line to tri-clamp adapters are available to connect I-Line systems to standard clamp piping."
+    },
+    {
+      "question": "What industries typically use I-Line fittings?",
+      "answer": "I-Line fittings are widely used in dairy processing, brewery, and beverage applications where the robust connection handles the vibration from pumps and agitators better than standard tri-clamp. They are also used in pharmaceutical and biotech applications requiring high-pressure capability."
+    },
+    {
+      "question": "What materials are I-Line fittings available in?",
+      "answer": "Our I-Line fittings are manufactured from 304 and 316L stainless steel with polished interior surfaces meeting sanitary standards. 316L is available for pharmaceutical and corrosive applications. All I-Line components — ferrules, clamps, and gaskets — should be sourced in matching sizes."
+    }
   ],
   "i-line-ferrules": [
-    {"question": "How are I-Line ferrules different from standard tri-clamp ferrules?", "answer": "I-Line ferrules have an interlocking male/female profile that provides positive alignment and greater rigidity than the flat-face tri-clamp ferrule design. The interlocking geometry distributes load more evenly and resists the lateral forces that can cause standard tri-clamp connections to slip under vibration or pressure."},
-    {"question": "How are I-Line ferrules attached to tubing?", "answer": "I-Line ferrules are butt-welded to the tube end using TIG welding, just like standard sanitary ferrules. The weld is ground and polished to a smooth interior finish to maintain sanitary cleanability at the joint. Proper fit-up to the tube OD is critical for a flush interior surface."},
-    {"question": "Are I-Line ferrules available in multiple sizes?", "answer": "Yes, I-Line ferrules are available in sizes from 0.5\" to 4\" to match standard sanitary tube diameters. Always match the ferrule OD to your tube OD when ordering, and ensure all components (ferrule, clamp, gasket) are the same I-Line size for proper fit and sealing."},
-    {"question": "Can I mix I-Line ferrules with standard tri-clamp clamps?", "answer": "No — I-Line ferrules require I-Line specific clamps that fit the unique interlocking profile. Standard tri-clamp clamps will not properly secure I-Line ferrules. Always use matched I-Line components (ferrule, clamp, gasket) together to ensure proper assembly and sealing performance."}
+    {
+      "question": "How are I-Line ferrules different from standard tri-clamp ferrules?",
+      "answer": "I-Line ferrules have an interlocking male/female profile that provides positive alignment and greater rigidity than the flat-face tri-clamp ferrule design. The interlocking geometry distributes load more evenly and resists the lateral forces that can cause standard tri-clamp connections to slip under vibration or pressure."
+    },
+    {
+      "question": "How are I-Line ferrules attached to tubing?",
+      "answer": "I-Line ferrules are butt-welded to the tube end using TIG welding, just like standard sanitary ferrules. The weld is ground and polished to a smooth interior finish to maintain sanitary cleanability at the joint. Proper fit-up to the tube OD is critical for a flush interior surface."
+    },
+    {
+      "question": "Are I-Line ferrules available in multiple sizes?",
+      "answer": "Yes, I-Line ferrules are available in sizes from 0.5\" to 4\" to match standard sanitary tube diameters. Always match the ferrule OD to your tube OD when ordering, and ensure all components (ferrule, clamp, gasket) are the same I-Line size for proper fit and sealing."
+    },
+    {
+      "question": "Can I mix I-Line ferrules with standard tri-clamp clamps?",
+      "answer": "No — I-Line ferrules require I-Line specific clamps that fit the unique interlocking profile. Standard tri-clamp clamps will not properly secure I-Line ferrules. Always use matched I-Line components (ferrule, clamp, gasket) together to ensure proper assembly and sealing performance."
+    }
   ],
   "tube-flanges": [
-    {"question": "What is the difference between a tube flange and a pipe flange?", "answer": "Tube flanges are sized to sanitary tube OD dimensions (e.g., 2\" OD tube) and maintain the flush, crevice-free interior surface required in hygienic systems. Pipe flanges follow standard pipe schedule dimensions (e.g., 2\" nominal pipe). Using the wrong type will result in a mismatched bore that creates a ledge at the connection."},
-    {"question": "Are your tube flanges compatible with standard ANSI flange bolt patterns?", "answer": "Yes, our sanitary tube flanges are manufactured with standard ANSI/ASME B16.5 150# bolt patterns, making them compatible with standard industrial flanged equipment, valves, and instrumentation. This allows sanitary tube systems to connect to a wide range of standard process equipment."},
-    {"question": "What gasket material should be used with tube flanges?", "answer": "The gasket selection depends on your process fluid and cleaning chemicals. Common choices include full-face PTFE or EPDM gaskets for sanitary flanged connections. The gasket should be compatible with both your product and your CIP chemicals and rated for your operating temperature and pressure."},
-    {"question": "Are tube flanges available in 316L stainless steel?", "answer": "Yes, we carry tube flanges in both 304 and 316L stainless steel. 316L is recommended for pharmaceutical, biotech, and corrosive applications. All flange faces are finished to a smooth, flat surface suitable for gasket sealing, and the bore is matched to the tube ID for a flush interior connection."}
+    {
+      "question": "What is the difference between a tube flange and a pipe flange?",
+      "answer": "Tube flanges are sized to sanitary tube OD dimensions (e.g., 2\" OD tube) and maintain the flush, crevice-free interior surface required in hygienic systems. Pipe flanges follow standard pipe schedule dimensions (e.g., 2\" nominal pipe). Using the wrong type will result in a mismatched bore that creates a ledge at the connection."
+    },
+    {
+      "question": "Are your tube flanges compatible with standard ANSI flange bolt patterns?",
+      "answer": "Yes, our sanitary tube flanges are manufactured with standard ANSI/ASME B16.5 150# bolt patterns, making them compatible with standard industrial flanged equipment, valves, and instrumentation. This allows sanitary tube systems to connect to a wide range of standard process equipment."
+    },
+    {
+      "question": "What gasket material should be used with tube flanges?",
+      "answer": "The gasket selection depends on your process fluid and cleaning chemicals. Common choices include full-face PTFE or EPDM gaskets for sanitary flanged connections. The gasket should be compatible with both your product and your CIP chemicals and rated for your operating temperature and pressure."
+    },
+    {
+      "question": "Are tube flanges available in 316L stainless steel?",
+      "answer": "Yes, we carry tube flanges in both 304 and 316L stainless steel. 316L is recommended for pharmaceutical, biotech, and corrosive applications. All flange faces are finished to a smooth, flat surface suitable for gasket sealing, and the bore is matched to the tube ID for a flush interior connection."
+    }
   ],
   "pipe-flanges": [
-    {"question": "What pressure class are your sanitary pipe flanges rated for?", "answer": "Our sanitary plate pipe flanges are typically manufactured to ANSI/ASME B16.5 150# pressure-temperature ratings unless otherwise specified. For higher pressure applications, we can source 300# or higher rated flanges. Always verify the pressure-temperature rating of your flange against your system design conditions."},
-    {"question": "What is a flat-face versus raised-face flange?", "answer": "A flat-face flange has the sealing surface flush with the flange face and uses a full-face gasket — preferred in sanitary applications to avoid creating crevices. A raised-face flange has a raised ring around the bore that concentrates gasket load — common in industrial applications but less preferred in sanitary systems."},
-    {"question": "Are sanitary pipe flanges compatible with standard industrial flanges?", "answer": "Yes, our sanitary pipe flanges follow standard ANSI bolt patterns and can bolt directly to standard industrial flanged equipment, pumps, and valves. This makes them ideal for connecting sanitary stainless piping to industrial equipment at the boundary between sanitary and non-sanitary sections of a system."},
-    {"question": "What stainless grade is recommended for pipe flanges in food processing?", "answer": "304 stainless steel is suitable for most food and beverage applications. 316L is recommended for dairy, pharmaceutical, and any application involving chlorides (including many sanitizers), as it provides better resistance to pitting and crevice corrosion. Specify your process fluid and cleaning chemicals when selecting the grade."}
+    {
+      "question": "What pressure class are your sanitary pipe flanges rated for?",
+      "answer": "Our sanitary plate pipe flanges are typically manufactured to ANSI/ASME B16.5 150# pressure-temperature ratings unless otherwise specified. For higher pressure applications, we can source 300# or higher rated flanges. Always verify the pressure-temperature rating of your flange against your system design conditions."
+    },
+    {
+      "question": "What is a flat-face versus raised-face flange?",
+      "answer": "A flat-face flange has the sealing surface flush with the flange face and uses a full-face gasket — preferred in sanitary applications to avoid creating crevices. A raised-face flange has a raised ring around the bore that concentrates gasket load — common in industrial applications but less preferred in sanitary systems."
+    },
+    {
+      "question": "Are sanitary pipe flanges compatible with standard industrial flanges?",
+      "answer": "Yes, our sanitary pipe flanges follow standard ANSI bolt patterns and can bolt directly to standard industrial flanged equipment, pumps, and valves. This makes them ideal for connecting sanitary stainless piping to industrial equipment at the boundary between sanitary and non-sanitary sections of a system."
+    },
+    {
+      "question": "What stainless grade is recommended for pipe flanges in food processing?",
+      "answer": "304 stainless steel is suitable for most food and beverage applications. 316L is recommended for dairy, pharmaceutical, and any application involving chlorides (including many sanitizers), as it provides better resistance to pitting and crevice corrosion. Specify your process fluid and cleaning chemicals when selecting the grade."
+    }
   ],
   "plate-flanges": [
-    {"question": "What is a plate flange used for in piping systems?", "answer": "Plate flanges (also called flat flanges or plate weld flanges) are flat circular discs that are welded to pipe ends to create a bolted flange connection. They are used to connect pipes to tanks, vessels, equipment, and other flanged components, and allow the connection to be disassembled for maintenance or inspection."},
-    {"question": "What materials are plate flanges available in?", "answer": "Our plate flanges are available in carbon steel and stainless steel (304 and 316L). Carbon steel flanges are used in non-corrosive industrial piping, while stainless steel flanges are required in sanitary, food, beverage, pharmaceutical, and corrosive applications."},
-    {"question": "What bolt pattern standards do your plate flanges follow?", "answer": "Our plate flanges are manufactured to ANSI/ASME B16.5 150# bolt patterns as standard, with other pressure classes available on request. Standard bolt patterns ensure compatibility with matching flanged equipment, valves, and instrumentation from any manufacturer."},
-    {"question": "Can plate flanges be used in sanitary applications?", "answer": "Yes, stainless steel plate flanges can be used in sanitary applications, particularly at the boundary between sanitary tube/pipe systems and flanged equipment. For wetted surfaces, specify 316L stainless and ensure the bore is finished flush with the mating pipe ID to prevent ledges that could harbor contamination."}
+    {
+      "question": "What is a plate flange used for in piping systems?",
+      "answer": "Plate flanges (also called flat flanges or plate weld flanges) are flat circular discs that are welded to pipe ends to create a bolted flange connection. They are used to connect pipes to tanks, vessels, equipment, and other flanged components, and allow the connection to be disassembled for maintenance or inspection."
+    },
+    {
+      "question": "What materials are plate flanges available in?",
+      "answer": "Our plate flanges are available in carbon steel and stainless steel (304 and 316L). Carbon steel flanges are used in non-corrosive industrial piping, while stainless steel flanges are required in sanitary, food, beverage, pharmaceutical, and corrosive applications."
+    },
+    {
+      "question": "What bolt pattern standards do your plate flanges follow?",
+      "answer": "Our plate flanges are manufactured to ANSI/ASME B16.5 150# bolt patterns as standard, with other pressure classes available on request. Standard bolt patterns ensure compatibility with matching flanged equipment, valves, and instrumentation from any manufacturer."
+    },
+    {
+      "question": "Can plate flanges be used in sanitary applications?",
+      "answer": "Yes, stainless steel plate flanges can be used in sanitary applications, particularly at the boundary between sanitary tube/pipe systems and flanged equipment. For wetted surfaces, specify 316L stainless and ensure the bore is finished flush with the mating pipe ID to prevent ledges that could harbor contamination."
+    }
   ],
   "valves": [
-    {"question": "What types of sanitary valves does Cardinal Cooling Systems carry?", "answer": "We carry a complete range of sanitary valves including butterfly valves, ball valves (sanitary, socket weld, and threaded), check valves (sanitary and clamp), and specialty valves. Both manual and actuated options are available to meet different levels of automation and control requirements."},
-    {"question": "What is the difference between a sanitary valve and an industrial valve?", "answer": "Sanitary valves are specifically designed for hygienic applications with smooth, crevice-free internal surfaces, electropolished or mechanically polished finishes, materials that meet food and pharmaceutical standards (typically 316L stainless), and designs that support CIP cleaning without disassembly. Industrial valves prioritize pressure rating and flow capacity over surface finish and cleanability."},
-    {"question": "How do I select the right valve for my sanitary process?", "answer": "Key selection factors include flow media and temperature, required pressure rating, whether you need full shut-off or throttling control, the need for CIP compatibility, automation requirements (manual vs actuated), and connection type (clamp, weld, threaded). Contact our technical team with your process parameters and we can recommend the right valve."},
-    {"question": "Are your sanitary valves available with actuators?", "answer": "Yes, many of our butterfly valves and ball valves are available with pneumatic or electric actuators for automated operation. Actuated valves are available with limit switches for position feedback and can be integrated with PLC control systems for automated processing and CIP sequences."}
+    {
+      "question": "What is a sanitary valve?",
+      "answer": "A sanitary valve is a hygienic flow-control valve built from 304 or 316L stainless steel with polished, crevice-free wetted surfaces so it can be cleaned in place. It starts, stops, or throttles flow in food, beverage, pharmaceutical, and data center cooling systems without harboring bacteria."
+    },
+    {
+      "question": "What are the main types of sanitary valves?",
+      "answer": "The most common sanitary valves are ball valves for tight on/off shutoff, butterfly valves for compact and economical isolation and throttling, and check valves for automatic backflow prevention. Diaphragm and multi-port 3-way valves are also used for sterile and flow-diversion service."
+    },
+    {
+      "question": "What material are sanitary valves made from?",
+      "answer": "Sanitary valves are made from 304 or 316L stainless steel with a 32Ra or finer polished finish. 316L is preferred for cooling loops and aggressive media, and seats and seals use inert materials such as EPDM, Viton, silicone, or PTFE."
+    },
+    {
+      "question": "What connection types do sanitary valves use?",
+      "answer": "Sanitary valves use tri-clamp, butt-weld, or bevel-seat connections rather than threads, because threaded joints are difficult to clean to a microbial level. Tri-clamp is the most common because it disassembles tool-free for cleaning."
+    },
+    {
+      "question": "What is the difference between a ball valve and a butterfly valve?",
+      "answer": "A ball valve gives a full unobstructed bore and the tightest shutoff and suits smaller lines and frequent on/off duty. A butterfly valve is more compact, lighter, and more economical in larger line sizes and is ideal for isolation and throttling. Many systems use both."
+    },
+    {
+      "question": "Can sanitary valves be automated?",
+      "answer": "Yes. Sanitary valves can be supplied with pneumatic (including spring-return, fail-safe) or electric actuators for automated or remote flow control, or with a manual locking handle for set-and-hold operation."
+    }
   ],
   "butterfly-valves": [
-    {"question": "What is the difference between a manual and an air actuated butterfly valve?", "answer": "Manual butterfly valves are operated by hand via a handle or gear operator and are used where infrequent operation or local manual control is acceptable. Air actuated butterfly valves use a pneumatic actuator for remote or automated operation, allowing integration with PLC systems, automated CIP sequences, and high-cycle applications."},
-    {"question": "Are sanitary butterfly valves suitable for throttling service?", "answer": "Butterfly valves can be used for throttling, but they are most efficient and accurate between 10% and 70% open. For precise flow control over a wide range, a globe or needle valve may be more appropriate. For simple on/off service, butterfly valves are an excellent cost-effective choice."},
-    {"question": "What seat materials are available for sanitary butterfly valves?", "answer": "We offer butterfly valves with EPDM, Viton (FKM), PTFE-lined, and silicone seats. EPDM is standard for most food, beverage, and water applications. Viton is used with oils, fuels, and aggressive chemicals. PTFE-lined seats offer the broadest chemical compatibility and are common in pharmaceutical applications."},
-    {"question": "Can butterfly valves be cleaned in place (CIP)?", "answer": "Yes, sanitary butterfly valves are designed for CIP cleaning. When fully open, the disc presents minimal obstruction to CIP flow. For thorough cleaning of the disc and seat area, CIP programs should include both open and closed valve positions to ensure all surfaces are wetted by cleaning solution."}
+    {
+      "question": "What is a sanitary butterfly valve?",
+      "answer": "A sanitary butterfly valve is a hygienic flow-control valve with a polished stainless disc that rotates a quarter turn to open, throttle, or shut off flow. It is compact, bi-directional, low in flow resistance, and has crevice-free wetted surfaces so it can be cleaned in place."
+    },
+    {
+      "question": "What seat material should I use for a cooling or glycol loop?",
+      "answer": "EPDM is the default seat for water, glycol, and deionized-water cooling loops and is rated to about 250°F. Use Viton for oils and aggressive chemicals and silicone for high-purity or wide-temperature service. Avoid Buna/nitrile in deionized-water service."
+    },
+    {
+      "question": "What is the difference between a butterfly valve and a ball valve?",
+      "answer": "A butterfly valve is more compact, lighter, and more economical in larger line sizes and is ideal for isolation and throttling of clean, low-to-medium-viscosity fluids. A ball valve gives a full unobstructed bore, tighter shutoff, and lower pressure drop and is preferred for smaller lines or frequent on/off duty."
+    },
+    {
+      "question": "Are Cardinal butterfly valves manual or actuated?",
+      "answer": "Both. Manual valves use a multi-position locking handle, and automated valves are available with pneumatic (including spring-return, fail-safe) or electric actuators for remote or automated flow control."
+    },
+    {
+      "question": "What sizes and connections are available?",
+      "answer": "Sizes run from 1\" to 12\" with tri-clamp or butt-weld ends. Valve body and disc are 304 or 316L stainless with a 32Ra polished finish, and seats are available in EPDM, Viton, and silicone."
+    },
+    {
+      "question": "Can sanitary butterfly valves be used in data center liquid cooling?",
+      "answer": "Yes. Their compact footprint and economical cost in larger line sizes make them well suited to isolating and throttling primary chilled-water and secondary coolant loops, where 316L bodies and EPDM seats resist glycol and deionized water."
+    }
   ],
   "sanitary-ball-valves": [
-    {"question": "What is a full-bore versus reduced-bore sanitary ball valve?", "answer": "A full-bore (full-port) ball valve has a ball opening equal to the pipe ID, allowing unrestricted flow with minimal pressure drop. A reduced-bore valve has a smaller ball opening, which increases velocity and pressure drop. Full-bore valves are preferred in sanitary applications for better CIP cleanability and lower pressure loss."},
-    {"question": "Are sanitary ball valves suitable for CIP service?", "answer": "Yes, sanitary ball valves are CIP compatible when properly designed. Full-bore valves in the open position allow CIP solution to flow through with minimal obstruction. Valves should be cycled to ensure the ball, seat, and body cavity are all wetted during CIP. Some designs include body flush connections for cleaning the cavity behind the ball."},
-    {"question": "What is a 3-way sanitary ball valve used for?", "answer": "A 3-way sanitary ball valve has three ports and allows flow to be directed, mixed, or diverted between two different paths. They are used at process line intersections to switch product flow between tanks, divert CIP solution, or blend two streams. Available in L-port and T-port configurations for different flow switching patterns."},
-    {"question": "What materials are sanitary ball valves made from?", "answer": "Our sanitary ball valves feature 316L stainless steel bodies and balls with PTFE or RTFE seat and seals for broad chemical compatibility. External components are 304 stainless. The smooth 316L ball surface provides low friction operation and resists product buildup for consistent sealing performance."}
+    {
+      "question": "What is a full-bore versus reduced-bore sanitary ball valve?",
+      "answer": "A full-bore (full-port) ball valve has a ball opening equal to the pipe ID, allowing unrestricted flow with minimal pressure drop. A reduced-bore valve has a smaller ball opening, which increases velocity and pressure drop. Full-bore valves are preferred in sanitary applications for better CIP cleanability and lower pressure loss."
+    },
+    {
+      "question": "Are sanitary ball valves suitable for CIP service?",
+      "answer": "Yes, sanitary ball valves are CIP compatible when properly designed. Full-bore valves in the open position allow CIP solution to flow through with minimal obstruction. Valves should be cycled to ensure the ball, seat, and body cavity are all wetted during CIP. Some designs include body flush connections for cleaning the cavity behind the ball."
+    },
+    {
+      "question": "What is a 3-way sanitary ball valve used for?",
+      "answer": "A 3-way sanitary ball valve has three ports and allows flow to be directed, mixed, or diverted between two different paths. They are used at process line intersections to switch product flow between tanks, divert CIP solution, or blend two streams. Available in L-port and T-port configurations for different flow switching patterns."
+    },
+    {
+      "question": "What materials are sanitary ball valves made from?",
+      "answer": "Our sanitary ball valves feature 316L stainless steel bodies and balls with PTFE or RTFE seat and seals for broad chemical compatibility. External components are 304 stainless. The smooth 316L ball surface provides low friction operation and resists product buildup for consistent sealing performance."
+    }
   ],
   "socket-weld-ball-valves": [
-    {"question": "What is the advantage of socket weld ball valves over threaded ball valves?", "answer": "Socket weld ball valves provide a stronger, more permanent joint with better leak resistance than threaded connections, especially in high-pressure and high-cycle applications. Once welded, there are no threads to corrode or loosen. They are preferred in permanent installations where the valve will not need to be frequently removed."},
-    {"question": "What pressure ratings do socket weld ball valves support?", "answer": "Socket weld ball valves typically handle pressures up to 1000 PSI or higher depending on size and material. This makes them suitable for high-pressure applications in chemical processing, steam systems, and industrial piping where threaded connections may not be appropriate."},
-    {"question": "What size socket weld ball valves do you carry?", "answer": "We carry socket weld ball valves from 0.25\" to 2\" in 304 and 316L stainless steel. The socket end accepts the tube or pipe OD for welding, with the socket depth and diameter matching standard pipe or tube dimensions for proper fit-up."},
-    {"question": "Can socket weld ball valves be used in sanitary applications?", "answer": "Socket weld ball valves in 316L stainless steel are used in sanitary-adjacent applications where a permanent welded connection is preferred and the full sanitary finish requirements of food-grade applications are not required. For fully sanitary applications, sanitary ball valves with clamp or butt-weld ends are typically specified."}
+    {
+      "question": "What is the advantage of socket weld ball valves over threaded ball valves?",
+      "answer": "Socket weld ball valves provide a stronger, more permanent joint with better leak resistance than threaded connections, especially in high-pressure and high-cycle applications. Once welded, there are no threads to corrode or loosen. They are preferred in permanent installations where the valve will not need to be frequently removed."
+    },
+    {
+      "question": "What pressure ratings do socket weld ball valves support?",
+      "answer": "Socket weld ball valves typically handle pressures up to 1000 PSI or higher depending on size and material. This makes them suitable for high-pressure applications in chemical processing, steam systems, and industrial piping where threaded connections may not be appropriate."
+    },
+    {
+      "question": "What size socket weld ball valves do you carry?",
+      "answer": "We carry socket weld ball valves from 0.25\" to 2\" in 304 and 316L stainless steel. The socket end accepts the tube or pipe OD for welding, with the socket depth and diameter matching standard pipe or tube dimensions for proper fit-up."
+    },
+    {
+      "question": "Can socket weld ball valves be used in sanitary applications?",
+      "answer": "Socket weld ball valves in 316L stainless steel are used in sanitary-adjacent applications where a permanent welded connection is preferred and the full sanitary finish requirements of food-grade applications are not required. For fully sanitary applications, sanitary ball valves with clamp or butt-weld ends are typically specified."
+    }
   ],
   "threaded-ball-valves": [
-    {"question": "What thread standard are your threaded ball valves available in?", "answer": "Our threaded ball valves are available with NPT (National Pipe Tapered) threads, which are the standard in most North American industrial and commercial piping systems. BSPT and other thread standards may be available on request for international applications."},
-    {"question": "Are threaded ball valves suitable for high-pressure applications?", "answer": "Stainless steel threaded ball valves are rated for pressures typically up to 1000 PSI for small sizes, decreasing with larger sizes. For very high-pressure applications or permanent installations, socket weld or butt-weld valves provide more reliable joints. NPT threads should always be sealed with appropriate thread sealant or tape."},
-    {"question": "What is the benefit of a 3-piece threaded ball valve?", "answer": "A 3-piece body design allows the center ball and seat section to be removed from the line for maintenance, repair, or cleaning without disturbing the threaded pipe connections on either side. This significantly reduces maintenance time and makes it easy to inspect or replace internal components."},
-    {"question": "Are stainless steel threaded ball valves suitable for food and beverage applications?", "answer": "Stainless steel threaded ball valves are commonly used in utility and non-product-contact lines in food and beverage facilities (water, air, CIP chemicals). For direct product contact lines requiring full CIP compatibility and sanitary finish, a clamp-end sanitary ball valve is the appropriate choice."}
+    {
+      "question": "What thread standard are your threaded ball valves available in?",
+      "answer": "Our threaded ball valves are available with NPT (National Pipe Tapered) threads, which are the standard in most North American industrial and commercial piping systems. BSPT and other thread standards may be available on request for international applications."
+    },
+    {
+      "question": "Are threaded ball valves suitable for high-pressure applications?",
+      "answer": "Stainless steel threaded ball valves are rated for pressures typically up to 1000 PSI for small sizes, decreasing with larger sizes. For very high-pressure applications or permanent installations, socket weld or butt-weld valves provide more reliable joints. NPT threads should always be sealed with appropriate thread sealant or tape."
+    },
+    {
+      "question": "What is the benefit of a 3-piece threaded ball valve?",
+      "answer": "A 3-piece body design allows the center ball and seat section to be removed from the line for maintenance, repair, or cleaning without disturbing the threaded pipe connections on either side. This significantly reduces maintenance time and makes it easy to inspect or replace internal components."
+    },
+    {
+      "question": "Are stainless steel threaded ball valves suitable for food and beverage applications?",
+      "answer": "Stainless steel threaded ball valves are commonly used in utility and non-product-contact lines in food and beverage facilities (water, air, CIP chemicals). For direct product contact lines requiring full CIP compatibility and sanitary finish, a clamp-end sanitary ball valve is the appropriate choice."
+    }
   ],
   "check-valves": [
-    {"question": "How does a sanitary check valve work?", "answer": "A sanitary check valve uses a ball, disc, or poppet that moves freely within the valve body. Forward flow opens the valve by pushing the closure element off its seat. When flow stops or reverses, the closure element returns to its seat under gravity or spring force, blocking reverse flow automatically without any external operator input."},
-    {"question": "What is the difference between a ball check valve and a disc check valve?", "answer": "A ball check valve uses a stainless steel or elastomer ball that rolls off its seat during forward flow and seats under gravity/spring when flow stops — simple, reliable, and easy to clean. A disc check valve uses a thin disc that pivots or lifts, offering faster response and lower cracking pressure, making it better for high-cycle or low-pressure-differential applications."},
-    {"question": "What is the minimum flow rate required to open a check valve?", "answer": "The minimum flow rate (cracking pressure) depends on the valve size, internal design, and whether a spring is included. Spring-loaded check valves require more forward pressure to open and close more positively. Gravity-operated check valves have very low cracking pressure but must be installed in the correct orientation (typically vertical, flow upward)."},
-    {"question": "Are sanitary check valves CIP compatible?", "answer": "Yes, our sanitary check valves are CIP compatible. For thorough cleaning, CIP programs should include sufficient flow velocity to open the valve and ensure cleaning solution contacts all internal surfaces. Some designs can be disassembled for manual cleaning or inspection of the seat and closure element."}
+    {
+      "question": "How does a sanitary check valve work?",
+      "answer": "A sanitary check valve uses a ball, disc, or poppet that moves freely within the valve body. Forward flow opens the valve by pushing the closure element off its seat. When flow stops or reverses, the closure element returns to its seat under gravity or spring force, blocking reverse flow automatically without any external operator input."
+    },
+    {
+      "question": "What is the difference between a ball check valve and a disc check valve?",
+      "answer": "A ball check valve uses a stainless steel or elastomer ball that rolls off its seat during forward flow and seats under gravity/spring when flow stops — simple, reliable, and easy to clean. A disc check valve uses a thin disc that pivots or lifts, offering faster response and lower cracking pressure, making it better for high-cycle or low-pressure-differential applications."
+    },
+    {
+      "question": "What is the minimum flow rate required to open a check valve?",
+      "answer": "The minimum flow rate (cracking pressure) depends on the valve size, internal design, and whether a spring is included. Spring-loaded check valves require more forward pressure to open and close more positively. Gravity-operated check valves have very low cracking pressure but must be installed in the correct orientation (typically vertical, flow upward)."
+    },
+    {
+      "question": "Are sanitary check valves CIP compatible?",
+      "answer": "Yes, our sanitary check valves are CIP compatible. For thorough cleaning, CIP programs should include sufficient flow velocity to open the valve and ensure cleaning solution contacts all internal surfaces. Some designs can be disassembled for manual cleaning or inspection of the seat and closure element."
+    }
   ],
   "clamp-check-valves": [
-    {"question": "What is the advantage of a clamp check valve over a threaded check valve?", "answer": "Clamp check valves with tri-clamp ends can be quickly removed from the line for inspection, cleaning, or maintenance without any tools beyond a clamp release. This is critical in sanitary systems where regular inspection and cleaning of all flow components is required to maintain hygiene compliance."},
-    {"question": "In what orientation should a clamp check valve be installed?", "answer": "Installation orientation depends on the internal design. Ball check valves are typically installed vertically with flow upward (gravity-assisted closing) or horizontally with a spring-assist. Disc check valves can often be installed in any orientation. Always refer to the manufacturer's orientation requirement for your specific model."},
-    {"question": "What materials are the sealing components made from in clamp check valves?", "answer": "The closure element (ball or disc) is typically 316L stainless steel or a compatible elastomer. The seat is usually EPDM, Viton, or PTFE depending on the application. All wetted materials are selected for food-grade compatibility and resistance to standard CIP cleaning chemicals."},
-    {"question": "Can clamp check valves handle backpressure?", "answer": "Yes, clamp check valves are designed to hold back pressure on the downstream side when flow stops or reverses. The pressure rating depends on the valve size and construction. Verify the maximum backpressure rating of your specific valve against your system design conditions, particularly in systems with elevated static head or pressure surges."}
+    {
+      "question": "What is the advantage of a clamp check valve over a threaded check valve?",
+      "answer": "Clamp check valves with tri-clamp ends can be quickly removed from the line for inspection, cleaning, or maintenance without any tools beyond a clamp release. This is critical in sanitary systems where regular inspection and cleaning of all flow components is required to maintain hygiene compliance."
+    },
+    {
+      "question": "In what orientation should a clamp check valve be installed?",
+      "answer": "Installation orientation depends on the internal design. Ball check valves are typically installed vertically with flow upward (gravity-assisted closing) or horizontally with a spring-assist. Disc check valves can often be installed in any orientation. Always refer to the manufacturer's orientation requirement for your specific model."
+    },
+    {
+      "question": "What materials are the sealing components made from in clamp check valves?",
+      "answer": "The closure element (ball or disc) is typically 316L stainless steel or a compatible elastomer. The seat is usually EPDM, Viton, or PTFE depending on the application. All wetted materials are selected for food-grade compatibility and resistance to standard CIP cleaning chemicals."
+    },
+    {
+      "question": "Can clamp check valves handle backpressure?",
+      "answer": "Yes, clamp check valves are designed to hold back pressure on the downstream side when flow stops or reverses. The pressure rating depends on the valve size and construction. Verify the maximum backpressure rating of your specific valve against your system design conditions, particularly in systems with elevated static head or pressure surges."
+    }
   ],
   "tube": [
-    {"question": "What is the difference between sanitary tubing and standard stainless pipe?", "answer": "Sanitary tubing is specified by OD (outer diameter) and uses a fixed wall thickness, with a highly polished interior finish (typically 32 Ra or better) required for hygienic applications. Standard stainless pipe follows nominal pipe size (NPS) with schedule wall thicknesses and typically has a rougher interior finish. Sanitary tubing is required in food, beverage, and pharma applications."},
-    {"question": "What is the standard interior finish for sanitary stainless tubing?", "answer": "Standard sanitary tubing meets 3-A Sanitary Standards with an interior surface finish of 32 Ra micro-inch (0.8 µm Ra) or better. Pharmaceutical applications may require EP (electropolished) finish of 15-20 Ra. The smooth finish prevents bacterial adhesion, supports CIP cleaning, and prevents product contamination."},
-    {"question": "What wall thicknesses are available for sanitary tubing?", "answer": "Common sanitary tube wall thicknesses are 0.065\" and 0.083\", with heavier walls available for high-pressure applications. The 0.065\" wall is most common in standard food and beverage applications, while 0.083\" is used where higher pressure ratings or additional mechanical strength is needed."},
-    {"question": "Is 304 or 316L stainless recommended for sanitary tubing?", "answer": "316L stainless is the preferred grade for pharmaceutical, biotech, and any application involving chlorinated cleaning agents, as its molybdenum content provides significantly better corrosion resistance. 304 stainless is widely used in food, beverage, and dairy applications where chloride exposure is limited and cost is a consideration."}
+    {
+      "question": "What is the difference between sanitary tubing and standard stainless pipe?",
+      "answer": "Sanitary tubing is specified by OD (outer diameter) and uses a fixed wall thickness, with a highly polished interior finish (typically 32 Ra or better) required for hygienic applications. Standard stainless pipe follows nominal pipe size (NPS) with schedule wall thicknesses and typically has a rougher interior finish. Sanitary tubing is required in food, beverage, and pharma applications."
+    },
+    {
+      "question": "What is the standard interior finish for sanitary stainless tubing?",
+      "answer": "Standard sanitary tubing meets 3-A Sanitary Standards with an interior surface finish of 32 Ra micro-inch (0.8 µm Ra) or better. Pharmaceutical applications may require EP (electropolished) finish of 15-20 Ra. The smooth finish prevents bacterial adhesion, supports CIP cleaning, and prevents product contamination."
+    },
+    {
+      "question": "What wall thicknesses are available for sanitary tubing?",
+      "answer": "Common sanitary tube wall thicknesses are 0.065\" and 0.083\", with heavier walls available for high-pressure applications. The 0.065\" wall is most common in standard food and beverage applications, while 0.083\" is used where higher pressure ratings or additional mechanical strength is needed."
+    },
+    {
+      "question": "Is 304 or 316L stainless recommended for sanitary tubing?",
+      "answer": "316L stainless is the preferred grade for pharmaceutical, biotech, and any application involving chlorinated cleaning agents, as its molybdenum content provides significantly better corrosion resistance. 304 stainless is widely used in food, beverage, and dairy applications where chloride exposure is limited and cost is a consideration."
+    }
   ],
   "tubes": [
-    {"question": "What OD sizes of sanitary stainless steel tubing do you carry?", "answer": "We stock sanitary tubing in common sizes from 0.5\" OD to 4\" OD in standard sanitary wall thicknesses. Larger sizes and custom lengths are available on request. Our tubing is available in 304 and 316L stainless steel with polished interior surfaces meeting 3-A sanitary standards."},
-    {"question": "What lengths does sanitary tubing come in?", "answer": "Standard sanitary tubing is available in 20-foot lengths, which is the most common length for minimizing weld joints in process lines. We can also supply cut-to-length tubing for shorter runs. Contact us with your specific length requirements and we can provide a quote."},
-    {"question": "What surface finish is required for pharmaceutical-grade sanitary tubing?", "answer": "Pharmaceutical applications typically require electropolished (EP) tubing with an interior Ra of 15-20 micro-inch (0.4-0.5 µm) or better, along with full material traceability documentation. Standard mechanical polish tubing (32 Ra) is acceptable for food and beverage but may not meet pharma-grade specifications."},
-    {"question": "How should sanitary tubing be cut and prepared for welding?", "answer": "Sanitary tubing should be cut with a stainless-specific tube cutter or saw blade to avoid contamination. The cut end must be deburred inside and out, cleaned of all oils and contaminants, and squared to within tolerance for proper weld fit-up. Using a tube facing tool ensures a precise, square cut end for consistent weld quality."}
+    {
+      "question": "What is sanitary tubing?",
+      "answer": "Sanitary tubing is polished stainless steel tube built to ASTM A270 and 3-A standards with a smooth, crevice-free interior so it can be cleaned in place. It is sized by outside diameter, made from 304 or 316L, and used in data center cooling, food, beverage, dairy, and pharmaceutical systems."
+    },
+    {
+      "question": "What is the difference between sanitary tubing and pipe?",
+      "answer": "Sanitary tubing is measured by its exact outside diameter and wall thickness and polished to a hygienic finish, while pipe is specified by nominal size and schedule and is not polished. Tubing is used for cleanable, high-purity flow; pipe is used for general structural or utility service."
+    },
+    {
+      "question": "What does 32Ra mean on sanitary tubing?",
+      "answer": "32Ra is a surface-roughness average of 32 microinches, the standard sanitary finish that minimizes the microscopic peaks and valleys where bacteria could collect. A smoother 20Ra or 15Ra electropolished finish is used for higher-purity pharmaceutical service."
+    },
+    {
+      "question": "What is the difference between 304 and 316L sanitary tubing?",
+      "answer": "304 is the economical choice for general sanitary and water service. 316L adds molybdenum for superior resistance to chlorides, glycol, and deionized water, making it the preferred tubing for data center cooling loops and pharmaceutical systems."
+    },
+    {
+      "question": "How is sanitary tubing measured?",
+      "answer": "Sanitary tubing is measured by its outside diameter (OD) and wall thickness, not nominal pipe size. Common walls are 0.065\" for ½\"–3\", 0.083\" at 4\", and 0.109\" at 6\"–8\"."
+    },
+    {
+      "question": "Can sanitary tubing be cut to length?",
+      "answer": "Yes. Standard tubing ships in 20-foot lengths and can be cut to size, and tri-clamp ferrules can be welded to the ends to make ready-to-install spool assemblies for a specific run."
+    }
   ]
 }

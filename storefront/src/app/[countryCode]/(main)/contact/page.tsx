@@ -2,6 +2,9 @@
 
 import Link from "next/link"
 import { useState, FormEvent, useRef } from "react"
+import { filesToAttachments } from "@lib/util/attachments"
+import { captureEvent, identifyUser } from "@lib/util/posthog"
+import AttachmentInput from "@modules/common/components/attachment-input"
 
 declare global {
   interface Window {
@@ -32,6 +35,7 @@ export default function ContactPage({ params }: Props) {
   const { countryCode } = params
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
   const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -49,6 +53,8 @@ export default function ContactPage({ params }: Props) {
     }
 
     try {
+      const attachments = await filesToAttachments(attachedFiles)
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/contact`,
         {
@@ -57,7 +63,9 @@ export default function ContactPage({ params }: Props) {
             "Content-Type": "application/json",
             "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(
+            attachments.length > 0 ? { ...data, attachments } : data
+          ),
         }
       )
 
@@ -70,9 +78,19 @@ export default function ContactPage({ params }: Props) {
             user_email: data.email,
             form_location: "contact_page",
           })
-          console.log("✅ Contact form submitted:", data.email)
         }
+        captureEvent("contact_form_submitted", {
+          form_location: "contact_page",
+          email: data.email,
+        })
+        identifyUser(data.email, {
+          email: data.email,
+          first_name: data.name,
+          last_name: data.lastName,
+          phone: data.phone,
+        })
         setSubmitStatus("success")
+        setAttachedFiles([])
         formRef.current?.reset()
       } else {
         setSubmitStatus("error")
@@ -156,8 +174,8 @@ export default function ContactPage({ params }: Props) {
                   <div>
                     <p className="text-sm font-semibold text-gray-900 mb-1">Our Address</p>
                     <p className="text-sm font-light" style={{ color: "#6b7280" }}>
-                      1200 NW 14th Terrace<br />
-                      Cape Coral, FL 33993<br />
+                      333 S.E. 2nd Avenue, Suite 2000<br />
+                      Miami, FL 33131<br />
                       United States
                     </p>
                   </div>
@@ -241,6 +259,14 @@ export default function ContactPage({ params }: Props) {
                     style={{ borderRadius: "5px" }}
                   />
                 </div>
+
+                {/* Attachments */}
+                <AttachmentInput
+                  files={attachedFiles}
+                  onChange={setAttachedFiles}
+                  disabled={isSubmitting}
+                  labelClassName="block text-xs text-gray-500 mb-1.5"
+                />
 
                 {/* Submit */}
                 <button

@@ -144,7 +144,7 @@ export default function IndustriesSupport() {
             Need solutions for a specialized application?
           </p>
           <Link
-            href="/contact"
+            href="/us/contact"
             className="inline-flex items-center px-8 py-4 bg-[#0f62fe] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             Discuss Your Project
