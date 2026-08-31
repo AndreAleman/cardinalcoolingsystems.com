@@ -57,7 +57,7 @@ export async function seedOrderFormWorld({
   });
 
   const company = (
-    await api.post("/store/companies", { name: "Alpha Cooling" }, headersOf(ada))
+    await api.post("/store/companies", { name: "Alpha Cooling", phone: "555-0101" }, headersOf(ada))
   ).data.company;
   const companyService = container.resolve(COMPANY_MODULE);
   await companyService.updateCompanies([
@@ -125,7 +125,7 @@ export async function seedOrderFormWorld({
     const other = (
       await api.post(
         "/store/companies",
-        { name: `${name} Co` },
+        { name: `${name} Co`, phone: "555-0103" },
         headersOf(customer)
       )
     ).data.company;

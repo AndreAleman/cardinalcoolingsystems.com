@@ -28,50 +28,77 @@ export const updateCustomer = cache(async function (
   return updateRes
 })
 
+/*
+  "Request an account": every new account is a membership request.
+  Phone and company name are required — the Pending Company is created
+  right after the customer, so Cardinal can accept or reject it and the
+  buyer lands on the waiting screen with their Welcome Code.
+*/
 export async function signup(_currentState: unknown, formData: FormData) {
   const password = formData.get("password") as string
   const companyName = ((formData.get("company_name") as string) || "").trim()
+  const phone = ((formData.get("phone") as string) || "").trim()
   const customerForm = {
-    email: formData.get("email") as string,
-    first_name: formData.get("first_name") as string,
-    last_name: formData.get("last_name") as string,
-    phone: formData.get("phone") as string,
+    email: ((formData.get("email") as string) || "").trim(),
+    first_name: ((formData.get("first_name") as string) || "").trim(),
+    last_name: ((formData.get("last_name") as string) || "").trim(),
+    phone,
   }
 
-  try {
-    const token = await sdk.auth.register("customer", "emailpass", {
-      email: customerForm.email,
-      password: password,
-    })
-
-    const customHeaders = { authorization: `Bearer ${token}` }
-    
-    const { customer: createdCustomer } = await sdk.store.customer.create(
-      customerForm,
-      {},
-      customHeaders
-    )
-
-    const loginToken = await sdk.auth.login("customer", "emailpass", {
-      email: customerForm.email,
-      password,
-    })
-
-    setAuthToken(typeof loginToken === 'string' ? loginToken : loginToken.location)
-
-    revalidateTag("customer")
-  } catch (error: any) {
-    return error.toString()
+  // Validate everything BEFORE creating anything, so a bad field never
+  // leaves a half-made account behind.
+  if (
+    !customerForm.email ||
+    !customerForm.first_name ||
+    !customerForm.last_name ||
+    !password
+  ) {
+    return "Please fill in your name, email, and password."
+  }
+  if (phone.length < 7) {
+    return "Please enter a phone number with at least 7 digits."
+  }
+  if (!companyName) {
+    return "Please enter your company name."
   }
 
-  // A company name means "give me a Dashboard": create the Pending
-  // Company now so the Welcome Code shows the moment they land.
-  if (companyName) {
+  // If this browser is already signed in (e.g. a retry after the
+  // company step failed), skip straight to the membership request —
+  // never re-register.
+  const existingCustomer = await getCustomer()
+
+  if (!existingCustomer) {
     try {
-      await createCompany(companyName)
+      const token = await sdk.auth.register("customer", "emailpass", {
+        email: customerForm.email,
+        password: password,
+      })
+
+      const customHeaders = { authorization: `Bearer ${token}` }
+
+      await sdk.store.customer.create(customerForm, {}, customHeaders)
+
+      const loginToken = await sdk.auth.login("customer", "emailpass", {
+        email: customerForm.email,
+        password,
+      })
+
+      setAuthToken(typeof loginToken === 'string' ? loginToken : loginToken.location)
+
+      revalidateTag("customer")
     } catch (error: any) {
-      return `Your account was created, but the company could not be: ${error.toString()}`
+      return error.toString()
     }
+  }
+
+  // The membership request itself: the Pending Company. If this fails
+  // the customer stays signed in and can retry from the account page's
+  // "Request portal access" card — they are never silently left as a
+  // bare retail account without being told.
+  try {
+    await createCompany({ name: companyName, phone })
+  } catch (error: any) {
+    return `Your sign-in was created, but your membership request did not go through: ${error.toString()} You are signed in — use the "Request portal access" form on your account page to try again.`
   }
   return null
 }

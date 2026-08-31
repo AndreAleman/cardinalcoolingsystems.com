@@ -62,18 +62,50 @@ export type CompanySignupResult = CompanyMembership & { welcome_code: string }
 
 /*
   Create the signed-in customer's Company (Pending until Cardinal
-  approves it). Returns the Welcome Code so it can be shown at once.
+  approves it). Name and phone are both required by the backend.
+  Returns the Welcome Code so it can be shown at once.
 */
-export async function createCompany(name: string): Promise<CompanySignupResult> {
+export async function createCompany(input: {
+  name: string
+  phone: string
+}): Promise<CompanySignupResult> {
   const result = await sdk.client
     .fetch<CompanySignupResult>("/store/companies", {
       method: "POST",
       headers: getAuthHeaders(),
-      body: { name },
+      body: { name: input.name, phone: input.phone },
     })
     .catch(medusaError)
   revalidateTag("company")
+  revalidateTag("customer")
   return result
+}
+
+/*
+  Form action: a signed-in customer with no Company requests portal
+  access (creates their Pending Company). Returns an error string or
+  null; on success the account page re-renders into the waiting screen.
+*/
+export async function requestPortalAccess(
+  _state: unknown,
+  formData: FormData
+): Promise<string | null> {
+  const name = ((formData.get("company_name") as string) || "").trim()
+  const phone = ((formData.get("phone") as string) || "").trim()
+
+  if (!name) {
+    return "Please enter your company name."
+  }
+  if (phone.length < 7) {
+    return "Please enter a phone number with at least 7 digits."
+  }
+
+  try {
+    await createCompany({ name, phone })
+    return null
+  } catch (error: any) {
+    return error?.message ?? "Could not send your request. Please try again."
+  }
 }
 
 export type TeamMember = {

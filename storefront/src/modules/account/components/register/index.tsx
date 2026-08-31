@@ -22,11 +22,12 @@ const Register = ({ setCurrentView }: Props) => {
       data-testid="register-page"
     >
       <h1 className="text-large-semi uppercase mb-6">
-        Become a Cardinal Cooling Systems Member
+        Request an account
       </h1>
       <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Create your Cardinal Cooling Systems Member profile, and get access to an enhanced
-        shopping experience.
+        Cardinal approves every account by hand — we&apos;ll email you when
+        you&apos;re in. You&apos;ll get a company dashboard and a 10%-off
+        welcome code.
       </p>
       <form className="w-full flex flex-col" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">
@@ -53,25 +54,29 @@ const Register = ({ setCurrentView }: Props) => {
             data-testid="email-input"
           />
           <Input
-            label="Phone"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            data-testid="phone-input"
-          />
-          <Input
-            label="Company (get a company dashboard + 10% off)"
-            name="company_name"
-            autoComplete="organization"
-            data-testid="company-name-input"
-          />
-          <Input
             label="Password"
             name="password"
             required
             type="password"
             autoComplete="new-password"
             data-testid="password-input"
+          />
+          <Input
+            label="Phone"
+            name="phone"
+            required
+            type="tel"
+            minLength={7}
+            title="Enter a phone number with at least 7 digits."
+            autoComplete="tel"
+            data-testid="phone-input"
+          />
+          <Input
+            label="Company name"
+            name="company_name"
+            required
+            autoComplete="organization"
+            data-testid="company-name-input"
           />
         </div>
         <ErrorMessage error={message} data-testid="register-error" />
@@ -93,7 +98,7 @@ const Register = ({ setCurrentView }: Props) => {
           .
         </span>
         <SubmitButton className="w-full mt-6" data-testid="register-button">
-          Join
+          Request an account
         </SubmitButton>
       </form>
       <span className="text-center text-ui-fg-base text-small-regular mt-6">

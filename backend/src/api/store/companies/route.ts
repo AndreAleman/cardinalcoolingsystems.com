@@ -29,6 +29,7 @@ export const POST = async (
   const { result } = await signupCompanyWorkflow(req.scope).run({
     input: {
       name: req.validatedBody.name,
+      phone: req.validatedBody.phone,
       customer: {
         id: customer.id,
         email: customer.email,

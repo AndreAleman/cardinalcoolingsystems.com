@@ -49,7 +49,7 @@ medusaIntegrationTestRunner({
     describe("POST /store/companies", () => {
       it("requires a signed-in customer", async () => {
         const res = await api
-          .post("/store/companies", { name: "Acme CDU" }, baseHeaders)
+          .post("/store/companies", { name: "Acme CDU", phone: "555-0100" }, baseHeaders)
           .catch((e) => e.response);
         expect(res.status).toBe(401);
       });
@@ -57,7 +57,7 @@ medusaIntegrationTestRunner({
       it("creates a Pending Company, makes the customer its admin, and issues a Welcome Code", async () => {
         const res = await api.post(
           "/store/companies",
-          { name: "Acme CDU" },
+          { name: "Acme CDU", phone: "555-0100" },
           headersFor(customer.id)
         );
 
@@ -82,7 +82,7 @@ medusaIntegrationTestRunner({
         const before = Date.now();
         const res = await api.post(
           "/store/companies",
-          { name: "Acme CDU" },
+          { name: "Acme CDU", phone: "555-0100" },
           headersFor(customer.id)
         );
 
@@ -123,7 +123,7 @@ medusaIntegrationTestRunner({
       });
 
       it("stops reporting the Welcome Code once its campaign has ended", async () => {
-        const res = await api.post("/store/companies", { name: "Acme CDU" }, headersFor(customer.id));
+        const res = await api.post("/store/companies", { name: "Acme CDU", phone: "555-0100" }, headersFor(customer.id));
         const promotionService: IPromotionModuleService = getContainer().resolve(Modules.PROMOTION);
         const [promotion] = await promotionService.listPromotions(
           { code: res.data.welcome_code },
@@ -139,11 +139,42 @@ medusaIntegrationTestRunner({
       });
 
       it("refuses a second Company for someone who is already a Team Member", async () => {
-        await api.post("/store/companies", { name: "Acme CDU" }, headersFor(customer.id));
+        await api.post("/store/companies", { name: "Acme CDU", phone: "555-0100" }, headersFor(customer.id));
         const res = await api
-          .post("/store/companies", { name: "Acme Again" }, headersFor(customer.id))
+          .post("/store/companies", { name: "Acme Again", phone: "555-0100" }, headersFor(customer.id))
           .catch((e) => e.response);
         expect(res.status).toBe(400);
+      });
+
+      it("requires a phone number", async () => {
+        const res = await api
+          .post("/store/companies", { name: "Acme CDU" }, headersFor(customer.id))
+          .catch((err) => err.response);
+        expect(res.status).toBe(400);
+      });
+
+      it("stores the phone on the Company and the customer", async () => {
+        await api.post(
+          "/store/companies",
+          { name: "Acme CDU", phone: "555-0100" },
+          headersFor(customer.id)
+        );
+
+        const container = getContainer();
+        const query = container.resolve("query");
+        const { data: companies } = await query.graph({
+          entity: "company",
+          fields: ["id", "phone"],
+          filters: {},
+        });
+        expect(companies[0].phone).toEqual("555-0100");
+
+        const { data: customers } = await query.graph({
+          entity: "customer",
+          fields: ["id", "phone"],
+          filters: { id: customer.id },
+        });
+        expect(customers[0].phone).toEqual("555-0100");
       });
 
       it("rejects an empty company name", async () => {
