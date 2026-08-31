@@ -43,8 +43,8 @@ medusaIntegrationTestRunner({
         { email: "bo@bravo.test", first_name: "Bo", last_name: "Bravo" },
       ]);
 
-      companyA = (await api.post("/store/companies", { name: "Alpha Cooling" }, headersOf(ada))).data.company;
-      companyB = (await api.post("/store/companies", { name: "Bravo Cooling" }, headersOf(bo))).data.company;
+      companyA = (await api.post("/store/companies", { name: "Alpha Cooling", phone: "555-0101" }, headersOf(ada))).data.company;
+      companyB = (await api.post("/store/companies", { name: "Bravo Cooling", phone: "555-0102" }, headersOf(bo))).data.company;
 
       const companyService = container.resolve(COMPANY_MODULE) as any;
       await companyService.updateCompanies([

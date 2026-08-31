@@ -43,7 +43,7 @@ medusaIntegrationTestRunner({
       });
       const signup = await api.post(
         "/store/companies",
-        { name: "Acme CDU" },
+        { name: "Acme CDU", phone: "555-0100" },
         buyer()
       );
       company = signup.data.company;

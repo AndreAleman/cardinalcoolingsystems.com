@@ -8,6 +8,7 @@ import { Modules } from "@medusajs/framework/utils";
 import { COMPANY_MODULE } from "../../modules/company";
 import { validateNotTeamMemberStep } from "./steps/validate-not-team-member";
 import { createPendingCompanyStep } from "./steps/create-pending-company";
+import { updateCustomerPhoneStep } from "./steps/update-customer-phone";
 import { createAdminTeamMemberStep } from "./steps/create-admin-team-member";
 import { createCompanyCustomerGroupStep } from "./steps/create-company-customer-group";
 import { issueWelcomeCodeStep } from "./steps/issue-welcome-code";
@@ -15,6 +16,7 @@ import { notifyCompanySignedUpStep } from "./steps/notify-company-signed-up";
 
 export type SignupCompanyInput = {
   name: string;
+  phone: string;
   customer: { id: string; email: string; first_name?: string | null };
 };
 
@@ -41,6 +43,12 @@ export const signupCompanyWorkflow = createWorkflow<
     const company = createPendingCompanyStep({
       name: input.name,
       email: input.customer.email,
+      phone: input.phone,
+    });
+
+    updateCustomerPhoneStep({
+      customer_id: input.customer.id,
+      phone: input.phone,
     });
 
     const teamMember = createAdminTeamMemberStep({ company_id: company.id });
