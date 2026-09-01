@@ -160,11 +160,14 @@ export async function uploadPurchaseOrder(file: {
       },
     })
   } catch (err: any) {
-    const message =
+    const raw =
       err?.response?.data?.message ||
       err?.message ||
       "We couldn't read that file. Please try again."
-    return { error: String(message) }
+    const message = /unauthorized/i.test(String(raw))
+      ? "Your session has expired — please sign out and sign back in, then try the upload again."
+      : String(raw)
+    return { error: message }
   }
 }
 
