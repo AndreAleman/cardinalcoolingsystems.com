@@ -91,6 +91,23 @@ const nextConfig = {
   serverRuntimeConfig: {
     port: process.env.PORT || 3000
   },
+  // PostHog requires trailing-slash requests to /ingest to pass through
+  // untouched (Next's default trailing-slash redirect breaks ingestion)
+  skipTrailingSlashRedirect: true,
+  // First-party proxy for PostHog so ad blockers don't drop analytics.
+  // The SDK is initialized with api_host '/ingest' in tracking-scripts.tsx.
+  async rewrites() {
+    return [
+      {
+        source: '/ingest/static/:path*',
+        destination: 'https://us-assets.i.posthog.com/static/:path*',
+      },
+      {
+        source: '/ingest/:path*',
+        destination: 'https://us.i.posthog.com/:path*',
+      },
+    ]
+  },
   // Keep Sanity Studio out of search engines even if the page-level
   // <meta name="robots"> tag from next-sanity is ever removed
   async headers() {

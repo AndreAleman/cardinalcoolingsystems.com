@@ -18,8 +18,6 @@ export const metadata: Metadata = {
 }
 
 const GTM_ID = "GTM-W3H2TDDZ"
-const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY
-const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com"
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
@@ -30,7 +28,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <link rel="dns-prefetch" href="https://t.contentsquare.net" />
         <link rel="dns-prefetch" href="https://r2.leadsy.ai" />
         <link rel="dns-prefetch" href="https://bucket-production-02b9.up.railway.app" />
-        {POSTHOG_KEY && <link rel="dns-prefetch" href={POSTHOG_HOST} />}
       </head>
       <body>
         <noscript
