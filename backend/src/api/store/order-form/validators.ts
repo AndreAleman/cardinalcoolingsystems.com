@@ -20,6 +20,8 @@ export const PlaceInvoiceOrder = z.object({
   attn_to: z.string().max(200, "Attn is too long").optional(),
   notes: z.string().max(2000).optional(),
   po_file_url: z.string().url().max(2000).optional(),
+  // The Ship-to Location picked by the buyer ("where the order is sent").
+  location_id: z.string().min(1).optional(),
 });
 
 export type PlaceInvoiceOrderType = z.infer<typeof PlaceInvoiceOrder>;
@@ -30,6 +32,8 @@ export const RequestQuote = z.object({
   attn_to: z.string().max(200, "Attn is too long").optional(),
   notes: z.string().max(2000).optional(),
   po_file_url: z.string().url().max(2000).optional(),
+  // The Ship-to Location picked by the buyer ("where the order is sent").
+  location_id: z.string().min(1).optional(),
 });
 
 export type RequestQuoteType = z.infer<typeof RequestQuote>;
@@ -43,6 +47,8 @@ export const PlaceDepositOrder = z.object({
   attn_to: z.string().max(200, "Attn is too long").optional(),
   notes: z.string().max(2000).optional(),
   po_file_url: z.string().url().max(2000).optional(),
+  // The Ship-to Location picked by the buyer ("where the order is sent").
+  location_id: z.string().min(1).optional(),
 });
 
 export type PlaceDepositOrderType = z.infer<typeof PlaceDepositOrder>;

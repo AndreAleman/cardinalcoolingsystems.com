@@ -1,12 +1,21 @@
 import type { MedusaResponse } from "@medusajs/framework";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 import type { CompanyRequest } from "../../middlewares/ensure-company-approved";
+import { resolveTeamMemberLocationId } from "../../../utils/company-context";
 
 /*
-  GET /store/approvals — the Dashboard approval queue, scoped by Role:
-  admins and managers see every Approval in their Company; members see
-  only the ones they submitted (created_by is set authoritatively from
-  the workflow input). Behind dashboardGate.
+  GET /store/approvals — the Dashboard approval queue, scoped by Role
+  the same way as the Orders section:
+
+    member                    -> only Approvals they submitted (created_by
+                                 is set authoritatively from the workflow)
+    manager with a Location   -> Approvals whose cart is tagged with that
+                                 Location (cart.metadata.location_id,
+                                 stamped from the buyer's Ship-to pick)
+    manager with no Location  -> the whole Company (role fallback)
+    admin                     -> everything
+
+  Behind dashboardGate.
 */
 export const GET = async (req: CompanyRequest, res: MedusaResponse) => {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
@@ -36,11 +45,43 @@ export const GET = async (req: CompanyRequest, res: MedusaResponse) => {
     filters.created_by = customerId;
   }
 
-  const { data: approvals } = await query.graph({
+  const { data: fetched } = await query.graph({
     entity: "approval",
     fields: ["*"],
     filters: filters as any,
   });
+
+  // Managers with a home site see only their Location's queue. The tag
+  // lives on the held cart's metadata (query.graph cannot filter on
+  // jsonb, so narrow here).
+  let approvals = fetched;
+  if (role === "manager") {
+    const locationId = await resolveTeamMemberLocationId(
+      req.scope,
+      customerId
+    );
+    if (locationId) {
+      const { data: taggedCarts } = await query.graph({
+        entity: "cart",
+        fields: ["id", "metadata"],
+        filters: { id: cartIds },
+      });
+      const visibleCartIds = new Set(
+        (taggedCarts as any[])
+          .filter(
+            (cart) => (cart.metadata as any)?.location_id === locationId
+          )
+          .map((cart) => cart.id)
+      );
+      approvals = approvals.filter((approval: any) =>
+        visibleCartIds.has(approval.cart_id)
+      );
+    }
+  }
+
+  if (!approvals.length) {
+    return res.json({ approvals: [], count: 0 });
+  }
 
   // Enrich with what is being approved and by whom, so the queue rows
   // are readable without extra round-trips.

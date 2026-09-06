@@ -49,9 +49,11 @@ medusaIntegrationTestRunner({
       bo = await mk("bo@acme.test", "Bo");
       mallory = await mk("mallory@evil.test", "Mallory");
 
+      // Instant access (2026-09-05): signup approves the Company on the
+      // spot, so no admin approve step is needed (and approving an
+      // already-approved Company is a 400).
       const signup = await api.post("/store/companies", { name: "Acme CDU", phone: "555-0100" }, headersOf(ada));
       company = signup.data.company;
-      await api.post(`/admin/companies/${company.id}/approve`, {}, adminHeaders);
     });
 
     describe("Team", () => {
@@ -124,8 +126,13 @@ medusaIntegrationTestRunner({
       });
 
       it("a Pending Company cannot invite yet", async () => {
-        const pending = await api.post("/store/companies", { name: "Not Yet Inc", phone: "555-0104" }, headersOf(mallory));
-        expect(pending.data.company.status).toBe("pending");
+        // Signups are approved instantly now; pending only arises when
+        // Cardinal parks an account manually. Recreate that state directly.
+        const created = await api.post("/store/companies", { name: "Not Yet Inc", phone: "555-0104" }, headersOf(mallory));
+        const companyService = getContainer().resolve(COMPANY_MODULE) as any;
+        await companyService.updateCompanies([
+          { id: created.data.company.id, status: "pending" },
+        ]);
         const res = await api
           .post("/store/dashboard/invites", { email: "x@y.test" }, headersOf(mallory))
           .catch((e) => e.response);

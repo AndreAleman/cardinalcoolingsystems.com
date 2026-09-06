@@ -11,8 +11,10 @@ describe("canDecideCompany", () => {
     expect(canDecideCompany("declined", "declined")).toBe(false);
   });
 
-  it("an Approved Company is never flipped", () => {
-    expect(canDecideCompany("approved", "declined")).toBe(false);
+  it("an Approved Company can be declined (ban hammer), not re-approved", () => {
+    // Instant access (2026-09-05): signups are born approved, so decline
+    // must work on an Approved Company or junk signups can't be banned.
+    expect(canDecideCompany("approved", "declined")).toBe(true);
     expect(canDecideCompany("approved", "approved")).toBe(false);
   });
 });

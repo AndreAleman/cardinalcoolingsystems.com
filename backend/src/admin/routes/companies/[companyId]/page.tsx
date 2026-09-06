@@ -5,6 +5,7 @@ import { DecideButtons } from "../components/decide-buttons"
 import { TeamMemberRow } from "../components/team-member-row"
 import { CompanyPriceList } from "../components/company-price-list"
 import { CompanyInvoicePayment } from "../components/company-invoice-payment"
+import { CompanyLocations } from "../components/company-locations"
 
 /*
   /app/companies/:companyId — the id is the segment after "companies".
@@ -59,6 +60,10 @@ const CompanyDetailPage = () => {
       </Container>
 
       <Container className="flex flex-col p-0 overflow-hidden">
+        <CompanyLocations company={company} />
+      </Container>
+
+      <Container className="flex flex-col p-0 overflow-hidden">
         <div className="px-6 py-4 border-b border-ui-border-base">
           <Text size="small" leading="compact" weight="plus">Team</Text>
         </div>
@@ -68,12 +73,18 @@ const CompanyDetailPage = () => {
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Email</Table.HeaderCell>
               <Table.HeaderCell>Role</Table.HeaderCell>
+              <Table.HeaderCell>Location</Table.HeaderCell>
               <Table.HeaderCell></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {(company.employees ?? []).map((member) => (
-              <TeamMemberRow key={member.id} companyId={company.id} member={member} />
+              <TeamMemberRow
+                key={member.id}
+                companyId={company.id}
+                member={member}
+                locations={company.locations ?? []}
+              />
             ))}
           </Table.Body>
         </Table>

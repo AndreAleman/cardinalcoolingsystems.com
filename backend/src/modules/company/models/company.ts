@@ -1,6 +1,7 @@
 import { model } from "@medusajs/framework/utils";
 import { Employee } from "./employee";
 import { CompanyInvite } from "./company-invite";
+import { Location } from "./location";
 
 export const Company = model.define("company", {
   id: model
@@ -33,4 +34,5 @@ export const Company = model.define("company", {
   invoice_payment_enabled: model.boolean().default(false),
   employees: model.hasMany(() => Employee),
   invites: model.hasMany(() => CompanyInvite),
+  locations: model.hasMany(() => Location),
 });

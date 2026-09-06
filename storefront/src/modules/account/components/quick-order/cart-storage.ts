@@ -50,11 +50,68 @@ export function saveStoredCartLines(
   try {
     if (!lines.length) {
       window.localStorage.removeItem(storageKey(companyId))
-      return
+    } else {
+      const payload: StoredCart = { savedAt: Date.now(), lines }
+      window.localStorage.setItem(
+        storageKey(companyId),
+        JSON.stringify(payload)
+      )
     }
-    const payload: StoredCart = { savedAt: Date.now(), lines }
-    window.localStorage.setItem(storageKey(companyId), JSON.stringify(payload))
   } catch {
     // Storage full / blocked (private mode) — persistence is best-effort.
   }
+  notifyPortalCartUpdated()
+}
+
+/*
+  ---- Cart-bridge helpers (nav badge + combine popup) ----
+
+  The nav renders on public pages where the PortalCartProvider isn't
+  mounted and the Company id isn't known client-side, so the badge and
+  the bridge read the stored draft directly: scan for our key prefix
+  and take the freshest non-expired entry (a browser normally holds at
+  most one Company's draft).
+*/
+
+export const PORTAL_CART_UPDATED_EVENT = "portal-cart-updated"
+
+export function notifyPortalCartUpdated(): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(PORTAL_CART_UPDATED_EVENT))
+  }
+}
+
+export type StoredPortalCart = {
+  companyId: string
+  lines: PortalCartLine[]
+}
+
+export function loadAnyStoredCart(): StoredPortalCart | null {
+  if (typeof window === "undefined") return null
+  try {
+    let best: (StoredPortalCart & { savedAt: number }) | null = null
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i)
+      if (!key || !key.startsWith(`${KEY_PREFIX}:`)) continue
+      const companyId = key.slice(KEY_PREFIX.length + 1)
+      const lines = loadStoredCartLines(companyId)
+      if (!lines.length) continue
+      const raw = window.localStorage.getItem(key)
+      const savedAt = raw ? (JSON.parse(raw) as StoredCart).savedAt ?? 0 : 0
+      if (!best || savedAt > best.savedAt) {
+        best = { companyId, lines, savedAt }
+      }
+    }
+    return best ? { companyId: best.companyId, lines: best.lines } : null
+  } catch {
+    return null
+  }
+}
+
+/* Total units in a stored draft — the badge's portal-side count. */
+export function countStoredCartUnits(): number {
+  const stored = loadAnyStoredCart()
+  return stored
+    ? stored.lines.reduce((sum, l) => sum + (Number(l.qty) || 0), 0)
+    : 0
 }

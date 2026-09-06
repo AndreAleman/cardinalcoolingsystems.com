@@ -38,6 +38,57 @@ export const getDashboard = cache(async function (): Promise<DashboardBootstrap 
     .catch(() => null)
 })
 
+/*
+  A Company site ("Location") — where an order can be shipped. Cardinal
+  manages these in Medusa Admin; the Dashboard only reads them.
+*/
+export type CompanyLocation = {
+  id: string
+  name: string
+  address_1: string
+  address_2: string | null
+  city: string
+  state: string
+  zip: string
+  phone: string | null
+}
+
+/* GET /store/dashboard/locations — the Company's sites for Ship-to. */
+export const getDashboardLocations = cache(async function (): Promise<CompanyLocation[]> {
+  const headers = getAuthHeaders()
+  if (!("authorization" in headers)) return []
+  return sdk.client
+    .fetch<{ locations: CompanyLocation[] }>("/store/dashboard/locations", {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    })
+    .then(({ locations }) => locations ?? [])
+    .catch(() => [])
+})
+
+/*
+  The signed-in Team Member's own assigned site, if Cardinal assigned
+  one (employee.location). Read via /store/customers/me with an extra
+  link field — null on any failure so the picker just has no default.
+*/
+export const getAssignedLocationId = cache(async function (): Promise<string | null> {
+  const headers = getAuthHeaders()
+  if (!("authorization" in headers)) return null
+  return sdk.client
+    .fetch<{ customer: { employee?: { location?: { id: string } | null } | null } }>(
+      "/store/customers/me",
+      {
+        method: "GET",
+        query: { fields: "+employee.location.id" },
+        headers,
+        cache: "no-store",
+      }
+    )
+    .then(({ customer }) => customer?.employee?.location?.id ?? null)
+    .catch(() => null)
+})
+
 export type DashboardOrderItem = {
   id: string
   title: string

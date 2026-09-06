@@ -15,6 +15,7 @@ export const companyMiddlewares: MiddlewareRoute[] = [
   { matcher: "/store/dashboard/team", methods: ["GET"], middlewares: dashboardGate },
   { matcher: "/store/dashboard/variants/:id/price", methods: ["GET"], middlewares: dashboardGate },
   { matcher: "/store/dashboard/orders", methods: ["GET"], middlewares: dashboardGate },
+  { matcher: "/store/dashboard/locations", methods: ["GET"], middlewares: dashboardGate },
   { matcher: "/store/dashboard/favorites", methods: ["GET"], middlewares: dashboardGate },
   {
     matcher: "/store/dashboard/favorites",

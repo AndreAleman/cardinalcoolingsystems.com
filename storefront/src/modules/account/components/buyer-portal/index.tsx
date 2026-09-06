@@ -12,7 +12,9 @@ import { HttpTypes } from "@medusajs/types"
 import { getCustomer } from "@lib/data/customer"
 import type { CompanyMembership } from "@lib/data/companies"
 import {
+  getAssignedLocationId,
   getDashboard,
+  getDashboardLocations,
   getDashboardOrders,
   listApprovals,
   listFavorites,
@@ -38,18 +40,29 @@ type Props = {
 }
 
 const BuyerPortal = async ({ membership, countryCode }: Props) => {
-  const [dashboard, initialProducts, orders, quotes, approvals, favorites, customer] =
-    await Promise.all([
-      getDashboard(),
-      searchPortalProducts({ countryCode }).catch(
-        () => [] as HttpTypes.StoreProduct[]
-      ),
-      getDashboardOrders(),
-      fetchQuotes(),
-      listApprovals(),
-      listFavorites(),
-      getCustomer().catch(() => null),
-    ])
+  const [
+    dashboard,
+    initialProducts,
+    orders,
+    quotes,
+    approvals,
+    favorites,
+    customer,
+    locations,
+    assignedLocationId,
+  ] = await Promise.all([
+    getDashboard(),
+    searchPortalProducts({ countryCode }).catch(
+      () => [] as HttpTypes.StoreProduct[]
+    ),
+    getDashboardOrders(),
+    fetchQuotes(),
+    listApprovals(),
+    listFavorites(),
+    getCustomer().catch(() => null),
+    getDashboardLocations(),
+    getAssignedLocationId(),
+  ])
 
   const role = dashboard?.role ?? membership.role
   const invoicePaymentEnabled = Boolean(
@@ -109,6 +122,8 @@ const BuyerPortal = async ({ membership, countryCode }: Props) => {
           countryCode={countryCode}
           initialProducts={initialProducts}
           addresses={customer?.addresses ?? []}
+          locations={locations}
+          assignedLocationId={assignedLocationId}
           initialFavorites={favoriteRows}
           invoicePaymentEnabled={invoicePaymentEnabled}
           currencyCode={currencyCode}

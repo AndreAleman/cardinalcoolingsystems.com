@@ -1,6 +1,7 @@
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils";
 import { ICustomerModuleService } from "@medusajs/framework/types";
 import { Modules } from "@medusajs/framework/utils";
+import { COMPANY_MODULE } from "../../../../src/modules/company";
 import { adminHeaders, createAdminUser } from "../../../utils/admin";
 import {
   generatePublishableKey,
@@ -11,11 +12,15 @@ import { customerHeaders, TEST_JWT_SECRET } from "../../../utils/customer-auth";
 jest.setTimeout(120 * 1000);
 
 /*
-  Ticket #3 — Cardinal approves a Company in Medusa Admin.
+  Ticket #3 — Cardinal approves or declines a Company in Medusa Admin.
 
+  Instant access (2026-09-05): signup approves the Company on the spot,
+  so pending now only arises when Cardinal parks an account manually —
+  these tests recreate that state directly through the company module.
   A Pending Company's Team Members can sign in but Dashboard data
   routes answer 403 company_pending. Cardinal approves (or declines)
-  over the admin API; approval unlocks those routes on the next call.
+  over the admin API; approval unlocks those routes on the next call,
+  and decline stays the ban hammer for junk signups.
 */
 medusaIntegrationTestRunner({
   inApp: true,
@@ -47,6 +52,14 @@ medusaIntegrationTestRunner({
         buyer()
       );
       company = signup.data.company;
+
+      // Signup grants instant access (status "approved"). The flows
+      // under test start from a manually-parked Pending Company, so set
+      // that state explicitly through the company module.
+      const companyService = container.resolve(COMPANY_MODULE) as any;
+      await companyService.updateCompanies([
+        { id: company.id, status: "pending" },
+      ]);
     });
 
     describe("Pending lock", () => {
@@ -106,17 +119,22 @@ medusaIntegrationTestRunner({
         expect(dashboard.data.code).toBe("company_declined");
       });
 
-      it("a Declined Company can be reinstated; an Approved one cannot be declined", async () => {
+      it("a Declined Company can be reinstated; an Approved one CAN be declined (ban hammer)", async () => {
         await api.post(`/admin/companies/${company.id}/decline`, {}, adminHeaders);
         const reinstated = await api.post(`/admin/companies/${company.id}/approve`, {}, adminHeaders);
         expect(reinstated.data.company.status).toBe("approved");
 
-        const res = await api
-          .post(`/admin/companies/${company.id}/decline`, {}, adminHeaders)
+        // Instant access (2026-09-05): signups are born approved, so the
+        // ban hammer must land on an Approved Company too.
+        const banned = await api.post(`/admin/companies/${company.id}/decline`, {}, adminHeaders);
+        expect(banned.status).toBe(200);
+        expect(banned.data.company.status).toBe("declined");
+
+        const dashboard = await api
+          .get("/store/dashboard", buyer())
           .catch((e) => e.response);
-        expect(res.status).toBe(400);
-        const still = await api.get(`/admin/companies/${company.id}`, adminHeaders);
-        expect(still.data.company.status).toBe("approved");
+        expect(dashboard.status).toBe(403);
+        expect(dashboard.data.code).toBe("company_declined");
       });
 
       it("admin routes need an admin session", async () => {

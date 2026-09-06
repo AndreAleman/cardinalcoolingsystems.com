@@ -36,7 +36,11 @@ import {
   type SubmitLine,
   type CartAddressPayload,
 } from "@lib/data/order-form"
-import { addFavorite, removeFavorite } from "@lib/data/dashboard"
+import {
+  addFavorite,
+  removeFavorite,
+  type CompanyLocation,
+} from "@lib/data/dashboard"
 import { addCustomerAddress } from "@lib/data/customer"
 import OrderReviewDrawer, {
   type DrawerSubmitExtras,
@@ -62,6 +66,10 @@ type Props = {
   countryCode: string
   initialProducts: HttpTypes.StoreProduct[]
   addresses: HttpTypes.StoreCustomerAddress[]
+  /* The Company's sites (Locations) — Ship-to picker options. */
+  locations: CompanyLocation[]
+  /* The member's own assigned site id (Ship-to default), if any. */
+  assignedLocationId: string | null
   initialFavorites: VariantRow[]
   invoicePaymentEnabled: boolean
   currencyCode: string
@@ -79,6 +87,8 @@ export default function QuickOrder({
   countryCode,
   initialProducts,
   addresses,
+  locations,
+  assignedLocationId,
   initialFavorites,
   invoicePaymentEnabled,
   currencyCode,
@@ -269,6 +279,22 @@ export default function QuickOrder({
     v: AddressPickerValue
   ): Promise<CartAddressPayload | null> => {
     if (!v) return null
+    if (v.kind === "location") {
+      // A Company site: its address IS the ship-to; the site name rides
+      // as the company line so the label shows on the shipment.
+      const site = locations.find((l) => l.id === v.id)
+      if (!site) throw new Error("Selected company site not found")
+      return {
+        company: site.name,
+        address_1: site.address_1,
+        address_2: site.address_2 ?? undefined,
+        city: site.city,
+        postal_code: site.zip,
+        province: site.state || undefined,
+        country_code: countryCode,
+        phone: site.phone ?? undefined,
+      }
+    }
     if (v.kind === "saved") {
       const a = addresses.find((x) => x.id === v.id)
       if (!a) throw new Error("Selected saved address not found")
@@ -306,10 +332,28 @@ export default function QuickOrder({
   const handleReviewSubmit = async (
     extras: DrawerSubmitExtras
   ): Promise<SubmitOutcome> => {
+    // reviewPlan, not plan: "Submit Quote Request" on an all-payable
+    // cart flips everything to the quote path.
+    const activePlan = reviewPlan
     const billing_address = await resolveAddress(extras.billing)
     const shipping_address = extras.shipping_same_as_billing
       ? billing_address
       : await resolveAddress(extras.shipping)
+
+    /*
+      Which Company site the order ships to. Explicitly picked in the
+      Ship-to select when the picker was shown (invoice/deposit); on
+      the picker-less paths (quote/checkout) the member's own assigned
+      site is the default so the submission still lands scoped to it.
+    */
+    const shipPickerShown =
+      activePlan.path === "invoice" || activePlan.path === "deposit"
+    const location_id =
+      extras.shipping?.kind === "location"
+        ? extras.shipping.id
+        : shipPickerShown
+        ? undefined
+        : assignedLocationId ?? undefined
 
     const outcome: SubmitOutcome = {}
     const quoteExtras = {
@@ -317,48 +361,56 @@ export default function QuickOrder({
       attn_to: extras.attn_to || undefined,
       notes: extras.notes || undefined,
       po_file_url: poFileUrl || undefined,
+      location_id,
       billing_address,
       shipping_address,
     }
 
-    if (plan.path === "invoice" || plan.path === "deposit") {
+    if (activePlan.path === "invoice" || activePlan.path === "deposit") {
       const submit =
-        plan.path === "invoice"
+        activePlan.path === "invoice"
           ? submitPortalInvoiceOrder
           : submitPortalDepositOrder
-      const result = await submit(toSubmitLines(plan.payLines), countryCode, {
-        ...quoteExtras,
-        po_number: extras.po_number,
-      })
+      const result = await submit(
+        toSubmitLines(activePlan.payLines),
+        countryCode,
+        {
+          ...quoteExtras,
+          po_number: extras.po_number,
+        }
+      )
       outcome.orderPlaced = true
       outcome.orderPendingApproval = result.pending_approval
       capturePortalEvent("portal_order_placed", {
-        path: plan.path,
-        items: plan.payLines.length,
-        total: plan.payableTotal,
+        path: activePlan.path,
+        items: activePlan.payLines.length,
+        total: activePlan.payableTotal,
       })
     }
 
-    if (plan.path === "checkout" && plan.payLines.length) {
-      await preparePortalCheckoutCart(toSubmitLines(plan.payLines), countryCode)
+    if (activePlan.path === "checkout" && activePlan.payLines.length) {
+      await preparePortalCheckoutCart(
+        toSubmitLines(activePlan.payLines),
+        countryCode
+      )
       outcome.checkoutReady = true
       capturePortalEvent("portal_order_placed", {
         path: "checkout",
-        items: plan.payLines.length,
-        total: plan.payableTotal,
+        items: activePlan.payLines.length,
+        total: activePlan.payableTotal,
       })
     }
 
-    if (plan.quoteLines.length) {
+    if (activePlan.quoteLines.length) {
       const result = await submitPortalQuoteRequest(
-        toSubmitLines(plan.quoteLines),
+        toSubmitLines(activePlan.quoteLines),
         countryCode,
         quoteExtras
       )
       outcome.quoteSent = true
       outcome.quotePendingApproval = result.pending_approval
       capturePortalEvent("portal_quote_requested", {
-        items: plan.quoteLines.length,
+        items: activePlan.quoteLines.length,
       })
     }
 
@@ -820,6 +872,8 @@ export default function QuickOrder({
         }}
         plan={reviewPlan}
         addresses={addresses}
+        locations={locations}
+        assignedLocationId={assignedLocationId}
         countryCode={countryCode}
         currencyCode={currencyCode}
         poPrefill={poPrefill}

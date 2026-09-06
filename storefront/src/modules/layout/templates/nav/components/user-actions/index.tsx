@@ -1,15 +1,46 @@
 "use client"
+import { useState } from "react"
 import Link from "next/link"
-import { useCartCount } from "@lib/hooks/use-cart-count"
+import { usePathname, useRouter } from "next/navigation"
+import { useCartCounts } from "@lib/hooks/use-cart-count"
 import { useCartPanel } from "@lib/context/cart-panel-context"
+import CartBridgeModal from "@modules/cart/components/cart-bridge"
 
 interface UserActionsProps {
   onSearchClick?: () => void
 }
 
 export default function UserActions({ onSearchClick }: UserActionsProps) {
-  const cartCount = useCartCount()
+  const { medusaCount, portalCount } = useCartCounts()
+  // The badge shows the COMBINED count: Medusa cart + company order.
+  const cartCount = medusaCount + portalCount
   const { openCartPanel } = useCartPanel()
+  const router = useRouter()
+  const pathname = usePathname()
+  const [bridgeOpen, setBridgeOpen] = useState(false)
+
+  const countryCode = /^[a-z]{2}$/.test(pathname?.split("/")[1] ?? "")
+    ? (pathname as string).split("/")[1]
+    : "us"
+
+  /*
+    Cart click, bridged (guests and company-less customers have no
+    portal draft, so nothing changes for them):
+    - only portal ("company order") lines → straight to the Dashboard
+    - only Medusa cart → the existing cart drawer
+    - both → the combine popup
+  */
+  const handleCartClick = () => {
+    if (portalCount > 0 && medusaCount === 0) {
+      router.push(`/${countryCode}/account`)
+      return
+    }
+    if (portalCount > 0 && medusaCount > 0) {
+      setBridgeOpen(true)
+      return
+    }
+    openCartPanel()
+  }
 
   return (
     <div className="hidden lg:flex items-center space-x-6">
@@ -29,7 +60,7 @@ export default function UserActions({ onSearchClick }: UserActionsProps) {
 
       {/* Cart — icon only */}
       <button
-        onClick={openCartPanel}
+        onClick={handleCartClick}
         aria-label="Cart"
         className="relative flex items-center transition-colors duration-200 py-2"
         style={{ color: "rgba(255,255,255,0.85)" }}
@@ -82,6 +113,14 @@ export default function UserActions({ onSearchClick }: UserActionsProps) {
           <path d="M2 6h8M7 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </Link>
+
+      <CartBridgeModal
+        open={bridgeOpen}
+        onClose={() => setBridgeOpen(false)}
+        medusaCount={medusaCount}
+        portalCount={portalCount}
+        countryCode={countryCode}
+      />
     </div>
   )
 }

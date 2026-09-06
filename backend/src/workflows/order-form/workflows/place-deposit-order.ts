@@ -7,6 +7,7 @@ import {
 } from "@medusajs/framework/workflows-sdk";
 import { validateDepositEligibilityStep } from "../steps/validate-deposit-eligibility";
 import { updateCartSubmitMetadataStep } from "../steps/update-cart-submit-metadata";
+import { validateSubmitLocationStep } from "../steps/validate-submit-location";
 import { resolveApprovalContextStep } from "../steps/resolve-approval-context";
 import { sendOperatorNotificationStep } from "../steps/send-operator-notification";
 import { stampOrderDepositMetadataStep } from "../steps/stamp-order-deposit-metadata";
@@ -32,6 +33,7 @@ export type PlaceDepositOrderWorkflowInput = {
   notes?: string;
   po_file_url?: string;
   company_id: string;
+  location_id?: string;
 };
 
 export type PlaceDepositOrderWorkflowOutput = {
@@ -51,6 +53,11 @@ export const placeDepositOrderWorkflow = createWorkflow<
     company_id: input.company_id,
   });
 
+  validateSubmitLocationStep({
+    location_id: input.location_id,
+    company_id: input.company_id,
+  }).config({ name: "validate-submit-location-deposit" });
+
   updateCartSubmitMetadataStep({
     cart_id: input.cart_id,
     request_type: "order" as const,
@@ -59,6 +66,7 @@ export const placeDepositOrderWorkflow = createWorkflow<
     notes: input.notes,
     po_file_url: input.po_file_url,
     company_id: input.company_id,
+    location_id: input.location_id,
   }).config({ name: "update-cart-submit-metadata-deposit" });
 
   const approvalContext = resolveApprovalContextStep({

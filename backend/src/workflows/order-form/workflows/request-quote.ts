@@ -5,6 +5,7 @@ import {
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk";
 import { updateCartSubmitMetadataStep } from "../steps/update-cart-submit-metadata";
+import { validateSubmitLocationStep } from "../steps/validate-submit-location";
 import { resolveApprovalContextStep } from "../steps/resolve-approval-context";
 import { sendOperatorNotificationStep } from "../steps/send-operator-notification";
 import { sendQuoteClientEmailStep } from "../../quote/steps/send-quote-client-email";
@@ -31,6 +32,7 @@ export type RequestQuoteWorkflowInput = {
   notes?: string;
   po_file_url?: string;
   company_id?: string;
+  location_id?: string;
 };
 
 export type RequestQuoteWorkflowOutput = {
@@ -44,6 +46,11 @@ export const requestQuoteWorkflow = createWorkflow<
   RequestQuoteWorkflowOutput,
   []
 >("request-quote", function (input: RequestQuoteWorkflowInput) {
+  validateSubmitLocationStep({
+    location_id: input.location_id,
+    company_id: input.company_id,
+  }).config({ name: "validate-submit-location-quote" });
+
   updateCartSubmitMetadataStep({
     cart_id: input.cart_id,
     request_type: "quote" as const,
@@ -52,6 +59,7 @@ export const requestQuoteWorkflow = createWorkflow<
     notes: input.notes,
     po_file_url: input.po_file_url,
     company_id: input.company_id,
+    location_id: input.location_id,
   }).config({ name: "update-cart-submit-metadata-quote" });
 
   const approvalContext = resolveApprovalContextStep({
