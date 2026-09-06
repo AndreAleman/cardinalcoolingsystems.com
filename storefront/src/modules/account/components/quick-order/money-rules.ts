@@ -28,18 +28,32 @@ export type PortalCartLine = {
   requiresQuote: boolean
 }
 
-export function isQuoteOnlyLine(line: PortalCartLine): boolean {
-  if (line.requiresQuote) return true
-  if (!line.unitPrice || line.unitPrice <= 0) return true
-  if (!line.weight || line.weight <= 0) return true
+/*
+  Why a line is Quote-Only, in the buyer's words — shown next to the
+  "Quote only" chip so the badge explains itself. null = Buyable Line.
+*/
+export type QuoteOnlyReason =
+  | "quote-only part"
+  | "price unavailable"
+  | "no weight on file"
+  | "over stock"
+
+export function quoteOnlyReason(line: PortalCartLine): QuoteOnlyReason | null {
+  if (line.requiresQuote) return "quote-only part"
+  if (!line.unitPrice || line.unitPrice <= 0) return "price unavailable"
+  if (!line.weight || line.weight <= 0) return "no weight on file"
   if (
     line.manageInventory &&
     line.inventoryQuantity != null &&
     line.qty > line.inventoryQuantity
   ) {
-    return true
+    return "over stock"
   }
-  return false
+  return null
+}
+
+export function isQuoteOnlyLine(line: PortalCartLine): boolean {
+  return quoteOnlyReason(line) !== null
 }
 
 export type SubmitPath =

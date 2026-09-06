@@ -4,6 +4,9 @@ import { z } from "zod";
   Validators for the order-form store routes. Quote Requests are pricing
   inquiries so po_number is optional; the invoice-order route (later
   slice) requires it.
+
+  po_file_url: the stored original of a PO Upload (the Read-Out's
+  file_url) so the document travels with the order/quote.
 */
 
 export const PlaceInvoiceOrder = z.object({
@@ -16,6 +19,7 @@ export const PlaceInvoiceOrder = z.object({
     .max(100, "PO number too long"),
   attn_to: z.string().max(200, "Attn is too long").optional(),
   notes: z.string().max(2000).optional(),
+  po_file_url: z.string().url().max(2000).optional(),
 });
 
 export type PlaceInvoiceOrderType = z.infer<typeof PlaceInvoiceOrder>;
@@ -25,6 +29,7 @@ export const RequestQuote = z.object({
   po_number: z.string().max(100, "PO number too long").optional(),
   attn_to: z.string().max(200, "Attn is too long").optional(),
   notes: z.string().max(2000).optional(),
+  po_file_url: z.string().url().max(2000).optional(),
 });
 
 export type RequestQuoteType = z.infer<typeof RequestQuote>;
@@ -37,6 +42,7 @@ export const PlaceDepositOrder = z.object({
     .max(100, "PO number too long"),
   attn_to: z.string().max(200, "Attn is too long").optional(),
   notes: z.string().max(2000).optional(),
+  po_file_url: z.string().url().max(2000).optional(),
 });
 
 export type PlaceDepositOrderType = z.infer<typeof PlaceDepositOrder>;

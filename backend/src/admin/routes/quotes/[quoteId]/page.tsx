@@ -79,6 +79,7 @@ const QuoteDetailPage = () => {
   const items = order?.items ?? []
   const cartMetadata = (quote.cart?.metadata ?? {}) as Record<string, unknown>
   const poNumber = (cartMetadata.po_number as string | undefined) || ""
+  const poFileUrl = (cartMetadata.po_file_url as string | undefined) || ""
 
   const canSend = ["pending_merchant", "customer_rejected"].includes(quote.status)
   const canReject = !["accepted", "customer_rejected", "merchant_rejected"].includes(
@@ -294,6 +295,19 @@ const QuoteDetailPage = () => {
               <Text size="small" weight="plus" className="text-ui-fg-subtle">PO number</Text>
               <Text size="small" className="font-mono">{poNumber || "—"}</Text>
             </div>
+            {poFileUrl && (
+              <div className="grid grid-cols-2 items-start">
+                <Text size="small" weight="plus" className="text-ui-fg-subtle">PO document</Text>
+                <a
+                  className="text-sm text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
+                  href={poFileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View the buyer&apos;s PO document
+                </a>
+              </div>
+            )}
             <div className="grid grid-cols-2 items-start">
               <Text size="small" weight="plus" className="text-ui-fg-subtle">Bill to</Text>
               <AddressBlock address={quote.cart?.billing_address} />

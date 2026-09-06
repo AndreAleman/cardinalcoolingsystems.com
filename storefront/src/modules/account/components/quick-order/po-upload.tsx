@@ -45,6 +45,9 @@ type ReadOutRow = PoReadOutLine & { rowId: number; removed: boolean }
 
 export type PoLoadedPayload = {
   poNumber: string | null
+  /* Stored original of the uploaded PO (the Read-Out's file_url) — kept
+     so the document can travel with the eventual order/quote. */
+  fileUrl: string | null
   /* Matched lines to hydrate + add to the Quick Order draft. */
   matched: { variantId: string; quantity: number }[]
   /* Unmatched lines to carry in the quote note ("Also quote: …"). */
@@ -191,6 +194,7 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
     try {
       const { loadedCount } = await onLoad({
         poNumber: readOut.po_number,
+        fileUrl: readOut.file_url,
         matched: matchedRows.map((r) => ({
           variantId: r.variant!.id,
           quantity: r.quantity,

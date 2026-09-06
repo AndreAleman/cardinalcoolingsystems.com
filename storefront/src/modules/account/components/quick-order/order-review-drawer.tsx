@@ -26,7 +26,8 @@ import AddressPicker, { type AddressPickerValue } from "./address-picker"
 import {
   type CartPlan,
   type PortalCartLine,
-  isQuoteOnlyLine,
+  type QuoteOnlyReason,
+  quoteOnlyReason,
 } from "./money-rules"
 
 type View = "items" | "form" | "success"
@@ -231,14 +232,14 @@ export default function OrderReviewDrawer({
     }, 300)
   }
 
-  const lineIsQuoteOnly = useMemo(() => {
-    const map = new Map<string, boolean>()
-    lines.forEach((l) => map.set(l.variantId, isQuoteOnlyLine(l)))
+  const lineQuoteOnlyReason = useMemo(() => {
+    const map = new Map<string, QuoteOnlyReason | null>()
+    lines.forEach((l) => map.set(l.variantId, quoteOnlyReason(l)))
     return map
   }, [lines])
 
   const renderLine = (line: PortalCartLine) => {
-    const quoteOnly = lineIsQuoteOnly.get(line.variantId)
+    const reason = lineQuoteOnlyReason.get(line.variantId)
     return (
       <li key={line.variantId} className="flex gap-3 px-6 py-4">
         <div className="w-14 h-14 flex-shrink-0 rounded bg-neutral-100 overflow-hidden flex items-center justify-center">
@@ -286,9 +287,9 @@ export default function OrderReviewDrawer({
                 +
               </button>
             </div>
-            {quoteOnly ? (
+            {reason ? (
               <span className="text-[14px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-0.5">
-                Quote only
+                Quote only — {reason}
               </span>
             ) : (
               <span className="text-[16px] tabular-nums">
@@ -432,7 +433,7 @@ export default function OrderReviewDrawer({
                     </span>
                     <span className="text-neutral-600 whitespace-nowrap">
                       × {line.qty}
-                      {lineIsQuoteOnly.get(line.variantId) && (
+                      {lineQuoteOnlyReason.get(line.variantId) && (
                         <span className="ml-2 text-amber-700 font-semibold">
                           quote
                         </span>
@@ -569,7 +570,7 @@ export default function OrderReviewDrawer({
                   id="order-notes"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Delivery preferences, certifications, etc."
+                  placeholder="Anything else we should know — including parts you need that aren't in our catalog (part number + quantity) — we'll include them in your quote."
                   rows={3}
                   disabled={submitting}
                   className="text-[16px]"

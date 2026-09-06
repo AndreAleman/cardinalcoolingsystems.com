@@ -87,6 +87,7 @@ export const sendOperatorNotificationStep = createStep(
     const cart = carts?.[0] as any;
     const metadata = (cart?.metadata ?? {}) as Record<string, unknown>;
     const poNumber = (metadata.po_number as string) || null;
+    const poFileUrl = (metadata.po_file_url as string) || null;
     const attnTo = (metadata.attn_to as string) || null;
     const notes = (metadata.notes as string) || null;
     const cartCompanyId = metadata.company_id as string | undefined;
@@ -139,6 +140,7 @@ export const sendOperatorNotificationStep = createStep(
           submitterName,
           companyName,
           poNumber,
+          poFileUrl,
           attnTo,
           notes,
           items,
