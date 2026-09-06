@@ -35,12 +35,12 @@ const CATEGORIES_QUERY = groq`
   *[_type == "category"] | order(title asc) {
     _id, title, slug, description,
     image{ asset->{ _id, url }, alt },
-    "postCount": count(*[_type == "post" && references(^._id)])
+    "postCount": count(*[_type == "post" && references(^._id) && publishedAt <= now()])
   }
 `
 
 const RECENT_POSTS_QUERY = groq`
-  *[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...6] {
+  *[_type == "post" && defined(slug.current) && publishedAt <= now()] | order(publishedAt desc)[0...6] {
     _id, title, slug, publishedAt, excerpt,
     mainImage{ asset->{ _id, url }, alt },
     categories[]->{ title, slug }

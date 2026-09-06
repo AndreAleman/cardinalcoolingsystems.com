@@ -38,7 +38,7 @@ const CATEGORY_QUERY = groq`
 `
 
 const CATEGORY_POSTS_QUERY = groq`
-  *[_type == "post" && defined(slug.current) && references(*[_type=="category" && slug.current == $slug]._id)] | order(publishedAt desc) {
+  *[_type == "post" && defined(slug.current) && publishedAt <= now() && references(*[_type=="category" && slug.current == $slug]._id)] | order(publishedAt desc) {
     _id, title, slug, publishedAt, excerpt,
     mainImage{ asset->{ _id, url }, alt },
     author->{ name, slug },
@@ -49,7 +49,7 @@ const CATEGORY_POSTS_QUERY = groq`
 const RELATED_CATEGORIES_QUERY = groq`
   *[_type == "category" && slug.current != $slug] | order(title asc)[0...6] {
     _id, title, slug,
-    "postCount": count(*[_type == "post" && references(^._id)])
+    "postCount": count(*[_type == "post" && references(^._id) && publishedAt <= now()])
   }
 `
 
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = await client.fetch(CATEGORY_QUERY, { slug })
   if (!category) return { title: "Category Not Found" }
   const postCount = await client.fetch<number>(
-    groq`count(*[_type == "post" && references(*[_type=="category" && slug.current == $slug]._id)])`,
+    groq`count(*[_type == "post" && publishedAt <= now() && references(*[_type=="category" && slug.current == $slug]._id)])`,
     { slug }
   )
   return {

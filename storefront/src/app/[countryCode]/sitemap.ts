@@ -81,7 +81,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Blog posts (Sanity)
   const blogPosts = await client.fetch(groq`
-    *[_type == "post" && defined(slug.current)] {
+    *[_type == "post" && defined(slug.current) && publishedAt <= now()] {
       "slug": slug.current,
       _updatedAt
     }

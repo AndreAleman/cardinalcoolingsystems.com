@@ -4,3 +4,6 @@ b2b-starter/
 # Redis snapshots — runtime state, should never be committed
 *.rdb
 dump.rdb
+
+# Local scratch space for agent blog-upload tooling
+.blogwork/

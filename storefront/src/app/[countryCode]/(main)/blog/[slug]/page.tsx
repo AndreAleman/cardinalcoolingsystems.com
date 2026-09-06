@@ -78,7 +78,7 @@ type FormData = {
 
 // GROQ queries
 const POST_QUERY = groq`
-  *[_type == "post" && slug.current == $slug][0] {
+  *[_type == "post" && slug.current == $slug && publishedAt <= now()][0] {
     _id,
     title,
     slug,
@@ -91,6 +91,10 @@ const POST_QUERY = groq`
           ...,
           cells[]
         }
+      },
+      _type == "image" => {
+        ...,
+        asset->{ url }
       }
     },
     excerpt,
@@ -120,7 +124,7 @@ const POST_QUERY = groq`
 `
 
 const RELATED_POSTS_QUERY = groq`
-  *[_type == "post" && slug.current != $slug && count(categories[@._ref in ^.^.categories[]._ref]) > 0] | order(publishedAt desc)[0...3] {
+  *[_type == "post" && slug.current != $slug && publishedAt <= now() && count(categories[@._ref in ^.^.categories[]._ref]) > 0] | order(publishedAt desc)[0...3] {
     _id,
     title,
     slug,
@@ -292,6 +296,18 @@ export default async function BlogPostPage({ params }: Props) {
                       value={post.body}
                       components={{
                         types: {
+                          image: ({value}) =>
+                            value?.asset?.url ? (
+                              <figure className="my-8">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={value.asset.url}
+                                  alt={value.alt || ""}
+                                  className="w-full rounded-lg"
+                                  loading="lazy"
+                                />
+                              </figure>
+                            ) : null,
                           table: ({value}) => (
                             <div className="my-8 overflow-x-auto">
                               <table className="min-w-full border-collapse border border-gray-300">
