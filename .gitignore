@@ -4,3 +4,8 @@ b2b-starter/
 # Redis snapshots — runtime state, should never be committed
 *.rdb
 dump.rdb
+
+# Read-only reference material — never commit client code
+accurate-frontend/
+reference/
+zero-price-skus.csv
