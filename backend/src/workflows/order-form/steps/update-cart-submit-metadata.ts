@@ -19,6 +19,8 @@ type Input = {
   po_number?: string;
   attn_to?: string;
   notes?: string;
+  /** Stored original of a PO Upload (the Read-Out's file_url). */
+  po_file_url?: string;
   company_id?: string;
   /** Guest quotes: free-typed company name + phone (no Company entity). */
   guest_company_name?: string;
@@ -39,6 +41,7 @@ export const updateCartSubmitMetadataStep = createStep(
       po_number,
       attn_to,
       notes,
+      po_file_url,
       company_id,
       guest_company_name,
       guest_phone,
@@ -61,6 +64,8 @@ export const updateCartSubmitMetadataStep = createStep(
     if (attn_to && attn_to.trim().length > 0)
       newMetadata.attn_to = attn_to.trim();
     if (notes && notes.trim().length > 0) newMetadata.notes = notes.trim();
+    if (po_file_url && po_file_url.trim().length > 0)
+      newMetadata.po_file_url = po_file_url.trim();
     if (company_id) newMetadata.company_id = company_id;
     if (guest_company_name && guest_company_name.trim().length > 0)
       newMetadata.guest_company_name = guest_company_name.trim();

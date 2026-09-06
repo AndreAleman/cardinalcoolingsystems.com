@@ -22,6 +22,19 @@ export type VariantRow = {
   available: boolean
 }
 
+/*
+  Medusa serializes numeric columns inconsistently across endpoints and
+  versions (weight and inventory_quantity can arrive as strings). A
+  dropped number here silently flips a priced, in-stock part to
+  Quote-Only, so coerce defensively: numbers and numeric strings pass,
+  everything else (null, undefined, "", NaN) becomes null.
+*/
+function toNumberOrNull(value: unknown): number | null {
+  if (value == null || value === "") return null
+  const n = Number(value)
+  return Number.isFinite(n) ? n : null
+}
+
 function metadataRequiresQuote(
   meta: Record<string, unknown> | null | undefined
 ): boolean {
@@ -39,16 +52,10 @@ export function productVariantToRow(
     sku: variant.sku ?? null,
     title: product.title ?? variant.sku ?? "Unknown part",
     thumbnail: product.thumbnail ?? null,
-    unitPrice:
-      typeof calculated?.calculated_amount === "number"
-        ? calculated.calculated_amount
-        : null,
+    unitPrice: toNumberOrNull(calculated?.calculated_amount),
     currencyCode: calculated?.currency_code ?? null,
-    weight: typeof variant.weight === "number" ? variant.weight : null,
-    inventoryQuantity:
-      typeof (variant as any).inventory_quantity === "number"
-        ? (variant as any).inventory_quantity
-        : null,
+    weight: toNumberOrNull(variant.weight),
+    inventoryQuantity: toNumberOrNull((variant as any).inventory_quantity),
     manageInventory: (variant as any).manage_inventory !== false,
     requiresQuote:
       metadataRequiresQuote(product.metadata) ||

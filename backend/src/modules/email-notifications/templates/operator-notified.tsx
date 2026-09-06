@@ -33,6 +33,8 @@ export interface OperatorNotifiedProps {
   submitterName: string
   companyName: string
   poNumber: string | null
+  /** Stored original of the buyer's PO Upload, when one rode along. */
+  poFileUrl?: string | null
   attnTo: string | null
   notes: string | null
   items: EmailItem[]
@@ -48,7 +50,7 @@ export const isOperatorNotifiedData = (data: any): data is OperatorNotifiedProps
 
 export const OperatorNotifiedTemplate: React.FC<OperatorNotifiedProps> & {
   PreviewProps?: OperatorNotifiedProps
-} = ({ requestType, submitterName, companyName, poNumber, attnTo, notes, items, adminUrl, messageText, preview }) => {
+} = ({ requestType, submitterName, companyName, poNumber, poFileUrl, attnTo, notes, items, adminUrl, messageText, preview }) => {
   const isQuote = requestType === 'quote'
   const isQuoteAccepted = requestType === 'quote-accepted'
   const isQuoteRejected = requestType === 'quote-rejected'
@@ -114,6 +116,14 @@ export const OperatorNotifiedTemplate: React.FC<OperatorNotifiedProps> & {
         <Button href={adminUrl} className="bg-black text-white px-5 py-3 rounded">
           {ctaLabel}
         </Button>
+        {poFileUrl && (
+          <Button
+            href={poFileUrl}
+            className="bg-white text-black border border-solid border-gray-300 px-5 py-3 rounded ml-3"
+          >
+            View the buyer&apos;s PO document
+          </Button>
+        )}
       </Section>
       <Text className="text-sm text-gray-600">Cardinal Cooling Systems</Text>
     </Base>

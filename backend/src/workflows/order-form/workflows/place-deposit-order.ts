@@ -30,6 +30,7 @@ export type PlaceDepositOrderWorkflowInput = {
   po_number: string;
   attn_to?: string;
   notes?: string;
+  po_file_url?: string;
   company_id: string;
 };
 
@@ -56,6 +57,7 @@ export const placeDepositOrderWorkflow = createWorkflow<
     po_number: input.po_number,
     attn_to: input.attn_to,
     notes: input.notes,
+    po_file_url: input.po_file_url,
     company_id: input.company_id,
   }).config({ name: "update-cart-submit-metadata-deposit" });
 

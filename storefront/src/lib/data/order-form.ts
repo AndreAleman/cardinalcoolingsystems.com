@@ -275,6 +275,9 @@ export type SubmitExtras = {
   po_number?: string
   attn_to?: string
   notes?: string
+  /* Stored original of a PO Upload (the Read-Out's file_url) — travels
+     with the order/quote so Cardinal can open the buyer's document. */
+  po_file_url?: string
 } & BuildCartExtras
 
 export type QuoteSubmitResult = {
@@ -303,6 +306,7 @@ export async function submitPortalQuoteRequest(
         po_number: extras?.po_number || undefined,
         attn_to: extras?.attn_to || undefined,
         notes: extras?.notes || undefined,
+        po_file_url: extras?.po_file_url || undefined,
       },
     })
     .catch(medusaError)
@@ -326,6 +330,7 @@ export async function submitPortalInvoiceOrder(
         po_number: extras.po_number,
         attn_to: extras.attn_to || undefined,
         notes: extras.notes || undefined,
+        po_file_url: extras.po_file_url || undefined,
       },
     })
     .catch(medusaError)
@@ -350,6 +355,7 @@ export async function submitPortalDepositOrder(
         po_number: extras.po_number,
         attn_to: extras.attn_to || undefined,
         notes: extras.notes || undefined,
+        po_file_url: extras.po_file_url || undefined,
       },
     })
     .catch(medusaError)

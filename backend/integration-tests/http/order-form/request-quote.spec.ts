@@ -144,7 +144,12 @@ medusaIntegrationTestRunner({
 
       const response = await api.post(
         "/store/order-form/request-quote",
-        { cart_id: cart.id, po_number: "PO-777", notes: "Need by Friday" },
+        {
+          cart_id: cart.id,
+          po_number: "PO-777",
+          notes: "Need by Friday",
+          po_file_url: "https://files.example.com/po.pdf",
+        },
         headersOf(ada)
       );
 
@@ -166,13 +171,17 @@ medusaIntegrationTestRunner({
       // The draft Order carries the Company link and the cart's lines.
       const { data: orders } = await query.graph({
         entity: "order",
-        fields: ["id", "is_draft_order", "items.*", "company.id"],
+        fields: ["id", "is_draft_order", "metadata", "items.*", "company.id"],
         filters: { id: quote.draft_order_id },
       });
       expect(orders[0].is_draft_order).toBe(true);
       expect(orders[0].items).toHaveLength(1);
       expect(orders[0].items[0].quantity).toEqual(3);
       expect((orders[0] as any).company?.id).toEqual(company.id);
+      // The buyer's PO document travels onto the draft order.
+      expect((orders[0] as any).metadata?.po_file_url).toEqual(
+        "https://files.example.com/po.pdf"
+      );
 
       // Submit-time metadata is stamped on the cart.
       const { data: carts } = await query.graph({
@@ -185,6 +194,7 @@ medusaIntegrationTestRunner({
           request_type: "quote",
           po_number: "PO-777",
           notes: "Need by Friday",
+          po_file_url: "https://files.example.com/po.pdf",
           company_id: company.id,
         })
       );

@@ -46,6 +46,7 @@ import type { AddressPickerValue } from "./address-picker"
 import {
   planCart,
   isQuoteOnlyLine,
+  quoteOnlyReason,
   type CartPlan,
   type PortalCartLine,
 } from "./money-rules"
@@ -97,6 +98,9 @@ export default function QuickOrder({
   // an "Also quote: …" note carrying its unmatched lines.
   const [poPrefill, setPoPrefill] = useState("")
   const [notesPrefill, setNotesPrefill] = useState("")
+  // The PO Upload's stored original (the Read-Out's file_url) so the
+  // document travels with the submitted order/quote.
+  const [poFileUrl, setPoFileUrl] = useState<string | null>(null)
 
   const favoriteVariantIds = useMemo(
     () => new Set(favorites.map((f) => f.variantId)),
@@ -248,6 +252,9 @@ export default function QuickOrder({
     if (payload.poNumber) {
       setPoPrefill(payload.poNumber)
     }
+    if (payload.fileUrl) {
+      setPoFileUrl(payload.fileUrl)
+    }
     if (noteEntries.length) {
       const note = noteEntries.join("\n")
       setNotesPrefill((prev) => (prev ? `${prev}\n${note}` : note))
@@ -309,6 +316,7 @@ export default function QuickOrder({
       po_number: extras.po_number || undefined,
       attn_to: extras.attn_to || undefined,
       notes: extras.notes || undefined,
+      po_file_url: poFileUrl || undefined,
       billing_address,
       shipping_address,
     }
@@ -364,6 +372,7 @@ export default function QuickOrder({
     clear()
     setPoPrefill("")
     setNotesPrefill("")
+    setPoFileUrl(null)
     router.refresh()
     return outcome
   }
@@ -687,7 +696,7 @@ export default function QuickOrder({
           </h3>
           <ul className="flex flex-col gap-y-1">
             {lines.map((line) => {
-              const quoteOnly = isQuoteOnlyLine(line)
+              const reason = quoteOnlyReason(line)
               return (
                 <li
                   key={line.variantId}
@@ -700,9 +709,9 @@ export default function QuickOrder({
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    {quoteOnly ? (
+                    {reason ? (
                       <span className="text-[14px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-0.5">
-                        Quote only
+                        Quote only — {reason}
                       </span>
                     ) : (
                       <span className="text-[16px] tabular-nums">
