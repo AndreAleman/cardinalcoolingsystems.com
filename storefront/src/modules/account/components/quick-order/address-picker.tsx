@@ -7,16 +7,23 @@
     - "new"   → inline one-off address form with an optional
                 "Save this address for future orders" checkbox
 
+  When the Company has sites ("Locations"), the Ship-to variant lists
+  them FIRST — picking one ships the order to that site and records
+  which site it was (location_id rides the submission).
+
   Output shape:
-    { kind: "saved", id }
+    { kind: "location", id }  ← a Company site
+    | { kind: "saved", id }
     | { kind: "new", address: {…}, save: boolean }
     | null  ← nothing chosen yet
 */
 
 import { Input } from "@medusajs/ui"
 import { HttpTypes } from "@medusajs/types"
+import type { CompanyLocation } from "@lib/data/dashboard"
 
 export type AddressPickerValue =
+  | { kind: "location"; id: string }
   | { kind: "saved"; id: string }
   | {
       kind: "new"
@@ -39,6 +46,8 @@ export type AddressPickerValue =
 type Props = {
   label: string
   addresses: HttpTypes.StoreCustomerAddress[]
+  /* Company sites, listed first in the select (Ship-to only). */
+  locations?: CompanyLocation[]
   value: AddressPickerValue
   onChange: (next: AddressPickerValue) => void
   disabled?: boolean
@@ -47,6 +56,11 @@ type Props = {
 }
 
 const ADD_NEW = "__add_new__"
+const LOCATION_PREFIX = "__loc__:"
+
+function summarizeLocation(l: CompanyLocation): string {
+  return `🏭 ${l.name} — ${l.city}`
+}
 
 function summarize(a: HttpTypes.StoreCustomerAddress): string {
   const parts = [
@@ -62,6 +76,7 @@ function summarize(a: HttpTypes.StoreCustomerAddress): string {
 export default function AddressPicker({
   label,
   addresses,
+  locations = [],
   value,
   onChange,
   disabled,
@@ -95,7 +110,9 @@ export default function AddressPicker({
       <select
         className="rounded border border-neutral-300 bg-white px-3 h-12 text-[16px] focus:outline-none focus:ring-2 focus:ring-neutral-300"
         value={
-          value?.kind === "saved"
+          value?.kind === "location"
+            ? `${LOCATION_PREFIX}${value.id}`
+            : value?.kind === "saved"
             ? value.id
             : value?.kind === "new"
             ? ADD_NEW
@@ -107,6 +124,8 @@ export default function AddressPicker({
             onChange(null)
           } else if (v === ADD_NEW) {
             onChange({ kind: "new", address: newAddress as any, save: saveFlag })
+          } else if (v.startsWith(LOCATION_PREFIX)) {
+            onChange({ kind: "location", id: v.slice(LOCATION_PREFIX.length) })
           } else {
             onChange({ kind: "saved", id: v })
           }
@@ -114,10 +133,17 @@ export default function AddressPicker({
         disabled={disabled}
       >
         <option value="">
-          {addresses.length === 0
+          {locations.length > 0
+            ? "Choose where to ship…"
+            : addresses.length === 0
             ? "No saved addresses yet"
             : "Choose a saved address…"}
         </option>
+        {locations.map((l) => (
+          <option key={l.id} value={`${LOCATION_PREFIX}${l.id}`}>
+            {summarizeLocation(l)}
+          </option>
+        ))}
         {addresses.map((a) => (
           <option key={a.id} value={a.id}>
             {summarize(a)}
@@ -125,6 +151,19 @@ export default function AddressPicker({
         ))}
         <option value={ADD_NEW}>+ Enter a new address</option>
       </select>
+
+      {value?.kind === "location" &&
+        (() => {
+          const site = locations.find((l) => l.id === value.id)
+          if (!site) return null
+          return (
+            <p className="text-[14px] text-neutral-600 m-0">
+              Ships to {site.name}: {site.address_1}
+              {site.address_2 ? `, ${site.address_2}` : ""}, {site.city},{" "}
+              {site.state} {site.zip}
+            </p>
+          )
+        })()}
 
       {isNewMode && (
         <div className="rounded border border-neutral-200 bg-neutral-50 p-3 grid grid-cols-2 gap-2">

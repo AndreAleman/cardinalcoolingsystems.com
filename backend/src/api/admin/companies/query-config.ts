@@ -18,10 +18,20 @@ export const adminCompanyFields = [
   "employees.id",
   "employees.role",
   "employees.spending_limit",
+  "employees.location.id",
+  "employees.location.name",
   "employees.customer.id",
   "employees.customer.email",
   "employees.customer.first_name",
   "employees.customer.last_name",
+  "locations.id",
+  "locations.name",
+  "locations.address_1",
+  "locations.address_2",
+  "locations.city",
+  "locations.state",
+  "locations.zip",
+  "locations.phone",
 ];
 
 export const adminCompanyQueryConfig = {

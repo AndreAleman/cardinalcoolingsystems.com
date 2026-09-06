@@ -7,10 +7,22 @@ import type { CompanyStatus } from "../../modules/company/types/status"
 import type { TeamMemberRole } from "../../modules/company/types/role"
 export type { TeamMemberRole }
 
+export type AdminLocation = {
+  id: string
+  name: string
+  address_1: string
+  address_2?: string | null
+  city: string
+  state: string
+  zip: string
+  phone?: string | null
+}
+
 export type AdminTeamMember = {
   id: string
   role: TeamMemberRole
   spending_limit: number
+  location?: { id: string; name: string } | null
   customer?: {
     id: string
     email: string
@@ -36,6 +48,7 @@ export type AdminCompany = {
   invoice_payment_enabled?: boolean
   created_at: string
   employees?: AdminTeamMember[]
+  locations?: AdminLocation[]
 }
 
 const companiesKey = (status?: CompanyStatus) => ["companies", { status }] as const
@@ -133,19 +146,91 @@ export const useSetInvoicePayment = (id: string) => {
   })
 }
 
-/* Change a Team Member's Role or Spending Limit. */
+/* Change a Team Member's Role, Spending Limit, or Location (null unassigns). */
 export const useUpdateTeamMember = (companyId: string) => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (input: { teamMemberId: string; role?: TeamMemberRole; spending_limit?: number }) =>
+    mutationFn: (input: {
+      teamMemberId: string
+      role?: TeamMemberRole
+      spending_limit?: number
+      location_id?: string | null
+    }) =>
       sdk.client.fetch<{ team_member: AdminTeamMember }>(
         `/admin/companies/${companyId}/team-members/${input.teamMemberId}`,
-        { method: "POST", body: { role: input.role, spending_limit: input.spending_limit } }
+        {
+          method: "POST",
+          body: {
+            ...(input.role !== undefined ? { role: input.role } : {}),
+            ...(input.spending_limit !== undefined ? { spending_limit: input.spending_limit } : {}),
+            ...(input.location_id !== undefined ? { location_id: input.location_id } : {}),
+          },
+        }
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: companyKey(companyId) })
       queryClient.invalidateQueries({ queryKey: ["companies"] })
       toast.success("Team member updated")
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+export type LocationInput = {
+  name: string
+  address_1: string
+  address_2?: string | null
+  city: string
+  state: string
+  zip: string
+  phone?: string | null
+}
+
+/* Locations are Cardinal-managed: created, edited, and deleted here only. */
+export const useCreateLocation = (companyId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (input: LocationInput) =>
+      sdk.client.fetch<{ location: AdminLocation }>(`/admin/companies/${companyId}/locations`, {
+        method: "POST",
+        body: input,
+      }),
+    onSuccess: ({ location }) => {
+      queryClient.invalidateQueries({ queryKey: companyKey(companyId) })
+      toast.success(`Location "${location.name}" added`)
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+export const useUpdateLocation = (companyId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (input: { locationId: string } & Partial<LocationInput>) => {
+      const { locationId, ...body } = input
+      return sdk.client.fetch<{ location: AdminLocation }>(
+        `/admin/companies/${companyId}/locations/${locationId}`,
+        { method: "POST", body }
+      )
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: companyKey(companyId) })
+      toast.success("Location updated")
+    },
+    onError: (err: Error) => toast.error(err.message),
+  })
+}
+
+export const useDeleteLocation = (companyId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (locationId: string) =>
+      sdk.client.fetch(`/admin/companies/${companyId}/locations/${locationId}`, {
+        method: "DELETE",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: companyKey(companyId) })
+      toast.success("Location removed — team assignments were cleared")
     },
     onError: (err: Error) => toast.error(err.message),
   })

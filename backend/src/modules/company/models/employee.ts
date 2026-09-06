@@ -1,5 +1,6 @@
 import { model } from "@medusajs/framework/utils";
 import { Company } from "./company";
+import { Location } from "./location";
 
 export const Employee = model.define("employee", {
   id: model
@@ -14,4 +15,12 @@ export const Employee = model.define("employee", {
   company: model.belongsTo(() => Company, {
     mappedBy: "employees",
   }),
+  // The Team Member's home site. Optional: someone with no Location
+  // falls back to their role rule company-wide (a manager with no site
+  // sees the whole Company). Assigned by Cardinal in Medusa Admin only.
+  location: model
+    .belongsTo(() => Location, {
+      mappedBy: "employees",
+    })
+    .nullable(),
 });

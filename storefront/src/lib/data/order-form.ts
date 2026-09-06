@@ -278,6 +278,9 @@ export type SubmitExtras = {
   /* Stored original of a PO Upload (the Read-Out's file_url) — travels
      with the order/quote so Cardinal can open the buyer's document. */
   po_file_url?: string
+  /* The Company site ("Location") the order ships to — the backend
+     rejects ids that aren't the member's own Company's. */
+  location_id?: string
 } & BuildCartExtras
 
 export type QuoteSubmitResult = {
@@ -307,6 +310,7 @@ export async function submitPortalQuoteRequest(
         attn_to: extras?.attn_to || undefined,
         notes: extras?.notes || undefined,
         po_file_url: extras?.po_file_url || undefined,
+        location_id: extras?.location_id || undefined,
       },
     })
     .catch(medusaError)
@@ -331,6 +335,7 @@ export async function submitPortalInvoiceOrder(
         attn_to: extras.attn_to || undefined,
         notes: extras.notes || undefined,
         po_file_url: extras.po_file_url || undefined,
+        location_id: extras.location_id || undefined,
       },
     })
     .catch(medusaError)
@@ -356,6 +361,7 @@ export async function submitPortalDepositOrder(
         attn_to: extras.attn_to || undefined,
         notes: extras.notes || undefined,
         po_file_url: extras.po_file_url || undefined,
+        location_id: extras.location_id || undefined,
       },
     })
     .catch(medusaError)

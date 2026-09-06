@@ -22,6 +22,8 @@ type Input = {
   /** Stored original of a PO Upload (the Read-Out's file_url). */
   po_file_url?: string;
   company_id?: string;
+  /** The Ship-to Location the buyer picked at submit time (validated upstream). */
+  location_id?: string;
   /** Guest quotes: free-typed company name + phone (no Company entity). */
   guest_company_name?: string;
   guest_phone?: string;
@@ -43,6 +45,7 @@ export const updateCartSubmitMetadataStep = createStep(
       notes,
       po_file_url,
       company_id,
+      location_id,
       guest_company_name,
       guest_phone,
     }: Input,
@@ -67,6 +70,7 @@ export const updateCartSubmitMetadataStep = createStep(
     if (po_file_url && po_file_url.trim().length > 0)
       newMetadata.po_file_url = po_file_url.trim();
     if (company_id) newMetadata.company_id = company_id;
+    if (location_id) newMetadata.location_id = location_id;
     if (guest_company_name && guest_company_name.trim().length > 0)
       newMetadata.guest_company_name = guest_company_name.trim();
     if (guest_phone && guest_phone.trim().length > 0)

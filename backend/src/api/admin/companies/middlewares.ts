@@ -6,8 +6,10 @@ import {
 import { adminCompanyQueryConfig } from "./query-config";
 import {
   AdminAssignCompanyPriceList,
+  AdminCreateLocation,
   AdminGetCompaniesParams,
   AdminSetInvoicePayment,
+  AdminUpdateLocation,
   AdminUpdateTeamMember,
 } from "./validators";
 import { createSelectParams } from "@medusajs/medusa/api/utils/validators";
@@ -42,5 +44,15 @@ export const adminCompanyMiddlewares: MiddlewareRoute[] = [
     matcher: "/admin/companies/:id/team-members/:teamMemberId",
     methods: ["POST"],
     middlewares: [validateAndTransformBody(AdminUpdateTeamMember)],
+  },
+  {
+    matcher: "/admin/companies/:id/locations",
+    methods: ["POST"],
+    middlewares: [validateAndTransformBody(AdminCreateLocation)],
+  },
+  {
+    matcher: "/admin/companies/:id/locations/:locationId",
+    methods: ["POST"],
+    middlewares: [validateAndTransformBody(AdminUpdateLocation)],
   },
 ];

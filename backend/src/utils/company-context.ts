@@ -43,6 +43,26 @@ export function companyContextFromCustomer(
   the storefront's Company is decided — never from a header, cookie or
   hostname (ADR-0004).
 */
+/*
+  The caller's assigned Location (their home site), or null when none.
+  A manager with a Location sees only orders/approvals tagged with it;
+  anyone with NO Location falls back to their role rule company-wide.
+*/
+export async function resolveTeamMemberLocationId(
+  container: MedusaContainer,
+  customerId: string
+): Promise<string | null> {
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const {
+    data: [customer],
+  } = await query.graph({
+    entity: "customer",
+    fields: ["id", "employee.id", "employee.location.id"],
+    filters: { id: customerId },
+  });
+  return ((customer as any)?.employee?.location?.id ?? null) as string | null;
+}
+
 export async function resolveCompanyContext(
   container: MedusaContainer,
   customerId: string

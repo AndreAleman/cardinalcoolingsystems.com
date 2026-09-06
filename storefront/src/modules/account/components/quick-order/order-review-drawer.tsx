@@ -22,6 +22,7 @@ import { Button, Input, Textarea } from "@medusajs/ui"
 import { HttpTypes } from "@medusajs/types"
 import { convertToLocale } from "@lib/util/money"
 import { usePortalCart } from "@lib/context/portal-cart-context"
+import type { CompanyLocation } from "@lib/data/dashboard"
 import AddressPicker, { type AddressPickerValue } from "./address-picker"
 import {
   type CartPlan,
@@ -55,6 +56,10 @@ type Props = {
   onClose: () => void
   plan: CartPlan
   addresses: HttpTypes.StoreCustomerAddress[]
+  /* The Company's sites — listed first in the Ship-to picker. */
+  locations?: CompanyLocation[]
+  /* The member's own assigned site: the Ship-to default when present. */
+  assignedLocationId?: string | null
   countryCode: string
   currencyCode: string
   /* PO Upload prefills: the PO's number and the "Also quote: …" note
@@ -80,6 +85,8 @@ export default function OrderReviewDrawer({
   onClose,
   plan,
   addresses,
+  locations = [],
+  assignedLocationId = null,
   countryCode,
   currencyCode,
   poPrefill,
@@ -94,9 +101,16 @@ export default function OrderReviewDrawer({
   const [notes, setNotes] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Ship-to defaults to the member's own assigned Company site when
+  // they have one (and it's still among the Company's sites).
+  const defaultShipTo: AddressPickerValue =
+    assignedLocationId && locations.some((l) => l.id === assignedLocationId)
+      ? { kind: "location", id: assignedLocationId }
+      : null
+
   const [billTo, setBillTo] = useState<AddressPickerValue>(null)
-  const [shipTo, setShipTo] = useState<AddressPickerValue>(null)
-  const [shipSameAsBill, setShipSameAsBill] = useState(true)
+  const [shipTo, setShipTo] = useState<AddressPickerValue>(defaultShipTo)
+  const [shipSameAsBill, setShipSameAsBill] = useState(!defaultShipTo)
 
   // Snapshot for the success view — taken on submit, BEFORE the parent
   // clears the cart, so the confirmation stays accurate.
@@ -226,8 +240,8 @@ export default function OrderReviewDrawer({
       setNotes("")
       setError(null)
       setBillTo(null)
-      setShipTo(null)
-      setShipSameAsBill(true)
+      setShipTo(defaultShipTo)
+      setShipSameAsBill(!defaultShipTo)
       setSnapshot(null)
     }, 300)
   }
@@ -535,7 +549,7 @@ export default function OrderReviewDrawer({
                       checked={shipSameAsBill}
                       onChange={(e) => {
                         setShipSameAsBill(e.target.checked)
-                        if (e.target.checked) setShipTo(null)
+                        setShipTo(e.target.checked ? null : defaultShipTo)
                       }}
                       disabled={submitting}
                       className="rounded border-neutral-300 h-5 w-5"
@@ -545,6 +559,7 @@ export default function OrderReviewDrawer({
                   <AddressPicker
                     label="Ship to"
                     addresses={addresses}
+                    locations={locations}
                     value={shipTo}
                     onChange={setShipTo}
                     disabled={submitting}

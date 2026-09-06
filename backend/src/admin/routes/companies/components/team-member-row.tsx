@@ -1,5 +1,6 @@
 import { Button, Select, Table, usePrompt } from "@medusajs/ui"
 import {
+  AdminLocation,
   AdminTeamMember,
   TeamMemberRole,
   useRemoveTeamMember,
@@ -7,9 +8,18 @@ import {
 } from "../../../hooks/companies"
 
 const ROLES: TeamMemberRole[] = ["member", "manager", "admin"]
+const NO_LOCATION = "no-location"
 
-/* One Team Member: name, email, a Role picker, and Remove. */
-export const TeamMemberRow = ({ companyId, member }: { companyId: string; member: AdminTeamMember }) => {
+/* One Team Member: name, email, Role picker, home-site picker, Remove. */
+export const TeamMemberRow = ({
+  companyId,
+  member,
+  locations = [],
+}: {
+  companyId: string
+  member: AdminTeamMember
+  locations?: AdminLocation[]
+}) => {
   const update = useUpdateTeamMember(companyId)
   const remove = useRemoveTeamMember(companyId)
   const prompt = usePrompt()
@@ -42,6 +52,31 @@ export const TeamMemberRow = ({ companyId, member }: { companyId: string; member
           <Select.Content>
             {ROLES.map((r) => (
               <Select.Item key={r} value={r}>{r}</Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      </Table.Cell>
+      <Table.Cell>
+        <Select
+          size="small"
+          value={member.location?.id ?? NO_LOCATION}
+          disabled={update.isPending}
+          onValueChange={(next) =>
+            update.mutate({
+              teamMemberId: member.id,
+              location_id: next === NO_LOCATION ? null : next,
+            })
+          }
+        >
+          <Select.Trigger className="w-40">
+            <Select.Value placeholder="No location" />
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Item value={NO_LOCATION}>No location</Select.Item>
+            {locations.map((location) => (
+              <Select.Item key={location.id} value={location.id}>
+                {location.name}
+              </Select.Item>
             ))}
           </Select.Content>
         </Select>

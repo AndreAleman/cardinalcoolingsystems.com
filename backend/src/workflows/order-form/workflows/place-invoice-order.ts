@@ -6,6 +6,7 @@ import {
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk";
 import { updateCartSubmitMetadataStep } from "../steps/update-cart-submit-metadata";
+import { validateSubmitLocationStep } from "../steps/validate-submit-location";
 import { resolveApprovalContextStep } from "../steps/resolve-approval-context";
 import { sendOperatorNotificationStep } from "../steps/send-operator-notification";
 import { createRequestForQuoteWorkflow } from "../../quote/workflows/create-request-for-quote";
@@ -32,6 +33,7 @@ export type PlaceInvoiceOrderWorkflowInput = {
   notes?: string;
   po_file_url?: string;
   company_id?: string;
+  location_id?: string;
 };
 
 export type PlaceInvoiceOrderWorkflowOutput = {
@@ -46,6 +48,11 @@ export const placeInvoiceOrderWorkflow = createWorkflow<
   PlaceInvoiceOrderWorkflowOutput,
   []
 >("place-invoice-order", function (input: PlaceInvoiceOrderWorkflowInput) {
+  validateSubmitLocationStep({
+    location_id: input.location_id,
+    company_id: input.company_id,
+  }).config({ name: "validate-submit-location-invoice" });
+
   updateCartSubmitMetadataStep({
     cart_id: input.cart_id,
     request_type: "order" as const,
@@ -54,6 +61,7 @@ export const placeInvoiceOrderWorkflow = createWorkflow<
     notes: input.notes,
     po_file_url: input.po_file_url,
     company_id: input.company_id,
+    location_id: input.location_id,
   });
 
   const approvalContext = resolveApprovalContextStep({

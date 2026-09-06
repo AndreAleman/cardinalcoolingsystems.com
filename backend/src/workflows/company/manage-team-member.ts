@@ -8,6 +8,8 @@ export type UpdateTeamMemberInput = {
   employee_id: string;
   role?: TeamMemberRole;
   spending_limit?: number;
+  /** Home site. A string assigns (must be this Company's), null unassigns. */
+  location_id?: string | null;
 };
 
 export const updateTeamMemberWorkflow = createWorkflow<UpdateTeamMemberInput, { id: string }, []>(

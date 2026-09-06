@@ -14,7 +14,8 @@ export const POST = async (
   res: MedusaResponse
 ) => {
   const customer_id = req.auth_context.actor_id;
-  const { cart_id, po_number, attn_to, notes, po_file_url } = req.validatedBody;
+  const { cart_id, po_number, attn_to, notes, po_file_url, location_id } =
+    req.validatedBody;
 
   const { result } = await placeDepositOrderWorkflow(req.scope).run({
     input: {
@@ -24,6 +25,7 @@ export const POST = async (
       attn_to,
       notes,
       po_file_url,
+      location_id,
       company_id: req.company_context.companyId,
     },
   });

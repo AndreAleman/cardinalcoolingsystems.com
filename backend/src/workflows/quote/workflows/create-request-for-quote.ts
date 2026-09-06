@@ -71,6 +71,11 @@ export const createRequestForQuoteWorkflow = createWorkflow<
       if (cart.metadata?.company_id) {
         orderMetadata.company_id = cart.metadata.company_id;
       }
+      // The Ship-to Location the buyer picked at submit time — the
+      // manager visibility scope reads it off the order.
+      if (cart.metadata?.location_id) {
+        orderMetadata.location_id = cart.metadata.location_id;
+      }
       // The buyer's PO document (PO Upload's stored original) travels
       // with the draft order so admin/emails can link to it directly.
       if (cart.metadata?.po_file_url) {
