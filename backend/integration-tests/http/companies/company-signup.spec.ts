@@ -54,7 +54,10 @@ medusaIntegrationTestRunner({
         expect(res.status).toBe(401);
       });
 
-      it("creates a Pending Company, makes the customer its admin, and issues a Welcome Code", async () => {
+      it("creates an APPROVED Company with instant portal access, makes the customer its admin, and issues a Welcome Code", async () => {
+        // Instant access (2026-09-05): cold-email traffic converts in one
+        // sitting — the account works the moment it's created. Cardinal
+        // still gets the signup email and can Decline junk in admin.
         const res = await api.post(
           "/store/companies",
           { name: "Acme CDU", phone: "555-0100" },
@@ -66,15 +69,14 @@ medusaIntegrationTestRunner({
           expect.objectContaining({
             name: "Acme CDU",
             email: "ada@acme.test",
-            status: "pending",
+            status: "approved",
           })
         );
         expect(res.data.role).toBe("admin");
         expect(res.data.welcome_code).toMatch(/^WELCOME-[A-Z0-9]{6}$/);
 
-        // The Dashboard's waiting screen reads the code back from /me.
         const me = await api.get("/store/companies/me", headersFor(customer.id));
-        expect(me.data.company.status).toBe("pending");
+        expect(me.data.company.status).toBe("approved");
         expect(me.data.company.welcome_code).toBe(res.data.welcome_code);
       });
 

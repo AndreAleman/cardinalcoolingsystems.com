@@ -22,12 +22,11 @@ const Register = ({ setCurrentView }: Props) => {
       data-testid="register-page"
     >
       <h1 className="text-large-semi uppercase mb-6">
-        Request an account
+        Create your account
       </h1>
       <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Cardinal approves every account by hand — we&apos;ll email you when
-        you&apos;re in. You&apos;ll get a company dashboard and a 10%-off
-        welcome code.
+        Your company dashboard unlocks the moment you sign up — your
+        prices, live stock, one-page ordering, and a 10%-off welcome code.
       </p>
       <form className="w-full flex flex-col" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">

@@ -10,6 +10,7 @@ const ProductRangeWrapper = dynamic(() => import("../product-range-wrapper"))
 const IndustriesServed = dynamic(() => import("@modules/home/components/industries-served"))
 const ProductCategories = dynamic(() => import("@modules/home/components/product-categories"))
 const WhyUs = dynamic(() => import("@modules/home/components/why-us"))
+const PortalPromo = dynamic(() => import("@modules/home/components/portal-promo"))
 const QuoteForm = dynamic(() => import("@modules/home/components/quote-form"))
 
 
@@ -120,6 +121,7 @@ export default async function Home({
       <IndustriesServed />
       <ProductCategories categories={categories} />
       <WhyUs />
+      <PortalPromo countryCode={countryCode} />
       <QuoteForm />
     </>
   )
