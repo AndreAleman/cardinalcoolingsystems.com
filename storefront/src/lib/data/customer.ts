@@ -119,6 +119,83 @@ export async function login(_currentState: unknown, formData: FormData) {
   }
 }
 
+/*
+  Forgot password, step 1: ask the backend to email a reset link.
+  The backend answers 201 whether or not the email has an account, and
+  this action mirrors that: it NEVER reveals account existence — even a
+  backend failure returns the same neutral confirmation.
+*/
+export async function requestPasswordReset(
+  _currentState: unknown,
+  formData: FormData
+): Promise<{ success: boolean; error: string | null }> {
+  const email = ((formData.get("email") as string) || "").trim()
+
+  if (!email) {
+    return { success: false, error: "Please enter your email address." }
+  }
+
+  try {
+    await sdk.auth.resetPassword("customer", "emailpass", {
+      identifier: email,
+    })
+  } catch {
+    // Deliberately swallowed: the confirmation must read the same
+    // whether or not the email exists.
+  }
+
+  return { success: true, error: null }
+}
+
+/*
+  Forgot password, step 2: set the new password using the token from
+  the emailed link. The token rides as the Bearer auth override on
+  POST /auth/customer/emailpass/update.
+*/
+export async function resetPassword(
+  _currentState: unknown,
+  formData: FormData
+): Promise<{ success: boolean; error: string | null }> {
+  const token = (formData.get("token") as string) || ""
+  const email = ((formData.get("email") as string) || "").trim()
+  const password = (formData.get("password") as string) || ""
+  const confirmPassword = (formData.get("confirm_password") as string) || ""
+
+  if (!token || !email) {
+    return {
+      success: false,
+      error:
+        "This reset link is incomplete. Please use the link from your email, or request a new one.",
+    }
+  }
+  if (password.length < 8) {
+    return {
+      success: false,
+      error: "Please choose a password of at least 8 characters.",
+    }
+  }
+  if (password !== confirmPassword) {
+    return { success: false, error: "The passwords do not match." }
+  }
+
+  try {
+    await sdk.auth.updateProvider(
+      "customer",
+      "emailpass",
+      { email, password },
+      token
+    )
+  } catch {
+    return {
+      success: false,
+      error:
+        "This reset link has expired or was already used. Please request a new one.",
+    }
+  }
+
+  return { success: true, error: null }
+}
+
 export async function signout(countryCode: string) {
   await sdk.auth.logout()
   removeAuthToken()

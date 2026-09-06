@@ -18,6 +18,7 @@ import { ApprovalRequestedTemplate, APPROVAL_REQUESTED, isApprovalRequestedData 
 import { RequestApprovedTemplate, REQUEST_APPROVED, isRequestApprovedData } from './request-approved'
 import { RequestRejectedTemplate, REQUEST_REJECTED, isRequestRejectedData } from './request-rejected'
 import { PoUploadedTemplate, PO_UPLOADED, isPoUploadedData } from './po-uploaded'
+import { PasswordResetTemplate, PASSWORD_RESET, isPasswordResetData } from './password-reset'
 
 export const EmailTemplates = {
   INVITE_USER,
@@ -36,6 +37,7 @@ export const EmailTemplates = {
   REQUEST_APPROVED,
   REQUEST_REJECTED,
   PO_UPLOADED,
+  PASSWORD_RESET,
   CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
@@ -154,6 +156,12 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.REQUEST_REJECTED}"`)
       }
       return <RequestRejectedTemplate {...data} />
+
+    case EmailTemplates.PASSWORD_RESET:
+      if (!isPasswordResetData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.PASSWORD_RESET}"`)
+      }
+      return <PasswordResetTemplate {...data} />
 
     case EmailTemplates.CONTACT_FORM:  // ✅ Simplified case
       console.log('[Templates] Using CONTACT_FORM template')
