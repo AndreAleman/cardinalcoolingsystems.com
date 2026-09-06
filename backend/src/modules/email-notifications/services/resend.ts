@@ -29,6 +29,20 @@ type InjectedDependencies = {
   logger: Logger
 }
 
+// Account-lifecycle emails come from info@; sales notifications keep
+// the module-configured sender (this.options.from).
+const INFO_FROM =
+  process.env.RESEND_INFO_FROM_EMAIL ??
+  "Cardinal Cooling Systems <info@cardinalcoolingsystems.com>"
+
+const TEMPLATE_FROM: Record<string, string> = {
+  "password-reset": INFO_FROM,
+  "company-invite": INFO_FROM,
+  "company-welcome": INFO_FROM,
+  "company-decided": INFO_FROM,
+  "invite-user": INFO_FROM,
+}
+
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
   static identifier = "notification-resend"
   private resendClient: Resend
@@ -58,6 +72,10 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         "Option `from` is required in the provider's options."
       )
     }
+  }
+
+  getFrom(template: string) {
+    return TEMPLATE_FROM[template] ?? this.options.from
   }
 
   getTemplateSubject(template: string, data: unknown) {
@@ -115,7 +133,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
     notification: ProviderSendNotificationDTO
   ): Promise<ProviderSendNotificationResultsDTO> {
     const commonOptions = {
-      from: this.options.from,
+      from: this.getFrom(notification.template),
       to: [notification.to],
       subject: this.getTemplateSubject(notification.template, notification.data),
     }

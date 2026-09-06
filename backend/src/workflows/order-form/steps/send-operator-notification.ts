@@ -43,6 +43,79 @@ type Output = {
 const ADMIN_URL =
   process.env.MEDUSA_ADMIN_URL ?? `${BACKEND_URL.replace(/\/+$/, "")}/app`;
 
+/** Skip attaching (link only) past this size. */
+const MAX_ATTACHMENT_BYTES = 15 * 1024 * 1024;
+const FETCH_TIMEOUT_MS = 15 * 1000;
+
+type EmailAttachment = {
+  content: string;
+  filename: string;
+  content_type: string;
+};
+
+/** Last path segment of the PO file URL, or the default name. */
+const filenameFromUrl = (url: string): string => {
+  try {
+    const tail = decodeURIComponent(
+      new URL(url).pathname.split("/").filter(Boolean).pop() ?? ""
+    );
+    if (tail) {
+      return tail;
+    }
+  } catch {
+    // fall through to the default
+  }
+  return "purchase-order.pdf";
+};
+
+/*
+  Best-effort download of the buyer's PO document so the email can
+  carry the actual file. Any failure (timeout, non-2xx, oversized)
+  returns null and the email falls back to the existing link button.
+*/
+const fetchPoAttachment = async (
+  url: string,
+  logger: { warn: (msg: string) => void }
+): Promise<EmailAttachment | null> => {
+  try {
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!response.ok) {
+      logger.warn(
+        `[order-form] send-operator-notification: PO file fetch answered ${response.status}; sending link only.`
+      );
+      return null;
+    }
+    const declaredSize = Number(response.headers.get("content-length"));
+    if (Number.isFinite(declaredSize) && declaredSize > MAX_ATTACHMENT_BYTES) {
+      logger.warn(
+        `[order-form] send-operator-notification: PO file is ${declaredSize} bytes (over the attachment cap); sending link only.`
+      );
+      return null;
+    }
+    const buffer = Buffer.from(await response.arrayBuffer());
+    if (buffer.byteLength > MAX_ATTACHMENT_BYTES) {
+      logger.warn(
+        `[order-form] send-operator-notification: PO file is ${buffer.byteLength} bytes (over the attachment cap); sending link only.`
+      );
+      return null;
+    }
+    return {
+      content: buffer.toString("base64"),
+      filename: filenameFromUrl(url),
+      content_type:
+        response.headers.get("content-type")?.split(";")[0]?.trim() ||
+        "application/pdf",
+    };
+  } catch (err: any) {
+    logger.warn(
+      `[order-form] send-operator-notification: PO file fetch failed (${err?.message ?? err}); sending link only.`
+    );
+    return null;
+  }
+};
+
 export const sendOperatorNotificationStep = createStep(
   "send-operator-notification",
   async (
@@ -130,11 +203,18 @@ export const sendOperatorNotificationStep = createStep(
       ? `${ADMIN_URL}/${adminSection}/${admin_target_id}`
       : `${ADMIN_URL}/${adminSection}`;
 
+    // Attach the buyer's PO document when one exists (best-effort —
+    // the link button stays in the template regardless).
+    const poAttachment = poFileUrl
+      ? await fetchPoAttachment(poFileUrl, logger)
+      : null;
+
     try {
       await notificationModule.createNotifications({
         to: operatorEmail,
         channel: "email",
         template: "operator-notified",
+        ...(poAttachment ? { attachments: [poAttachment] } : {}),
         data: {
           requestType: request_type,
           submitterName,
