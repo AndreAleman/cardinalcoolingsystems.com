@@ -104,6 +104,8 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         return "Your request was approved"
       case EmailTemplates.REQUEST_REJECTED:
         return "Your request was rejected"
+      case EmailTemplates.PASSWORD_RESET:
+        return "Reset your Cardinal password"
       default:
         return "New Email"
     }
