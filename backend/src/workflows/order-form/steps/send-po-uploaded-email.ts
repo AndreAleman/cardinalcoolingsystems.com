@@ -16,7 +16,14 @@ type Input = {
   po_number: string | null;
   file_url: string | null;
   lines: PoReadOutLine[];
+  /** The uploaded document, so the email can carry the actual file. */
+  filename?: string | null;
+  mime_type?: string | null;
+  file_base64?: string | null;
 };
+
+/** Skip attaching (link only) past this decoded size. */
+const MAX_ATTACHMENT_BYTES = 15 * 1024 * 1024;
 
 type Output = {
   sent: boolean;
@@ -25,7 +32,16 @@ type Output = {
 export const sendPoUploadedEmailStep = createStep(
   "send-po-uploaded-email",
   async (
-    { customer_id, company_id, po_number, file_url, lines }: Input,
+    {
+      customer_id,
+      company_id,
+      po_number,
+      file_url,
+      lines,
+      filename,
+      mime_type,
+      file_base64,
+    }: Input,
     { container }
   ) => {
     const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
@@ -69,11 +85,34 @@ export const sendPoUploadedEmailStep = createStep(
       "A team member";
     const companyName = (companies?.[0] as any)?.name ?? "their company";
 
+    // Attach the actual PO document (link stays in the template
+    // regardless). Skip oversized files — the link still works.
+    let attachments:
+      | { content: string; filename: string; content_type: string }[]
+      | undefined;
+    if (file_base64) {
+      const decodedBytes = Math.floor((file_base64.length * 3) / 4);
+      if (decodedBytes <= MAX_ATTACHMENT_BYTES) {
+        attachments = [
+          {
+            content: file_base64,
+            filename: filename || "purchase-order.pdf",
+            content_type: mime_type || "application/pdf",
+          },
+        ];
+      } else {
+        logger.info(
+          `[order-form] send-po-uploaded-email: PO file ~${decodedBytes} bytes exceeds attachment cap; sending link only.`
+        );
+      }
+    }
+
     try {
       await notificationModule.createNotifications({
         to: operatorEmail,
         channel: "email",
         template: "po-uploaded",
+        ...(attachments ? { attachments } : {}),
         data: {
           submitterName,
           companyName,

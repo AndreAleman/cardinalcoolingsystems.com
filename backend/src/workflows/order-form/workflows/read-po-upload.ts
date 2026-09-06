@@ -56,6 +56,9 @@ export const readPoUploadWorkflow = createWorkflow<
   sendPoUploadedEmailStep({
     customer_id: input.customer_id,
     company_id: input.company_id,
+    filename: input.filename,
+    mime_type: input.mime_type,
+    file_base64: input.file_base64,
     po_number: transform(
       { extracted },
       ({ extracted }) => (extracted as ExtractedPo).po_number
