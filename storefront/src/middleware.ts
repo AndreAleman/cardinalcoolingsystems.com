@@ -192,5 +192,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg).*)"],
+  // "ingest" excluded so the PostHog proxy (rewrites in next.config.js)
+  // isn't redirected to /us/ingest/*
+  matcher: ["/((?!api|ingest|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg).*)"],
 }
