@@ -26,11 +26,11 @@ const RequestPortalAccess = ({ customer }: Props) => {
       className="mb-8 p-6 border border-ui-border-base rounded-lg bg-ui-bg-subtle"
       data-testid="request-portal-access"
     >
-      <h2 className="text-xl-semi mb-2">Request portal access</h2>
+      <h2 className="text-xl-semi mb-2">Unlock your company dashboard</h2>
       <p className="text-base-regular text-ui-fg-base mb-4">
         Your account isn&apos;t linked to a company yet. Tell us who you buy
-        for and we&apos;ll set up your company dashboard — Cardinal approves
-        every account by hand, and we&apos;ll email you when you&apos;re in.
+        for and your dashboard unlocks right away — one-page ordering,
+        your prices, and live stock.
       </p>
       <form action={formAction} className="flex flex-col gap-y-2 max-w-sm">
         <Input

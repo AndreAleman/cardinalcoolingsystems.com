@@ -54,7 +54,7 @@ const Login = ({ setCurrentView }: Props) => {
           className="underline"
           data-testid="register-button"
         >
-          Request an account
+          Create an account
         </button>
         .
       </span>

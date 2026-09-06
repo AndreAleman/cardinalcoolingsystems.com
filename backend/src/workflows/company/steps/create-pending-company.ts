@@ -7,6 +7,10 @@ type Input = {
   email: string;
   phone?: string;
   currency_code?: string;
+  /* Instant access (2026-09-05): signups default to approved so
+     cold-email traffic converts in one sitting. Cardinal can Decline
+     junk in admin; declined companies lose the Dashboard. */
+  status?: "pending" | "approved";
 };
 
 export const createPendingCompanyStep = createStep(
@@ -18,7 +22,7 @@ export const createPendingCompanyStep = createStep(
       email: input.email,
       phone: input.phone,
       currency_code: input.currency_code ?? "usd",
-      status: "pending",
+      status: input.status ?? "approved",
     });
     return new StepResponse(company, company.id);
   },

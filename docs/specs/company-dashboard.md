@@ -171,6 +171,16 @@ override anything below that conflicts:
   (`po-uploaded` template). The Dashboard drop zone loads matched lines
   into Quick Order; unmatched lines ride in the quote note. Requires
   `ANTHROPIC_API_KEY`.
+- **Instant access (2026-09-05, supersedes ADR-0003's pending default
+  for signups)**: cold-email campaigns advertise the portal, and cold
+  traffic converts in one sitting or not at all — so signups now create
+  the Company APPROVED and the Dashboard unlocks immediately. Phone +
+  company name stay required (the lead is still captured, Cardinal is
+  still emailed), Decline in admin remains the ban hammer, and the
+  invoice switch / custom price lists stay manual per Company. The
+  pending/declined states and their screens remain in code for declined
+  companies. Slice 5 shipped alongside: `/portal` landing page (the
+  cold-email destination, real screenshots) + homepage section.
 
 **Delivery is in five slices**, each reviewed and released on its own (see Out of Scope for what each excludes). The slices are: (1) Companies, approval, invites, roles, Price Lists, the Dashboard with Quick Order + stock rule + Quote Requests/Quotes + Favorites + Order Again + Orders, Medusa Admin pages, approvals and Spending Limits switched off; (2) Deposit Threshold, Deposit, Balance Invoice, ACH; (3) PO Upload; (4) Spend Tiers, Referral, Win-Back, Reorder Nudge; (5) marketing homepage section and landing page.
 
