@@ -5,6 +5,7 @@ import Input from "@modules/common/components/input"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { inviteTeamMember } from "@lib/data/companies"
+import { btnPrimary } from "../portal-ui"
 
 const InviteForm = () => {
   const [message, formAction] = useFormState(inviteTeamMember, null)
@@ -14,7 +15,7 @@ const InviteForm = () => {
         <Input label="Coworker's email" name="email" type="email" required autoComplete="off" data-testid="invite-email-input" />
         <ErrorMessage error={message} data-testid="invite-error" />
       </div>
-      <SubmitButton className="whitespace-nowrap" data-testid="invite-button">Send invite</SubmitButton>
+      <SubmitButton className={`${btnPrimary} whitespace-nowrap`} data-testid="invite-button">Send invite</SubmitButton>
     </form>
   )
 }

@@ -21,7 +21,20 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Button, Input, Table, Toaster, toast } from "@medusajs/ui"
+import { Table, Toaster, toast } from "@medusajs/ui"
+import {
+  amberPillClass,
+  btnPrimary,
+  btnSecondary,
+  btnToggleActive,
+  captionClass,
+  headingClass,
+  inputClass,
+  skuClass,
+  subheadingClass,
+  tableHeadClass,
+  thumbClass,
+} from "../portal-ui"
 import { HttpTypes } from "@medusajs/types"
 import { convertToLocale } from "@lib/util/money"
 import { capturePortalEvent } from "@lib/util/portal-analytics"
@@ -440,10 +453,10 @@ export default function QuickOrder({
     return (
       <div className="flex flex-col gap-y-6">
         <div
-          className="rounded-lg border-2 border-green-600 bg-green-50 p-8 text-center"
+          className="rounded-[5px] border-2 border-green-600 bg-green-50 p-8 text-center"
           data-testid="quick-order-confirmation"
         >
-          <div className="text-3xl font-semibold text-green-800 mb-3">
+          <div className="text-[24px] font-semibold tracking-tight text-green-800 mb-3">
             ✓{" "}
             {o.orderPlaced
               ? o.orderPendingApproval
@@ -453,7 +466,7 @@ export default function QuickOrder({
               ? "Ready for checkout"
               : "Quote request sent"}
           </div>
-          <div className="text-[18px] text-green-900 flex flex-col gap-1 mb-2">
+          <div className="text-[16px] leading-relaxed text-green-900 flex flex-col gap-1 mb-2">
             {o.orderPlaced && (
               <p>
                 {o.orderPendingApproval
@@ -473,29 +486,23 @@ export default function QuickOrder({
             )}
           </div>
           {confirmation.po && (
-            <p className="text-[16px] text-green-900 mb-4">
+            <p className="text-[15px] text-green-900 mb-4">
               PO number: <span className="font-mono">{confirmation.po}</span>
             </p>
           )}
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
             {o.checkoutReady && (
-              <Button
-                variant="primary"
-                size="large"
-                className="h-12 text-[18px] bg-green-600 hover:bg-green-700"
-                onClick={goToCheckout}
-              >
+              <button type="button" className={btnPrimary} onClick={goToCheckout}>
                 Continue to Checkout →
-              </Button>
+              </button>
             )}
-            <Button
-              variant={o.checkoutReady ? "secondary" : "primary"}
-              size="large"
-              className="h-12 text-[18px]"
+            <button
+              type="button"
+              className={o.checkoutReady ? btnSecondary : btnPrimary}
               onClick={() => setConfirmation(null)}
             >
               Start a new order
-            </Button>
+            </button>
           </div>
         </div>
         <Toaster />
@@ -522,8 +529,17 @@ export default function QuickOrder({
       row.inventoryQuantity != null &&
       row.inventoryQuantity <= 0
 
+    const lowStock =
+      row.manageInventory &&
+      row.inventoryQuantity != null &&
+      row.inventoryQuantity > 0 &&
+      row.inventoryQuantity <= 5
+
     return (
-      <Table.Row key={key} className="[&>td]:py-[12px]">
+      <Table.Row
+        key={key}
+        className="[&>td]:py-3 transition-colors motion-reduce:transition-none hover:bg-gray-50"
+      >
         <Table.Cell className="text-center align-middle">
           <button
             type="button"
@@ -534,46 +550,42 @@ export default function QuickOrder({
                 : `Save ${row.sku} to favorites`
             }
             aria-pressed={favoriteVariantIds.has(row.variantId)}
-            className={`text-[26px] leading-none px-2 py-0.5 rounded-md hover:bg-amber-50 ${
+            className={`text-[26px] leading-none px-2 py-0.5 rounded-[5px] hover:bg-amber-50 ${
               favoriteVariantIds.has(row.variantId)
                 ? "text-amber-500 hover:text-amber-600"
-                : "text-neutral-300 hover:text-amber-500"
+                : "text-gray-300 hover:text-amber-500"
             }`}
           >
             {favoriteVariantIds.has(row.variantId) ? "★" : "☆"}
           </button>
         </Table.Cell>
         <Table.Cell className="align-middle">
-          <div className="font-mono text-[18px] font-semibold">{row.sku}</div>
-          <div className="text-[15px] text-neutral-600">{row.title}</div>
+          <div className={skuClass}>{row.sku}</div>
+          <div className={captionClass}>{row.title}</div>
         </Table.Cell>
         <Table.Cell className="align-middle">
           {row.thumbnail ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={row.thumbnail}
-              alt={row.title}
-              className="h-14 w-14 object-cover rounded"
-            />
+            <img src={row.thumbnail} alt={row.title} className={thumbClass} />
           ) : (
-            <div className="h-14 w-14 bg-neutral-100 rounded" />
+            <div className="h-12 w-12 rounded-[5px] border border-gray-200 bg-gray-50" />
           )}
         </Table.Cell>
-        <Table.Cell className="align-middle text-[18px] tabular-nums">
+        <Table.Cell className="align-middle text-right text-[16px] tabular-nums text-[#111111]">
           {row.unitPrice && row.unitPrice > 0 ? (
             fmt(row.unitPrice, row.currencyCode)
           ) : (
-            <span className="text-amber-700 text-[15px] font-semibold">
-              Quote only
-            </span>
+            <span className={amberPillClass}>Quote only</span>
           )}
         </Table.Cell>
-        <Table.Cell className="align-middle text-[16px]">
+        <Table.Cell className="align-middle text-right text-[15px] tabular-nums">
           {!row.manageInventory ? (
             <span className="text-green-700">In stock</span>
           ) : outOfStock ? (
-            <span className="text-amber-700 font-semibold">
-              Out of stock — quote only
+            <span className={amberPillClass}>Out of stock — quote only</span>
+          ) : lowStock ? (
+            <span className="text-amber-700">
+              Only {row.inventoryQuantity} in stock
             </span>
           ) : (
             <span className="text-green-700">
@@ -581,8 +593,8 @@ export default function QuickOrder({
             </span>
           )}
         </Table.Cell>
-        <Table.Cell className="align-middle">
-          <Input
+        <Table.Cell className="align-middle text-right">
+          <input
             type="number"
             min={1}
             value={qty}
@@ -592,7 +604,7 @@ export default function QuickOrder({
                 [row.variantId]: Math.max(1, Number(e.target.value) || 1),
               }))
             }
-            className="w-20 h-12 text-[16px]"
+            className={`${inputClass} w-20 text-right tabular-nums`}
             aria-label={`Quantity for ${row.sku}`}
           />
           {quoteOnly &&
@@ -600,19 +612,19 @@ export default function QuickOrder({
             row.inventoryQuantity != null &&
             row.inventoryQuantity > 0 &&
             qty > row.inventoryQuantity && (
-              <div className="text-[13px] text-amber-700 font-semibold mt-1">
+              <div className="text-[13px] font-medium text-amber-700 mt-1">
                 Over stock — quote only
               </div>
             )}
         </Table.Cell>
         <Table.Cell className="align-middle">
-          <Button
-            variant="secondary"
-            className="h-12 px-5 text-[16px]"
+          <button
+            type="button"
+            className={btnSecondary}
             onClick={() => addRowToOrder(rowToCartLine(row, qty))}
           >
             Add
-          </Button>
+          </button>
         </Table.Cell>
       </Table.Row>
     )
@@ -624,28 +636,30 @@ export default function QuickOrder({
   return (
     <div className="flex flex-col gap-y-5" data-testid="quick-order">
       <header>
-        <h2 className="text-xl-semi m-0">Quick Order</h2>
-        <p className="text-[16px] text-neutral-500">
+        <h2 className={`${headingClass} m-0`}>Quick Order</h2>
+        <p className="text-[15px] text-[#6b7280] mt-1">
           Search by part number, set quantities, and place your order or
           request a quote — all from this table.
         </p>
       </header>
 
-      <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl">
-        <Input
-          placeholder="Search part number or name"
+      <form onSubmit={handleSearch} className="flex w-full">
+        <input
+          type="search"
+          placeholder="Search by part number or name…"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           disabled={isSearching}
-          className="h-12 text-[16px]"
+          aria-label="Search by part number or name"
+          className="h-12 w-full min-w-0 flex-1 rounded-l-[5px] rounded-r-none border border-r-0 border-gray-300 bg-white px-4 text-[17px] text-[#111111] placeholder:text-gray-400 focus:outline-none focus:border-[#E3000F] focus:ring-2 focus:ring-[#E3000F]/15 relative focus:z-10 disabled:opacity-50"
         />
-        <Button
+        <button
           type="submit"
           disabled={isSearching}
-          className="h-12 px-6 text-[16px]"
+          className={`${btnPrimary} flex-shrink-0 rounded-l-none px-8`}
         >
-          {isSearching ? "Searching..." : "Search"}
-        </Button>
+          {isSearching ? "Searching…" : "Search"}
+        </button>
       </form>
 
       {/* PO Upload — drop a purchase order, verify the Read-Out, load it
@@ -653,38 +667,52 @@ export default function QuickOrder({
       <PoUpload currencyCode={currencyCode} onLoad={handlePoLoad} />
 
       <div className="flex items-center gap-3">
-        <span className="text-[16px] font-medium text-neutral-600">Show:</span>
-        <Button
-          variant={favView === "all" ? "primary" : "secondary"}
+        <span className="text-[15px] font-medium text-[#6b7280]">Show:</span>
+        <button
+          type="button"
           onClick={() => setFavView("all")}
           aria-pressed={favView === "all"}
-          className="h-12 px-5 text-[16px]"
+          className={`${btnSecondary} ${favView === "all" ? btnToggleActive : ""}`}
         >
           All parts
-        </Button>
-        <Button
-          variant={favView === "favorites" ? "primary" : "secondary"}
+        </button>
+        <button
+          type="button"
           onClick={() => setFavView("favorites")}
           aria-pressed={favView === "favorites"}
-          className="h-12 px-5 text-[16px]"
+          className={`${btnSecondary} ${
+            favView === "favorites" ? btnToggleActive : ""
+          }`}
         >
           ★ Favorites ({favorites.length})
-        </Button>
+        </button>
       </div>
 
       <div className="overflow-x-auto">
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell className="text-center">
+              <Table.HeaderCell className={`${tableHeadClass} text-center`}>
                 Favorite
               </Table.HeaderCell>
-              <Table.HeaderCell>Part</Table.HeaderCell>
-              <Table.HeaderCell>Picture</Table.HeaderCell>
-              <Table.HeaderCell>Price</Table.HeaderCell>
-              <Table.HeaderCell>Stock</Table.HeaderCell>
-              <Table.HeaderCell>Qty</Table.HeaderCell>
-              <Table.HeaderCell>Add</Table.HeaderCell>
+              <Table.HeaderCell className={tableHeadClass}>
+                Part
+              </Table.HeaderCell>
+              <Table.HeaderCell className={tableHeadClass}>
+                Picture
+              </Table.HeaderCell>
+              <Table.HeaderCell className={`${tableHeadClass} text-right`}>
+                Price
+              </Table.HeaderCell>
+              <Table.HeaderCell className={`${tableHeadClass} text-right`}>
+                Stock
+              </Table.HeaderCell>
+              <Table.HeaderCell className={`${tableHeadClass} text-right`}>
+                Qty
+              </Table.HeaderCell>
+              <Table.HeaderCell className={tableHeadClass}>
+                Add
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -698,7 +726,7 @@ export default function QuickOrder({
               <Table.Row>
                 <td
                   colSpan={7}
-                  className="text-center text-neutral-500 px-4 py-4 text-[16px]"
+                  className="text-center text-[#6b7280] px-4 py-8 text-[15px]"
                 >
                   {favView === "favorites"
                     ? favorites.length === 0
@@ -720,19 +748,19 @@ export default function QuickOrder({
             type="button"
             onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
             disabled={currentPage === 0}
-            className="px-4 py-2 text-[18px] rounded border border-neutral-200 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed"
+            className={`${btnSecondary} w-12 px-0`}
             aria-label="Previous page"
           >
             ←
           </button>
-          <span className="text-[15px] text-neutral-600">
+          <span className="text-[15px] text-[#6b7280] tabular-nums">
             Page {currentPage + 1} of {totalPages}
           </span>
           <button
             type="button"
             onClick={() => setCurrentPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={currentPage >= totalPages - 1}
-            className="px-4 py-2 text-[18px] rounded border border-neutral-200 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed"
+            className={`${btnSecondary} w-12 px-0`}
             aria-label="Next page"
           >
             →
@@ -742,8 +770,8 @@ export default function QuickOrder({
 
       {/* In-progress order preview */}
       {lines.length > 0 && (
-        <div className="border-t pt-4">
-          <h3 className="text-[18px] font-semibold mb-2">
+        <div className="border-t border-gray-200 pt-4">
+          <h3 className={`${subheadingClass} mb-2`}>
             In your order ({lines.length})
           </h3>
           <ul className="flex flex-col gap-y-1">
@@ -752,21 +780,21 @@ export default function QuickOrder({
               return (
                 <li
                   key={line.variantId}
-                  className="flex items-center justify-between gap-3 py-2 border-b border-neutral-100 last:border-b-0"
+                  className="flex items-center justify-between gap-3 py-2 border-b border-gray-100 last:border-b-0"
                 >
                   <div className="flex flex-col min-w-0">
-                    <span className="font-mono text-[16px]">{line.sku}</span>
-                    <span className="text-[14px] text-neutral-500 truncate">
+                    <span className={skuClass}>{line.sku}</span>
+                    <span className={`${captionClass} truncate`}>
                       {line.title}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     {reason ? (
-                      <span className="text-[14px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-0.5">
+                      <span className={amberPillClass}>
                         Quote only — {reason}
                       </span>
                     ) : (
-                      <span className="text-[16px] tabular-nums">
+                      <span className="text-[16px] tabular-nums text-[#111111]">
                         {fmt((line.unitPrice ?? 0) * line.qty, line.currencyCode)}
                       </span>
                     )}
@@ -775,18 +803,18 @@ export default function QuickOrder({
                       onClick={() => updateQty(line.variantId, line.qty - 1)}
                       disabled={line.qty <= 1}
                       aria-label={`Decrease ${line.sku} quantity`}
-                      className="w-10 h-10 flex items-center justify-center rounded border border-neutral-200 text-[18px] hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="w-10 h-10 flex items-center justify-center rounded-[5px] border border-gray-300 text-[18px] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       −
                     </button>
-                    <span className="text-[16px] font-medium w-8 text-center">
+                    <span className="text-[16px] font-medium w-8 text-center tabular-nums">
                       {line.qty}
                     </span>
                     <button
                       type="button"
                       onClick={() => updateQty(line.variantId, line.qty + 1)}
                       aria-label={`Increase ${line.sku} quantity`}
-                      className="w-10 h-10 flex items-center justify-center rounded border border-neutral-200 text-[18px] hover:bg-neutral-100"
+                      className="w-10 h-10 flex items-center justify-center rounded-[5px] border border-gray-300 text-[18px] hover:bg-gray-50"
                     >
                       +
                     </button>
@@ -794,7 +822,7 @@ export default function QuickOrder({
                       type="button"
                       onClick={() => removeLine(line.variantId)}
                       aria-label={`Remove ${line.sku}`}
-                      className="w-10 h-10 flex items-center justify-center rounded border border-neutral-200 text-[18px] text-red-700 hover:bg-red-50 ml-1"
+                      className="w-10 h-10 flex items-center justify-center rounded-[5px] border border-gray-300 text-[18px] text-[#E3000F] hover:bg-[rgba(227,0,15,0.06)] ml-1"
                     >
                       ×
                     </button>
@@ -807,12 +835,12 @@ export default function QuickOrder({
           {/* Plan summary + submit */}
           <div className="mt-4 flex flex-col gap-3">
             {plan.payLines.length > 0 && (
-              <div className="flex justify-between text-[17px]">
-                <span className="text-neutral-600">
+              <div className="flex justify-between text-[16px]">
+                <span className="text-[#6b7280]">
                   Payable now ({plan.payLines.length}{" "}
                   {plan.payLines.length === 1 ? "item" : "items"})
                 </span>
-                <span className="font-semibold tabular-nums">
+                <span className="font-semibold tabular-nums text-[#111111]">
                   {fmt(plan.payableTotal)}
                 </span>
               </div>
@@ -826,14 +854,13 @@ export default function QuickOrder({
                     } will be sent to Cardinal as a Quote Request.`}
               </p>
             )}
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-wrap justify-end gap-3">
               {plan.payLines.length > 0 &&
                 plan.path !== "quote_all" &&
                 plan.path !== "quote_only" && (
-                  <Button
-                    variant="secondary"
-                    size="large"
-                    className="h-12 px-6 text-[18px]"
+                  <button
+                    type="button"
+                    className={`${btnSecondary} px-6`}
                     onClick={() => {
                       setQuoteEverything(true)
                       setReviewOpen(true)
@@ -841,12 +868,11 @@ export default function QuickOrder({
                     data-testid="quick-order-quote-instead"
                   >
                     Submit Quote Request
-                  </Button>
+                  </button>
                 )}
-              <Button
-                variant="primary"
-                size="large"
-                className="h-12 px-8 text-[18px] bg-green-600 hover:bg-green-700"
+              <button
+                type="button"
+                className={`${btnPrimary} px-8`}
                 onClick={() => {
                   setQuoteEverything(false)
                   setReviewOpen(true)
@@ -858,7 +884,7 @@ export default function QuickOrder({
                 {plan.path === "checkout" && "Review & Pay"}
                 {(plan.path === "quote_all" || plan.path === "quote_only") &&
                   "Submit Quote Request"}
-              </Button>
+              </button>
             </div>
           </div>
         </div>

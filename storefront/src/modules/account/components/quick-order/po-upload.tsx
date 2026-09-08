@@ -23,8 +23,16 @@
 */
 
 import { useRef, useState } from "react"
-import { Button, Input } from "@medusajs/ui"
 import { convertToLocale } from "@lib/util/money"
+import {
+  amberPillClass,
+  btnPrimary,
+  btnSecondary,
+  captionClass,
+  inputClass,
+  skuClass,
+  tableHeadClass,
+} from "../portal-ui"
 import { capturePortalEvent } from "@lib/util/portal-analytics"
 import {
   uploadPurchaseOrder,
@@ -261,17 +269,37 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
             setDragOver(false)
             handleFile(e.dataTransfer.files?.[0])
           }}
-          className={`w-full max-w-2xl rounded-lg border-2 border-dashed px-6 py-6 text-left transition-colors ${
+          className={`w-full rounded-[5px] border-2 border-dashed px-6 py-6 text-left transition-colors motion-reduce:transition-none ${
             dragOver
-              ? "border-blue-500 bg-blue-50"
-              : "border-neutral-300 bg-neutral-50 hover:border-blue-400 hover:bg-blue-50/50"
+              ? "border-[#E3000F] bg-[rgba(227,0,15,0.04)]"
+              : "border-gray-300 bg-gray-50 hover:border-[#E3000F] hover:bg-[rgba(227,0,15,0.03)]"
           }`}
           data-testid="po-upload-dropzone"
         >
-          <span className="block text-[18px] font-semibold text-neutral-800">
-            📄 Drop your PO here (PDF) — we&apos;ll fill the table for you
+          <span className="flex items-center gap-2.5 text-[17px] font-semibold text-[#111111]">
+            <span
+              className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[5px]"
+              style={{ backgroundColor: "rgba(227,0,15,0.08)" }}
+              aria-hidden="true"
+            >
+              <svg
+                className="h-4 w-4"
+                style={{ color: "#E3000F" }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                />
+              </svg>
+            </span>
+            Drop your PO here (PDF) — we&apos;ll fill the table for you
           </span>
-          <span className="block text-[15px] text-neutral-500 mt-1">
+          <span className="block text-[15px] text-[#6b7280] mt-1.5 pl-[42px]">
             Or click to choose a file. PDF or a photo (PNG, JPEG, WebP), up to
             15MB.
           </span>
@@ -281,19 +309,19 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
       {/* Reading — persistent, visibly alive; blocks a second upload. */}
       {status.kind === "reading" && (
         <div
-          className="w-full max-w-2xl rounded-lg border-2 border-blue-300 bg-blue-50 px-6 py-6 flex items-center gap-4"
+          className="w-full rounded-[5px] border border-gray-200 bg-gray-50 px-6 py-6 flex items-center gap-4"
           role="status"
           data-testid="po-upload-reading"
         >
           <span
             aria-hidden="true"
-            className="inline-block h-8 w-8 flex-shrink-0 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"
+            className="inline-block h-8 w-8 flex-shrink-0 rounded-full border-4 border-[#E3000F] border-t-transparent animate-spin motion-reduce:animate-none"
           />
           <div>
-            <p className="text-[18px] font-semibold text-blue-900 m-0">
+            <p className="text-[17px] font-semibold text-[#111111] m-0">
               Reading your PO&hellip;
             </p>
-            <p className="text-[15px] text-blue-800 m-0 mt-1">
+            <p className="text-[15px] text-[#374151] m-0 mt-1">
               We&apos;re reading &ldquo;{status.filename}&rdquo; line by line.
               This usually takes 30&ndash;60 seconds — please keep this page
               open.
@@ -305,7 +333,7 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
       {/* Error — persistent panel, not a toast. */}
       {status.kind === "error" && (
         <div
-          className="w-full max-w-2xl rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-[16px] text-red-800"
+          className="w-full rounded-[5px] border border-red-300 bg-red-50 px-4 py-3 text-[15px] text-red-800"
           role="alert"
           data-testid="po-upload-error"
         >
@@ -316,7 +344,7 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
       {/* Small persistent confirmation line after loading. */}
       {status.kind === "done" && (
         <div
-          className="w-full max-w-2xl rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-[16px] text-green-900 flex items-start justify-between gap-3"
+          className="w-full rounded-[5px] border border-green-300 bg-green-50 px-4 py-3 text-[15px] text-green-900 flex items-start justify-between gap-3"
           data-testid="po-upload-done"
         >
           <span>
@@ -348,19 +376,19 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
       {/* ---- The PO Read-Out: verify table ---- */}
       {(status.kind === "readout" || status.kind === "loading") && readOut && (
         <div
-          className="rounded-lg border-2 border-blue-300 bg-white shadow-sm"
+          className="rounded-[5px] border border-gray-200 bg-white shadow-sm"
           data-testid="po-readout"
         >
-          <div className="px-5 py-4 border-b bg-blue-50 rounded-t-lg">
+          <div className="px-5 py-4 border-b border-gray-200 bg-gray-50 rounded-t-[5px]">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h3 className="text-[20px] font-semibold m-0">
+                <h3 className="text-[18px] font-semibold tracking-tight text-[#111111] m-0">
                   We read PO{" "}
                   <span className="font-mono">
                     {readOut.po_number || "(no number found)"}
                   </span>
                 </h3>
-                <p className="text-[16px] text-neutral-700 m-0 mt-1">
+                <p className="text-[15px] text-[#374151] m-0 mt-1">
                   Check every line before you continue. Fix quantities or
                   remove lines that don&apos;t belong.
                 </p>
@@ -370,7 +398,7 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
                   href={readOut.file_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[16px] text-blue-700 underline whitespace-nowrap"
+                  className="text-[15px] font-medium text-[#111111] underline underline-offset-2 whitespace-nowrap hover:text-[#E3000F]"
                 >
                   View original
                 </a>
@@ -381,9 +409,9 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="text-[14px] text-neutral-500 border-b">
+                <tr className={`${tableHeadClass} border-b border-gray-200`}>
                   <th className="px-4 py-2 font-medium">On your PO</th>
-                  <th className="px-4 py-2 font-medium w-24">Qty</th>
+                  <th className="px-4 py-2 font-medium w-24 text-right">Qty</th>
                   <th className="px-4 py-2 font-medium">Our matching part</th>
                   <th className="px-4 py-2 font-medium w-14">
                     <span className="sr-only">Remove</span>
@@ -394,17 +422,20 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
                 {activeRows.map((row) => {
                   const matched = !row.unmatched && row.variant
                   return (
-                    <tr key={row.rowId} className="border-b last:border-b-0 align-top">
+                    <tr
+                      key={row.rowId}
+                      className="border-b border-gray-100 last:border-b-0 align-top transition-colors motion-reduce:transition-none hover:bg-gray-50"
+                    >
                       <td className="px-4 py-3 max-w-[260px]">
                         <span
                           title={row.description}
-                          className="block text-[16px] text-neutral-800 truncate"
+                          className="block text-[15px] text-[#374151] truncate"
                         >
                           {row.description}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
-                        <Input
+                      <td className="px-4 py-3 text-right">
+                        <input
                           type="number"
                           min={1}
                           value={row.quantity}
@@ -413,21 +444,21 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
                             setRowQty(row.rowId, Number(e.target.value))
                           }
                           aria-label={`Quantity for ${row.description}`}
-                          className="w-20 h-12 text-[16px]"
+                          className={`${inputClass} w-20 text-right tabular-nums`}
                         />
                       </td>
                       <td className="px-4 py-3">
                         {matched ? (
                           <div className="flex flex-col gap-1">
                             <div>
-                              <span className="font-mono text-[16px] font-semibold">
+                              <span className={skuClass}>
                                 {row.variant!.sku}
                               </span>
-                              <span className="text-[15px] text-neutral-600 ml-2">
+                              <span className={`${captionClass} ml-2`}>
                                 {row.variant!.title}
                               </span>
                             </div>
-                            <div className="text-[16px] tabular-nums">
+                            <div className="text-[15px] tabular-nums text-[#374151]">
                               {row.variant!.unit_price != null
                                 ? `${fmt(row.variant!.unit_price)} each — our price applies`
                                 : "Price to be quoted"}
@@ -435,15 +466,15 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
                             {row.price_alarm &&
                               row.unit_price != null &&
                               row.variant!.unit_price != null && (
-                                <div className="text-[14px] font-semibold text-amber-800 bg-amber-50 border border-amber-300 rounded px-2 py-1 w-fit">
-                                  ⚠ PO price {fmt(row.unit_price)} is lower
+                                <div className={`${amberPillClass} px-2 py-1 w-fit`}>
+                                  PO price {fmt(row.unit_price)} is lower
                                   than our price {fmt(row.variant!.unit_price)}
                                 </div>
                               )}
                           </div>
                         ) : (
-                          <div className="text-[15px] font-semibold text-amber-800 bg-amber-50 border border-amber-300 rounded px-2 py-1 w-fit">
-                            NOT MATCHED — we&apos;ll send it as a quote, or
+                          <div className={`${amberPillClass} px-2 py-1 w-fit whitespace-normal`}>
+                            Not matched — we&apos;ll send it as a quote, or
                             remove this line and pick the part from the search
                             below
                           </div>
@@ -455,7 +486,7 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
                           onClick={() => removeRow(row.rowId)}
                           disabled={status.kind === "loading"}
                           aria-label={`Remove line ${row.description}`}
-                          className="w-10 h-10 flex items-center justify-center rounded border border-neutral-200 text-[18px] text-red-700 hover:bg-red-50 disabled:opacity-40"
+                          className="w-10 h-10 flex items-center justify-center rounded-[5px] border border-gray-300 text-[18px] text-[#E3000F] hover:bg-[rgba(227,0,15,0.06)] disabled:opacity-40"
                         >
                           ×
                         </button>
@@ -467,7 +498,7 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
                   <tr>
                     <td
                       colSpan={4}
-                      className="px-4 py-4 text-center text-[16px] text-neutral-500"
+                      className="px-4 py-8 text-center text-[15px] text-[#6b7280]"
                     >
                       All lines removed. Close this panel or upload a
                       different PO.
@@ -478,7 +509,7 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
             </table>
           </div>
 
-          <div className="px-5 py-4 border-t flex flex-col gap-3">
+          <div className="px-5 py-4 border-t border-gray-200 flex flex-col gap-3">
             {unmatchedRows.length > 0 && (
               <p className="text-[15px] text-amber-800 m-0">
                 {unmatchedRows.length} unmatched{" "}
@@ -487,27 +518,25 @@ export default function PoUpload({ currencyCode, onLoad }: Props) {
               </p>
             )}
             <div className="flex flex-wrap justify-end gap-3">
-              <Button
-                variant="secondary"
-                size="large"
+              <button
+                type="button"
                 onClick={dismissReadOut}
                 disabled={status.kind === "loading"}
-                className="h-12 px-6 text-[17px]"
+                className={`${btnSecondary} px-6`}
               >
                 Discard
-              </Button>
-              <Button
-                variant="primary"
-                size="large"
+              </button>
+              <button
+                type="button"
                 onClick={handleLoad}
                 disabled={status.kind === "loading" || activeRows.length === 0}
-                className="h-12 px-8 text-[18px]"
+                className={`${btnPrimary} px-8`}
                 data-testid="po-readout-load"
               >
                 {status.kind === "loading"
                   ? "Loading your parts…"
                   : "Load into Quick Order"}
-              </Button>
+              </button>
             </div>
           </div>
         </div>

@@ -9,9 +9,10 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { Button, toast } from "@medusajs/ui"
+import { toast } from "@medusajs/ui"
 import { convertToLocale } from "@lib/util/money"
 import { decideApproval, type Approval } from "@lib/data/dashboard"
+import { btnPrimary, btnSecondary, headingClass } from "../portal-ui"
 
 type Props = {
   approvals: Approval[]
@@ -49,17 +50,17 @@ const ApprovalsSection = ({ approvals }: Props) => {
 
   return (
     <section className="flex flex-col gap-4" data-testid="approvals-section">
-      <h2 className="text-xl-semi m-0">Approvals</h2>
-      <p className="text-[16px] text-neutral-600 m-0">
+      <h2 className={`${headingClass} m-0`}>Approvals</h2>
+      <p className="text-[15px] text-[#6b7280] m-0">
         These submissions from your team are waiting for your sign-off.
       </p>
-      <ul className="flex flex-col divide-y divide-neutral-100 border-y border-neutral-100">
+      <ul className="flex flex-col divide-y divide-gray-100 border-y border-gray-200">
         {pendingList.map((approval) => (
           <li
             key={approval.id}
             className="flex flex-col small:flex-row small:items-start justify-between gap-3 py-4"
           >
-            <div className="flex flex-col gap-1 text-[16px] text-neutral-700 min-w-0">
+            <div className="flex flex-col gap-1 text-[16px] text-[#374151] min-w-0">
               <div>
                 <span className="font-semibold">
                   {approval.submitter?.name ||
@@ -84,13 +85,13 @@ const ApprovalsSection = ({ approvals }: Props) => {
                 )}
               </div>
               {approval.cart?.po_number && (
-                <div className="text-[15px] text-neutral-600">
+                <div className="text-[14px] text-[#6b7280]">
                   PO number:{" "}
                   <span className="font-mono">{approval.cart.po_number}</span>
                 </div>
               )}
               {approval.cart?.items?.length ? (
-                <ul className="text-[15px] text-neutral-600 list-disc pl-5 m-0">
+                <ul className="text-[14px] text-[#6b7280] list-disc pl-5 m-0">
                   {approval.cart.items.map((item, idx) => (
                     <li key={idx}>
                       {item.quantity}× {item.variant_sku || item.title}
@@ -101,29 +102,29 @@ const ApprovalsSection = ({ approvals }: Props) => {
                   ))}
                 </ul>
               ) : (
-                <div className="text-[15px] text-neutral-500">
+                <div className="text-[14px] text-[#6b7280]">
                   Submission{" "}
                   <span className="font-mono">{approval.cart_id.slice(-8)}</span>
                 </div>
               )}
             </div>
             <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                className="h-12 px-5 text-[16px]"
+              <button
+                type="button"
+                className={btnSecondary}
                 disabled={busyId === approval.id}
                 onClick={() => decide(approval, "rejected")}
               >
                 Reject
-              </Button>
-              <Button
-                variant="primary"
-                className="h-12 px-5 text-[16px] bg-green-600 hover:bg-green-700"
+              </button>
+              <button
+                type="button"
+                className={btnPrimary}
                 disabled={busyId === approval.id}
                 onClick={() => decide(approval, "approved")}
               >
                 {busyId === approval.id ? "Working..." : "Approve"}
-              </Button>
+              </button>
             </div>
           </li>
         ))}

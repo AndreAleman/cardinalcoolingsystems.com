@@ -18,8 +18,14 @@
 */
 
 import { useEffect, useMemo, useState } from "react"
-import { Button, Input, Textarea } from "@medusajs/ui"
 import { HttpTypes } from "@medusajs/types"
+import {
+  amberPillClass,
+  btnPrimary,
+  btnSecondary,
+  captionClass,
+  inputClass,
+} from "../portal-ui"
 import { convertToLocale } from "@lib/util/money"
 import { usePortalCart } from "@lib/context/portal-cart-context"
 import type { CompanyLocation } from "@lib/data/dashboard"
@@ -256,7 +262,7 @@ export default function OrderReviewDrawer({
     const reason = lineQuoteOnlyReason.get(line.variantId)
     return (
       <li key={line.variantId} className="flex gap-3 px-6 py-4">
-        <div className="w-14 h-14 flex-shrink-0 rounded bg-neutral-100 overflow-hidden flex items-center justify-center">
+        <div className="w-12 h-12 flex-shrink-0 rounded-[5px] border border-gray-200 bg-gray-50 overflow-hidden flex items-center justify-center">
           {line.thumbnail ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -265,7 +271,7 @@ export default function OrderReviewDrawer({
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-xs text-neutral-400">—</span>
+            <span className="text-xs text-gray-400">—</span>
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -274,16 +280,16 @@ export default function OrderReviewDrawer({
             <button
               onClick={() => removeLine(line.variantId)}
               aria-label={`Remove ${line.sku}`}
-              className="text-neutral-400 hover:text-red-600 text-2xl leading-none"
+              className="text-gray-400 hover:text-[#E3000F] text-2xl leading-none"
             >
               ×
             </button>
           </div>
-          <p className="text-[14px] font-mono text-neutral-500 mt-0.5">
+          <p className="text-[14px] font-mono text-[#6b7280] mt-0.5">
             {line.sku}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center border rounded w-fit">
+            <div className="flex items-center border border-gray-300 rounded-[5px] w-fit">
               <button
                 onClick={() => updateQty(line.variantId, line.qty - 1)}
                 disabled={line.qty <= 1}
@@ -302,11 +308,9 @@ export default function OrderReviewDrawer({
               </button>
             </div>
             {reason ? (
-              <span className="text-[14px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-0.5">
-                Quote only — {reason}
-              </span>
+              <span className={amberPillClass}>Quote only — {reason}</span>
             ) : (
-              <span className="text-[16px] tabular-nums">
+              <span className="text-[16px] tabular-nums text-[#111111]">
                 {fmt((line.unitPrice ?? 0) * line.qty)}
               </span>
             )}
@@ -320,7 +324,7 @@ export default function OrderReviewDrawer({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/40 transition-opacity duration-300"
+        className="fixed inset-0 z-50 bg-black/40 transition-opacity duration-300 motion-reduce:transition-none"
         style={{ opacity: open ? 1 : 0, pointerEvents: open ? "auto" : "none" }}
         onClick={() => {
           if (view === "success") handleDone()
@@ -334,25 +338,25 @@ export default function OrderReviewDrawer({
         role="dialog"
         aria-modal="true"
         aria-label="Order review"
-        className="fixed top-0 right-0 h-full z-50 flex flex-col bg-white shadow-2xl transition-transform duration-300 ease-out"
+        className="fixed top-0 right-0 h-full z-50 flex flex-col bg-white shadow-2xl transition-transform duration-300 ease-out motion-reduce:transition-none"
         style={{
           width: "min(520px, 100vw)",
           transform: open ? "translateX(0)" : "translateX(100%)",
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
           <div className="flex items-center gap-3">
             {view === "form" && (
               <button
                 onClick={() => setView("items")}
                 aria-label="Back to items"
-                className="text-neutral-500 hover:text-neutral-900 text-xl"
+                className="text-gray-500 hover:text-[#111111] text-xl"
               >
                 ←
               </button>
             )}
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-xl font-semibold tracking-tight text-[#111111]">
               {view === "items" && "Review Order"}
               {view === "form" &&
                 (isQuotePath ? "Quote Request Details" : "Order Details")}
@@ -362,7 +366,7 @@ export default function OrderReviewDrawer({
           <button
             onClick={view === "success" ? handleDone : onClose}
             aria-label="Close"
-            className="text-neutral-500 hover:text-neutral-900 text-3xl leading-none"
+            className="text-gray-500 hover:text-[#111111] text-3xl leading-none"
           >
             ×
           </button>
@@ -373,8 +377,8 @@ export default function OrderReviewDrawer({
           <>
             <div className="flex-1 overflow-y-auto">
               {lines.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full p-8 text-center text-neutral-500">
-                  <p className="font-medium text-[18px]">
+                <div className="flex flex-col items-center justify-center h-full p-8 text-center text-[#6b7280]">
+                  <p className="font-medium text-[16px] text-[#374151]">
                     No items in your order yet.
                   </p>
                   <p className="text-[15px] mt-1">
@@ -386,13 +390,13 @@ export default function OrderReviewDrawer({
               )}
             </div>
             {lines.length > 0 && (
-              <div className="border-t px-6 py-4 flex flex-col gap-2">
+              <div className="border-t border-gray-200 px-6 py-4 flex flex-col gap-2">
                 {plan.payLines.length > 0 && (
                   <div className="flex justify-between text-[16px]">
-                    <span className="text-neutral-600">
+                    <span className="text-[#6b7280]">
                       Payable items ({plan.payLines.length})
                     </span>
-                    <span className="font-semibold tabular-nums">
+                    <span className="font-semibold tabular-nums text-[#111111]">
                       {fmt(plan.payableTotal)}
                     </span>
                   </div>
@@ -404,21 +408,20 @@ export default function OrderReviewDrawer({
                     sent as a Quote Request for pricing.
                   </p>
                 )}
-                <Button
-                  variant="primary"
-                  size="large"
+                <button
+                  type="button"
                   onClick={() => setView("form")}
-                  className="w-full h-12 text-[18px]"
+                  className={`${btnPrimary} w-full`}
                 >
                   Continue →
-                </Button>
-                <Button
-                  variant="secondary"
+                </button>
+                <button
+                  type="button"
                   onClick={onClose}
-                  className="w-full h-12 text-[18px]"
+                  className={`${btnSecondary} w-full`}
                 >
                   Keep editing
-                </Button>
+                </button>
               </div>
             )}
           </>
@@ -431,24 +434,24 @@ export default function OrderReviewDrawer({
             className="flex-1 flex flex-col overflow-hidden"
           >
             <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4">
-              <div className="rounded border border-neutral-200 bg-neutral-50 px-3 py-2 text-[15px] text-neutral-700">
+              <div className="rounded-[5px] border border-gray-200 bg-gray-50 px-3 py-2 text-[15px] text-[#374151]">
                 {lines.length} {lines.length === 1 ? "item" : "items"},{" "}
                 {totalUnits} total {totalUnits === 1 ? "unit" : "units"}
               </div>
 
-              <ul className="border rounded divide-y text-[15px]">
+              <ul className="border border-gray-200 rounded-[5px] divide-y divide-gray-100 text-[15px]">
                 {lines.map((line) => (
                   <li
                     key={line.variantId}
                     className="px-3 py-2 flex justify-between gap-3"
                   >
-                    <span className="font-mono text-neutral-700 truncate">
+                    <span className="font-mono text-[#374151] truncate">
                       {line.sku}
                     </span>
-                    <span className="text-neutral-600 whitespace-nowrap">
+                    <span className="text-[#6b7280] whitespace-nowrap tabular-nums">
                       × {line.qty}
                       {lineQuoteOnlyReason.get(line.variantId) && (
-                        <span className="ml-2 text-amber-700 font-semibold">
+                        <span className="ml-2 text-amber-700 font-medium">
                           quote
                         </span>
                       )}
@@ -458,7 +461,7 @@ export default function OrderReviewDrawer({
               </ul>
 
               {/* What will happen, in plain words. */}
-              <div className="rounded border border-blue-200 bg-blue-50 px-3 py-2 text-[15px] text-neutral-800">
+              <div className="rounded-[5px] border px-3 py-2 text-[15px] text-[#374151]" style={{ borderColor: "rgba(227,0,15,0.15)", backgroundColor: "rgba(227,0,15,0.04)" }}>
                 {plan.path === "invoice" &&
                   "Your order will be placed and Cardinal will bill your company by invoice."}
                 {plan.path === "deposit" &&
@@ -482,18 +485,18 @@ export default function OrderReviewDrawer({
               <div className="flex flex-col gap-1.5">
                 <label
                   htmlFor="po-number"
-                  className="text-[15px] font-semibold text-neutral-700"
+                  className="text-[15px] font-semibold text-[#374151]"
                 >
                   PO Number{" "}
                   {poRequired ? (
-                    <span className="text-red-600">*</span>
+                    <span className="text-[#E3000F]">*</span>
                   ) : (
-                    <span className="text-neutral-400 font-normal">
+                    <span className="text-gray-400 font-normal">
                       (optional)
                     </span>
                   )}
                 </label>
-                <Input
+                <input
                   id="po-number"
                   type="text"
                   required={poRequired}
@@ -503,7 +506,7 @@ export default function OrderReviewDrawer({
                     poRequired ? "Your purchase order number" : "If you have one"
                   }
                   disabled={submitting}
-                  className="h-12 text-[16px]"
+                  className={inputClass}
                 />
               </div>
               )}
@@ -513,21 +516,21 @@ export default function OrderReviewDrawer({
               <div className="flex flex-col gap-1.5">
                 <label
                   htmlFor="attn-to"
-                  className="text-[15px] font-semibold text-neutral-700"
+                  className="text-[15px] font-semibold text-[#374151]"
                 >
                   Attention to{" "}
-                  <span className="text-neutral-400 font-normal">
+                  <span className="text-gray-400 font-normal">
                     (optional)
                   </span>
                 </label>
-                <Input
+                <input
                   id="attn-to"
                   type="text"
                   value={attnTo}
                   onChange={(e) => setAttnTo(e.target.value)}
                   placeholder="Who should this go to? e.g. Mike R., Facilities"
                   disabled={submitting}
-                  className="h-12 text-[16px]"
+                  className={inputClass}
                 />
               </div>
               )}
@@ -543,7 +546,7 @@ export default function OrderReviewDrawer({
                     disabled={submitting}
                     countryCode={countryCode}
                   />
-                  <label className="flex items-center gap-2 text-[15px] text-neutral-700">
+                  <label className="flex items-center gap-2 text-[15px] text-[#374151]">
                     <input
                       type="checkbox"
                       checked={shipSameAsBill}
@@ -552,7 +555,7 @@ export default function OrderReviewDrawer({
                         setShipTo(e.target.checked ? null : defaultShipTo)
                       }}
                       disabled={submitting}
-                      className="rounded border-neutral-300 h-5 w-5"
+                      className="rounded border-gray-300 h-5 w-5 accent-[#E3000F]"
                     />
                     Ship to the same address
                   </label>
@@ -574,51 +577,48 @@ export default function OrderReviewDrawer({
               <div className="flex flex-col gap-1.5">
                 <label
                   htmlFor="order-notes"
-                  className="text-[15px] font-semibold text-neutral-700"
+                  className="text-[15px] font-semibold text-[#374151]"
                 >
                   Notes{" "}
-                  <span className="text-neutral-400 font-normal">
+                  <span className="text-gray-400 font-normal">
                     (optional)
                   </span>
                 </label>
-                <Textarea
+                <textarea
                   id="order-notes"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Anything else we should know — including parts you need that aren't in our catalog (part number + quantity) — we'll include them in your quote."
                   rows={3}
                   disabled={submitting}
-                  className="text-[16px]"
+                  className="rounded-[5px] border border-gray-300 bg-white px-3 py-2 text-[16px] text-[#111111] placeholder:text-gray-400 focus:outline-none focus:border-[#E3000F] focus:ring-2 focus:ring-[#E3000F]/15 disabled:opacity-50"
                 />
               </div>
               )}
 
               {error && (
-                <div className="rounded border border-red-300 bg-red-50 px-3 py-2 text-[15px] text-red-700">
+                <div className="rounded-[5px] border border-red-300 bg-red-50 px-3 py-2 text-[15px] text-red-700">
                   {error}
                 </div>
               )}
             </div>
 
-            <div className="border-t px-6 py-4 flex flex-col gap-2">
-              <Button
+            <div className="border-t border-gray-200 px-6 py-4 flex flex-col gap-2">
+              <button
                 type="submit"
-                variant="primary"
-                size="large"
                 disabled={submitting}
-                className="w-full h-12 text-[18px] bg-green-600 hover:bg-green-700"
+                className={`${btnPrimary} w-full`}
               >
                 {submitting ? "Submitting..." : submitLabel}
-              </Button>
-              <Button
+              </button>
+              <button
                 type="button"
-                variant="secondary"
                 onClick={() => setView("items")}
                 disabled={submitting}
-                className="w-full h-12 text-[18px]"
+                className={`${btnSecondary} w-full`}
               >
                 ← Back to items
-              </Button>
+              </button>
             </div>
           </form>
         )}
@@ -631,61 +631,59 @@ export default function OrderReviewDrawer({
             </div>
             <div className="flex flex-col gap-2">
               {snapshot.outcome.orderPlaced && (
-                <p className="text-[18px] font-semibold text-neutral-900">
+                <p className="text-[17px] font-semibold text-[#111111]">
                   {snapshot.outcome.orderPendingApproval
                     ? "Your order is waiting for your admin's approval."
                     : "Your order has been placed."}
                 </p>
               )}
               {snapshot.outcome.quoteSent && (
-                <p className="text-[18px] font-semibold text-neutral-900">
+                <p className="text-[17px] font-semibold text-[#111111]">
                   {snapshot.outcome.quotePendingApproval
                     ? "Your quote request is waiting for your admin's approval."
                     : "Your quote request was sent to Cardinal."}
                 </p>
               )}
               {snapshot.outcome.checkoutReady && (
-                <p className="text-[18px] font-semibold text-neutral-900">
+                <p className="text-[17px] font-semibold text-[#111111]">
                   Your in-stock items are ready to pay for at checkout.
                 </p>
               )}
             </div>
-            <div className="w-full rounded border bg-neutral-50 px-4 py-3 text-left text-[15px]">
+            <div className="w-full rounded-[5px] border border-gray-200 bg-gray-50 px-4 py-3 text-left text-[15px]">
               <div className="flex justify-between">
-                <span className="text-neutral-500">PO number</span>
+                <span className="text-[#6b7280]">PO number</span>
                 <span className="font-mono">
                   {snapshot.po || (
-                    <span className="text-neutral-400 italic">none</span>
+                    <span className="text-gray-400 italic">none</span>
                   )}
                 </span>
               </div>
               <div className="flex justify-between mt-1">
-                <span className="text-neutral-500">Items</span>
-                <span>{snapshot.itemCount}</span>
+                <span className="text-[#6b7280]">Items</span>
+                <span className="tabular-nums">{snapshot.itemCount}</span>
               </div>
               <div className="flex justify-between mt-1">
-                <span className="text-neutral-500">Total units</span>
-                <span>{snapshot.unitCount}</span>
+                <span className="text-[#6b7280]">Total units</span>
+                <span className="tabular-nums">{snapshot.unitCount}</span>
               </div>
             </div>
             {snapshot.outcome.checkoutReady ? (
-              <Button
-                variant="primary"
-                size="large"
+              <button
+                type="button"
                 onClick={onGoToCheckout}
-                className="w-full h-12 text-[18px] bg-green-600 hover:bg-green-700"
+                className={`${btnPrimary} w-full`}
               >
                 Continue to Checkout →
-              </Button>
+              </button>
             ) : (
-              <Button
-                variant="primary"
-                size="large"
+              <button
+                type="button"
                 onClick={handleDone}
-                className="w-full h-12 text-[18px]"
+                className={`${btnPrimary} w-full`}
               >
                 Done
-              </Button>
+              </button>
             )}
           </div>
         )}

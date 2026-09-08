@@ -17,6 +17,12 @@ import { convertToLocale } from "@lib/util/money"
 import type { PortalQuote } from "@lib/data/quotes"
 import type { Approval } from "@lib/data/dashboard"
 import QuoteStatusBadge from "./quote-status-badge"
+import {
+  btnSecondary,
+  emptyStateClass,
+  headingClass,
+  subheadingClass,
+} from "../portal-ui"
 
 type Props = {
   quotes: PortalQuote[]
@@ -40,32 +46,32 @@ function QuoteRow({ quote }: { quote: PortalQuote }) {
   const itemCount =
     order?.items?.reduce((acc: number, item: any) => acc + item.quantity, 0) ?? 0
   return (
-    <li className="flex flex-col small:flex-row small:items-center justify-between gap-2 py-3 border-b border-neutral-100 last:border-b-0">
+    <li className="flex flex-col small:flex-row small:items-center justify-between gap-2 py-3 border-b border-gray-100 last:border-b-0 transition-colors motion-reduce:transition-none hover:bg-gray-50">
       <div className="flex items-center gap-4 flex-wrap">
-        <span className="text-[16px] font-semibold">
+        <span className="text-[16px] font-semibold text-[#111111]">
           Quote #{order?.display_id ?? "—"}
         </span>
-        <span className="text-[15px] text-neutral-500">
+        <span className="text-[14px] text-[#6b7280]">
           {formatDate(quote.created_at)}
         </span>
         <QuoteStatusBadge status={quote.status} />
       </div>
       <div className="flex items-center gap-4">
-        <span className="text-[16px] tabular-nums">
+        <span className="text-[16px] tabular-nums text-[#111111]">
           {order?.total != null
             ? convertToLocale({
                 amount: order.total,
                 currency_code: order.currency_code ?? "usd",
               })
             : "—"}
-          <span className="text-neutral-500">
+          <span className="text-[#6b7280]">
             {" "}
             · {itemCount} {itemCount === 1 ? "item" : "items"}
           </span>
         </span>
         <LocalizedClientLink
           href={`/account/quotes/details/${quote.id}`}
-          className="inline-flex items-center h-12 px-5 rounded-md border border-neutral-300 text-[16px] font-medium hover:bg-neutral-50"
+          className={btnSecondary}
         >
           See details
         </LocalizedClientLink>
@@ -83,7 +89,7 @@ function Group({
 }) {
   return (
     <div className="mb-6">
-      <h3 className="text-[17px] font-semibold text-neutral-700 border-b border-neutral-200 pb-1 mb-1">
+      <h3 className={`${subheadingClass} border-b border-gray-200 pb-1 mb-1`}>
         {title}
       </h3>
       {children}
@@ -109,10 +115,10 @@ const QuotesSection = ({ quotes, pendingApprovals }: Props) => {
 
   return (
     <section className="flex flex-col" data-testid="quotes-section">
-      <h2 className="text-xl-semi mb-4">Quotes</h2>
+      <h2 className={`${headingClass} mb-4`}>Quotes</h2>
 
       {isEmpty && (
-        <p className="text-[16px] text-neutral-500">
+        <p className={emptyStateClass}>
           No quotes yet. Quote-only items from Quick Order will show up here.
         </p>
       )}
@@ -137,10 +143,10 @@ const QuotesSection = ({ quotes, pendingApprovals }: Props) => {
               return (
                 <li
                   key={a.id}
-                  className="flex flex-col small:flex-row small:items-center justify-between gap-2 py-3 border-b border-neutral-100 last:border-b-0"
+                  className="flex flex-col small:flex-row small:items-center justify-between gap-2 py-3 border-b border-gray-100 last:border-b-0"
                 >
                   <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="text-[16px] text-neutral-700">
+                    <span className="text-[16px] text-[#374151]">
                       {a.cart?.request_type === "quote"
                         ? "Quote request"
                         : "Order"}{" "}
@@ -153,7 +159,7 @@ const QuotesSection = ({ quotes, pendingApprovals }: Props) => {
                       waiting for your admin&apos;s approval
                     </span>
                     {a.cart?.items?.length ? (
-                      <span className="text-[15px] text-neutral-500 truncate">
+                      <span className="text-[14px] text-[#6b7280] truncate">
                         {a.cart.items
                           .map(
                             (item) =>
@@ -165,19 +171,19 @@ const QuotesSection = ({ quotes, pendingApprovals }: Props) => {
                       </span>
                     ) : null}
                     {a.cart?.po_number && (
-                      <span className="text-[15px] text-neutral-500">
+                      <span className="text-[14px] text-[#6b7280]">
                         PO: <span className="font-mono">{a.cart.po_number}</span>
                       </span>
                     )}
                   </div>
-                  <span className="text-[16px] tabular-nums whitespace-nowrap">
+                  <span className="text-[16px] tabular-nums whitespace-nowrap text-[#111111]">
                     {a.cart?.total != null && a.cart.total > 0
                       ? convertToLocale({
                           amount: a.cart.total,
                           currency_code: a.cart.currency_code || "usd",
                         })
                       : "—"}
-                    <span className="text-neutral-500">
+                    <span className="text-[#6b7280]">
                       {" "}
                       · {itemCount} {itemCount === 1 ? "item" : "items"}
                     </span>

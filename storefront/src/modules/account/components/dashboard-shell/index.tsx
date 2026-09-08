@@ -23,14 +23,17 @@ const DashboardShell = async ({ membership, children }: DashboardShellProps) => 
     <div data-testid="dashboard-shell">
       {membership && (
         <div
-          className="flex items-baseline justify-between mb-6 pb-4 border-b border-gray-200"
+          className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200"
           data-testid="company-header"
           data-value={membership.company.id}
         >
-          <h1 className="text-2xl-semi" data-testid="company-name">
+          <h1
+            className="text-2xl font-semibold tracking-tight text-[#111111] m-0"
+            data-testid="company-name"
+          >
             {membership.company.name}
           </h1>
-          <span className="text-small-regular text-ui-fg-subtle uppercase">
+          <span className="inline-flex items-center rounded-[5px] border border-gray-300 bg-gray-50 px-2.5 py-1 text-[12px] font-medium uppercase tracking-wider text-[#6b7280]">
             {membership.role}
           </span>
         </div>
@@ -48,7 +51,7 @@ const DashboardShell = async ({ membership, children }: DashboardShellProps) => 
           )}
           {children}
           {teamData && (
-            <div className="mt-10">
+            <div className="mt-12">
               <TeamSection
                 team={teamData.team}
                 invites={teamData.invites}
