@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { btnSecondary } from "../portal-ui"
 
 type Props = { code: string }
 
@@ -20,15 +21,22 @@ const WelcomeCodeBanner = ({ code }: Props) => {
 
   return (
     <div
-      className="rounded-lg border border-gray-200 bg-gray-50 p-4 flex flex-col small:flex-row small:items-center justify-between gap-3"
+      className="rounded-[5px] border p-4 flex flex-col small:flex-row small:items-center justify-between gap-3"
+      style={{
+        borderColor: "rgba(227, 0, 15, 0.15)",
+        backgroundColor: "rgba(227, 0, 15, 0.04)",
+      }}
       data-testid="welcome-code-banner"
     >
       <div>
-        <p className="text-small-regular text-ui-fg-subtle m-0">
+        <p
+          className="text-[12px] font-medium uppercase tracking-widest m-0"
+          style={{ color: "#E3000F" }}
+        >
           Your welcome code — 10% off your first order, any size, works once
         </p>
         <p
-          className="text-2xl font-semibold tracking-wider m-0"
+          className="text-2xl font-semibold tracking-wider m-0 mt-0.5 text-[#111111]"
           data-testid="welcome-code"
           data-value={code}
         >
@@ -38,7 +46,7 @@ const WelcomeCodeBanner = ({ code }: Props) => {
       <button
         type="button"
         onClick={copy}
-        className="px-4 py-2 rounded-md bg-gray-900 text-white text-small-regular"
+        className={btnSecondary}
         data-testid="copy-welcome-code"
       >
         {copied ? "Copied" : "Copy code"}

@@ -2,6 +2,7 @@ import { OpenInvite, TeamMember, TeamMemberRole } from "@lib/data/companies"
 import InviteForm from "./invite-form"
 import ApprovalSettingToggle from "./approval-setting-toggle"
 import { displayName } from "@lib/util/display-name"
+import { headingClass } from "../portal-ui"
 
 type Props = {
   team: TeamMember[]
@@ -14,24 +15,24 @@ type Props = {
 /* Who is on the Company, who has been invited, and a box to invite more. */
 const TeamSection = ({ team, invites, role, requiresAdminApproval }: Props) => (
   <section className="flex flex-col gap-4" data-testid="team-section">
-    <h2 className="text-xl-semi m-0">Team</h2>
+    <h2 className={`${headingClass} m-0`}>Team</h2>
     {role === "admin" && (
       <ApprovalSettingToggle initialValue={Boolean(requiresAdminApproval)} />
     )}
-    <ul className="flex flex-col divide-y divide-gray-200 border-y border-gray-200">
+    <ul className="flex flex-col divide-y divide-gray-100 border-y border-gray-200">
       {team.map((m) => (
-        <li key={m.id} className="flex justify-between py-2 text-small-regular" data-testid="team-member">
+        <li key={m.id} className="flex justify-between items-center py-2.5 text-[15px] text-[#374151]" data-testid="team-member">
           <span>
             {displayName(m.customer)}
-            <span className="text-ui-fg-subtle"> · {m.customer?.email}</span>
+            <span className="text-[#6b7280]"> · {m.customer?.email}</span>
           </span>
-          <span className="uppercase text-ui-fg-subtle">{m.role}</span>
+          <span className="text-[12px] uppercase tracking-wider text-[#6b7280]">{m.role}</span>
         </li>
       ))}
       {invites.map((i) => (
-        <li key={i.id} className="flex justify-between py-2 text-small-regular text-ui-fg-subtle" data-testid="open-invite">
+        <li key={i.id} className="flex justify-between items-center py-2.5 text-[15px] text-[#6b7280]" data-testid="open-invite">
           <span>{i.email}</span>
-          <span>Invited</span>
+          <span className="text-[12px] uppercase tracking-wider">Invited</span>
         </li>
       ))}
     </ul>

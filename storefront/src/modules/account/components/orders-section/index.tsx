@@ -9,7 +9,15 @@
 */
 
 import { useMemo } from "react"
-import { Button, toast } from "@medusajs/ui"
+import { toast } from "@medusajs/ui"
+import {
+  amberPillClass,
+  btnSecondary,
+  captionClass,
+  emptyStateClass,
+  headingClass,
+  skuClass,
+} from "../portal-ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/money"
 import { usePortalCart } from "@lib/context/portal-cart-context"
@@ -75,49 +83,45 @@ const OrdersSection = ({ orders, variantInfo }: Props) => {
   return (
     <section className="flex flex-col gap-6" data-testid="orders-section">
       <div>
-        <h2 className="text-xl-semi mb-4">Order Again</h2>
+        <h2 className={`${headingClass} mb-4`}>Order Again</h2>
         {orderAgainRows.length === 0 ? (
-          <p className="text-[16px] text-neutral-500 m-0">
+          <p className={`${emptyStateClass} m-0`}>
             Parts from your past orders will show up here for one-click
             reordering.
           </p>
         ) : (
-          <ul className="flex flex-col divide-y divide-neutral-100 border-y border-neutral-100">
+          <ul className="flex flex-col divide-y divide-gray-100 border-y border-gray-200">
             {orderAgainRows.map((row) => {
               const info = variantInfo[row.variantId]
               return (
                 <li
                   key={row.variantId}
-                  className="flex items-center justify-between gap-3 py-2"
+                  className="flex items-center justify-between gap-3 py-2 transition-colors motion-reduce:transition-none hover:bg-gray-50"
                 >
                   <div className="min-w-0">
-                    <span className="font-mono text-[16px]">
-                      {row.sku ?? "—"}
-                    </span>
-                    <span className="text-[15px] text-neutral-500 ml-2 truncate">
+                    <span className={skuClass}>{row.sku ?? "—"}</span>
+                    <span className={`${captionClass} ml-2 truncate`}>
                       {row.title}
                     </span>
                   </div>
                   <div className="flex items-center gap-4 whitespace-nowrap">
                     {info?.unitPrice && info.unitPrice > 0 ? (
-                      <span className="text-[16px] tabular-nums">
+                      <span className="text-[16px] tabular-nums text-[#111111]">
                         {convertToLocale({
                           amount: info.unitPrice,
                           currency_code: info.currencyCode ?? "usd",
                         })}
                       </span>
                     ) : (
-                      <span className="text-[14px] text-amber-700 font-semibold">
-                        Quote only
-                      </span>
+                      <span className={amberPillClass}>Quote only</span>
                     )}
-                    <Button
-                      variant="secondary"
-                      className="h-12 px-5 text-[16px]"
+                    <button
+                      type="button"
+                      className={btnSecondary}
                       onClick={() => addToOrder(row.variantId, row.title)}
                     >
                       Add to order
-                    </Button>
+                    </button>
                   </div>
                 </li>
               )
@@ -127,36 +131,36 @@ const OrdersSection = ({ orders, variantInfo }: Props) => {
       </div>
 
       <div>
-        <h2 className="text-xl-semi mb-4">Recent Orders</h2>
+        <h2 className={`${headingClass} mb-4`}>Recent Orders</h2>
         {orders.length === 0 ? (
-          <p className="text-[16px] text-neutral-500 m-0">
+          <p className={`${emptyStateClass} m-0`}>
             No orders yet — your first order will show up here.
           </p>
         ) : (
-          <ul className="flex flex-col divide-y divide-neutral-100 border-y border-neutral-100">
+          <ul className="flex flex-col divide-y divide-gray-100 border-y border-gray-200">
             {orders.slice(0, MAX_ORDERS_SHOWN).map((order) => (
               <li
                 key={order.id}
-                className="flex flex-col small:flex-row small:items-center justify-between gap-2 py-3"
+                className="flex flex-col small:flex-row small:items-center justify-between gap-2 py-3 transition-colors motion-reduce:transition-none hover:bg-gray-50"
               >
                 <div className="flex items-center gap-4 flex-wrap">
-                  <span className="text-[16px] font-semibold">
+                  <span className="text-[16px] font-semibold text-[#111111]">
                     Order #{order.display_id}
                   </span>
-                  <span className="text-[15px] text-neutral-500">
+                  <span className="text-[14px] text-[#6b7280]">
                     {formatDate(order.created_at)}
                   </span>
-                  <span className="text-[14px] uppercase tracking-wide text-neutral-500">
+                  <span className="text-[13px] uppercase tracking-wider text-[#6b7280]">
                     {order.status}
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-[16px] tabular-nums">
+                  <span className="text-[16px] tabular-nums text-[#111111]">
                     {convertToLocale({
                       amount: order.total,
                       currency_code: order.currency_code ?? "usd",
                     })}
-                    <span className="text-neutral-500">
+                    <span className="text-[#6b7280]">
                       {" "}
                       · {order.items?.length ?? 0}{" "}
                       {(order.items?.length ?? 0) === 1 ? "item" : "items"}
@@ -164,7 +168,7 @@ const OrdersSection = ({ orders, variantInfo }: Props) => {
                   </span>
                   <LocalizedClientLink
                     href={`/account/orders/details/${order.id}`}
-                    className="inline-flex items-center h-12 px-5 rounded-md border border-neutral-300 text-[16px] font-medium hover:bg-neutral-50"
+                    className={btnSecondary}
                   >
                     Details
                   </LocalizedClientLink>

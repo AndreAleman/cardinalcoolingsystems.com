@@ -18,9 +18,9 @@
     | null  ← nothing chosen yet
 */
 
-import { Input } from "@medusajs/ui"
 import { HttpTypes } from "@medusajs/types"
 import type { CompanyLocation } from "@lib/data/dashboard"
+import { inputClass } from "../portal-ui"
 
 export type AddressPickerValue =
   | { kind: "location"; id: string }
@@ -103,12 +103,12 @@ export default function AddressPicker({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-[15px] font-semibold text-neutral-700">
+      <label className="text-[15px] font-semibold text-[#374151]">
         {label}
       </label>
 
       <select
-        className="rounded border border-neutral-300 bg-white px-3 h-12 text-[16px] focus:outline-none focus:ring-2 focus:ring-neutral-300"
+        className="rounded-[5px] border border-gray-300 bg-white px-3 h-12 text-[16px] text-[#111111] focus:outline-none focus:border-[#E3000F] focus:ring-2 focus:ring-[#E3000F]/15 disabled:opacity-50"
         value={
           value?.kind === "location"
             ? `${LOCATION_PREFIX}${value.id}`
@@ -157,7 +157,7 @@ export default function AddressPicker({
           const site = locations.find((l) => l.id === value.id)
           if (!site) return null
           return (
-            <p className="text-[14px] text-neutral-600 m-0">
+            <p className="text-[14px] text-[#6b7280] m-0">
               Ships to {site.name}: {site.address_1}
               {site.address_2 ? `, ${site.address_2}` : ""}, {site.city},{" "}
               {site.state} {site.zip}
@@ -166,65 +166,80 @@ export default function AddressPicker({
         })()}
 
       {isNewMode && (
-        <div className="rounded border border-neutral-200 bg-neutral-50 p-3 grid grid-cols-2 gap-2">
-          <Input
+        <div className="rounded-[5px] border border-gray-200 bg-gray-50 p-3 grid grid-cols-2 gap-2">
+          <input
+            type="text"
             placeholder="First name"
+            className={inputClass}
             value={newAddress.first_name ?? ""}
             onChange={(e) => setNewAddressField("first_name", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="Last name"
+            className={inputClass}
             value={newAddress.last_name ?? ""}
             onChange={(e) => setNewAddressField("last_name", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="Company (optional)"
-            className="col-span-2"
+            className={`${inputClass} col-span-2`}
             value={newAddress.company ?? ""}
             onChange={(e) => setNewAddressField("company", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="Address line 1"
-            className="col-span-2"
+            className={`${inputClass} col-span-2`}
             value={newAddress.address_1}
             onChange={(e) => setNewAddressField("address_1", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="Address line 2 (optional)"
-            className="col-span-2"
+            className={`${inputClass} col-span-2`}
             value={newAddress.address_2 ?? ""}
             onChange={(e) => setNewAddressField("address_2", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="City"
+            className={inputClass}
             value={newAddress.city}
             onChange={(e) => setNewAddressField("city", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="State"
+            className={inputClass}
             value={newAddress.province ?? ""}
             onChange={(e) => setNewAddressField("province", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="ZIP / Postal code"
+            className={inputClass}
             value={newAddress.postal_code}
             onChange={(e) => setNewAddressField("postal_code", e.target.value)}
             disabled={disabled}
           />
-          <Input
+          <input
+            type="text"
             placeholder="Phone (optional)"
+            className={inputClass}
             value={newAddress.phone ?? ""}
             onChange={(e) => setNewAddressField("phone", e.target.value)}
             disabled={disabled}
           />
-          <label className="col-span-2 flex items-center gap-2 text-[15px] text-neutral-700 mt-1">
+          <label className="col-span-2 flex items-center gap-2 text-[15px] text-[#374151] mt-1">
             <input
               type="checkbox"
               checked={saveFlag}
@@ -236,7 +251,7 @@ export default function AddressPicker({
                 })
               }
               disabled={disabled}
-              className="rounded border-neutral-300 h-5 w-5"
+              className="rounded border-gray-300 h-5 w-5 accent-[#E3000F]"
             />
             Save this address for future orders
           </label>

@@ -33,10 +33,10 @@ const ApprovalSettingToggle = ({ initialValue }: Props) => {
 
   return (
     <label
-      className="flex items-center justify-between gap-4 rounded border border-neutral-200 bg-neutral-50 px-4 py-3"
+      className="flex items-center justify-between gap-4 rounded-[5px] border border-gray-200 bg-gray-50 px-4 py-3"
       data-testid="approval-setting-toggle"
     >
-      <span className="text-[16px] text-neutral-700">
+      <span className="text-[15px] text-[#374151]">
         Orders from members need admin approval
       </span>
       <input
@@ -44,7 +44,7 @@ const ApprovalSettingToggle = ({ initialValue }: Props) => {
         checked={enabled}
         onChange={toggle}
         disabled={isPending}
-        className="h-6 w-6 rounded border-neutral-300 accent-green-600"
+        className="h-6 w-6 rounded border-gray-300 accent-[#E3000F]"
         aria-label="Require admin approval for member orders"
       />
     </label>
