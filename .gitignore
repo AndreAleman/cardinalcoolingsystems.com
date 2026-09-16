@@ -9,3 +9,4 @@ dump.rdb
 accurate-frontend/
 reference/
 zero-price-skus.csv
+/*.csv

@@ -51,7 +51,7 @@ const PO_SCHEMA = {
           sku_or_description: {
             type: "string",
             description:
-              "The line's FULL description text including every part number in it, verbatim",
+              "The line's FULL description text, verbatim and in the document's original language, including every part number in it. When the document has separate SIZE / MATERIAL / MODEL columns, append them to the description text (e.g. '… — 3\", 304').",
           },
           quantity: { type: "number" },
           unit_price: {
@@ -119,7 +119,13 @@ export const extractPoDocumentStep = createStep(
             documentBlock,
             {
               type: "text",
-              text: "Read this purchase order. Return the PO number and every line item. Keep each line's description VERBATIM and complete — part numbers often hide inside the description text and must not be dropped or normalized.",
+              text: [
+                "Read this purchasing document. It may be a formal purchase order, a quote request, or a spec/accessories table, in ANY language (keep descriptions in the original language — do not translate).",
+                "Return the PO number (null if the document has none) and every line item.",
+                "Keep each line's description VERBATIM and complete — part numbers often hide inside the description text and must not be dropped or normalized.",
+                "When the table has separate SIZE, MATERIAL, or MODEL columns, append those values to that line's description text so nothing is lost (e.g. 'Ferrule-14AMP L=28.6MM — 3\", 304').",
+                "Quantities come from the QTY/quantity column; unit_price is null when the document shows no prices.",
+              ].join(" "),
             },
           ],
         },
