@@ -11,8 +11,9 @@ const PendingCompany = ({ company }: Props) => {
         <h2 className="text-xl-semi mb-2">We&apos;re reviewing {company.name}</h2>
         <p className="text-base-regular text-ui-fg-base m-0">
           Your company account is set up. Cardinal is checking it now — usually
-          within one business day. You&apos;ll get an email the moment your
-          Dashboard is unlocked. Until then you can keep shopping the site as usual.
+          within one business day. You&apos;ll get an email with your 10%-off
+          welcome code the moment your Dashboard is unlocked. Until then you
+          can keep shopping the site as usual.
         </p>
       </div>
       {company.welcome_code && <WelcomeCodeBanner code={company.welcome_code} />}

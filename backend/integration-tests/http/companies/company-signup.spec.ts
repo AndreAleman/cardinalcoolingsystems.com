@@ -9,11 +9,16 @@ import {
   generateStoreHeaders,
 } from "../../utils/store";
 import { customerHeaders, TEST_JWT_SECRET } from "../../utils/customer-auth";
+import { approveDomains } from "../../utils/approved-domains";
+import { COMPANY_MODULE } from "../../../src/modules/company";
 
 jest.setTimeout(120 * 1000);
 
 /*
-  Ticket #2 — Sign up → Pending Company + Welcome Code.
+  Ticket #2 — Sign up → Company + Welcome Code.
+
+  ADR-0007: only an Approved Domain (acme.test here) is born Approved
+  with a Welcome Code. Any other domain is born Pending with no code.
 
   A signed-in customer with no Company posts a company name. One
   workflow creates the Pending Company, makes them its admin Team
@@ -35,6 +40,7 @@ medusaIntegrationTestRunner({
       const container = getContainer();
       const publishableKey = await generatePublishableKey(container);
       baseHeaders = generateStoreHeaders({ publishableKey });
+      await approveDomains(container);
 
       const customerService: ICustomerModuleService = container.resolve(
         Modules.CUSTOMER
@@ -54,10 +60,10 @@ medusaIntegrationTestRunner({
         expect(res.status).toBe(401);
       });
 
-      it("creates an APPROVED Company with instant portal access, makes the customer its admin, and issues a Welcome Code", async () => {
-        // Instant access (2026-09-05): cold-email traffic converts in one
-        // sitting — the account works the moment it's created. Cardinal
-        // still gets the signup email and can Decline junk in admin.
+      it("an Approved Domain gets an APPROVED Company with instant portal access, admin role, and a Welcome Code", async () => {
+        // Instant access (2026-09-05, narrowed by ADR-0007): outreach
+        // traffic converts in one sitting. Cardinal still gets the
+        // signup email and can Decline in admin.
         const res = await api.post(
           "/store/companies",
           { name: "Acme CDU", phone: "555-0100" },
@@ -78,6 +84,74 @@ medusaIntegrationTestRunner({
         const me = await api.get("/store/companies/me", headersFor(customer.id));
         expect(me.data.company.status).toBe("approved");
         expect(me.data.company.welcome_code).toBe(res.data.welcome_code);
+      });
+
+      describe("a domain that is not on the Approved Domain list (ADR-0007)", () => {
+        const signupAs = async (email: string) => {
+          const customerService: ICustomerModuleService = getContainer().resolve(
+            Modules.CUSTOMER
+          );
+          const stranger = await customerService.createCustomers({
+            email,
+            first_name: "Sam",
+            last_name: "Stranger",
+          });
+          const res = await api.post(
+            "/store/companies",
+            { name: "Stranger Co", phone: "555-0199" },
+            headersFor(stranger.id)
+          );
+          return { stranger, res };
+        };
+
+        it("is born PENDING with no Welcome Code, and the Dashboard stays locked", async () => {
+          const { stranger, res } = await signupAs("sam@prospect.test");
+          expect(res.status).toBe(201);
+          expect(res.data.company.status).toBe("pending");
+          expect(res.data.welcome_code).toBeNull();
+          expect(res.data.role).toBe("admin");
+
+          const me = await api.get("/store/companies/me", headersFor(stranger.id));
+          expect(me.data.company.status).toBe("pending");
+          expect(me.data.company.welcome_code).toBeNull();
+
+          const dash = await api
+            .get("/store/dashboard", headersFor(stranger.id))
+            .catch((e) => e.response);
+          expect(dash.status).toBe(403);
+          expect(dash.data.code).toBe("company_pending");
+
+          // No promotion was minted for an unvetted signup.
+          const promotionService: IPromotionModuleService = getContainer().resolve(
+            Modules.PROMOTION
+          );
+          expect(await promotionService.listPromotions({})).toHaveLength(0);
+        });
+
+        it("matches the domain case-insensitively", async () => {
+          const { res } = await signupAs("Sam@ACME.test");
+          expect(res.data.company.status).toBe("approved");
+        });
+
+        it("does not treat a subdomain or a lookalike as listed", async () => {
+          const a = await signupAs("sam@mail.acme.test");
+          expect(a.res.data.company.status).toBe("pending");
+        });
+
+        it("a free-mail address is PENDING even if its domain got listed", async () => {
+          const companyService = getContainer().resolve(COMPANY_MODULE) as any;
+          await companyService.createApprovedDomains({ domain: "gmail.com", source: "import" });
+          const { res } = await signupAs("sam@gmail.com");
+          expect(res.data.company.status).toBe("pending");
+        });
+
+        it("an empty list means everyone is PENDING", async () => {
+          const companyService = getContainer().resolve(COMPANY_MODULE) as any;
+          const all = await companyService.listApprovedDomains({});
+          await companyService.deleteApprovedDomains(all.map((d: any) => d.id));
+          const { res } = await signupAs("sam@acme.test");
+          expect(res.data.company.status).toBe("pending");
+        });
       });
 
       it("the Welcome Code is a 10% promotion, usable once, expiring in 30 days, scoped to the Company", async () => {

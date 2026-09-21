@@ -18,8 +18,12 @@ _Avoid_: Employee, user, contact
 What a Team Member may do: `member`, `manager`, or `admin`. Today every new Team Member is `admin`; the other two exist for later.
 
 **Pending Company**:
-A Company that has signed up but Cardinal has not yet approved. Its Team Members can sign in but the Dashboard is locked.
+A Company that has signed up but Cardinal has not yet approved. Its Team Members can sign in but the Dashboard is locked. A signup is born Pending unless its email domain is an Approved Domain. A Pending Company has no Welcome Code yet and has been emailed nothing.
 _Avoid_: Unverified, inactive
+
+**Approved Domain**:
+An email domain whose signups get instant access: the Company is born Approved. The list is the companies Cardinal is actively emailing, plus the domain of any Company Cardinal approves; declining a Company removes its domain. Exact domain, never a free-mail provider (ADR-0007).
+_Avoid_: Whitelist, allowed URL, trusted domain
 
 **Approved Company**:
 A Company that Cardinal has switched on. Its Dashboard is unlocked. Never flipped back.
@@ -138,7 +142,7 @@ How often a Spending Limit starts over: never, daily, weekly, monthly, or yearly
 ### Incentives
 
 **Welcome Code**:
-A 10%-off code a Company receives on signup. One per Company, works once, any order size, expires in 30 days.
+A 10%-off code a Company receives when it becomes Approved: at signup for an Approved Domain, otherwise when Cardinal approves it. One per Company, works once, any order size, expires 30 days after issue.
 
 **Win-Back Code**:
 A 10%-off code sent to a Company that has not ordered in 60 days, valid on the next Order of $200 or more.
