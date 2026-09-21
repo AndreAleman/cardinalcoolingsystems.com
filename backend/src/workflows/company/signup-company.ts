@@ -2,11 +2,13 @@ import { createRemoteLinkStep } from "@medusajs/medusa/core-flows";
 import {
   createWorkflow,
   transform,
+  when,
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk";
 import { Modules } from "@medusajs/framework/utils";
 import { COMPANY_MODULE } from "../../modules/company";
 import { validateNotTeamMemberStep } from "./steps/validate-not-team-member";
+import { resolveSignupStatusStep } from "./steps/resolve-signup-status";
 import { createPendingCompanyStep } from "./steps/create-pending-company";
 import { updateCustomerPhoneStep } from "./steps/update-customer-phone";
 import { createAdminTeamMemberStep } from "./steps/create-admin-team-member";
@@ -22,12 +24,17 @@ export type SignupCompanyInput = {
 
 export type SignupCompanyOutput = {
   company: { id: string; name: string; status: string };
-  welcome: { code: string; ends_at: string };
+  // Only an instantly-approved signup gets its Welcome Code now; a
+  // Pending Company gets it when Cardinal approves (ADR-0007).
+  welcome?: { code: string; ends_at: string } | null;
 };
 
 /*
-  Signup: Pending Company + admin Team Member + Customer Group +
-  Welcome Code, in one transaction. Emails are best-effort at the end.
+  Signup: Company + admin Team Member + Customer Group in one
+  transaction. An Approved Domain is born Approved and gets its Welcome
+  Code and welcome email at once; anyone else is born Pending, gets no
+  code and no email to their (unvetted) address, and Cardinal is asked
+  to decide (ADR-0007). Emails are best-effort at the end.
 */
 // Explicit generics: the inferred type is not portable under pnpm and
 // breaks declaration emit in `medusa build`.
@@ -40,10 +47,13 @@ export const signupCompanyWorkflow = createWorkflow<
   function (input: SignupCompanyInput) {
     validateNotTeamMemberStep({ customer_id: input.customer.id });
 
+    const access = resolveSignupStatusStep({ email: input.customer.email });
+
     const company = createPendingCompanyStep({
       name: input.name,
       email: input.customer.email,
       phone: input.phone,
+      status: access.status,
     });
 
     updateCustomerPhoneStep({
@@ -70,18 +80,24 @@ export const signupCompanyWorkflow = createWorkflow<
     ]);
     createRemoteLinkStep(links);
 
-    const welcome = issueWelcomeCodeStep({
-      company_id: company.id,
-      company_name: input.name,
-      customer_group_id: group.id,
-    });
+    const welcome = when("signup-is-instant", { access }, (d) => d.access.status === "approved").then(
+      function () {
+        return issueWelcomeCodeStep({
+          company_id: company.id,
+          company_name: input.name,
+          customer_group_id: group.id,
+        });
+      }
+    );
 
-    notifyCompanySignedUpStep({
-      company: company,
-      customer: input.customer,
-      welcome_code: welcome.code,
-      ends_at: welcome.ends_at,
-    });
+    const notice = transform({ company, input, access, welcome }, (d) => ({
+      company: { id: d.company.id, name: d.company.name },
+      customer: d.input.customer,
+      status: d.access.status,
+      welcome_code: d.welcome?.code ?? null,
+      ends_at: d.welcome?.ends_at ?? null,
+    }));
+    notifyCompanySignedUpStep(notice);
 
     return new WorkflowResponse({ company, welcome });
   }

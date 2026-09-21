@@ -7,9 +7,9 @@ type Input = {
   email: string;
   phone?: string;
   currency_code?: string;
-  /* Instant access (2026-09-05): signups default to approved so
-     cold-email traffic converts in one sitting. Cardinal can Decline
-     junk in admin; declined companies lose the Dashboard. */
+  /* Decided by resolveSignupStatusStep (ADR-0007): Approved Domains
+     get instant access, everyone else waits for Cardinal. Omitted =
+     pending, the safe default. */
   status?: "pending" | "approved";
 };
 
@@ -22,7 +22,7 @@ export const createPendingCompanyStep = createStep(
       email: input.email,
       phone: input.phone,
       currency_code: input.currency_code ?? "usd",
-      status: input.status ?? "approved",
+      status: input.status ?? "pending",
     });
     return new StepResponse(company, company.id);
   },

@@ -2,6 +2,7 @@ import { Modules } from "@medusajs/framework/utils";
 import { COMPANY_MODULE } from "../../src/modules/company";
 import { generatePublishableKey, generateStoreHeaders } from "./store";
 import { customerHeaders } from "./customer-auth";
+import { approveDomains } from "./approved-domains";
 
 /*
   Shared world for order-form / quote specs: store headers, region,
@@ -56,6 +57,7 @@ export async function seedOrderFormWorld({
     last_name: "Alpha",
   });
 
+  await approveDomains(container);
   const company = (
     await api.post("/store/companies", { name: "Alpha Cooling", phone: "555-0101" }, headersOf(ada))
   ).data.company;

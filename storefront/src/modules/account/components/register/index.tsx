@@ -25,8 +25,9 @@ const Register = ({ setCurrentView }: Props) => {
         Create your account
       </h1>
       <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Your company dashboard unlocks the moment you sign up — your
-        prices, live stock, one-page ordering, and a 10%-off welcome code.
+        Your company dashboard gives you your prices, live stock, one-page
+        ordering, and a 10%-off welcome code. Most accounts are activated
+        right away. Others are reviewed within one business day.
       </p>
       <form className="w-full flex flex-col" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">
@@ -52,6 +53,9 @@ const Register = ({ setCurrentView }: Props) => {
             autoComplete="email"
             data-testid="email-input"
           />
+          <p className="text-small-regular text-ui-fg-subtle m-0 -mt-1">
+            Use your work email for the fastest approval.
+          </p>
           <Input
             label="Password"
             name="password"

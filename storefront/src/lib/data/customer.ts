@@ -30,9 +30,10 @@ export const updateCustomer = cache(async function (
 
 /*
   "Request an account": every new account is a membership request.
-  Phone and company name are required — the Pending Company is created
-  right after the customer, so Cardinal can accept or reject it and the
-  buyer lands on the waiting screen with their Welcome Code.
+  Phone and company name are required — the Company is created right
+  after the customer. An Approved Domain lands straight in the
+  Dashboard with a Welcome Code; anyone else lands on the waiting
+  screen until Cardinal approves them (ADR-0007).
 */
 export async function signup(_currentState: unknown, formData: FormData) {
   const password = formData.get("password") as string

@@ -7,13 +7,17 @@ import { EmailTemplates } from "../../../modules/email-notifications/templates";
 type Input = {
   company: { id: string; name: string };
   customer: { email: string; first_name?: string | null };
-  welcome_code: string;
-  ends_at: string;
+  status: "approved" | "pending";
+  welcome_code: string | null;
+  ends_at: string | null;
 };
 
 /*
-  Best-effort: a mail outage must never fail a signup. Two emails —
-  the Welcome Code to the buyer, "new Company, go approve it" to Cardinal.
+  Best-effort: a mail outage must never fail a signup. Cardinal is
+  always told. The buyer is only emailed when the signup was instantly
+  approved — a Pending signup's address is unvetted, and mailing a
+  discount code to whatever address a bot typed would burn the sending
+  reputation our outreach depends on (ADR-0007).
 */
 export const notifyCompanySignedUpStep = createStep(
   "notify-company-signed-up",
@@ -26,7 +30,9 @@ export const notifyCompanySignedUpStep = createStep(
       logger.info("Notification module not configured; skipping signup emails");
       return new StepResponse(null);
     }
-    const sends = [
+    const sends: Promise<unknown>[] = [];
+    if (input.status === "approved" && input.welcome_code && input.ends_at) {
+      sends.push(
       notification.createNotifications({
         to: input.customer.email,
         channel: "email",
@@ -37,7 +43,10 @@ export const notifyCompanySignedUpStep = createStep(
           welcome_code: input.welcome_code,
           ends_at: input.ends_at,
         },
-      }),
+      })
+      );
+    }
+    sends.push(
       notification.createNotifications({
         to: CARDINAL_NOTIFY_EMAIL,
         channel: "email",
@@ -47,9 +56,10 @@ export const notifyCompanySignedUpStep = createStep(
           company_name: input.company.name,
           email: input.customer.email,
           first_name: input.customer.first_name ?? "",
+          status: input.status,
         },
-      }),
-    ];
+      })
+    );
     const results = await Promise.allSettled(sends);
     for (const r of results) {
       if (r.status === "rejected") {

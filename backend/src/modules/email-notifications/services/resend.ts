@@ -122,6 +122,18 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         return "Your request was approved"
       case EmailTemplates.REQUEST_REJECTED:
         return "Your request was rejected"
+      case EmailTemplates.COMPANY_SIGNUP_ADMIN: {
+        const name = (data as any)?.company_name ?? "a company"
+        return (data as any)?.status === "approved"
+          ? `New signup (auto-approved): ${name}`
+          : `Needs your approval: ${name}`
+      }
+      case EmailTemplates.COMPANY_WELCOME:
+        return "Welcome to Cardinal — your company dashboard and 10% code"
+      case EmailTemplates.COMPANY_DECIDED:
+        return (data as any)?.status === "approved"
+          ? "Your company dashboard is unlocked"
+          : "About your Cardinal company account"
       case EmailTemplates.PASSWORD_RESET:
         return "Reset your Cardinal password"
       default:

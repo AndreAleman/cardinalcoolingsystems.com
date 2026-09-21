@@ -9,9 +9,9 @@ import { signupCompanyWorkflow } from "../../../workflows/company/signup-company
 import { StoreSignupCompanyType } from "./validators";
 
 /*
-  POST /store/companies — a signed-in customer creates their Pending
-  Company and becomes its admin Team Member. Returns the Welcome Code
-  so the storefront can show it immediately.
+  POST /store/companies — a signed-in customer creates their Company
+  and becomes its admin Team Member. An Approved Domain is approved on
+  the spot and gets its Welcome Code back; anyone else is Pending.
 */
 export const POST = async (
   req: AuthenticatedMedusaRequest<StoreSignupCompanyType>,
@@ -46,6 +46,7 @@ export const POST = async (
   return res.status(201).json({
     company,
     role: ctx?.role,
-    welcome_code: result.welcome.code,
+    // Null for a Pending Company — its code is issued at approval.
+    welcome_code: result.welcome?.code ?? null,
   });
 };

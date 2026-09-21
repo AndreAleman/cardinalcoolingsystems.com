@@ -12,6 +12,7 @@ import {
 } from "../../utils/store";
 import { customerHeaders, TEST_JWT_SECRET } from "../../utils/customer-auth";
 import { adminHeaders, createAdminUser } from "../../utils/admin";
+import { approveDomains } from "../../utils/approved-domains";
 
 jest.setTimeout(120 * 1000);
 
@@ -107,6 +108,7 @@ medusaIntegrationTestRunner({
         last_name: "Alpha",
       });
 
+      await approveDomains(getContainer());
       company = (
         await api.post("/store/companies", { name: "Alpha Cooling", phone: "555-0101" }, headersOf(ada))
       ).data.company;
