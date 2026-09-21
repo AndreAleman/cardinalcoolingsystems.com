@@ -3,6 +3,8 @@ import { Modules } from "@medusajs/framework/utils";
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
 import { CARDINAL_NOTIFY_EMAIL } from "../../../lib/constants";
 import { EmailTemplates } from "../../../modules/email-notifications/templates";
+import { hit } from "../../../lib/rate-limit";
+import { CARDINAL_SIGNUP_MAIL_CAP, mailCapVerdict } from "../../../utils/abuse-policy";
 
 type Input = {
   company: { id: string; name: string };
@@ -46,7 +48,14 @@ export const notifyCompanySignedUpStep = createStep(
       })
       );
     }
-    sends.push(
+    // A flood must cost Cardinal one notice, not hundreds of emails.
+    // Every Company is still listed in Medusa Admin. Limiter down → send.
+    const count = await hit("mail:cardinal-signup", CARDINAL_SIGNUP_MAIL_CAP, logger);
+    const verdict = count === null ? "send" : mailCapVerdict(count);
+    if (verdict === "drop") {
+      logger.warn(`Signup email cap reached; Cardinal not emailed about ${input.company.id}`);
+    }
+    if (verdict !== "drop") sends.push(
       notification.createNotifications({
         to: CARDINAL_NOTIFY_EMAIL,
         channel: "email",
@@ -57,6 +66,7 @@ export const notifyCompanySignedUpStep = createStep(
           email: input.customer.email,
           first_name: input.customer.first_name ?? "",
           status: input.status,
+          flood: verdict === "send_flood_notice",
         },
       })
     );

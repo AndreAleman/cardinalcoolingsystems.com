@@ -1,12 +1,14 @@
 "use client"
 
 import { useState, FormEvent } from "react"
+import { useBotGuard } from "@modules/common/components/bot-guard"
 import { captureEvent, identifyUser } from "@lib/util/posthog"
 
 // Footer email-capture form. Reuses the existing /store/contact lead-capture
 // endpoint (which emails the team) so signups reach the same inbox as other
 // leads without any new backend infrastructure.
 export default function NewsletterForm() {
+  const guard = useBotGuard()
   const [email, setEmail] = useState("")
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
 
@@ -25,6 +27,7 @@ export default function NewsletterForm() {
             "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
           },
           body: JSON.stringify({
+            ...(await guard.values()),
             name: "Newsletter",
             lastName: "Signup",
             email,
@@ -32,6 +35,8 @@ export default function NewsletterForm() {
           }),
         }
       )
+
+      guard.reset()
 
       if (!res.ok) throw new Error("Subscribe failed")
 
@@ -82,6 +87,7 @@ export default function NewsletterForm() {
           Something went wrong — please try again.
         </p>
       )}
+      {guard.field}
     </form>
   )
 }

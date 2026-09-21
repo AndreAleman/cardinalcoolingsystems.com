@@ -11,6 +11,8 @@ export interface CompanySignupAdminProps {
   first_name: string
   /* 'approved' = Approved Domain, instant access; 'pending' = needs Cardinal. */
   status?: 'approved' | 'pending'
+  /* True on the one email sent when the hourly signup-email cap is passed. */
+  flood?: boolean
   preview?: string
 }
 
@@ -19,7 +21,7 @@ export const isCompanySignupAdminData = (data: any): data is CompanySignupAdminP
 
 export const CompanySignupAdminTemplate: React.FC<CompanySignupAdminProps> & {
   PreviewProps?: CompanySignupAdminProps
-} = ({ company_id, company_name, email, first_name, status = 'pending', preview }) => {
+} = ({ company_id, company_name, email, first_name, status = 'pending', flood = false, preview }) => {
   const instant = status === 'approved'
   const backendUrl = process.env.BACKEND_URL || 'http://localhost:9000'
   return (
@@ -33,6 +35,11 @@ export const CompanySignupAdminTemplate: React.FC<CompanySignupAdminProps> & {
           ? 'Their email domain is on your outreach list, so they have dashboard access already. Decline them in admin if this looks wrong.'
           : 'Their email domain is not on your outreach list. They cannot use the dashboard, and have been sent nothing, until you approve them.'}
       </Text>
+      {flood && (
+        <Text>
+          <strong>Signup volume is unusually high.</strong> This is the last signup email for the next hour, so your inbox is not flooded. Every signup is still listed in Medusa Admin under Companies. If this looks like bots, decline them there.
+        </Text>
+      )}
       <Text>
         <Link href={`${backendUrl}/app/companies/${company_id}`}>Open it in Medusa Admin</Link>
       </Text>

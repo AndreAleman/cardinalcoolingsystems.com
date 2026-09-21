@@ -6,6 +6,7 @@ import Input from "@modules/common/components/input"
 import { LOGIN_VIEW } from "@modules/account/templates/login-template"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
+import BotGuard from "@modules/common/components/bot-guard"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { signup } from "@lib/data/customer"
 
@@ -100,6 +101,7 @@ const Register = ({ setCurrentView }: Props) => {
           </LocalizedClientLink>
           .
         </span>
+        <BotGuard />
         <SubmitButton className="w-full mt-6" data-testid="register-button">
           Request an account
         </SubmitButton>
