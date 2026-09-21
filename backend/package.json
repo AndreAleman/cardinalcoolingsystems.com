@@ -59,6 +59,7 @@
     "csv-parse": "^6.1.0",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.1",
+    "ioredis": "5.8.2",
     "medusajs-launch-utils": "^0.0.16",
     "minio": "^8.0.3",
     "next": "^15.1.11",

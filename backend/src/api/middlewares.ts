@@ -19,6 +19,12 @@ import { adminQuotesMiddlewares } from "./admin/quotes/middlewares"
 import { storeApprovalsMiddlewares } from "./store/approvals/middlewares"
 import { adminApprovalsMiddlewares } from "./admin/approvals/middlewares"
 import { adminOrdersMiddlewares } from "./admin/orders/middlewares"
+import {
+  honeypot,
+  rateLimit,
+  requireStorefront,
+  requireTurnstile,
+} from "./middlewares/abuse-guard"
 
 // Constant-time compare so the token check doesn't leak length/contents.
 function safeEqual(a: string, b: string): boolean {
@@ -87,7 +93,34 @@ export default defineMiddlewares({
       // Attachments arrive base64-encoded in the JSON body (10MB raw cap in
       // the validator), so the default body size limit is far too small.
       bodyParser: { sizeLimit: "20mb" },
-      middlewares: [validateAndTransformBody(ContactFormSchema)],
+      // Bot protection runs BEFORE validation: limit, then the trap
+      // (calm 200, nothing sent), then the Turnstile challenge.
+      middlewares: [
+        rateLimit("contact"),
+        honeypot,
+        requireTurnstile,
+        validateAndTransformBody(ContactFormSchema),
+      ],
+    },
+    {
+      // Core Medusa route. Signup is storefront-only and challenged: the
+      // publishable key is public, so without this a script can register
+      // accounts straight against the backend.
+      matcher: "/auth/customer/emailpass/register",
+      methods: ["POST"],
+      middlewares: [requireStorefront, rateLimit("register"), requireTurnstile],
+    },
+    {
+      // Core Medusa route: the second step of signup.
+      matcher: "/store/customers",
+      methods: ["POST"],
+      middlewares: [requireStorefront],
+    },
+    {
+      // Core Medusa route: password guessing.
+      matcher: "/auth/customer/emailpass",
+      methods: ["POST"],
+      middlewares: [rateLimit("login")],
     },
     {
       // Authenticated admin tool: one payload → packing slip + PO PDFs + Stripe

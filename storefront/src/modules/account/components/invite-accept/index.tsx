@@ -4,6 +4,7 @@ import { useFormState } from "react-dom"
 import Input from "@modules/common/components/input"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
+import BotGuard from "@modules/common/components/bot-guard"
 import { acceptInviteSignup } from "@lib/data/customer"
 import { InvitePreview } from "@lib/data/companies"
 
@@ -36,6 +37,7 @@ const InviteAccept = ({ token, invite, signedIn, signedInEmail }: Props) => {
             This invite was sent to {invite.email}. Sign out and open the link again to accept it as that person.
           </p>
         )}
+        <BotGuard />
         <SubmitButton className="w-full mt-2" data-testid="accept-invite-button">
           {signedIn ? "Accept invite" : "Create account & join"}
         </SubmitButton>

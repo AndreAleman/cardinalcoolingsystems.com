@@ -7,6 +7,7 @@ import { StoreSignupCompanySchema } from "./validators";
 import { ensureCompanyApproved } from "../../middlewares/ensure-company-approved";
 import { StoreInviteSchema } from "../dashboard/invites/validators";
 import { StoreFavoriteSchema } from "../dashboard/favorites/validators";
+import { rateLimit, requireStorefront } from "../../middlewares/abuse-guard";
 
 const dashboardGate = [authenticate("customer", ["session", "bearer"]), ensureCompanyApproved];
 
@@ -42,6 +43,9 @@ export const companyMiddlewares: MiddlewareRoute[] = [
     matcher: "/store/companies",
     methods: ["POST"],
     middlewares: [
+      // Bot protection: storefront-only, then per-buyer-IP limit.
+      requireStorefront,
+      rateLimit("company"),
       authenticate("customer", ["session", "bearer"]),
       validateAndTransformBody(StoreSignupCompanySchema),
     ],
