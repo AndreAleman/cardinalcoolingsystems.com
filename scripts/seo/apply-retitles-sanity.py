@@ -4,7 +4,8 @@ Run: python3 scripts/seo/apply-retitles-sanity.py [--dry-run]  (reads SANITY_API
 import json, os, sys, urllib.request, urllib.parse, pathlib
 HERE = pathlib.Path(__file__).parent; ROOT = HERE.parent.parent
 PID, DS = "kgdlucjs", "production"; API = f"https://{PID}.api.sanity.io/v2024-01-01/data"
-tok = os.environ.get("SANITY_API_WRITE_TOKEN") or next(l.split("=",1)[1].strip().strip('"') for l in (ROOT/"storefront/.env.local").read_text().splitlines() if l.startswith("SANITY_API_WRITE_TOKEN="))
+ENV_FILES = [ROOT / "storefront/.env.local", ROOT.parent / "cardinalcoolingsystems.com/storefront/.env.local"]  # worktrees lack the gitignored .env.local
+tok = os.environ.get("SANITY_API_WRITE_TOKEN") or next((l.split("=", 1)[1].strip().strip('"') for f in ENV_FILES if f.exists() for l in f.read_text().splitlines() if l.startswith("SANITY_API_WRITE_TOKEN=")), None) or sys.exit("missing SANITY_API_WRITE_TOKEN")
 dry = "--dry-run" in sys.argv
 q = urllib.parse.quote("*[_type=='post']{_id,title,'slug':slug.current}")
 posts = json.load(urllib.request.urlopen(urllib.request.Request(f"{API}/query/{DS}?query={q}", headers={"Authorization": f"Bearer {tok}"}), timeout=60))["result"]

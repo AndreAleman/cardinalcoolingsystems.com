@@ -4,11 +4,14 @@ Reads credentials from backend/.env when env vars are unset."""
 import json, os, sys, urllib.request, pathlib
 HERE = pathlib.Path(__file__).parent; ROOT = HERE.parent.parent
 B = os.environ.get("MEDUSA_BACKEND_URL", "https://backend-production-04a8.up.railway.app")
+ENV_FILES = [ROOT / "backend/.env", ROOT.parent / "cardinalcoolingsystems.com/backend/.env"]  # worktrees lack the gitignored .env
 def env(k):
     if os.environ.get(k): return os.environ[k]
-    for line in (ROOT / "backend/.env").read_text().splitlines():
-        if line.startswith(k + "="): return line.split("=", 1)[1].strip().strip('"')
-    sys.exit(f"missing {k}")
+    for f in ENV_FILES:
+        if not f.exists(): continue
+        for line in f.read_text().splitlines():
+            if line.startswith(k + "="): return line.split("=", 1)[1].strip().strip('"')
+    sys.exit(f"missing {k}: set it in the environment or in {ENV_FILES[0]}")
 dry = "--dry-run" in sys.argv
 def call(path, body=None, tok=None):
     req = urllib.request.Request(B + path, data=json.dumps(body).encode() if body else None,
