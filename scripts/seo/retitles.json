@@ -1,0 +1,852 @@
+[
+ {
+  "path": "categories/fittings",
+  "cur_title": "Sanitary Fittings Supplier | 304 & 316L, 3-A Certified",
+  "kw": "sanitary fittings",
+  "title": "Sanitary Fittings | 304 & 316L Stainless, Tri-Clamp & Weld",
+  "h1": "Sanitary Fittings",
+  "action": "Retitle + rewrite",
+  "owner": "Cardinal",
+  "note": "Top-level page. You rank 55 on a blog post instead; this page must own it. Add spec table + FAQ."
+ },
+ {
+  "path": "categories/clamp-fittings",
+  "cur_title": "Sanitary Clamp Fittings | Stainless Steel Tri Clamp",
+  "kw": "tri clamp fittings",
+  "title": "Tri-Clamp Fittings | Sanitary Stainless Steel, 1/2\" to 12\"",
+  "h1": "Tri-Clamp Fittings",
+  "action": "Retitle + rewrite",
+  "owner": "Cardinal",
+  "note": "Gap: sani #14, S&O #7 for 'tri clamp'. Current title leads with 'Sanitary Clamp Fittings' (no volume)."
+ },
+ {
+  "path": "categories/clamps",
+  "cur_title": "Sanitary Clamps | Stainless Steel Tri Clamp Fittings",
+  "kw": "sanitary clamps",
+  "title": "Sanitary Clamps | Tri-Clamp Heavy Duty, Bolted & Wing Nut",
+  "h1": "Sanitary Tri-Clamp Clamps",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "You rank 57. Also targets 'tri clover clamp' 480."
+ },
+ {
+  "path": "categories/clamp-gaskets",
+  "cur_title": "Clamp Gaskets | Cardinal Cooling Systems",
+  "kw": "tri clamp gaskets",
+  "title": "Tri-Clamp Gaskets | PTFE, EPDM, Viton, Silicone",
+  "h1": "Tri-Clamp Gaskets",
+  "action": "Retitle + rewrite",
+  "owner": "Cardinal",
+  "note": "Current title has no keyword. Add material-vs-fluid table (glycol/PG25). Targets 'ptfe tri clamp gasket' 210."
+ },
+ {
+  "path": "categories/clamp-ferrules",
+  "cur_title": "Sanitary Clamp Ferrules | 304 & 316L Tri-Clamp",
+  "kw": "tri clamp ferrule",
+  "title": "Tri-Clamp Ferrules | Weld, Short & Long, 304/316L",
+  "h1": "Tri-Clamp Ferrules",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Gap term; you don't rank."
+ },
+ {
+  "path": "categories/tubes",
+  "cur_title": "Stainless Steel Sanitary Tubing Supplier | Fast Shipping",
+  "kw": "stainless steel tubing",
+  "title": "Stainless Steel Tubing | Sanitary 304 & 316L, A270, Sizes 1/2\" to 12\"",
+  "h1": "Stainless Steel Sanitary Tubing",
+  "action": "Retitle + size pages",
+  "owner": "Cardinal",
+  "note": "Biggest term in the set. Also 'sanitary tubes' 210 (rank 51), 'sanitary stainless steel tube' 170 (rank 44)."
+ },
+ {
+  "path": "categories/valves",
+  "cur_title": "Stainless Steel Valves Supplier | Fast Shipping",
+  "kw": "sanitary valves",
+  "title": "Sanitary Valves | Stainless Ball, Butterfly & Check, Tri-Clamp",
+  "h1": "Sanitary Valves",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "You rank 83\u201389. 'Stainless Steel Valves Supplier | Fast Shipping' targets nothing."
+ },
+ {
+  "path": "categories/sanitary-ball-valves",
+  "cur_title": "Sanitary Ball Valves | Stainless Steel Ball Valves",
+  "kw": "sanitary ball valve",
+  "title": "Sanitary Ball Valves | Tri-Clamp, 3-Way & Encapsulated, 316L",
+  "h1": "Sanitary Ball Valves",
+  "action": "Retitle + rewrite",
+  "owner": "Cardinal",
+  "note": "Rank 104. Also 'tri clamp ball valve' 90, '3 way sanitary ball valve' 30 (rank 41\u201346)."
+ },
+ {
+  "path": "categories/butterfly-valves",
+  "cur_title": "Sanitary Butterfly Valves Manufacturer | Fast Shipping",
+  "kw": "sanitary butterfly valve",
+  "title": "Sanitary Butterfly Valves | Tri-Clamp & Weld End, EPDM/Viton",
+  "h1": "Sanitary Butterfly Valves",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Rank 69. Drop 'Manufacturer' (you're a distributor) and 'Fast Shipping'."
+ },
+ {
+  "path": "categories/check-valves",
+  "cur_title": "Sanitary Check Valves | Stainless Steel & Ball Check",
+  "kw": "sanitary check valve",
+  "title": "Sanitary Check Valves | Ball Check & Tri-Clamp, 304/316L",
+  "h1": "Sanitary Check Valves",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Rank 75. Also 'types of check valves' 880 gap \u2192 add a short section."
+ },
+ {
+  "path": "categories/clamp-check-valves",
+  "cur_title": "Clamp Check Valves | Sanitary Tri Clamp Valves",
+  "kw": "tri clamp check valve",
+  "title": "Tri-Clamp Check Valves | Sanitary Ball Check",
+  "h1": "Tri-Clamp Check Valves",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Rank 43; 'clamp valve' 70 at rank 20 \u2014 your best position on the site."
+ },
+ {
+  "path": "categories/eccentric-reducers",
+  "cur_title": "Eccentric Reducers | Stainless Steel & Pipe Reducers",
+  "kw": "eccentric reducer",
+  "title": "Eccentric Reducers | Sanitary Butt Weld, 304 & 316L",
+  "h1": "Eccentric Reducers (Butt Weld)",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Gap: sani #4. You rank 78 for 'concentric reducer' on THIS page (wrong page). Fix cross-targeting."
+ },
+ {
+  "path": "categories/concentric-reducers",
+  "cur_title": "Concentric Reducers | Stainless Steel & Pipe Reducers",
+  "kw": "concentric reducer",
+  "title": "Concentric Reducers | Sanitary Butt Weld, 304 & 316L",
+  "h1": "Concentric Reducers (Butt Weld)",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Make this page own 'concentric reducer'; empirical foods bought 31W4P reducers repeatedly."
+ },
+ {
+  "path": "categories/clamp-concentric-reducers",
+  "cur_title": "Concentric Reducers | Stainless Steel & Pipe Reducers",
+  "kw": "tri clamp concentric reducer",
+  "title": "Tri-Clamp Concentric Reducers | Sanitary 304 & 316L",
+  "h1": "Tri-Clamp Concentric Reducers",
+  "action": "Retitle (dedupe)",
+  "owner": "Cardinal",
+  "note": "Currently the SAME title as the weld page. Duplicate titles split the signal."
+ },
+ {
+  "path": "categories/clamp-eccentric-reducers",
+  "cur_title": "Eccentric Reducers | Stainless Steel & Pipe Reducers",
+  "kw": "tri clamp eccentric reducer",
+  "title": "Tri-Clamp Eccentric Reducers | Sanitary 304 & 316L",
+  "h1": "Tri-Clamp Eccentric Reducers",
+  "action": "Retitle (dedupe)",
+  "owner": "Cardinal",
+  "note": "Same duplicate-title problem."
+ },
+ {
+  "path": "categories/45-clamp-elbows",
+  "cur_title": "45 Degree Elbows | Stainless Steel & Welded Elbows",
+  "kw": "tri clamp 45 elbow",
+  "title": "Tri-Clamp 45\u00b0 Elbows | Sanitary Stainless",
+  "h1": "Tri-Clamp 45\u00b0 Elbows",
+  "action": "Retitle (dedupe)",
+  "owner": "Cardinal",
+  "note": "Identical title to /45-elbows today."
+ },
+ {
+  "path": "categories/45-elbows",
+  "cur_title": "45 Degree Elbows | Stainless Steel & Welded Elbows",
+  "kw": "45 degree elbow",
+  "title": "45\u00b0 Elbows | Sanitary Butt Weld, 304 & 316L",
+  "h1": "45\u00b0 Butt Weld Elbows",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Gap: sani #4 for '45 degree elbow'."
+ },
+ {
+  "path": "categories/90-elbows",
+  "cur_title": "90 Degree Elbows | Stainless Steel & Steel Elbows",
+  "kw": "90 degree elbow stainless",
+  "title": "90\u00b0 Elbows | Sanitary Butt Weld, 304 & 316L",
+  "h1": "90\u00b0 Butt Weld Elbows",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Rank 56 'steel 90 degree elbow', 82 'pipe elbow 90'. Drop '& Steel Elbows' (you don't sell carbon steel)."
+ },
+ {
+  "path": "categories/90-clamp-elbows",
+  "cur_title": "90\u00b0 Clamp Elbows | Sanitary Stainless Steel Elbows",
+  "kw": "tri clamp elbow",
+  "title": "Tri-Clamp 90\u00b0 Elbows | Sanitary Stainless",
+  "h1": "Tri-Clamp 90\u00b0 Elbows",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Rank 67; '90 degree pipe clamp' 210 at rank 64."
+ },
+ {
+  "path": "categories/reducing-tees",
+  "cur_title": "Reducing Tees | Cardinal Cooling Systems",
+  "kw": "reducing tee",
+  "title": "Reducing Tees | Sanitary Butt Weld & Tri-Clamp, 304/316L",
+  "h1": "Reducing Tees",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Gap: sani #9. Current title has no keyword."
+ },
+ {
+  "path": "categories/tees",
+  "cur_title": "Tees | Cardinal Cooling Systems",
+  "kw": "sanitary tee",
+  "title": "Sanitary Tees | Straight, Reducing, Short Outlet \u2014 Weld & Clamp",
+  "h1": "Sanitary Tees",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "'sanitary t' 720 gap. Current title is just 'Tees'."
+ },
+ {
+  "path": "categories/clamp-tees",
+  "cur_title": "Clamp Tees | Cardinal Cooling Systems",
+  "kw": "tri clamp tee",
+  "title": "Tri-Clamp Tees | Straight, Reducing & Short Outlet",
+  "h1": "Tri-Clamp Tees",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Rank 52 on a product page; category should own it."
+ },
+ {
+  "path": "categories/straight-tees",
+  "cur_title": "Straight Tees | Cardinal Cooling Systems",
+  "kw": "straight tee stainless",
+  "title": "Straight Tees | Sanitary Butt Weld, 304 & 316L",
+  "h1": "Butt Weld Straight Tees",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": null
+ },
+ {
+  "path": "categories/caps",
+  "cur_title": "Sanitary End Caps | 304 & 316L, Clamp or Weld",
+  "kw": "sanitary end cap",
+  "title": "Sanitary End Caps | Weld & Tri-Clamp, 304/316L",
+  "h1": "Sanitary End Caps",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Rank 45\u201349. 'weld on pipe cap' 590 gap \u2192 mention weld caps."
+ },
+ {
+  "path": "categories/clamp-caps",
+  "cur_title": "Stainless End Caps | Tri Clamp & Sanitary Caps",
+  "kw": "tri clamp cap",
+  "title": "Tri-Clamp End Caps | Solid Sanitary Caps",
+  "h1": "Tri-Clamp End Caps",
+  "action": "Retitle (dedupe)",
+  "owner": "Cardinal",
+  "note": "Overlaps /caps; make this one clamp-specific."
+ },
+ {
+  "path": "categories/clamp-adapters",
+  "cur_title": "Tri Clamp Adapters | NPT & Sanitary Pipe Adapters",
+  "kw": "tri clamp adapter",
+  "title": "Tri-Clamp Adapters | NPT, BSPP, Hose Barb & Weld",
+  "h1": "Tri-Clamp Adapters",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Also 'tri clamp flange' 110 via flange adapters."
+ },
+ {
+  "path": "categories/adapters",
+  "cur_title": "Sanitary Adapters | Tri-Clamp to NPT, BSPP, Hose",
+  "kw": "sanitary adapters",
+  "title": "Sanitary Adapters | Tri-Clamp to NPT, BSPP & Hose",
+  "h1": "Sanitary Adapters",
+  "action": "Keep",
+  "owner": "Cardinal",
+  "note": "Title already fine."
+ },
+ {
+  "path": "categories/tube-flanges",
+  "cur_title": "Tube Flanges | Stainless Steel Flange Fittings",
+  "kw": "tri clamp flange",
+  "title": "Tri-Clamp Flanges & Tube Flanges | Stainless",
+  "h1": "Tube Flanges",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "'flange adapter' 720 gap (sani #4)."
+ },
+ {
+  "path": "categories/plate-flanges",
+  "cur_title": "Steel Flange Plate | Plate Flanges for Piping Systems",
+  "kw": "plate flange",
+  "title": "Plate Flanges | Stainless Steel, Sanitary Tube OD",
+  "h1": "Plate Flanges",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Gap: sani #8. Current title 'Steel Flange Plate' is backwards."
+ },
+ {
+  "path": "categories/pipe-flanges",
+  "cur_title": "Pipe Flanges | Stainless Steel & Industrial Flange Fittings",
+  "kw": "stainless flanges",
+  "title": "Stainless Steel Pipe Flanges | 150#, Slip-On & Weld",
+  "h1": "Stainless Steel Pipe Flanges",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Gap: 'ss flanges'/'stainless flanges' 880."
+ },
+ {
+  "path": "categories/hangers",
+  "cur_title": "Sanitary Pipe Hangers & Supports | 304/316L SS | Fast Ship",
+  "kw": "sanitary tube hangers",
+  "title": "Sanitary Tube Hangers | Hex Hangers with Inserts, 304/316L",
+  "h1": "Sanitary Tube Hangers",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "'hex hangers' 50 at rank 52\u201369; 'add-a-hanger' 70."
+ },
+ {
+  "path": "categories/sanitary-butt-weld-fittings",
+  "cur_title": "Sanitary Butt Weld Fittings | 304 & 316L, 3-A Certified",
+  "kw": "butt weld fittings",
+  "title": "Butt Weld Fittings | Sanitary Stainless, 304 & 316L",
+  "h1": "Sanitary Butt Weld Fittings",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "'butt weld pipe fittings' 590 gap (sani #14); 'weld fitting' 720."
+ },
+ {
+  "path": "categories/ball-valves",
+  "cur_title": "Ball Valves | Cardinal Cooling Systems",
+  "kw": "stainless steel ball valve",
+  "title": "Stainless Steel Ball Valves | Threaded, Socket Weld & Sanitary",
+  "h1": "Stainless Steel Ball Valves",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Ranks 87\u201391 for 'hvac ball valve'. Parent page for the three ball-valve categories."
+ },
+ {
+  "path": "categories/threaded-ball-valves",
+  "cur_title": "Threaded Ball Valves | Stainless Steel & NPT Valves",
+  "kw": "threaded ball valve stainless",
+  "title": "Threaded Ball Valves | NPT, 316 Stainless",
+  "h1": "Threaded Ball Valves",
+  "action": "Keep",
+  "owner": "Cardinal",
+  "note": null
+ },
+ {
+  "path": "categories/socket-weld-ball-valves",
+  "cur_title": "Socket Weld Ball Valves | Industrial & Stainless Steel",
+  "kw": "socket weld ball valve",
+  "title": "Socket Weld Ball Valves | 316 Stainless",
+  "h1": "Socket Weld Ball Valves",
+  "action": "Keep",
+  "owner": "Cardinal",
+  "note": "Rank 47 'socket welded valves'."
+ },
+ {
+  "path": "categories/sight-glass",
+  "cur_title": "Sanitary Sight Glass | Stainless Steel & Tri Clamp",
+  "kw": "sanitary sight glass",
+  "title": "Sanitary Sight Glass | Tri-Clamp, Stainless",
+  "h1": "Sanitary Sight Glass",
+  "action": "Keep",
+  "owner": "Cardinal",
+  "note": null
+ },
+ {
+  "path": "categories/i-line-fittings",
+  "cur_title": "I-Line Fittings | Sanitary Stainless Steel I-Line",
+  "kw": "i line fittings",
+  "title": "I-Line Fittings | Sanitary Stainless",
+  "h1": "I-Line Fittings",
+  "action": "Keep",
+  "owner": "Cowbird-later",
+  "note": "Food/dairy term. Cowbird should own I-line; keep here, no investment."
+ },
+ {
+  "path": "categories/i-line-gaskets",
+  "cur_title": "I-Line Gaskets | Cardinal Cooling Systems",
+  "kw": "i line gasket",
+  "title": "I-Line Gaskets | EPDM, PTFE, Viton",
+  "h1": "I-Line Gaskets",
+  "action": "Retitle",
+  "owner": "Cowbird-later",
+  "note": "Gap: sani #1. Cheap retitle now; real page on Cowbird later."
+ },
+ {
+  "path": "categories/i-line-clamps",
+  "cur_title": "I-Line Clamps | Cardinal Cooling Systems",
+  "kw": "i line clamps",
+  "title": "I-Line Clamps | Bolted & Wing Nut",
+  "h1": "I-Line Clamps",
+  "action": "Retitle",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/i-line-ferrules",
+  "cur_title": "I-Line Weld Ferrules | Sanitary Stainless Steel Fittings",
+  "kw": "i line ferrule",
+  "title": "I-Line Ferrules | Weld, Male & Female",
+  "h1": "I-Line Ferrules",
+  "action": "Keep",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/bevel-seat-fittings",
+  "cur_title": "Bevel Seat Fittings | Stainless Steel & Bevel Seat Gaskets",
+  "kw": "bevel seat fittings",
+  "title": "Bevel Seat Fittings | Sanitary Stainless",
+  "h1": "Bevel Seat Fittings",
+  "action": "Keep",
+  "owner": "Cowbird-later",
+  "note": "Dairy term."
+ },
+ {
+  "path": "categories/bevel-seat-gaskets",
+  "cur_title": "Bevel Seat Gaskets | EPDM, PTFE, Viton & Silicone",
+  "kw": "bevel seat gasket",
+  "title": "Bevel Seat Gaskets | EPDM, PTFE, Viton & Silicone",
+  "h1": "Bevel Seat Gaskets",
+  "action": "Keep",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/bevel-seat-caps",
+  "cur_title": "Bevel Seat End Caps | Sanitary & Stainless Steel Caps",
+  "kw": "bevel seat cap",
+  "title": "Bevel Seat End Caps | Sanitary Stainless",
+  "h1": "Bevel Seat End Caps",
+  "action": "Keep",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/bevel-seat-ferrules",
+  "cur_title": "Bevel Seat Ferrules | Cardinal Cooling Systems",
+  "kw": "bevel seat ferrule",
+  "title": "Bevel Seat Ferrules | Plain & Threaded",
+  "h1": "Bevel Seat Ferrules",
+  "action": "Retitle",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/plain-bevel-seat-ferrules",
+  "cur_title": "Plain Bevel Seat Ferrules | Cardinal Cooling Systems",
+  "kw": "plain bevel seat ferrule",
+  "title": "Plain Bevel Seat Ferrules | Sanitary Stainless",
+  "h1": "Plain Bevel Seat Ferrules",
+  "action": "Retitle",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/threaded-bevel-seat-ferrules",
+  "cur_title": "Threaded Bevel Seat Ferrules | Cardinal Cooling Systems",
+  "kw": "threaded bevel seat ferrule",
+  "title": "Threaded Bevel Seat Ferrules | Sanitary Stainless",
+  "h1": "Threaded Bevel Seat Ferrules",
+  "action": "Retitle",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/hex-nuts",
+  "cur_title": "Sanitary Hex Nuts | 304 Bevel Seat Union Nuts",
+  "kw": "bevel seat hex nut",
+  "title": "Bevel Seat Hex Nuts | 304 Stainless Union Nuts",
+  "h1": "Bevel Seat Hex Nuts",
+  "action": "Keep",
+  "owner": "Cowbird-later",
+  "note": null
+ },
+ {
+  "path": "categories/spray-balls",
+  "cur_title": "Spray Balls | Stainless Steel & CIP Tank Spray Balls",
+  "kw": "cip spray ball",
+  "title": "CIP Spray Balls | Stainless Tank Spray Balls",
+  "h1": "CIP Spray Balls",
+  "action": "Keep",
+  "owner": "Cowbird-later",
+  "note": "Food/CIP term."
+ },
+ {
+  "path": "categories/stub-ends",
+  "cur_title": "Stub Ends | Stainless Steel Pipe Stub Ends",
+  "kw": "stainless stub end",
+  "title": "Stainless Steel Stub Ends | Type A, Sanitary Tube",
+  "h1": "Stainless Steel Stub Ends",
+  "action": "Keep",
+  "owner": "Cardinal",
+  "note": null
+ },
+ {
+  "path": "categories/laterals-and-wyes",
+  "cur_title": "Sanitary Laterals & Wyes | Stainless Steel Piping",
+  "kw": "sanitary wye",
+  "title": "Sanitary Laterals & Wyes | Butt Weld & Tri-Clamp",
+  "h1": "Sanitary Laterals & Wyes",
+  "action": "Keep",
+  "owner": "Cardinal",
+  "note": "'lateral wye' 70 at rank 53 (CPC $56!)."
+ },
+ {
+  "path": "categories/crosses",
+  "cur_title": "Crossing Fittings | Sanitary & Clamp Cross",
+  "kw": "sanitary cross fitting",
+  "title": "Sanitary Crosses | Tri-Clamp & Butt Weld",
+  "h1": "Sanitary Crosses",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "'Crossing Fittings' is not a term anyone searches."
+ },
+ {
+  "path": "categories/180-return-bends",
+  "cur_title": "180\u00ba Return Bends | Cardinal Cooling Systems",
+  "kw": "180 return bend",
+  "title": "180\u00b0 Return Bends | Sanitary Stainless, Weld & Clamp",
+  "h1": "180\u00b0 Return Bends",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Remove '| Cardinal Cooling Systems' filler."
+ },
+ {
+  "path": "categories/specialty",
+  "cur_title": "Specialty | Cardinal Cooling Systems",
+  "kw": null,
+  "title": null,
+  "h1": null,
+  "action": "Noindex or merge",
+  "owner": "Cardinal",
+  "note": "'Specialty' means nothing to Google. Fold into parent or noindex."
+ },
+ {
+  "path": "blog/coolant-distribution-units-cdus-the-central-hub-for-fluid-regulation-and-filtration",
+  "cur_title": "Coolant Distribution Units (CDUs): The Central Hub for Fluid Regulation and Filtration | Cardinal Cooling Systems Blog",
+  "kw": "cdu data center",
+  "title": "CDU Piping & Fittings: What Connects to a Coolant Distribution Unit",
+  "h1": "CDU Piping and Fittings for Data Center Liquid Cooling",
+  "action": "Retitle + add product links",
+  "owner": "Cardinal",
+  "note": "3,677 words, 0 product links. CSI ranks #6\u201342 on this cluster with one post. Also 'what is a cdu' 590, 'cdu cooling' 170."
+ },
+ {
+  "path": "blog/what-fittings-does-a-data-center-liquid-cooling-system-need",
+  "cur_title": "What Fittings Does a Data Center Liquid Cooling System Need? | Cardinal Cooling Systems Blog",
+  "kw": "data center liquid cooling fittings",
+  "title": "Data Center Liquid Cooling Fittings: Tri-Clamp, Weld & Adapters",
+  "h1": "Data Center Liquid Cooling Fittings",
+  "action": "Retitle + add product links",
+  "owner": "Cardinal",
+  "note": "Sani #7 and S&O #2 hold this SERP with thin pages."
+ },
+ {
+  "path": "blog/stainless-piping-solutions-for-data-center-glycol-loops-a-complete-guide",
+  "cur_title": "Stainless Piping Solutions for Data Center Glycol Loops: A Complete Guide | Cardinal Cooling Systems Blog",
+  "kw": "data center glycol loop piping",
+  "title": "Stainless Piping for Data Center Glycol Loops: Tube, Fittings & Valves",
+  "h1": "Stainless Piping for Data Center Glycol Loops",
+  "action": "Retitle + add product links",
+  "owner": "Cardinal",
+  "note": "Becomes the 'secondary loop tubing' stage page."
+ },
+ {
+  "path": "blog/valve-operation-essentials-a-guide-to-flow-control-automation-and-valve-types-in-liquid-cooling",
+  "cur_title": "Valve Operation Essentials: A Guide to Flow Control, Automation, and Valve Types in Liquid Cooling | Cardinal Cooling Systems Blog",
+  "kw": "liquid cooling valves data center",
+  "title": "Valves for Data Center Liquid Cooling: Ball, Butterfly & Check",
+  "h1": "Valves for Data Center Liquid Cooling",
+  "action": "Retitle + add product links",
+  "owner": "Cardinal",
+  "note": "Becomes the valves stage page."
+ },
+ {
+  "path": "blog/weld-fitting-takeoff-and-dimensions-guide-for-liquid-cooling-system",
+  "cur_title": "Weld Fitting Takeoff & Dimensions Guide for Liquid Cooling System | Cardinal Cooling Systems Blog",
+  "kw": "weld fitting dimensions",
+  "title": "Weld Fitting Dimensions & Takeoff Chart for Liquid Cooling Loops",
+  "h1": "Weld Fitting Dimensions and Takeoff Chart",
+  "action": "Retitle + add table",
+  "owner": "Cardinal",
+  "note": "Make the dimension table the page. Link from every weld category."
+ },
+ {
+  "path": "blog/why-does-leak-prevention-matter-in-data-center-coolant-loops",
+  "cur_title": "Why Does Leak Prevention Matter in Data Center Coolant Loops? | Cardinal Cooling Systems Blog",
+  "kw": "leak prevention data center coolant loop",
+  "title": "Preventing Leaks in Data Center Coolant Loops: Gaskets, Clamps & Torque",
+  "h1": "Preventing Leaks in Data Center Coolant Loops",
+  "action": "Retitle + add product links",
+  "owner": "Cardinal",
+  "note": "Link to gaskets, clamps, torque-spec page."
+ },
+ {
+  "path": "blog/why-surface-finish-and-cleanliness-matter-for-coolant-quality-in-closed-loops",
+  "cur_title": "Why Surface Finish and Cleanliness Matter for Coolant Quality in Closed Loops | Cardinal Cooling Systems Blog",
+  "kw": "surface finish coolant loop",
+  "title": "Surface Finish & Cleanliness for Closed-Loop Coolant Quality",
+  "h1": "Surface Finish and Cleanliness in Closed Coolant Loops",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Merge the two generic surface-finish posts INTO this one (see below)."
+ },
+ {
+  "path": "blog/standard-tees-vs-sanitary-wyes-solving-flow-imbalance-in-high-density-racks",
+  "cur_title": "Standard Tees vs. Sanitary Wyes: Solving Flow Imbalance in High-Density Racks | Cardinal Cooling Systems Blog",
+  "kw": "tee vs wye flow",
+  "title": "Tee vs Wye Fittings: Fixing Flow Imbalance in Liquid-Cooled Racks",
+  "h1": "Tee vs Wye Fittings in Liquid-Cooled Racks",
+  "action": "Keep + add product links",
+  "owner": "Cardinal",
+  "note": "Good specific post; link to tees and wyes."
+ },
+ {
+  "path": "blog/data-center-liquid-cooling-how-sanitary-stainless-steel-components-boost-reliability",
+  "cur_title": "Data Center Liquid Cooling: How Sanitary Stainless Steel Components Boost Reliability | Cardinal Cooling Systems Blog",
+  "kw": "stainless steel data center liquid cooling",
+  "title": "Why Stainless Steel for Data Center Liquid Cooling Loops",
+  "h1": "Why Stainless Steel for Data Center Liquid Cooling",
+  "action": "Retitle \u2192 pillar feeder",
+  "owner": "Cardinal",
+  "note": "Content folds into the pillar; keep URL, link up."
+ },
+ {
+  "path": "blog/sanitary-fittings-for-data-center-liquid-cooling",
+  "cur_title": "Sanitary Fittings for Data Center Liquid Cooling | Cardinal Cooling Systems Blog",
+  "kw": "sanitary fittings data center",
+  "title": null,
+  "h1": null,
+  "action": "Merge into 'what-fittings\u2026' post (301)",
+  "owner": "Cardinal",
+  "note": "Two posts on the same topic. Keep the longer one."
+ },
+ {
+  "path": "blog/sanitary-fittings-guide-types-applications-and-selection-for-data-centers-and-hvac",
+  "cur_title": "Sanitary Fittings Guide: Types, Applications, and Selection for Data Centers and HVAC | Cardinal Cooling Systems Blog",
+  "kw": "sanitary fittings guide",
+  "title": "Sanitary Fittings Guide: Types, Ends & Selection",
+  "h1": "Sanitary Fittings Guide",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Ranks 36\u201374 on 'what are sanitary fittings' / '3a sanitary fittings'. Drop 'for Data Centers and HVAC' \u2014 it dilutes both."
+ },
+ {
+  "path": "blog/304-vs-316-stainless-steel-which-one-should-you-choose",
+  "cur_title": "304 vs 316 Stainless Steel: Which One Should You Choose? | Cardinal Cooling Systems Blog",
+  "kw": "304 vs 316 stainless steel",
+  "title": null,
+  "h1": null,
+  "action": "Merge into /stainless-steel-304-vs-316 (301)",
+  "owner": "Cardinal",
+  "note": "Two posts compete (ranks 96 and 109). One page, retitled '304 vs 316 Stainless Steel for Cooling & Sanitary Systems'. Low priority: saturated SERP."
+ },
+ {
+  "path": "blog/stainless-steel-304-vs-316",
+  "cur_title": "Stainless Steel: 304 vs 316  | Cardinal Cooling Systems Blog",
+  "kw": "304 vs 316 stainless steel",
+  "title": "304 vs 316 Stainless Steel: Which for Cooling & Sanitary Systems",
+  "h1": "304 vs 316 Stainless Steel",
+  "action": "Retitle (after merge)",
+  "owner": "Cardinal",
+  "note": null
+ },
+ {
+  "path": "blog/the-basics-of-compression-tube-fittings",
+  "cur_title": "The Basics of Compression Tube Fittings: 101 | Cardinal Cooling Systems Blog",
+  "kw": "compression tube fittings",
+  "title": null,
+  "h1": null,
+  "action": "Merge into \u2026-101 (301)",
+  "owner": "Cardinal",
+  "note": "Exact duplicate title on two URLs."
+ },
+ {
+  "path": "blog/the-basics-of-compression-tube-fittings-101",
+  "cur_title": "The Basics of Compression Tube Fittings: 101 | Cardinal Cooling Systems Blog",
+  "kw": "different types of compression fittings",
+  "title": "Compression Tube Fittings: Types, Sizing & When to Use Them",
+  "h1": "Compression Tube Fittings Explained",
+  "action": "Retitle (after merge)",
+  "owner": "Cardinal",
+  "note": "Rank 96. You don't sell compression fittings; keep only if it feeds the tubing page."
+ },
+ {
+  "path": "blog/surface-finish-and-sanitary-fittings",
+  "cur_title": "Surface finish and sanitary fittings | Cardinal Cooling Systems Blog",
+  "kw": "surface finish sanitary",
+  "title": null,
+  "h1": null,
+  "action": "Merge into closed-loops surface-finish post (301)",
+  "owner": "Cardinal",
+  "note": "Three surface-finish posts total."
+ },
+ {
+  "path": "blog/why-does-surface-finish-matter-in-sanitary-stainless-steel",
+  "cur_title": "Why Does Surface Finish Matter in Sanitary Stainless Steel? | Cardinal Cooling Systems Blog",
+  "kw": "surface finish stainless",
+  "title": null,
+  "h1": null,
+  "action": "Merge into closed-loops surface-finish post (301)",
+  "owner": "Cardinal",
+  "note": null
+ },
+ {
+  "path": "blog/difference-between-electropolished-and-standard-stainless-steel-surfaces",
+  "cur_title": "Difference Between Electropolished and Standard Stainless Steel Surfaces | Cardinal Cooling Systems Blog",
+  "kw": "electropolished vs polished stainless",
+  "title": "Electropolished vs Mechanically Polished Stainless: Ra, Cost & Use",
+  "h1": "Electropolished vs Polished Stainless Steel",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Keep; distinct query."
+ },
+ {
+  "path": "blog/dimensions-sizing-tri-clamp-fittings",
+  "cur_title": "Dimensions and Sizing of Tri-Clamp Fittings | Cardinal Cooling Systems Blog",
+  "kw": "tri clamp dimensions",
+  "title": "Tri-Clamp Dimensions & Sizes Chart (1/2\" to 12\")",
+  "h1": "Tri-Clamp Dimensions and Sizes Chart",
+  "action": "Rebuild as reference page",
+  "owner": "Cardinal",
+  "note": "Ranks 51\u201358. Needs a real table with flange OD, tube OD, gasket ID, clamp size per line size, and a drawing."
+ },
+ {
+  "path": "blog/what-are-tri-clamp-spools",
+  "cur_title": "What Are Tri-Clamp Spools? | Cardinal Cooling Systems Blog",
+  "kw": "tri clamp spool",
+  "title": "Tri-Clamp Spools: Sizes, Lengths & Custom Spool Assemblies",
+  "h1": "Tri-Clamp Spools",
+  "action": "Retitle + link product",
+  "owner": "Cardinal",
+  "note": "sani ranks #7 and #10 for 'tri clamp fittings' with spool pages."
+ },
+ {
+  "path": "blog/what-are-sanitary-tubes-types-sizes-and-applications-explained",
+  "cur_title": "What Are Sanitary Tubes? Types, Sizes, and Applications Explained | Cardinal Cooling Systems Blog",
+  "kw": "sanitary tubing sizes",
+  "title": "Sanitary Tubing Sizes, Wall Thickness & Grades (A270)",
+  "h1": "Sanitary Tubing Sizes and Wall Thickness",
+  "action": "Rebuild as reference page",
+  "owner": "Cardinal",
+  "note": "Target 'stainless steel tubing sizes' 390, 'dimensions of stainless steel tubing' 390 (sani #8)."
+ },
+ {
+  "path": "blog/what-are-3-a-sanitary-standards",
+  "cur_title": "What Are 3-A Sanitary Standards? | Cardinal Cooling Systems Blog",
+  "kw": "3-a sanitary standards",
+  "title": "3-A Sanitary Standards Explained: What 3-A Certified Fittings Mean",
+  "h1": "3-A Sanitary Standards Explained",
+  "action": "Retitle",
+  "owner": "Cowbird-later",
+  "note": "sani #10\u201326 on five variants; you don't rank. Retitle now; real home is Cowbird."
+ },
+ {
+  "path": "blog/what-are-sanitary-fittings-and-why-are-they-important",
+  "cur_title": "What Are Sanitary Fittings & Why Are They Important? | Cardinal Cooling Systems Blog",
+  "kw": "what are sanitary fittings",
+  "title": null,
+  "h1": null,
+  "action": "Merge into sanitary-fittings-guide (301)",
+  "owner": "Cardinal",
+  "note": "Ranks 36\u201359 but on the same queries as the guide. One page."
+ },
+ {
+  "path": "blog/6-essential-sanitary-fittings-you-need-to-know-about",
+  "cur_title": "6 Essential Sanitary Fittings You Need to Know About | Cardinal Cooling Systems Blog",
+  "kw": "types of sanitary fittings",
+  "title": "Types of Sanitary Fittings: Clamp, Weld, Bevel Seat, I-Line, John Perry",
+  "h1": "Types of Sanitary Fittings",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Listicle title \u2192 query title."
+ },
+ {
+  "path": "blog/complete-guide-to-sanitary-stainless-steel-fittings-materials-and-standards",
+  "cur_title": "Complete Guide to Sanitary Stainless Steel Fittings, Materials & Standards | Cardinal Cooling Systems Blog",
+  "kw": "sanitary stainless steel fittings",
+  "title": "Sanitary Stainless Steel Fittings: Materials, Finishes & Standards",
+  "h1": "Sanitary Stainless Steel Fittings Guide",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "S&O #3, sani #8 on this term."
+ },
+ {
+  "path": "blog/how-to-choose-the-right-sanitary-valve-for-your-system",
+  "cur_title": "How to Choose the Right Sanitary Valve for Your System | Cardinal Cooling Systems Blog",
+  "kw": "how to choose sanitary valve",
+  "title": "How to Choose a Sanitary Valve: Ball vs Butterfly vs Check",
+  "h1": "How to Choose a Sanitary Valve",
+  "action": "Retitle + link categories",
+  "owner": "Cardinal",
+  "note": "'check valve vs ball valve' 1,900 gap \u2192 add that comparison section."
+ },
+ {
+  "path": "blog/differences-between-sanitary-strainers-and-sanitary-filters",
+  "cur_title": "Differences Between Sanitary Strainers and Sanitary Filters | Cardinal Cooling Systems Blog",
+  "kw": "strainer vs filter",
+  "title": "Strainer vs Filter: Differences in Sanitary & Cooling Systems",
+  "h1": "Strainer vs Filter",
+  "action": "Keep",
+  "owner": "Cardinal",
+  "note": "Rank 47; fine."
+ },
+ {
+  "path": "blog/ehedg-vs-other-hygienic-standards-explained-differences-and-industry-applications",
+  "cur_title": "EHEDG vs Other Hygienic Standards Explained: Differences and Industry Applications | Cardinal Cooling Systems Blog",
+  "kw": "ehedg",
+  "title": "EHEDG vs 3-A vs ASME BPE: Hygienic Standards Compared",
+  "h1": "EHEDG vs 3-A vs ASME BPE",
+  "action": "Retitle",
+  "owner": "Cowbird-later",
+  "note": "Rank 30 \u2014 your second-best position. 'bpe' 2,400 gap (CSI #11) \u2192 add BPE section."
+ },
+ {
+  "path": "blog/good-manufacturing-practices-gmp-in-sanitary-production",
+  "cur_title": "Good Manufacturing Practices (GMP) in Sanitary Production | Cardinal Cooling Systems Blog",
+  "kw": "gmp sanitary",
+  "title": null,
+  "h1": null,
+  "action": "Move to Cowbird later",
+  "owner": "Cowbird-later",
+  "note": "Food-processing topic; no DC relevance."
+ },
+ {
+  "path": "blog/sanitary-stainless-steel-systems-industry-applications-use-cases-and-design-guide",
+  "cur_title": "Sanitary Stainless Steel Systems: Industry Applications, Use Cases & Design Guide | Cardinal Cooling Systems Blog",
+  "kw": "sanitary stainless steel systems",
+  "title": null,
+  "h1": null,
+  "action": "Merge into materials guide (301)",
+  "owner": "Cardinal",
+  "note": "Generic overlap."
+ },
+ {
+  "path": "blog/what-is-din-32676",
+  "cur_title": "What Is DIN 32676? | Cardinal Cooling Systems Blog",
+  "kw": "din 32676",
+  "title": "DIN 32676 Explained: Metric Tri-Clamp Ferrule Dimensions",
+  "h1": "DIN 32676 Metric Tri-Clamp Ferrules",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Good niche term; add dimension table. 'metric stainless steel tubing' 110."
+ },
+ {
+  "path": "blog/what-is-heat-lot-number-on-sanitary-fittings",
+  "cur_title": "What Is Heat Lot Number on Sanitary Fittings | Cardinal Cooling Systems Blog",
+  "kw": "heat number stainless fittings",
+  "title": "Heat Numbers on Stainless Fittings: Traceability & MTRs",
+  "h1": "Heat Numbers and Traceability on Stainless Fittings",
+  "action": "Retitle",
+  "owner": "Cardinal",
+  "note": "Keep; DC buyers ask for MTRs."
+ }
+]

@@ -102,7 +102,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             Category
           </p>
           <h1 className="font-sans text-4xl lg:text-5xl font-normal tracking-tight text-white mb-3">
-            {mainCategory.name}
+            {(mainCategory.metadata?.h1 as string) || mainCategory.name}
           </h1>
         </div>
       </section>
