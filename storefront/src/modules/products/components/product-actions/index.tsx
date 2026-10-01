@@ -160,8 +160,8 @@ export default function ProductActions({
   const hasNoPrice = quoteOnlyReason === "price unavailable"
   const isQuoteOnly = quoteOnlyReason !== null
 
-  // Polished tube is priced per order: its quote CTA opens the stainless
-  // tubing page's form, pre-filled with the selected SKU. Every other
+  // Polished tube and schedule pipe are priced per order: their quote CTA
+  // opens the stainless tubing page's form, pre-filled with the selected SKU. Every other
   // quote-only product keeps the contact page.
   const isTube = isStainlessTubeProduct(product)
   const quoteHref = isTube
@@ -372,7 +372,7 @@ export default function ProductActions({
                   className="underline transition-colors duration-150 hover:text-gray-900"
                   data-testid="stainless-tube-page-link"
                 >
-                  See every tube size, alloy and wall
+                  See every tube and pipe size
                 </Link>
               </p>
             )}
