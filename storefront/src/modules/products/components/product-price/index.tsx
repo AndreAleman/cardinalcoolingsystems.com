@@ -15,8 +15,23 @@ export default function ProductPrice({
 
   const selectedPrice = variant ? variantPrice : cheapestPrice
 
+  /* No payable price ($0, missing) = Quote-Only (lib/util/quote-only.ts).
+     The product is already fetched server-side, so this is final — never
+     a loading state and never "$0.00". */
   if (!selectedPrice) {
-    return <div className="block w-32 h-9 bg-gray-100 animate-pulse" style={{ borderRadius: "5px" }} />
+    return (
+      <div className="flex flex-col gap-y-1" data-testid="product-price-quote-only">
+        <p className="text-xs font-medium" style={{ color: "#9ca3af" }}>
+          Price
+        </p>
+        <span className="text-3xl font-semibold tracking-tight" style={{ color: "#111111" }}>
+          Quote only
+        </span>
+        <p className="text-xs font-light" style={{ color: "#9ca3af" }}>
+          Priced per order. Request a quote for this configuration.
+        </p>
+      </div>
+    )
   }
 
   return (
