@@ -1,4 +1,5 @@
 import { HttpTypes } from "@medusajs/types"
+import { STAINLESS_PIPE_PRODUCT_HANDLE } from "@lib/stainless-pipe"
 
 /*
   The stainless sanitary tube/pipe landing page
@@ -28,6 +29,8 @@ export function isStainlessTubeProduct(
 ): boolean {
   if (!product) return false
   if (product.handle === STAINLESS_TUBE_PRODUCT_HANDLE) return true
+  /* Schedule pipe is quoted on the same page and form. */
+  if (product.handle === STAINLESS_PIPE_PRODUCT_HANDLE) return true
   return (product.categories ?? []).some((c) => isStainlessTubeCategory(c?.handle))
 }
 

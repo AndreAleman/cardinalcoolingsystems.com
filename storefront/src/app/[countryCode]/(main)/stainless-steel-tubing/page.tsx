@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { HttpTypes } from "@medusajs/types"
 import Link from "next/link"
 import { getProductByHandle } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
@@ -8,12 +9,20 @@ import {
   tubeSizeRows,
   tubeVariantOptions,
 } from "@lib/stainless-tube"
+import {
+  STAINLESS_PIPE_PRODUCT_HANDLE,
+  pipeSchedules,
+  pipeSizeRows,
+  pipeVariantOptions,
+} from "@lib/stainless-pipe"
 import TubeQuoteForm from "@modules/stainless-tube/components/tube-quote-form"
+import ProductPreview from "@modules/products/components/product-preview"
 
 /*
   Stainless sanitary tube / pipe landing page. Server-rendered: the size
-  table comes from the polished tube product's variants in Medusa, so it
-  stays in sync with the catalog. Tube is priced per order (Quote-Only),
+  tables come from the polished tube and schedule pipe products' variants
+  in Medusa, so they stay in sync with the catalog, and both products get
+  a native product card (ProductPreview). Tube is priced per order (Quote-Only),
   so the page sells the quote, not a price. Facts on this page are the
   owner-approved list only — do not add lead times or price claims.
 */
@@ -47,7 +56,7 @@ const facts = [
 const faqs = [
   {
     q: "Is it stainless steel tubing or stainless steel pipe?",
-    a: "Sanitary tubing is sized by its actual outside diameter (OD) and wall thickness, for example 2\" OD × 0.065\" wall. Many buyers call it stainless steel pipe; if you have a pipe spec, send it with your request and we will quote the matching tube.",
+    a: "Sanitary tubing is sized by its actual outside diameter (OD) and wall thickness, for example 2\" OD × 0.065\" wall. Schedule pipe is sized by nominal pipe size (NPS) and schedule, so 2\" Sch 10S pipe is 2.375\" OD × 0.109\" wall. We quote both: send your spec and we will match it.",
   },
   {
     q: "304L or 316L?",
@@ -66,16 +75,35 @@ const faqs = [
 export default async function StainlessSteelTubingPage({ params }: Props) {
   const { countryCode } = params
 
-  let product = null
+  let region: HttpTypes.StoreRegion | null = null
   try {
-    const region = await getRegion(countryCode)
-    if (region) product = (await getProductByHandle(STAINLESS_TUBE_PRODUCT_HANDLE, region.id)) ?? null
+    region = (await getRegion(countryCode)) ?? null
   } catch {
-    product = null
+    region = null
   }
+
+  const loadProduct = async (handle: string) => {
+    if (!region) return null
+    try {
+      return (await getProductByHandle(handle, region.id)) ?? null
+    } catch {
+      return null
+    }
+  }
+  const [product, pipeProduct] = await Promise.all([
+    loadProduct(STAINLESS_TUBE_PRODUCT_HANDLE),
+    loadProduct(STAINLESS_PIPE_PRODUCT_HANDLE),
+  ])
 
   const options = tubeVariantOptions(product)
   const { rows, alloys } = tubeSizeRows(options)
+
+  const pipeOptions = pipeVariantOptions(pipeProduct)
+  const { rows: pipeRows, columns: pipeColumns } = pipeSizeRows(pipeOptions)
+  const schedules = pipeSchedules(pipeOptions)
+  const cardProducts = [product, pipeProduct].filter(
+    (p): p is NonNullable<typeof p> => !!p?.id
+  )
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -114,7 +142,13 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
           <p className="text-base font-light leading-relaxed max-w-2xl mb-8" style={{ color: "#4b5563" }}>
             Polished sanitary tubing to ASTM A270 3-A, ID and OD polished, in 304L and 316L
             {rows.length > 0 && <> from {rows[0].od} to {rows[rows.length - 1].od} OD</>}.
-            Tube is priced per order: send your sizes and quantities and get pricing back within 48 hours.
+            {pipeRows.length > 0 && (
+              <>
+                {" "}Plus ASTM A312 welded schedule pipe in 304 and 316, NPS {pipeRows[0].size} to{" "}
+                {pipeRows[pipeRows.length - 1].size}, Sch {schedules.join(", ")}.
+              </>
+            )}{" "}
+            Tube and pipe are priced per order: send your sizes and quantities and get pricing back within 48 hours.
           </p>
           <div className="flex flex-wrap gap-3">
             <a
@@ -159,6 +193,27 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
           </ul>
         </div>
       </section>
+
+      {/* ── Product cards ────────────────────────────────────────────── */}
+      {region && cardProducts.length > 0 && (
+        <section className="py-16 px-6 lg:px-12" data-testid="stainless-product-cards">
+          <div className="mx-auto max-w-[1440px]">
+            <h2 className="font-sans text-3xl font-normal tracking-tight mb-3" style={{ color: "#111111" }}>
+              Tube and pipe we stock
+            </h2>
+            <p className="text-sm font-light mb-8 max-w-2xl" style={{ color: "#6b7280" }}>
+              Open a product to see every size, alloy and part number. Both are quote only: request a quote from the product page or the form below.
+            </p>
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-8 w-full items-stretch">
+              {cardProducts.map((p) => (
+                <li key={p.id}>
+                  <ProductPreview product={p} region={region!} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* ── Size / alloy table ───────────────────────────────────────── */}
       <section id="sizes" className="py-16 px-6 lg:px-12 scroll-mt-28">
@@ -220,6 +275,64 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
         </div>
       </section>
 
+      {/* ── Pipe size / schedule table ────────────────────────────────── */}
+      {pipeRows.length > 0 && (
+        <section id="pipe-sizes" className="py-16 px-6 lg:px-12 border-t scroll-mt-28" style={{ borderColor: "#f0f0f0" }}>
+          <div className="mx-auto max-w-[1440px]">
+            <h2 className="font-sans text-3xl font-normal tracking-tight mb-3" style={{ color: "#111111" }}>
+              Stainless pipe sizes and schedules
+            </h2>
+            <p className="text-sm font-light mb-8 max-w-2xl" style={{ color: "#6b7280" }}>
+              ASTM A312 welded pipe, mill finish or OD polished, quoted per foot. OD and wall per ASME B36.19. Need a size or schedule that is not listed? Add it to your quote request.
+            </p>
+            <div className="overflow-x-auto border border-gray-100" style={{ borderRadius: "5px" }}>
+              <table className="w-full text-sm text-left">
+                <thead style={{ backgroundColor: "#fafafa" }}>
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: "#111111" }}>Pipe size (NPS)</th>
+                    <th scope="col" className="px-4 py-3 font-semibold" style={{ color: "#111111" }}>Schedule</th>
+                    <th scope="col" className="px-4 py-3 font-semibold" style={{ color: "#111111" }}>OD</th>
+                    <th scope="col" className="px-4 py-3 font-semibold" style={{ color: "#111111" }}>Wall</th>
+                    {pipeColumns.map((c) => (
+                      <th key={c.key} scope="col" className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: "#111111" }}>{c.label}</th>
+                    ))}
+                    <th scope="col" className="px-4 py-3 font-semibold" style={{ color: "#111111" }}>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pipeRows.map((r) => (
+                    <tr key={`${r.size}-${r.schedule}`} className="border-t border-gray-100">
+                      <td className="px-4 py-3 font-medium" style={{ color: "#111111" }}>{r.size}</td>
+                      <td className="px-4 py-3" style={{ color: "#374151" }}>Sch {r.schedule}</td>
+                      <td className="px-4 py-3" style={{ color: "#374151" }}>{r.od ?? "—"}</td>
+                      <td className="px-4 py-3" style={{ color: "#374151" }}>{r.wall ?? "—"}</td>
+                      {pipeColumns.map((c) => (
+                        <td key={c.key} className="px-4 py-3 font-mono text-xs whitespace-nowrap" style={{ color: r.skus[c.key] ? "#374151" : "#d1d5db" }}>
+                          {r.skus[c.key] ?? "—"}
+                        </td>
+                      ))}
+                      <td className="px-4 py-3">
+                        <a href={`#${STAINLESS_TUBE_QUOTE_ANCHOR}`} className="text-sm font-medium hover:underline whitespace-nowrap" style={{ color: "#E3000F" }}>
+                          Quote only
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {pipeProduct?.handle && (
+              <p className="text-sm mt-4" style={{ color: "#6b7280" }}>
+                Product details:{" "}
+                <Link href={`/${countryCode}/products/${pipeProduct.handle}`} className="underline hover:text-gray-900">
+                  {pipeProduct.title}
+                </Link>
+              </p>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* ── Quote form ───────────────────────────────────────────────── */}
       <section
         id={STAINLESS_TUBE_QUOTE_ANCHOR}
@@ -229,10 +342,10 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
         <div className="mx-auto max-w-[1440px] grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
           <div>
             <h2 className="font-sans text-3xl font-normal tracking-tight mb-4" style={{ color: "#111111" }}>
-              Request a stainless tubing quote
+              Request a stainless tubing or pipe quote
             </h2>
             <p className="text-sm font-light leading-relaxed mb-6 max-w-md" style={{ color: "#6b7280" }}>
-              Tick the sizes and alloys you need, add quantities and where it ships, and attach a PO or drawing if you have one. Pricing comes back within 48 hours and holds for 90 days.
+              Tick the tube sizes and alloys you need (list pipe sizes and schedules in Notes), add quantities and where it ships, and attach a PO or drawing if you have one. Pricing comes back within 48 hours and holds for 90 days.
             </p>
             <p className="text-sm font-light" style={{ color: "#6b7280" }}>
               Prefer email or phone?{" "}
