@@ -87,8 +87,16 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         return "Order Confirmation"
       case EmailTemplates.ADMIN_ORDER:
         return "New Order Received"
-      case EmailTemplates.CONTACT_FORM:
-        return "New Contact Form Submission"
+      case EmailTemplates.CONTACT_FORM: {
+        // Name the sender so the lead is recognizable in the inbox and can't be
+        // swallowed by a filter keyed on a generic subject.
+        const d = data as { name?: string; lastName?: string; email?: string; scamReasons?: string[] } | undefined
+        const who = [d?.name, d?.lastName].filter(Boolean).join(" ")
+        const domain = d?.email?.split("@")[1]
+        const tail = [who, domain].filter(Boolean).join(" — ")
+        const subject = tail ? `Quote request from ${tail}` : "New quote request"
+        return d?.scamReasons?.length ? `[Likely scam] ${subject}` : subject
+      }
       case EmailTemplates.INVITE_USER:
         return "You've been invited to Cardinal Cooling Systems"
       case EmailTemplates.ADMIN_USER_REGISTERED:
@@ -132,10 +140,16 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
   async send(
     notification: ProviderSendNotificationDTO
   ): Promise<ProviderSendNotificationResultsDTO> {
+    // Contact-form leads reply straight to the buyer, not to the sending address.
+    const replyTo =
+      notification.template === EmailTemplates.CONTACT_FORM
+        ? (notification.data as { email?: string } | undefined)?.email
+        : undefined
     const commonOptions = {
       from: this.getFrom(notification.template),
       to: [notification.to],
       subject: this.getTemplateSubject(notification.template, notification.data),
+      ...(replyTo ? { replyTo } : {}),
     }
 
     let emailOptions: CreateEmailOptions

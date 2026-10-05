@@ -18,6 +18,7 @@ type ContactFormEmailProps = {
   phone?: string
   message: string
   attachmentFilenames?: string[]
+  scamReasons?: string[]
 }
 
 function ContactFormEmailComponent({
@@ -27,6 +28,7 @@ function ContactFormEmailComponent({
   phone,
   message,
   attachmentFilenames,
+  scamReasons,
 }: ContactFormEmailProps) {
   return (
     <Tailwind>
@@ -41,6 +43,20 @@ function ContactFormEmailComponent({
 
           {/* Content */}
           <Container className="p-6">
+            {scamReasons && scamReasons.length > 0 && (
+              <Section className="mb-6 p-4 bg-[#fff4e5] border border-[#f0b05a]">
+                <Text className="text-sm font-semibold text-[#8a4b00] m-0 mb-1">
+                  Likely scam — matches known supplier-fraud patterns:
+                </Text>
+                <Text className="text-sm text-[#8a4b00] m-0 whitespace-pre-wrap">
+                  {scamReasons.map((r) => `• ${r}`).join("\n")}
+                </Text>
+                <Text className="text-xs text-[#8a4b00] m-0 mt-2">
+                  Do not open attachments or reply with an email address unless the request names real parts.
+                </Text>
+              </Section>
+            )}
+
             <Heading className="text-2xl font-bold text-gray-800 mb-4">
               New Contact Request
             </Heading>

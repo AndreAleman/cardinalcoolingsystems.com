@@ -244,6 +244,24 @@ export default function CategoryTemplate({
           </div>
         )}
 
+        {/* Quote path: directory and search visitors arrive with a BOM, not a cart */}
+        <div
+          className="mt-10 px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+          style={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+        >
+          <p className="text-sm m-0" style={{ color: "#374151" }}>
+            Have a parts list or spec? Send it over and we quote the same business day.
+          </p>
+          <LocalizedClientLink
+            href={`/contact?category=${encodeURIComponent(category.name)}`}
+            className="inline-flex items-center justify-center h-10 px-5 text-sm font-semibold text-white whitespace-nowrap transition-colors duration-150"
+            style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+            data-testid="category-request-quote-link"
+          >
+            Request a quote
+          </LocalizedClientLink>
+        </div>
+
         {/* Products */}
         <div className="py-10">
           <p className="text-xs font-normal tracking-widest uppercase mb-6" style={{ color: "#E3000F" }}>
