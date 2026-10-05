@@ -207,6 +207,13 @@ export default function ProductActions({
     return { message: "In stock", color: "#16a34a" }
   }, [selectedVariant, inStock, availableStock])
 
+  // Carry the part into the contact form so the quote request arrives with a part number
+  const quoteParams = new URLSearchParams()
+  if (selectedVariant?.sku) quoteParams.set("part", selectedVariant.sku)
+  if (product.title) quoteParams.set("product", product.title)
+  const quoteQuery = quoteParams.toString()
+  const quoteHref = `/${countryCode}/contact${quoteQuery ? `?${quoteQuery}` : ""}`
+
   return (
     <>
       <ToastContainer />
@@ -335,7 +342,7 @@ export default function ProductActions({
 
             {/* Full-width Request a quote CTA → contact page */}
             <Link
-              href={`/${countryCode}/contact`}
+              href={quoteHref}
               className="w-full h-12 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200"
               style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#c0000d" }}
@@ -385,6 +392,16 @@ export default function ProductActions({
                   </>
                 )}
             </button>
+
+            {/* Quote path for buyers who don't buy by card: part number travels to the contact form */}
+            <Link
+              href={quoteHref}
+              className="w-full h-11 flex items-center justify-center gap-2 text-sm font-semibold transition-colors duration-150 hover:bg-gray-50"
+              style={{ color: "#111111", border: "1px solid #d1d5db", borderRadius: "5px" }}
+              data-testid="request-quote-link"
+            >
+              Request a quote for this part
+            </Link>
 
             <p className="text-sm text-center" style={{ color: "#9ca3af" }}>
               Need 10+ units?{" "}

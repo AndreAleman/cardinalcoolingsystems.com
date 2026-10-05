@@ -11,7 +11,7 @@ const IndustriesServed = dynamic(() => import("@modules/home/components/industri
 const ProductCategories = dynamic(() => import("@modules/home/components/product-categories"))
 const WhyUs = dynamic(() => import("@modules/home/components/why-us"))
 const PortalPromo = dynamic(() => import("@modules/home/components/portal-promo"))
-const QuoteForm = dynamic(() => import("@modules/home/components/quote-form"))
+const QuoteCta = dynamic(() => import("@modules/home/components/quote-cta"))
 
 
 
@@ -122,7 +122,7 @@ export default async function Home({
       <ProductCategories categories={categories} />
       <WhyUs />
       <PortalPromo countryCode={countryCode} />
-      <QuoteForm />
+      <QuoteCta />
     </>
   )
 }
