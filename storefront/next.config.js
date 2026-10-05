@@ -129,6 +129,47 @@ const nextConfig = {
         destination: '/us/blog',
         permanent: true,
       },
+      // Merged duplicate posts → the page that keeps the topic (#27)
+      {
+        source: '/us/blog/sanitary-fittings-for-data-center-liquid-cooling',
+        destination: '/us/blog/what-fittings-does-a-data-center-liquid-cooling-system-need',
+        permanent: true,
+      },
+      {
+        source: '/us/blog/304-vs-316-stainless-steel-which-one-should-you-choose',
+        destination: '/us/blog/stainless-steel-304-vs-316',
+        permanent: true,
+      },
+      {
+        source: '/us/blog/the-basics-of-compression-tube-fittings',
+        destination: '/us/blog/the-basics-of-compression-tube-fittings-101',
+        permanent: true,
+      },
+      {
+        source: '/us/blog/surface-finish-and-sanitary-fittings',
+        destination: '/us/blog/why-surface-finish-and-cleanliness-matter-for-coolant-quality-in-closed-loops',
+        permanent: true,
+      },
+      {
+        source: '/us/blog/why-does-surface-finish-matter-in-sanitary-stainless-steel',
+        destination: '/us/blog/why-surface-finish-and-cleanliness-matter-for-coolant-quality-in-closed-loops',
+        permanent: true,
+      },
+      {
+        source: '/us/blog/what-are-sanitary-fittings-and-why-are-they-important',
+        destination: '/us/blog/sanitary-fittings-guide-types-applications-and-selection-for-data-centers-and-hvac',
+        permanent: true,
+      },
+      {
+        source: '/us/blog/sanitary-stainless-steel-systems-industry-applications-use-cases-and-design-guide',
+        destination: '/us/blog/complete-guide-to-sanitary-stainless-steel-fittings-materials-and-standards',
+        permanent: true,
+      },
+      {
+        source: '/us/blog/dimensions-and-sizing-of-tri-clamp-fittings',
+        destination: '/us/blog/dimensions-sizing-tri-clamp-fittings',
+        permanent: true,
+      },
       // Customer service to contact
       {
         source: '/us/customer-service',
