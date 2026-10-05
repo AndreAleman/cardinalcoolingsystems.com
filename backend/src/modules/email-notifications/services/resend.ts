@@ -90,11 +90,12 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
       case EmailTemplates.CONTACT_FORM: {
         // Name the sender so the lead is recognizable in the inbox and can't be
         // swallowed by a filter keyed on a generic subject.
-        const d = data as { name?: string; lastName?: string; email?: string } | undefined
+        const d = data as { name?: string; lastName?: string; email?: string; scamReasons?: string[] } | undefined
         const who = [d?.name, d?.lastName].filter(Boolean).join(" ")
         const domain = d?.email?.split("@")[1]
         const tail = [who, domain].filter(Boolean).join(" — ")
-        return tail ? `Quote request from ${tail}` : "New quote request"
+        const subject = tail ? `Quote request from ${tail}` : "New quote request"
+        return d?.scamReasons?.length ? `[Likely scam] ${subject}` : subject
       }
       case EmailTemplates.INVITE_USER:
         return "You've been invited to Cardinal Cooling Systems"

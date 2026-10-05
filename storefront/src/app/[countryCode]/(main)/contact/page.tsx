@@ -88,6 +88,7 @@ export default function ContactPage({ params }: Props) {
       )
 
       if (response.ok) {
+        const result = (await response.json().catch(() => ({}))) as { suspectedScam?: boolean }
         if (typeof window !== "undefined") {
           window.dataLayer = window.dataLayer || []
           window.dataLayer.push({
@@ -102,6 +103,7 @@ export default function ContactPage({ params }: Props) {
           email: data.email,
           prefill_part: prefill?.part,
           prefill_category: prefill?.category,
+          suspected_scam: result.suspectedScam === true,
         })
         identifyUser(data.email, {
           email: data.email,
