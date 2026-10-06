@@ -26,10 +26,9 @@ export default function ShippingReturns() {
           1–2 business days. Transit times vary by carrier and destination.
         </p>
         <p>
-          Standard shipping charges are calculated at checkout based on weight,
-          destination, and service level. For qualifying large orders, free
-          freight allowances apply as described in the Free Freight Policy
-          section below.
+          Parcel shipping charges are calculated at checkout based on weight,
+          destination, and service level. Orders over 120 lbs, and all tube
+          orders, ship by freight carrier; see Freight Shipments below.
         </p>
 
         <h2>Returns &amp; Refunds</h2>
@@ -53,14 +52,12 @@ export default function ShippingReturns() {
           applicable restocking or return shipping charges if applicable.
         </p>
 
-        <h2>Free Freight Policy</h2>
+        <h2>Freight Shipments</h2>
         <p>
-          Cardinal Cooling Systems currently offers full freight allowance to
-          the lower 48 US states on sanitary valve and fitting orders exceeding
-          $2,500, excluding clamps and hangers-only orders. A270 Polished Tube
-          orders are full freight allowed to Eastern and Central time zones for
-          orders exceeding $7,500, and to Mountain and Western time zones for
-          orders exceeding $25,000.
+          Freight (LTL) shipments are billed at the carrier&apos;s actual cost.
+          We confirm the freight charge with you before anything ships, and on
+          deposit orders it is added to the balance invoice. A270 tube ships in
+          20 ft lengths from Kansas City, MO or Paramount, CA.
         </p>
 
         <h2>Tube Case Quantities</h2>

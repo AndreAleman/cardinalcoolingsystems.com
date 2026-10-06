@@ -6,8 +6,10 @@
   - Unknown weight or a quote-only line anywhere: quote required.
   - 120 lbs or less (UPS parcel limit): pay in full at checkout.
   - Over 120 lbs, under $7,500: freight must be quoted.
-  - Over 120 lbs, $7,500 or more: freight free -> 50% deposit now,
-    balance invoiced 30 days after arrival.
+  - Over 120 lbs, $7,500 or more: 50% deposit now, balance invoiced 30
+    days after arrival with freight added at carrier cost (ADR-0009: the
+    site no longer promises free freight; the threshold only picks the
+    deposit path).
 
   Amounts are Medusa-convention dollars as-is (49.99 = $49.99), never cents.
 */
