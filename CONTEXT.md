@@ -64,7 +64,7 @@ One part and one quantity in the Quick Order table.
 An Order Line whose quantity is at or under the stock on hand. It shows a price and can be paid for.
 
 **Quote-Only Line**:
-An Order Line that cannot be paid for and can only go into a Quote Request: quantity over the stock on hand (including zero stock), or a part with no price or no weight on file.
+An Order Line that cannot be paid for and can only go into a Quote Request: quantity over the stock on hand (including zero stock), or a part with no price or no weight on file. A $0 price counts as no price. On the public site the same price rule (plus the `requires_quote` flag) makes a part show "Quote only" with a Request-a-quote action instead of a price, and keeps it out of the cart (`storefront/src/lib/util/quote-only.ts`).
 
 **Quote Request**:
 A list of Order Lines a Team Member sends to Cardinal to be priced. Cardinal answers with a Quote.

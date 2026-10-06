@@ -7,6 +7,7 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { isStainlessTubeCategory, STAINLESS_TUBE_PAGE_PATH } from "@lib/stainless-tube"
 
 type FaqItem = { question: string; answer: string }
 
@@ -137,6 +138,27 @@ export default function CategoryTemplate({
             <p className="text-sm font-light leading-relaxed" style={{ color: "#555555" }}>
               {category.description}
             </p>
+          </div>
+        )}
+
+        {/* Stainless tube is quoted per order: point buyers at the size
+            table + quote form on the landing page. */}
+        {isStainlessTubeCategory(category.handle) && (
+          <div className="py-6 border-b border-gray-100">
+            <LocalizedClientLink
+              href={STAINLESS_TUBE_PAGE_PATH}
+              className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 transition-colors"
+              style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px" }}
+              data-testid="stainless-tube-page-banner"
+            >
+              <span className="text-sm" style={{ color: "#374151" }}>
+                <strong className="font-semibold" style={{ color: "#111111" }}>Stainless tubing is quoted per order.</strong>{" "}
+                See every size, alloy and wall, and get pricing back within 48 hours.
+              </span>
+              <span className="text-sm font-semibold whitespace-nowrap group-hover:underline" style={{ color: "#E3000F" }}>
+                Sizes &amp; quote →
+              </span>
+            </LocalizedClientLink>
           </div>
         )}
 
