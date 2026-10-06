@@ -1,6 +1,7 @@
 import { getCategoriesList } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import NewsletterForm from "@modules/layout/components/newsletter-form"
+import { STAINLESS_TUBE_PAGE_PATH } from "@lib/stainless-tube"
 
 export default async function Footer() {
   const { product_categories } = await getCategoriesList(0, 50)
@@ -52,6 +53,16 @@ export default async function Footer() {
               Product Categories
             </h3>
             <ul className="space-y-3">
+              <li>
+                <LocalizedClientLink
+                  href={STAINLESS_TUBE_PAGE_PATH}
+                  className="text-sm transition-colors hover:text-white"
+                  style={{ color: "rgba(255,255,255,0.6)" }}
+                  data-testid="stainless-tube-footer-link"
+                >
+                  Stainless Steel Tubing &amp; Pipe
+                </LocalizedClientLink>
+              </li>
               {parentCategories.map((c) => (
                 <li key={c.id}>
                   <LocalizedClientLink

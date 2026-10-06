@@ -10,6 +10,7 @@ import { redirect } from "next/navigation"
 import { getAuthHeaders, getCartId, removeCartId, setCartId } from "./cookies"
 import { getProductsById } from "./products"
 import { getRegion } from "./regions"
+import { isVariantQuoteOnly } from "@lib/util/quote-only"
 
 export async function retrieveCart() {
   const cartId = getCartId()
@@ -79,6 +80,45 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
     .catch(medusaError)
 }
 
+/*
+  Quote-Only parts never enter a paid cart (docs/adr/0001, CONTEXT.md
+  "Quote-Only Line", lib/util/quote-only.ts): requires_quote metadata or
+  no payable price ($0 / missing). The UI already swaps Add to Cart for
+  "Request a quote"; this is the server-side backstop for stale pages and
+  direct calls. It looks up the live price with the buyer's own auth, so a
+  Company price list that does price the part still lets it through. If the
+  lookup itself fails it lets the add proceed, so a catalog hiccup never
+  blocks a normal purchase.
+*/
+async function assertNotQuoteOnly(variantId: string, regionId: string) {
+  let product: HttpTypes.StoreProduct | undefined
+  try {
+    const { products } = await sdk.client.fetch<{
+      products: HttpTypes.StoreProduct[]
+    }>("/store/products", {
+      method: "GET",
+      query: {
+        variants: { id: [variantId] },
+        region_id: regionId,
+        fields: "id,metadata,*variants,+variants.metadata,*variants.calculated_price",
+        limit: 1,
+      },
+      headers: getAuthHeaders(),
+      cache: "no-store",
+    })
+    product = products?.[0]
+  } catch {
+    return
+  }
+  const variant = product?.variants?.find((v) => v.id === variantId)
+  if (!product || !variant) return
+  if (isVariantQuoteOnly(product, variant)) {
+    throw new Error(
+      "This part is quote only. Request a quote instead of adding it to the cart."
+    )
+  }
+}
+
 export async function addToCart({
   variantId,
   quantity,
@@ -96,6 +136,8 @@ export async function addToCart({
   if (!cart) {
     throw new Error("Error retrieving or creating cart")
   }
+
+  await assertNotQuoteOnly(variantId, cart.region_id!)
 
   await sdk.store.cart
     .createLineItem(
