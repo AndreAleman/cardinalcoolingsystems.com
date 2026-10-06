@@ -153,7 +153,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
                     304 &amp; 316L Stainless
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5" style={{ backgroundColor: "#f8f8f8", color: "#6b7280", borderRadius: "5px" }}>
-                    Ships in 1 Business Day
+                    Ships in 1–2 Business Days
                   </span>
                 </div>
 
