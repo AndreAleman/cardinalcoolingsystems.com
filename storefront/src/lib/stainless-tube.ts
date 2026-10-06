@@ -2,10 +2,12 @@ import { HttpTypes } from "@medusajs/types"
 import { STAINLESS_PIPE_PRODUCT_HANDLE } from "@lib/stainless-pipe"
 
 /*
-  The stainless sanitary tube/pipe landing page
-  (app/[countryCode]/(main)/stainless-steel-tubing). Polished tube is
-  priced per order (Quote-Only, $0 in Medusa), so its product page,
-  its category page, the footer and the sitemap all point here.
+  Stainless tubing landing page helpers
+  (app/[countryCode]/(main)/stainless-steel-tubing). A270 polished tube is
+  priced per foot in Medusa (see scripts/seo/apply-tube-pricing.py); schedule
+  pipe is quote-only ($0, requires_quote). The size table shows the per-foot
+  price where one exists and "Quote only" where it does not. The page's quote
+  form takes multi-size RFQs; product pages link to it with ?sku=.
 */
 
 /* Path without the country code; LocalizedClientLink adds it. */
@@ -51,6 +53,8 @@ export type TubeSizeRow = {
   wall: string
   /* alloy (e.g. "304L") -> SKU */
   skus: Record<string, string>
+  /* alloy -> price per foot in dollars; null when the variant is quote-only */
+  prices: Record<string, number | null>
 }
 
 export type TubeVariantOption = {
@@ -59,6 +63,8 @@ export type TubeVariantOption = {
   od: string
   wall: string
   label: string
+  /* Per-foot price from the region-priced variant; null when $0 / missing (quote-only). */
+  pricePerFt: number | null
 }
 
 /* Parses 1-1/2", 2", 12" into inches. */
@@ -98,7 +104,9 @@ export function tubeVariantOptions(
     const wall = optionValue(v, (t) => t.includes("wall"))
     if (!alloyRaw || !od || !wall) continue
     const alloy = normalizeAlloy(alloyRaw)
-    out.push({ sku: v.sku, alloy, od, wall, label: `${od} OD × ${wall} wall, ${alloy}` })
+    const amount = Number((v as any).calculated_price?.calculated_amount)
+    const pricePerFt = Number.isFinite(amount) && amount > 0 ? amount : null
+    out.push({ sku: v.sku, alloy, od, wall, label: `${od} OD × ${wall} wall, ${alloy}`, pricePerFt })
   }
   return out.sort(
     (a, b) =>
@@ -119,8 +127,9 @@ export function tubeSizeRows(options: TubeVariantOption[]): {
     const key = `${o.od}|${o.wall}`
     const row =
       byKey.get(key) ??
-      ({ od: o.od, odInches: parseInches(o.od), wall: o.wall, skus: {} } as TubeSizeRow)
+      ({ od: o.od, odInches: parseInches(o.od), wall: o.wall, skus: {}, prices: {} } as TubeSizeRow)
     row.skus[o.alloy] = o.sku
+    row.prices[o.alloy] = o.pricePerFt
     byKey.set(key, row)
   }
   const rows = Array.from(byKey.values()).sort(

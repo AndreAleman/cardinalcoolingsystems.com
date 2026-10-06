@@ -160,13 +160,17 @@ export default function ProductActions({
   const hasNoPrice = quoteOnlyReason === "price unavailable"
   const isQuoteOnly = quoteOnlyReason !== null
 
-  // Polished tube and schedule pipe are priced per order: their quote CTA
-  // opens the stainless tubing page's form, pre-filled with the selected SKU. Every other
-  // quote-only product keeps the contact page.
+  // Tube and schedule pipe quote through the stainless tubing page's form,
+  // pre-filled with the selected SKU (multi-size RFQs). Every other product
+  // goes to the contact page with the part carried in the query string.
   const isTube = isStainlessTubeProduct(product)
+  const quoteParams = new URLSearchParams()
+  if (selectedVariant?.sku) quoteParams.set("part", selectedVariant.sku)
+  if (product.title) quoteParams.set("product", product.title)
+  const quoteQuery = quoteParams.toString()
   const quoteHref = isTube
     ? stainlessTubeQuoteHref(countryCode, selectedVariant?.sku)
-    : `/${countryCode}/contact`
+    : `/${countryCode}/contact${quoteQuery ? `?${quoteQuery}` : ""}`
 
   const availableStock = useMemo(() => {
     if (!selectedVariant?.manage_inventory) return null
@@ -224,13 +228,6 @@ export default function ProductActions({
     if (availableStock) return { message: `${availableStock} in stock`, color: "#16a34a" }
     return { message: "In stock", color: "#16a34a" }
   }, [selectedVariant, inStock, availableStock])
-
-  // Carry the part into the contact form so the quote request arrives with a part number
-  const quoteParams = new URLSearchParams()
-  if (selectedVariant?.sku) quoteParams.set("part", selectedVariant.sku)
-  if (product.title) quoteParams.set("product", product.title)
-  const quoteQuery = quoteParams.toString()
-  const quoteHref = `/${countryCode}/contact${quoteQuery ? `?${quoteQuery}` : ""}`
 
   return (
     <>

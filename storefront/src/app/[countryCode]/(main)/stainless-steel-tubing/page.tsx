@@ -35,9 +35,9 @@ const MTR_LOOKUP_URL = "https://sanitube.us/mtr-generator"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
-    title: "Stainless Steel Tubing & Pipe | Sanitary 304L & 316L | Cardinal Cooling Systems",
+    title: "Stainless Steel Tubing Sizes & Prices | 304L & 316L Sanitary Tube and Pipe",
     description:
-      "Sanitary stainless steel tubing and pipe in 304L and 316L, ASTM A270 3-A polished, 1-1/2\" to 12\" OD. Quote only: pricing in 48 hours, quotes held 90 days, no minimums, MTRs for every part.",
+      "Sanitary stainless steel tubing in 304L and 316L, ASTM A270 3-A polished, 1/2\" to 12\" OD, priced per foot and sold in 20 ft lengths. Schedule pipe quoted in 48 hours. MTRs for every part.",
     alternates: {
       canonical: `https://cardinalcoolingsystems.com/${params.countryCode}/stainless-steel-tubing`,
     },
@@ -45,10 +45,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const facts = [
-  { title: "Pricing in 48 hours", detail: "Send sizes and quantities; your quote comes back within 48 hours." },
-  { title: "Quotes held 90 days", detail: "Your price holds for 90 days, so you can plan the build and the PO." },
-  { title: "No minimums", detail: "Quote a few lengths or a full project, same process." },
-  { title: "Ships from FL, KC and LA", detail: "Stock ships from our Florida, Kansas City and Los Angeles warehouses." },
+  { title: "Tube priced per foot", detail: "Every A270 size shows its per-foot price. Order online or send a list for a project quote." },
+  { title: "Project quotes in 48 hours", detail: "Mixed sizes, pipe, or volume pricing: send the list and the quote comes back within 48 hours, held for 90 days." },
+  { title: "No minimums", detail: "Order a single 20 ft length or a full project, same process." },
+  { title: "Ships from KC and LA", detail: "Tube ships in 20 ft lengths by freight from Kansas City or Paramount, CA; freight is confirmed before shipping." },
   { title: "MTRs for every part", detail: "Mill test reports are available for every part we ship." },
   { title: "Same-day vendor setup", detail: "Send your vendor forms and we set you up the same day." },
 ]
@@ -63,8 +63,8 @@ const faqs = [
     a: "Both are low-carbon grades suited to welding. 316L adds molybdenum for better resistance to chlorides and many cleaning chemicals. 304L is common where that exposure is low. Tell us your fluid and we will quote either or both.",
   },
   {
-    q: "Why is there no price on the site?",
-    a: "Tube is priced per order on size mix and quantity, so every order is quoted. You get pricing within 48 hours and the quote holds for 90 days.",
+    q: "How is tube priced?",
+    a: "By the foot, in 20 ft lengths; the price per foot is shown for every size and alloy below. Freight is billed at carrier cost and confirmed before shipping. For a project with mixed sizes, pipe, or volume, send the list and you get a quote within 48 hours, held for 90 days.",
   },
   {
     q: "Can I get MTRs?",
@@ -134,7 +134,7 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
           </nav>
 
           <p className="text-xs font-medium tracking-[0.18em] uppercase mb-4" style={{ color: "#E3000F" }}>
-            Sanitary tubing · 304L &amp; 316L · Quote only
+            Sanitary tubing · 304L &amp; 316L · Priced per foot
           </p>
           <h1 className="font-sans text-4xl lg:text-6xl font-normal tracking-tight mb-6 max-w-4xl" style={{ color: "#111111" }}>
             Stainless Steel Tubing &amp; Pipe
@@ -148,7 +148,7 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
                 {pipeRows[pipeRows.length - 1].size}, Sch {schedules.join(", ")}.
               </>
             )}{" "}
-            Tube and pipe are priced per order: send your sizes and quantities and get pricing back within 48 hours.
+            Tube is priced per foot below and sold in 20 ft lengths. Pipe and project lists are quoted within 48 hours.
           </p>
           <div className="flex flex-wrap gap-3">
             <a
@@ -235,7 +235,7 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
                     {alloys.map((a) => (
                       <th key={a} scope="col" className="px-4 py-3 font-semibold" style={{ color: "#111111" }}>{a}</th>
                     ))}
-                    <th scope="col" className="px-4 py-3 font-semibold" style={{ color: "#111111" }}>Price</th>
+                    <th scope="col" className="px-4 py-3 font-semibold whitespace-nowrap" style={{ color: "#111111" }}>Order</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -244,14 +244,25 @@ export default async function StainlessSteelTubingPage({ params }: Props) {
                       <td className="px-4 py-3 font-medium" style={{ color: "#111111" }}>{r.od}</td>
                       <td className="px-4 py-3" style={{ color: "#374151" }}>{r.wall}</td>
                       {alloys.map((a) => (
-                        <td key={a} className="px-4 py-3 font-mono text-xs" style={{ color: r.skus[a] ? "#374151" : "#d1d5db" }}>
-                          {r.skus[a] ?? "—"}
+                        <td key={a} className="px-4 py-3" style={{ color: r.skus[a] ? "#374151" : "#d1d5db" }}>
+                          <span className="font-mono text-xs">{r.skus[a] ?? "—"}</span>
+                          {r.skus[a] && (
+                            <span className="block text-sm font-medium" style={{ color: "#111111" }}>
+                              {r.prices[a] != null ? `$${r.prices[a]!.toFixed(2)} / ft` : "Quote only"}
+                            </span>
+                          )}
                         </td>
                       ))}
-                      <td className="px-4 py-3">
-                        <a href={`#${STAINLESS_TUBE_QUOTE_ANCHOR}`} className="text-sm font-medium hover:underline" style={{ color: "#E3000F" }}>
-                          Quote only
-                        </a>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {product && Object.values(r.prices).some((p) => p != null) ? (
+                          <Link href={`/${countryCode}/products/${product.handle}`} className="text-sm font-medium hover:underline" style={{ color: "#E3000F" }}>
+                            Buy by the foot
+                          </Link>
+                        ) : (
+                          <a href={`#${STAINLESS_TUBE_QUOTE_ANCHOR}`} className="text-sm font-medium hover:underline" style={{ color: "#E3000F" }}>
+                            Quote only
+                          </a>
+                        )}
                       </td>
                     </tr>
                   ))}
