@@ -14,6 +14,15 @@ import { addToCart } from "@lib/data/cart"
 import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { HttpTypes } from "@medusajs/types"
 import Link from "next/link"
+import {
+  catalogQuoteOnlyReason,
+  isProductQuoteOnly,
+} from "@lib/util/quote-only"
+import {
+  isStainlessTubeProduct,
+  STAINLESS_TUBE_PAGE_PATH,
+  stainlessTubeQuoteHref,
+} from "@lib/stainless-tube"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -138,17 +147,26 @@ export default function ProductActions({
     return false
   }, [selectedVariant])
 
-  // Quote-only logic — variant-level takes precedence over product-level
-  const requiresQuote = !!(
-    selectedVariant?.metadata?.requires_quote === true ||
-    selectedVariant?.metadata?.requires_quote === "true" ||
-    product.metadata?.requires_quote === true ||
-    product.metadata?.requires_quote === "true"
-  )
-  const hasNoPrice = !!(
-    selectedVariant && !selectedVariant.calculated_price?.calculated_amount
-  )
-  const isQuoteOnly = requiresQuote || hasNoPrice
+  // Quote-only logic (lib/util/quote-only.ts): requires_quote metadata on the
+  // product or variant, or no payable price ($0 / missing). With no variant
+  // selected yet, the product is quote-only when none of its variants can be
+  // bought, so the buyer sees the quote path right away.
+  const quoteOnlyReason = selectedVariant
+    ? catalogQuoteOnlyReason(product, selectedVariant)
+    : isProductQuoteOnly(product)
+      ? catalogQuoteOnlyReason(product, product.variants?.[0])
+      : null
+  const requiresQuote = quoteOnlyReason === "quote-only part"
+  const hasNoPrice = quoteOnlyReason === "price unavailable"
+  const isQuoteOnly = quoteOnlyReason !== null
+
+  // Polished tube is priced per order: its quote CTA opens the stainless
+  // tubing page's form, pre-filled with the selected SKU. Every other
+  // quote-only product keeps the contact page.
+  const isTube = isStainlessTubeProduct(product)
+  const quoteHref = isTube
+    ? stainlessTubeQuoteHref(countryCode, selectedVariant?.sku)
+    : `/${countryCode}/contact`
 
   const availableStock = useMemo(() => {
     if (!selectedVariant?.manage_inventory) return null
@@ -164,7 +182,7 @@ export default function ProductActions({
   }
 
   const handleAddToCart = async () => {
-    if (!selectedVariant?.id) return
+    if (!selectedVariant?.id || isQuoteOnly) return
     setIsAdding(true)
     try {
       await addToCart({ variantId: selectedVariant.id, quantity, countryCode })
@@ -335,7 +353,7 @@ export default function ProductActions({
               </svg>
               <span>
                 {hasNoPrice && !requiresQuote
-                  ? "Price unavailable — quote only. Request a quote and we'll get back to you within 1 business day."
+                  ? "Quote only — priced per order. Request a quote and we'll get back to you within 1 business day."
                   : "This product is available by quote only. Request a quote and we'll get back to you within 1 business day."}
               </span>
             </div>
@@ -354,6 +372,17 @@ export default function ProductActions({
               </svg>
               Request a quote
             </Link>
+            {isTube && (
+              <p className="text-sm text-center m-0" style={{ color: "#6b7280" }}>
+                <Link
+                  href={`/${countryCode}${STAINLESS_TUBE_PAGE_PATH}`}
+                  className="underline transition-colors duration-150 hover:text-gray-900"
+                  data-testid="stainless-tube-page-link"
+                >
+                  See every tube size, alloy and wall
+                </Link>
+              </p>
+            )}
             <p className="text-sm text-center m-0" style={{ color: "#9ca3af" }}>
               Have a company account?{" "}
               <Link
@@ -453,6 +482,7 @@ export default function ProductActions({
           show={!inView}
           optionsDisabled={!!disabled || isAdding}
           isQuoteOnly={isQuoteOnly}
+          quoteHref={quoteHref}
           countryCode={countryCode}
         />
       </div>
