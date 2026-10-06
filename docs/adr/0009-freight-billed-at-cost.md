@@ -2,20 +2,24 @@
 status: accepted
 amends: 0006
 ---
-# Freight is billed at carrier cost and never advertised
+# Freight is billed at carrier cost; allowances live in the policy page only
 
 Decided 2026-10-06 with the owner.
 
 ADR-0006 said heavy orders at $7,500 or more ship "freight free". The
-supplier's own free-freight floor on A270 tube is $10,500–$27,500 at cost
-depending on lane, so that promise would have Cardinal paying freight on
-most tube orders in the $7,500–$27,500 band.
+supplier's own free-freight floor is $10,500–$27,500 at cost depending on
+lane, so that promise would have Cardinal paying freight on most freight
+orders in the $7,500–$27,500 band.
 
 From now on:
 
-- The site does not publish freight costs, allowances or thresholds. The
-  Shipping & Returns page says freight shipments are billed at the
-  carrier's actual cost and confirmed before shipping.
+- Freight is billed at the carrier's actual cost and confirmed before
+  shipping. A freight allowance applies only at $15,000+ merchandise value
+  to the contiguous US, or $21,500+ to FL, NY, NJ, DE, New England, OR and
+  WA (the supplier's lane floors expressed at selling price, rounded up).
+- These numbers appear on the Shipping & Returns policy page only. Product
+  pages, cart and checkout do not show freight costs, allowances or
+  thresholds; freight is a line on the quote or the balance invoice.
 - The payment path in `backend/src/utils/payment-rules.ts` is unchanged:
   120 lbs is still the parcel line, heavy orders under $7,500 are still
   quoted, heavy orders at $7,500 or more still take a 50% deposit. The

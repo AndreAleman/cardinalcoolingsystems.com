@@ -52,12 +52,21 @@ export default function ShippingReturns() {
           applicable restocking or return shipping charges if applicable.
         </p>
 
-        <h2>Freight Shipments</h2>
+        <h2>Freight Policy</h2>
         <p>
-          Freight (LTL) shipments are billed at the carrier&apos;s actual cost.
-          We confirm the freight charge with you before anything ships, and on
-          deposit orders it is added to the balance invoice. A270 tube ships in
-          20 ft lengths from Kansas City, MO or Paramount, CA.
+          Orders over 120 lbs, and all A270 tube orders, ship by freight (LTL)
+          carrier. Freight is billed at the carrier&apos;s actual cost; we confirm
+          the charge with you before anything ships, and on deposit orders it is
+          added to the balance invoice.
+        </p>
+        <p>
+          Freight is allowed (no charge) on freight-class orders of $15,000 or
+          more shipping to the contiguous United States, except that orders
+          shipping to Florida, New York, New Jersey, Delaware, the New England
+          states, Oregon and Washington qualify at $21,500 or more. Allowances
+          are based on merchandise value before tax. A270 tube ships in 20 ft
+          lengths from Kansas City, MO or Paramount, CA; parcel-size orders
+          follow the Shipping Policy above.
         </p>
 
         <h2>Tube Case Quantities</h2>
