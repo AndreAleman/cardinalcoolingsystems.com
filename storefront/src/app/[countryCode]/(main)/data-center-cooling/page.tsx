@@ -214,7 +214,7 @@ export default function DataCenterLanding() {
             display: "flex", gap: 48, flexWrap: "wrap",
             opacity: hero.inView ? 1 : 0, transition: "all 0.7s ease 0.5s",
           }}>
-            {["3-A Certified 304 & 316L", "Ships 1–2 Business Days", "Free Shipping Over $100", "Mission-Critical Grade"].map(t => (
+            {["3-A Certified 304 & 316L", "Ships 1–2 Business Days", "Mission-Critical Grade"].map(t => (
               <div key={t} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ color: "#E3000F" }}>✓</span>
                 <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", letterSpacing: "0.03em" }}>{t}</span>
