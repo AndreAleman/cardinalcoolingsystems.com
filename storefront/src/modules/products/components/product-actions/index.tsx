@@ -164,9 +164,6 @@ export default function ProductActions({
   // tubing page's form, pre-filled with the selected SKU. Every other
   // quote-only product keeps the contact page.
   const isTube = isStainlessTubeProduct(product)
-  const quoteHref = isTube
-    ? stainlessTubeQuoteHref(countryCode, selectedVariant?.sku)
-    : `/${countryCode}/contact`
 
   const availableStock = useMemo(() => {
     if (!selectedVariant?.manage_inventory) return null
@@ -230,7 +227,9 @@ export default function ProductActions({
   if (selectedVariant?.sku) quoteParams.set("part", selectedVariant.sku)
   if (product.title) quoteParams.set("product", product.title)
   const quoteQuery = quoteParams.toString()
-  const quoteHref = `/${countryCode}/contact${quoteQuery ? `?${quoteQuery}` : ""}`
+  const quoteHref = isTube
+    ? stainlessTubeQuoteHref(countryCode, selectedVariant?.sku)
+    : `/${countryCode}/contact${quoteQuery ? `?${quoteQuery}` : ""}`
 
   return (
     <>
