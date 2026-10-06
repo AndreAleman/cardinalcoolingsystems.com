@@ -26,10 +26,9 @@ export default function ShippingReturns() {
           1–2 business days. Transit times vary by carrier and destination.
         </p>
         <p>
-          Standard shipping charges are calculated at checkout based on weight,
-          destination, and service level. For qualifying large orders, free
-          freight allowances apply as described in the Free Freight Policy
-          section below.
+          Parcel shipping charges are calculated at checkout based on weight,
+          destination, and service level. Orders over 120 lbs, and all tube
+          orders, ship by freight carrier; see Freight Shipments below.
         </p>
 
         <h2>Returns &amp; Refunds</h2>
@@ -53,14 +52,21 @@ export default function ShippingReturns() {
           applicable restocking or return shipping charges if applicable.
         </p>
 
-        <h2>Free Freight Policy</h2>
+        <h2>Freight Policy</h2>
         <p>
-          Cardinal Cooling Systems currently offers full freight allowance to
-          the lower 48 US states on sanitary valve and fitting orders exceeding
-          $2,500, excluding clamps and hangers-only orders. A270 Polished Tube
-          orders are full freight allowed to Eastern and Central time zones for
-          orders exceeding $7,500, and to Mountain and Western time zones for
-          orders exceeding $25,000.
+          Orders over 120 lbs, and all A270 tube orders, ship by freight (LTL)
+          carrier. Freight is billed at the carrier&apos;s actual cost; we confirm
+          the charge with you before anything ships, and on deposit orders it is
+          added to the balance invoice.
+        </p>
+        <p>
+          Freight is allowed (no charge) on freight-class orders of $15,000 or
+          more shipping to the contiguous United States, except that orders
+          shipping to Florida, New York, New Jersey, Delaware, the New England
+          states, Oregon and Washington qualify at $21,500 or more. Allowances
+          are based on merchandise value before tax. A270 tube ships in 20 ft
+          lengths from Kansas City, MO or Paramount, CA; parcel-size orders
+          follow the Shipping Policy above.
         </p>
 
         <h2>Tube Case Quantities</h2>

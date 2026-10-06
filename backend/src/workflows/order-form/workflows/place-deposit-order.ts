@@ -18,10 +18,11 @@ import { createApprovalsWorkflow } from "../../approval/workflows/create-approva
 import { ApprovalType } from "../../../modules/approval/types";
 
 /*
-  Place a 50%-deposit order: over 120 lbs at $7,500+ freight is free, so
-  the order is taken WITHOUT payment and marked deposit-due. Cardinal
-  sends the Stripe deposit invoice from admin, then the balance invoice
-  (net 30) after arrival. Same pipeline as invoice orders plus the
+  Place a 50%-deposit order: over 120 lbs at $7,500+ the order is taken
+  WITHOUT payment and marked deposit-due. Cardinal sends the Stripe
+  deposit invoice from admin, then the balance invoice (net 30) after
+  arrival, adding freight at carrier cost unless metadata.freight is
+  "allowed" (ADR-0009). Same pipeline as invoice orders plus the
   eligibility check and the deposit metadata stamp.
 */
 

@@ -1,10 +1,13 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk";
 import { Modules } from "@medusajs/framework/utils";
+import { freightAllowance } from "../../../utils/payment-rules";
 
 /*
   Mark a freshly promoted Order as a 50%-deposit order. Admin reads
   these fields to send the Stripe deposit invoice and, after arrival,
-  the balance invoice (net 30). Compensation restores prior metadata.
+  the balance invoice (net 30) — with freight added at carrier cost
+  unless `freight` is "allowed" (ADR-0009). Compensation restores prior
+  metadata.
 */
 
 type Input = {
@@ -20,8 +23,15 @@ export const stampOrderDepositMetadataStep = createStep(
   "stamp-order-deposit-metadata",
   async ({ order_id }: Input, { container }) => {
     const orderModule = container.resolve(Modules.ORDER);
-    const order = await orderModule.retrieveOrder(order_id);
+    const order = await orderModule.retrieveOrder(order_id, {
+      relations: ["shipping_address"],
+    });
     const previousMetadata = (order.metadata ?? {}) as Record<string, unknown>;
+    const shippingState = order.shipping_address?.province ?? null;
+    const freight = freightAllowance({
+      totalUsd: Number(order.total ?? 0),
+      shippingState,
+    });
 
     await orderModule.updateOrders([
       {
@@ -30,6 +40,8 @@ export const stampOrderDepositMetadataStep = createStep(
           ...previousMetadata,
           payment_rule: "deposit_50",
           deposit_status: "due",
+          freight,
+          freight_ship_to_state: shippingState?.toUpperCase() ?? null,
         },
       },
     ]);
