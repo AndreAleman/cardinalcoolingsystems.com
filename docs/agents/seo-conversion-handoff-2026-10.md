@@ -177,7 +177,7 @@ Do not chase: "data center liquid cooling" (system-level), "quick disconnect" (P
 - `Andres-Weekly-Schedule.xlsx` — hours budget, 30-minute weekly grid, daily checklist.
 - `CCS-Tube-Pricing-2026-10.xlsx` — tube pricing math + free-freight lanes.
 - `dc-news/<date>.md` — daily news digest output.
-- `sanitube-agent-prompt.md` — task brief for the Sanitube parity work.
+- `sanitube-agent-prompt.md` — the Sanitube brief: create the A270 tube products on sanitube.us at the listed per-foot prices, nothing else (`docs/agents/sanitube-tube-import-prompt.md`).
 
 ## 11. Working rules for agents on this repo
 
@@ -217,7 +217,7 @@ Work the queue top to bottom. Each item is one issue, one branch `ai/<issue>-<sl
 
 ### T4. Size-level product pages
 - Today sizes live in `?alloy=&size=` query params on one product URL, so Google sees one page per product. Design: one indexable URL per size/alloy (route `products/[handle]/[variant-slug]` or canonical variant pages), with a spec table (OD, wall, weight, pressure rating where known, part number) and title `2" Tri-Clamp 90° Elbow, 316L | 14MP-200`. Start with the top five products by GSC impressions; measure before expanding.
-- Catalog scope is the full Sanitube list (`~/colibri-repos/sanitube.us/pricing-reports/a-level-price-list-upload.csv`, 1,102 priced SKUs; cost basis = that list; selling price per Andres, 30% margin on tube so far).
+- Catalog scope for Cardinal size pages is the Sanitube A-level list (`~/colibri-repos/sanitube.us/pricing-reports/a-level-price-list-upload.csv`, 1,102 SKUs). Sanitube's own site is a separate, narrower job (tube products only) with its own brief.
 
 ### T5. Directories and outreach (no code)
 - From aleman@cardinalcoolingsystems.com, submit the Directories tab entries in `CCS-SEO-Action-Plan.xlsx` (Thomasnet first; GlobalSpec, IQS, Crunchbase, D&B, Bing Places, LinkedIn page, DCD profile, Mission Critical buyers guide, Data Center Map). One consistent description: "Cardinal Cooling Systems stocks 304 and 316L stainless sanitary tube, tri-clamp and weld fittings, and valves for data center liquid cooling and food-processing loops. Same-day quotes on parts lists and BOMs." NAP = the Regus Miami address and (630) 947-9955.
