@@ -35,6 +35,24 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
     setMousePosition({ x, y })
   }
 
+  // No placeholder or logo stand-in when a product has no photo: Google
+  // Merchant Center rejects placeholder product images.
+  if (validImages.length === 0) {
+    return (
+      <div className="flex flex-col items-center w-full max-w-[420px] mx-auto" id="pdp-image-gallery">
+        <div
+          className="w-[400px] h-[440px] max-w-full rounded mb-4 flex items-center justify-center"
+          style={{ backgroundColor: "#f3f4f6" }}
+          data-testid="pdp-no-photo"
+        >
+          <span className="text-sm" style={{ color: "#6b7280" }}>
+            Photo not available
+          </span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col items-center w-full max-w-[420px] mx-auto" id="pdp-image-gallery">
       {/* Main image */}

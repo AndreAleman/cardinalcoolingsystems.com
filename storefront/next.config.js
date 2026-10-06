@@ -170,6 +170,12 @@ const nextConfig = {
         destination: '/us/blog/dimensions-sizing-tri-clamp-fittings',
         permanent: true,
       },
+      // Shipping & Returns was split into stand-alone policy pages (GMC audit)
+      {
+        source: '/us/shipping-returns',
+        destination: '/us/shipping-policy',
+        permanent: true,
+      },
       // Customer service to contact
       {
         source: '/us/customer-service',

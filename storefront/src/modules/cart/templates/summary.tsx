@@ -9,6 +9,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import RequestQuoteModal from "@modules/cart/components/request-quote-modal"
 import { captureEvent } from "@lib/util/posthog"
 import { HttpTypes } from "@medusajs/types"
+import PaymentIcons from "@modules/common/components/payment-icons"
 
 type SummaryProps = {
   cart: HttpTypes.StoreCart & {
@@ -53,6 +54,10 @@ const Summary = ({ cart, customer }: SummaryProps) => {
         <Button className="w-full h-10">Go to checkout</Button>
       </LocalizedClientLink>
       <RequestQuoteModal customer={customer} />
+      <div className="flex items-center justify-between gap-3 pt-2">
+        <span className="text-sm text-ui-fg-subtle">We accept</span>
+        <PaymentIcons iconClassName="h-6 w-auto" data-testid="cart-payment-icons" />
+      </div>
     </div>
   )
 }

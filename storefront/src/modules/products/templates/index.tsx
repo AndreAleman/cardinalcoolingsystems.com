@@ -12,6 +12,7 @@ import { HttpTypes } from "@medusajs/types"
 import SanityTabs from "../components/sanity-tabs"
 import Link from "next/link"
 import ProductViewTracker from "@modules/products/components/product-view-tracker"
+import PaymentIcons from "@modules/common/components/payment-icons"
 
 type SanityTab = {
   _key: string
@@ -168,6 +169,12 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
                 }>
                   <ProductActionsWrapper id={product.id} region={region} selectedVariant={selectedVariant} />
                 </Suspense>
+
+                {/* Accepted payment methods (same list as the footer) */}
+                <div className="flex items-center gap-3">
+                  <span className="text-xs" style={{ color: "#6b7280" }}>We accept</span>
+                  <PaymentIcons iconClassName="h-6 w-auto" data-testid="product-payment-icons" />
+                </div>
 
                 {/* Accordion tabs — Product Information + Shipping & Returns */}
                 <div className="border-t border-gray-100 pt-6">

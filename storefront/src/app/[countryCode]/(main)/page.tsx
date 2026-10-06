@@ -40,6 +40,7 @@ export default async function Home({
     getRegion(countryCode),
     sdk.store.category.list({
       fields: "id,name,handle,description,metadata,*products,products.id,products.thumbnail,products.images,products.images.url,products.images.rank",
+      limit: 100,
     }),
   ])
 
@@ -53,6 +54,8 @@ export default async function Home({
   const rangeProducts =
     collections
       ?.flatMap((collection) => collection.products || [])
+      // Only products with a real photo (no placeholder images, per GMC)
+      ?.filter((p) => !!(p.thumbnail || p.images?.[0]?.url))
       ?.slice(0, 8)
       ?.map((p) => {
         const variants = p.variants || []
@@ -107,7 +110,7 @@ export default async function Home({
           id: p.id,
           title: p.title,
           subtitle: spec || p.subtitle || p.title || "Product",
-          image: p.thumbnail ?? "/images/placeholder.jpg",
+          image: (p.thumbnail || p.images?.[0]?.url) as string,
           handle: p.handle,
           price: lowestPrice,
         }

@@ -43,7 +43,8 @@ export default function ProductCategories({ categories }: Props) {
   const filtered = HANDLES.reduce<HttpTypes.StoreProductCategory[]>(
     (acc, handle) => {
       const match = categories.find((c) => c.handle === handle)
-      if (match) acc.push(match)
+      // Empty categories are never linked (GMC rejects them).
+      if (match && (match.products?.length ?? 0) > 0) acc.push(match)
       return acc
     },
     []

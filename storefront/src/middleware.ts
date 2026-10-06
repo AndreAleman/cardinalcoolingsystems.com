@@ -193,6 +193,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // "ingest" excluded so the PostHog proxy (rewrites in next.config.js)
-  // isn't redirected to /us/ingest/*
-  matcher: ["/((?!api|ingest|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg).*)"],
+  // isn't redirected to /us/ingest/*.
+  // Static files in /public are excluded too; without jpeg/webp/pdf/txt here,
+  // /images/og-image.jpeg, /line-card.pdf and /robots.txt were redirected to
+  // /us/... and 404'd (the homepage og:image and Organization logo were broken).
+  matcher: ["/((?!api|ingest|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.svg|.*\\.webp|.*\\.avif|.*\\.ico|.*\\.pdf|.*\\.txt).*)"],
 }

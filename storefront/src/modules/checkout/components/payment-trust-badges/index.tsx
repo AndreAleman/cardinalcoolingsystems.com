@@ -1,5 +1,6 @@
 import { LockClosedIcon, ShieldCheckIcon } from "@heroicons/react/24/solid"
 import { Text } from "@medusajs/ui"
+import PaymentIcons from "@modules/common/components/payment-icons"
 
 export default function PaymentTrustBadges() {
   return (
@@ -7,28 +8,7 @@ export default function PaymentTrustBadges() {
       {/* Payment Methods Accepted - With Real Icons */}
       <div className="flex items-center justify-between">
         <Text className="text-sm text-ui-fg-subtle">We accept:</Text>
-        <div className="flex gap-2 items-center">
-          <img 
-            src="/images/payments/visa.svg" 
-            alt="Visa" 
-            className="h-6 w-auto opacity-70" 
-          />
-          <img 
-            src="/images/payments/mastercard.svg" 
-            alt="Mastercard" 
-            className="h-6 w-auto opacity-70" 
-          />
-          <img 
-            src="/images/payments/amex.svg" 
-            alt="American Express" 
-            className="h-6 w-auto opacity-70" 
-          />
-          <img 
-            src="/images/payments/discover.svg" 
-            alt="Discover" 
-            className="h-6 w-auto opacity-70" 
-          />
-        </div>
+        <PaymentIcons iconClassName="h-6 w-auto" />
       </div>
 
       {/* Security Features */}
