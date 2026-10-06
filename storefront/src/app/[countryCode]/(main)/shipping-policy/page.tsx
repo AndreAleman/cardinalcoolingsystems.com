@@ -1,58 +1,53 @@
 import { Metadata } from "next"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 export const metadata: Metadata = {
-  title: "Shipping & Returns - Cardinal Cooling Systems",
+  title: "Shipping Policy | Cardinal Cooling Systems",
   description:
-    "Information about our shipping policies, delivery times, and return procedures for stainless steel sanitary fittings.",
+    "Where we ship, processing times, parcel and freight shipping for stainless steel sanitary fittings, valves and tube.",
+  alternates: {
+    canonical: "https://cardinalcoolingsystems.com/us/shipping-policy",
+  },
 }
 
-export default function ShippingReturns() {
+export default function ShippingPolicy() {
   return (
     <div className="max-w-4xl mx-auto px-6 lg:px-8 py-12">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Shipping & Returns
+          Shipping Policy
         </h1>
-        <p className="text-lg text-gray-600">Last updated: February 14, 2026</p>
+        <p className="text-lg text-gray-600">Last updated: October 6, 2026</p>
       </div>
 
       {/* Page Content */}
       <div className="prose prose-lg max-w-none">
-        <h2>Shipping Policy</h2>
+        <h2>Where We Ship</h2>
         <p>
           We currently ship to commercial and residential addresses in the
-          contiguous United States only. Orders are typically processed within
-          1–2 business days. Transit times vary by carrier and destination.
+          contiguous United States only.
         </p>
+
+        <h2>Processing Time</h2>
+        <p>
+          Orders are typically processed within 1–2 business days. Transit
+          times vary by carrier and destination.
+        </p>
+
+        <h2>Parcel Shipping</h2>
         <p>
           Parcel shipping charges are calculated at checkout based on weight,
           destination, and service level. Orders over 120 lbs, and all tube
           orders, ship by freight carrier; see Freight Shipments below.
         </p>
-
-        <h2>Returns &amp; Refunds</h2>
         <p>
-          Standard products may be returned within 30 days of delivery with
-          prior authorization. Items must be unused, in their original packaging,
-          and suitable for resale.
-        </p>
-        <p>
-          To request a return, please contact us at{" "}
-          <a href="mailto:aleman@cardinalcoolingsystems.com">
-            aleman@cardinalcoolingsystems.com
-          </a>{" "}
-          or{" "}
-          <a href="tel:+16309479955">
-            (630) 947-9955
-          </a>{" "}
-          for a Return Merchandise Authorization (RMA) and shipping
-          instructions. Once we receive and inspect the returned goods, approved
-          refunds will be issued to the original payment method, less any
-          applicable restocking or return shipping charges if applicable.
+          Parcel shipping is free on orders with an items subtotal of $100 or
+          more (before tax, shipping and discounts) when the whole shipment is
+          120 lbs or less.
         </p>
 
-        <h2>Freight Policy</h2>
+        <h2>Freight Shipments</h2>
         <p>
           Orders over 120 lbs, and all A270 tube orders, ship by freight (LTL)
           carrier. Freight is billed at the carrier&apos;s actual cost; we confirm
@@ -66,7 +61,7 @@ export default function ShippingReturns() {
           states, Oregon and Washington qualify at $21,500 or more. Allowances
           are based on merchandise value before tax. A270 tube ships in 20 ft
           lengths from Kansas City, MO or Paramount, CA; parcel-size orders
-          follow the Shipping Policy above.
+          follow the Parcel Shipping terms above.
         </p>
 
         <h2>Tube Case Quantities</h2>
@@ -167,58 +162,17 @@ export default function ShippingReturns() {
           </table>
         </div>
 
-        <h2>Warranty</h2>
+        <h2>Tracking Your Order</h2>
         <p>
-          Cardinal Cooling Systems LLC (herein called Cardinal Cooling Systems)
-          warrants the products described herein to be
-          free from defects in material and workmanship for a period of ninety
-          (90) days from date of shipment by Cardinal Cooling Systems under
-          normal use and service. Cardinal Cooling Systems&apos;s sole
-          obligation under this warranty is limited to replacing, as hereinafter
-          provided, any stock (not special order or fabricated) product found to
-          Cardinal Cooling Systems&apos;s satisfaction to be defective upon
-          examination by Cardinal Cooling Systems, provided that such product
-          shall be returned for inspection to Cardinal Cooling Systems within
-          thirty (30) days after discovery of the defect.
+          Signed-in customers can see the status of every order on the{" "}
+          <LocalizedClientLink href="/account/orders">Orders</LocalizedClientLink>{" "}
+          page of their account. For help with a shipment, contact us below.
         </p>
 
+        <h2>Returns</h2>
         <p>
-          The replacement of defective products will be made without charge for
-          parts. This warranty shall not apply to: (a) any product that has been
-          subject to abuse, negligence, accident, or misapplication; (b) any
-          product altered or repaired by a party not exclusively authorized by
-          Cardinal Cooling Systems; and (c) normal maintenance services or the
-          replacement of service items (such as gaskets and seats) made in
-          connection with such services. To the extent permitted by State and
-          Federal law, this limited warranty shall extend only to the buyer and
-          any other person reasonably expected to use or consume the warranted
-          goods.
-        </p>
-
-        <p>
-          Cardinal Cooling Systems disclaims any and all liability for injury to
-          persons or property, or other damages of any nature, including
-          special, indirect, consequential, compensatory, and punitive damages,
-          directly or indirectly resulting from the performance, operation, or
-          the failure to operate, of any equipment or process. No action may be
-          brought against Cardinal Cooling Systems for an alleged breach of
-          warranty unless such action is instituted within ninety (90) days from
-          the date the cause of action accrues. This limited warranty shall be
-          construed and enforced to the fullest extent allowable by applicable
-          State and Federal law.
-        </p>
-
-        <p>
-          <strong>
-            OTHER THAN THE OBLIGATION OF CARDINAL COOLING SYSTEMS SET FORTH
-            HEREIN, CARDINAL COOLING SYSTEMS DISCLAIMS ALL WARRANTIES, EXPRESS
-            OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF
-            MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, AND ANY OTHER
-            OBLIGATION OR LIABILITY. THE FOREGOING CONSTITUTES CARDINAL COOLING
-            SYSTEMS&apos;S SOLE OBLIGATION WITH RESPECT TO DAMAGES, WHETHER
-            DIRECT, INCIDENTAL OR CONSEQUENTIAL, RESULTING FROM THE USE OR
-            PERFORMANCE OF THE PRODUCT.
-          </strong>
+          Returns and refunds are covered by our{" "}
+          <LocalizedClientLink href="/return-policy">Return Policy</LocalizedClientLink>.
         </p>
 
         <h2>Contact Information</h2>

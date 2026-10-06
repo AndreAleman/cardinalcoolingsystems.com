@@ -72,7 +72,7 @@ export default async function StorePage({ searchParams, params }: Params) {
       <span>✓ ASTM A269 &amp; A270 Standards</span>
       <span>✓ 3A Certified</span>
       <span>✓ 304 &amp; 316L Stainless</span>
-      <span>✓ Ships in 1 Business Day</span>
+      <span>✓ Ships in 1–2 Business Days</span>
     </div>
   </div>
 </section>

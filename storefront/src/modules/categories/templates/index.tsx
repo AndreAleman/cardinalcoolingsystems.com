@@ -7,6 +7,7 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { categoryImage as realCategoryImage } from "@lib/util/category-visibility"
 import { isStainlessTubeCategory, STAINLESS_TUBE_PAGE_PATH } from "@lib/stainless-tube"
 
 type FaqItem = { question: string; answer: string }
@@ -31,16 +32,7 @@ function CategoryCard({ cat, getImage }: { cat: any; getImage: (c: any) => strin
             className="w-full h-full group-hover:scale-105 transition-transform duration-500"
             style={{ objectFit: "contain" }}
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center p-8" style={{ backgroundColor: "#E3000F" }}>
-            <img
-              src="/images/logo/new-cardinal-cooling-logo.svg"
-              alt="Cardinal Cooling Systems"
-              className="w-full h-auto"
-              style={{ filter: "brightness(0) invert(1)" }}
-            />
-          </div>
-        )}
+        ) : null /* no placeholder image: GMC rejects them */}
       </div>
       <div className="p-4">
         <p className="text-sm font-semibold leading-snug transition-colors group-hover:text-red-600 mb-1" style={{ color: "#111111" }}>
@@ -75,16 +67,9 @@ export default function CategoryTemplate({
 
   if (!category || !countryCode) notFound()
 
-  const getImage = (cat: any): string | null => {
-    if (cat.metadata?.image) return cat.metadata.image as string
-    if (cat.metadata?.featured_image) return cat.metadata.featured_image as string
-    const products = cat.products ?? []
-    for (const p of products) {
-      if (p.thumbnail) return p.thumbnail
-      if (p.images?.[0]?.url) return p.images[0].url
-    }
-    return null
-  }
+  // Real product photo only (own products, then descendants); never a placeholder.
+  const getImage = (cat: any): string | null =>
+    realCategoryImage(cat, allCategories as any[])
 
   const categoryImage = getImage(category)
   // The page's single <h1> is the category name rendered in the dark header.
@@ -206,16 +191,7 @@ export default function CategoryTemplate({
                           className="w-full h-full group-hover:scale-105 transition-transform duration-500"
                           style={{ objectFit: "contain" }}
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center p-8" style={{ backgroundColor: "#E3000F" }}>
-                          <img
-                            src="/images/logo/new-cardinal-cooling-logo.svg"
-                            alt="Cardinal Cooling Systems"
-                            className="w-full h-auto"
-                            style={{ filter: "brightness(0) invert(1)" }}
-                          />
-                        </div>
-                      )}
+                      ) : null}
                     </div>
                     <div className="p-3">
                       <p className="text-xs font-semibold leading-snug transition-colors group-hover:text-red-600 line-clamp-2" style={{ color: "#111111" }}>

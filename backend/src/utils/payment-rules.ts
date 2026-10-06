@@ -19,7 +19,8 @@ export const MAX_PARCEL_WEIGHT_LBS = 120;
 export const DEPOSIT_THRESHOLD_USD = 7_500;
 
 /* Freight allowance (ADR-0009): the supplier's free-freight lane floors
-   expressed at selling price. Published on the Shipping & Returns page only. */
+   expressed at selling price. Published on the Shipping Policy page
+   (/shipping-policy, formerly Shipping & Returns) only. */
 export const FREIGHT_ALLOWANCE_USD = 15_000;
 export const FREIGHT_ALLOWANCE_FAR_USD = 21_500;
 /** States served from the far warehouse lane: FL, NY/NJ/DE, New England, OR, WA. */

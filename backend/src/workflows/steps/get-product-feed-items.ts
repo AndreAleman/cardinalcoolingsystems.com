@@ -1,6 +1,11 @@
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
 import { getVariantAvailability, QueryContext } from "@medusajs/framework/utils"
 import { CalculatedPriceSet } from "@medusajs/framework/types"
+import {
+  feedImageLink,
+  feedShippingWeight,
+  feedSkipReason,
+} from "../../utils/product-feed-rules"
 
 export type FeedItem = {
   id: string
@@ -65,6 +70,7 @@ export const getProductFeedItemsStep = createStep(
           "description",
           "handle",
           "thumbnail",
+          "weight",
           "images.*",
           "status",
           "metadata",
@@ -119,24 +125,21 @@ export const getProductFeedItemsStep = createStep(
         }) : undefined
 
         for (const variant of product.variants) {
-          // Skip variant-level quote-only items.
-          const variantRequiresQuote =
-            variant.metadata?.requires_quote === true ||
-            variant.metadata?.requires_quote === "true"
-          if (variantRequiresQuote) {continue}
-
           // @ts-ignore
           const calculatedPrice = variant.calculated_price as CalculatedPriceSet
 
-          // Skip variants with no calculated price for this currency.
-          // Per policy, advertised products must be purchasable; price must also be
-          // consistent between feed and landing page.
-          if (
-            !calculatedPrice ||
-            calculatedPrice.calculated_amount === undefined ||
-            calculatedPrice.calculated_amount === null ||
-            Number.isNaN(Number(calculatedPrice.calculated_amount))
-          ) {continue}
+          // GMC feed hygiene: no quote-only items, no missing or $0 prices
+          // (e.g. quote-only polished tube and pipe), no items without an
+          // image or a shipping weight. See utils/product-feed-rules.ts.
+          const skip = feedSkipReason({
+            product: product as any,
+            variant: variant as any,
+            calculatedAmount: calculatedPrice?.calculated_amount as any,
+          })
+          if (skip) {continue}
+
+          const imageLink = feedImageLink(variant as any, product as any) as string
+          const shippingWeight = feedShippingWeight(variant as any, product as any) as number
 
           const hasOriginalPrice = calculatedPrice?.original_amount !== calculatedPrice?.calculated_amount
           const originalPrice = hasOriginalPrice ? calculatedPrice.original_amount :
@@ -211,7 +214,7 @@ export const getProductFeedItemsStep = createStep(
             title: variantTitle,
             description: description,
             link: variantUrl,
-            image_link: variant.thumbnail || product.thumbnail || "",
+            image_link: imageLink,
             additional_image_link: product.images?.map(
               (image) => image.url
             )?.join(","),
@@ -224,7 +227,7 @@ export const getProductFeedItemsStep = createStep(
             gtin: variant.ean || variant.upc || variant.barcode || undefined,
             mpn: variant.sku || undefined,
             identifier_exists: identifierExists,
-            shipping_weight: variant.weight ? `${variant.weight} lb` : undefined,
+            shipping_weight: `${shippingWeight} lb`,
             shipping_length: variant.length ? `${variant.length} in` : undefined,
             shipping_width: variant.width ? `${variant.width} in` : undefined,
             shipping_height: variant.height ? `${variant.height} in` : undefined,

@@ -55,6 +55,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    {
+      url: `${baseUrl}/${countryCode}/shipping-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/${countryCode}/return-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
   ]
 
   // Products — one canonical parent URL per product.
@@ -74,7 +86,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  // Product categories (Medusa) — e.g. /us/categories/valves
+  // Product categories (Medusa) — e.g. /us/categories/valves.
+  // listCategories() already drops categories with no published products.
   const productCategories = await listCategories()
 
   const categoryPageUrls: MetadataRoute.Sitemap = productCategories

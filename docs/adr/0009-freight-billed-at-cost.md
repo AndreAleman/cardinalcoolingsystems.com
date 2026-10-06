@@ -17,7 +17,8 @@ From now on:
   shipping. A freight allowance applies only at $15,000+ merchandise value
   to the contiguous US, or $21,500+ to FL, NY, NJ, DE, New England, OR and
   WA (the supplier's lane floors expressed at selling price, rounded up).
-- These numbers appear on the Shipping & Returns policy page only. Product
+- These numbers appear on the Shipping Policy page (`/us/shipping-policy`;
+  it replaced the Shipping & Returns page, which now 301s there) only. Product
   pages, cart and checkout do not show freight costs, allowances or
   thresholds; freight is a line on the quote or the balance invoice.
 - `freightAllowance()` in `payment-rules.ts` applies the rule by ship-to

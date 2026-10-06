@@ -164,9 +164,6 @@ export default function ProductActions({
   // tubing page's form, pre-filled with the selected SKU. Every other
   // quote-only product keeps the contact page.
   const isTube = isStainlessTubeProduct(product)
-  const quoteHref = isTube
-    ? stainlessTubeQuoteHref(countryCode, selectedVariant?.sku)
-    : `/${countryCode}/contact`
 
   const availableStock = useMemo(() => {
     if (!selectedVariant?.manage_inventory) return null
@@ -230,7 +227,9 @@ export default function ProductActions({
   if (selectedVariant?.sku) quoteParams.set("part", selectedVariant.sku)
   if (product.title) quoteParams.set("product", product.title)
   const quoteQuery = quoteParams.toString()
-  const quoteHref = `/${countryCode}/contact${quoteQuery ? `?${quoteQuery}` : ""}`
+  const quoteHref = isTube
+    ? stainlessTubeQuoteHref(countryCode, selectedVariant?.sku)
+    : `/${countryCode}/contact${quoteQuery ? `?${quoteQuery}` : ""}`
 
   return (
     <>
@@ -454,7 +453,8 @@ export default function ProductActions({
                 </svg>
               </div>
               <span className="text-sm" style={{ color: "#374151" }}>
-                <strong className="font-medium">Free shipping</strong> on orders over $100
+                <strong className="font-medium">Free parcel shipping</strong> on orders over $100{" "}
+                <span className="text-xs" style={{ color: "#6b7280" }}>(up to 120 lbs; freight quoted)</span>
               </span>
             </div>
             <div className="flex items-center gap-x-2.5">
@@ -464,7 +464,7 @@ export default function ProductActions({
                 </svg>
               </div>
               <span className="text-sm" style={{ color: "#374151" }}>
-                Usually ships within <strong className="font-medium">1-2 business days</strong>
+                Usually ships within <strong className="font-medium">1–2 business days</strong>
               </span>
             </div>
           </div>
