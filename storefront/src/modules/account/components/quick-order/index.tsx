@@ -854,6 +854,12 @@ export default function QuickOrder({
                     } will be sent to Cardinal as a Quote Request.`}
               </p>
             )}
+            {plan.path === "deposit" && (
+              <p className="text-[15px] text-gray-600 m-0">
+                Freight is confirmed before shipping and, unless the order
+                qualifies for our freight allowance, added to the balance invoice.
+              </p>
+            )}
             <div className="flex flex-wrap justify-end gap-3">
               {plan.payLines.length > 0 &&
                 plan.path !== "quote_all" &&

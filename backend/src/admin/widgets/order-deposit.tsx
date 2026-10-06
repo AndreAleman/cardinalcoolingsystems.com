@@ -94,9 +94,19 @@ const OrderDepositWidget = ({ data }: DetailWidgetProps<AdminOrder>) => {
       </div>
 
       <div className="px-6 py-4 flex items-center justify-between gap-4">
-        <Text size="small" className="text-ui-fg-subtle">
-          {STATUS_HINTS[status] ?? STATUS_HINTS.due}
-        </Text>
+        <div className="flex flex-col gap-1">
+          <Text size="small" className="text-ui-fg-subtle">
+            {STATUS_HINTS[status] ?? STATUS_HINTS.due}
+          </Text>
+          {/* ADR-0009: freight on the balance invoice depends on the lane allowance */}
+          <Text size="small" weight="plus">
+            {metadata.freight === "allowed"
+              ? `Freight allowed (order meets the ${metadata.freight_ship_to_state ?? ""} lane minimum) — no freight on the balance invoice.`
+              : metadata.freight === "billed_at_cost"
+                ? `Add freight at carrier cost to the balance invoice (ship-to ${metadata.freight_ship_to_state ?? "state unknown"}).`
+                : "Freight allowance unknown — no ship-to state on the order; confirm freight before invoicing the balance."}
+          </Text>
+        </div>
 
         <div className="flex shrink-0 gap-2">
           {status === "due" && (

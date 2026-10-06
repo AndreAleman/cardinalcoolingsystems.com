@@ -20,6 +20,10 @@ From now on:
 - These numbers appear on the Shipping & Returns policy page only. Product
   pages, cart and checkout do not show freight costs, allowances or
   thresholds; freight is a line on the quote or the balance invoice.
+- `freightAllowance()` in `payment-rules.ts` applies the rule by ship-to
+  state. Every deposit order is stamped `metadata.freight` ("allowed" /
+  "billed_at_cost" / "unknown") and `freight_ship_to_state`; the admin
+  deposit widget shows it so the balance invoice is built correctly.
 - The payment path in `backend/src/utils/payment-rules.ts` is unchanged:
   120 lbs is still the parcel line, heavy orders under $7,500 are still
   quoted, heavy orders at $7,500 or more still take a 50% deposit. The
