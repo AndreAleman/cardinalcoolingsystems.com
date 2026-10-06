@@ -8,6 +8,8 @@
   - Quote-Only Line — cannot be paid for; rides a Quote Request.
 */
 
+import { isTubeItem, roundUpToSticks, TUBE_STICK_FT } from "@lib/util/tube-sticks"
+
 export const WEIGHT_LIMIT_LBS = 120
 export const DEPOSIT_MIN_TOTAL = 7500
 
@@ -26,6 +28,26 @@ export type PortalCartLine = {
   manageInventory: boolean
   /* product/variant metadata.requires_quote is "true"/true. */
   requiresQuote: boolean
+  /* Tube, sold in 20 ft sticks (lib/util/tube-sticks.ts). Optional so
+     drafts saved before this field still load; the SKU rule covers them. */
+  tube?: boolean
+}
+
+/* Tube lines: quantity is feet in whole 20 ft sticks. */
+export function isTubePortalLine(line: Pick<PortalCartLine, "sku" | "tube">): boolean {
+  return !!line.tube || isTubeItem({ sku: line.sku })
+}
+
+export function portalQtyStep(line: Pick<PortalCartLine, "sku" | "tube">): number {
+  return isTubePortalLine(line) ? TUBE_STICK_FT : 1
+}
+
+/* The quantity a line may hold: tube rounds up to whole sticks. */
+export function normalizePortalQty(
+  line: Pick<PortalCartLine, "sku" | "tube">,
+  qty: number
+): number {
+  return isTubePortalLine(line) ? roundUpToSticks(qty) : qty
 }
 
 /*

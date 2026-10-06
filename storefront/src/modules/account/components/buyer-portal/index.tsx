@@ -109,6 +109,7 @@ const BuyerPortal = async ({ membership, countryCode }: Props) => {
       manageInventory: true,
       requiresQuote: false,
       available: false,
+      tube: false,
     }
   })
 

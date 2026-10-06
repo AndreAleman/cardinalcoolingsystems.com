@@ -16,7 +16,10 @@ import React, {
   useRef,
   useState,
 } from "react"
-import type { PortalCartLine } from "@modules/account/components/quick-order/money-rules"
+import {
+  normalizePortalQty,
+  type PortalCartLine,
+} from "@modules/account/components/quick-order/money-rules"
 import {
   loadStoredCartLines,
   saveStoredCartLines,
@@ -45,7 +48,9 @@ export function PortalCartProvider({
 
   useEffect(() => {
     const stored = loadStoredCartLines(companyId)
-    if (stored.length) setLines(stored)
+    if (stored.length) {
+      setLines(stored.map((l) => ({ ...l, qty: normalizePortalQty(l, l.qty) })))
+    }
     hydrated.current = true
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId])
@@ -55,15 +60,20 @@ export function PortalCartProvider({
     saveStoredCartLines(companyId, lines)
   }, [companyId, lines])
 
+  // Tube quantities always land as whole 20 ft sticks (rounded up), so
+  // every surface that adds or edits a line (Quick Order, PO upload, Order
+  // Again, Favorites) gets the same rule.
   const addLine = useCallback((line: PortalCartLine) => {
     setLines((prev) => {
       const existing = prev.find((l) => l.variantId === line.variantId)
       if (existing) {
         return prev.map((l) =>
-          l.variantId === line.variantId ? { ...l, qty: l.qty + line.qty } : l
+          l.variantId === line.variantId
+            ? { ...l, qty: normalizePortalQty(line, l.qty + line.qty) }
+            : l
         )
       }
-      return [...prev, line]
+      return [...prev, { ...line, qty: normalizePortalQty(line, line.qty) }]
     })
   }, [])
 
@@ -71,7 +81,9 @@ export function PortalCartProvider({
     setLines((prev) =>
       qty <= 0
         ? prev.filter((l) => l.variantId !== variantId)
-        : prev.map((l) => (l.variantId === variantId ? { ...l, qty } : l))
+        : prev.map((l) =>
+            l.variantId === variantId ? { ...l, qty: normalizePortalQty(l, qty) } : l
+          )
     )
   }, [])
 

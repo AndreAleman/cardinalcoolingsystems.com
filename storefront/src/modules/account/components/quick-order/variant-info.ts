@@ -7,6 +7,7 @@
 
 import { HttpTypes } from "@medusajs/types"
 import type { PortalCartLine } from "./money-rules"
+import { isTubeItem } from "@lib/util/tube-sticks"
 
 export type VariantRow = {
   variantId: string
@@ -20,6 +21,8 @@ export type VariantRow = {
   manageInventory: boolean
   requiresQuote: boolean
   available: boolean
+  /* Tube, sold in 20 ft sticks (lib/util/tube-sticks.ts). */
+  tube: boolean
 }
 
 /*
@@ -61,6 +64,12 @@ export function productVariantToRow(
       metadataRequiresQuote(product.metadata) ||
       metadataRequiresQuote(variant.metadata as any),
     available: true,
+    tube: isTubeItem({
+      sku: variant.sku,
+      metadata: variant.metadata as Record<string, unknown> | null,
+      productHandle: product.handle,
+      productMetadata: product.metadata as Record<string, unknown> | null,
+    }),
   }
 }
 
@@ -77,6 +86,7 @@ export function rowToCartLine(row: VariantRow, qty: number): PortalCartLine {
     inventoryQuantity: row.inventoryQuantity,
     manageInventory: row.manageInventory,
     requiresQuote: row.requiresQuote,
+    tube: row.tube,
   }
 }
 

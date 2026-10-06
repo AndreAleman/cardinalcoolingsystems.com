@@ -29,8 +29,12 @@ LIST = {
     "6200": ("T316L", '2"', '0.065"', 300, 10.21), "6250": ("T316L", '2-1/2"', '0.065"', 300, 12.57),
     "6300": ("T316L", '3"', '0.065"', 200, 15.73), "6400": ("T316L", '4"', '0.083"', 100, 23.61),
     "6601": ("T316L", '6"', '0.109"', 40, 51.30), "6801": ("T316L", '8"', '0.109"', 20, 73.19),
-    "61000": ("T316L", '10"', '0.109"', 20, 210.10), "61200": ("T316L", '12"', '0.109"', 20, 235.50),
+    "61000": ("T316L", '10"', '0.120"', 20, 210.10), "61200": ("T316L", '12"', '0.120"', 20, 235.50),
 }
+# Sanitube (Todd, Oct 2026) only offers AI270 tube, except these four A270 SKUs. The list's other
+# "A270" prices are AI270 prices. 10"/12" are 0.120" wall. AI270P-4402 is not stocked (excluded).
+A270_EXCEPTIONS = {"4100", "6050", "6075", "6100"}
+def site_sku(suf): return ("A270P-" if suf in A270_EXCEPTIONS else "AI270P-") + suf
 SIZE_IN = {'1/2"': 0.5, '3/4"': 0.75, '1"': 1.0, '1-1/2"': 1.5, '2"': 2.0, '2-1/2"': 2.5, '3"': 3.0, '4"': 4.0, '5"': 5.0, '6"': 6.0, '8"': 8.0, '10"': 10.0, '12"': 12.0}
 
 def env(k):
@@ -58,7 +62,7 @@ def main():
         price = round(cost / (1 - a.margin) * mult, 2)
         wall_in = float(wall.strip('"')); od = SIZE_IN[size]
         weight = round(10.93 * (od - wall_in) * wall_in * mult, 2)
-        meta = {"unit": a.unit, "cost_per_ft": cost, "case_qty_ft": case_ft, "sanitube_sku": f"A270P-{suf}", "priced_at": PRICED_AT, "margin": a.margin}
+        meta = {"unit": a.unit, "cost_per_ft": cost, "case_qty_ft": case_ft, "sanitube_sku": site_sku(suf), "priced_at": PRICED_AT, "margin": a.margin}
         v = by_suffix.get(suf)
         label = f"{alloy}, {size}, {wall}"
         if v:
@@ -71,10 +75,10 @@ def main():
                 row["options"] = {"Alloy": alloy, "Size (Tube OD)": size, "Wall": wall}; note += f" (wall {cur_wall}→{wall})"
             update.append(row)
         else:
-            create.append({"title": label, "sku": f"AI270P-{suf}", "options": {"Alloy": alloy, "Size (Tube OD)": size, "Wall": wall},
+            create.append({"title": label, "sku": site_sku(suf), "options": {"Alloy": alloy, "Size (Tube OD)": size, "Wall": wall},
                            "prices": [{"currency_code": "usd", "amount": price}], "weight": weight, "manage_inventory": False, "metadata": meta})
             note = "CREATE"
-        print(f"{'AI270P-'+suf:14} {label:24} {cost:8.2f} {price:11.2f} {weight:8.2f}  {note}")
+        print(f"{site_sku(suf):14} {label:24} {cost:8.2f} {price:11.2f} {weight:8.2f}  {note}")
     unit_text = "by the foot" if a.unit == "ft" else "per 20 ft length"
     desc_note = f" Sold {unit_text}; supplied in 20 ft lengths. Ships freight from Kansas City, MO or Paramount, CA."
     desc = (p.get("description") or "").split(" Sold by the foot")[0].split(" Sold per 20 ft")[0] + desc_note

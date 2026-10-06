@@ -34,6 +34,8 @@ import {
   type CartPlan,
   type PortalCartLine,
   type QuoteOnlyReason,
+  isTubePortalLine,
+  portalQtyStep,
   quoteOnlyReason,
 } from "./money-rules"
 
@@ -291,16 +293,18 @@ export default function OrderReviewDrawer({
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center border border-gray-300 rounded-[5px] w-fit">
               <button
-                onClick={() => updateQty(line.variantId, line.qty - 1)}
-                disabled={line.qty <= 1}
+                onClick={() => updateQty(line.variantId, line.qty - portalQtyStep(line))}
+                disabled={line.qty <= portalQtyStep(line)}
                 aria-label="Decrease quantity"
                 className="w-10 h-10 text-[18px] disabled:opacity-40"
               >
                 −
               </button>
-              <span className="w-10 text-center text-[16px]">{line.qty}</span>
+              <span className={`${isTubePortalLine(line) ? "w-14" : "w-10"} text-center text-[16px]`}>
+                {isTubePortalLine(line) ? `${line.qty} ft` : line.qty}
+              </span>
               <button
-                onClick={() => updateQty(line.variantId, line.qty + 1)}
+                onClick={() => updateQty(line.variantId, line.qty + portalQtyStep(line))}
                 aria-label="Increase quantity"
                 className="w-10 h-10 text-[18px]"
               >

@@ -24,6 +24,7 @@ import {
   updateProductVariantsWorkflow,
 } from "@medusajs/core-flows"
 import type { InventorySyncType } from "./validators"
+import { linkedInventoryItemId } from "../../../utils/variant-inventory-item"
 
 export const POST = async (
   req: MedusaRequest<InventorySyncType>,
@@ -87,12 +88,16 @@ export const POST = async (
       }
 
       // Ensure an inventory_item exists for this SKU and is linked.
-      const existingItems = await inventoryService.listInventoryItems(
-        { sku: row.sku },
-        { take: 1 },
-      )
+      // Prefer the item already linked to the variant: after a SKU rename
+      // (AI270P-4100 -> A270P-4100) it may still carry the old SKU.
+      const linkedId = await linkedInventoryItemId(query, variant.id)
+      const existingItems = linkedId
+        ? []
+        : await inventoryService.listInventoryItems({ sku: row.sku }, { take: 1 })
       let inventoryItemId: string
-      if (existingItems.length) {
+      if (linkedId) {
+        inventoryItemId = linkedId
+      } else if (existingItems.length) {
         inventoryItemId = existingItems[0].id
       } else {
         const { result } = await createInventoryItemsWorkflow(req.scope).run({

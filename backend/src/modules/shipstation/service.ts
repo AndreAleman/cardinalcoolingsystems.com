@@ -142,16 +142,23 @@ async calculatePrice(
   // Free parcel shipping (ADR-0009): items subtotal $100+ (dollars, before
   // tax/shipping/discounts) and the whole shipment 120 lbs or less. Heavier
   // or unweighed shipments take the normal rate path below.
+  // Tube lines (20 ft sticks) always ship freight, so they rule the free
+  // parcel rate out; the line's SKU/handle/unit identify them.
   const items = (context.items || []) as Array<{
     unit_price?: unknown
     quantity?: unknown
-    variant?: { weight?: unknown } | null
+    variant_sku?: string | null
+    product_handle?: string | null
+    variant?: { weight?: unknown; sku?: string | null; metadata?: Record<string, unknown> | null } | null
   }>
   const freeParcel = decideFreeParcelShipping(
     items.map((item) => ({
       unitPrice: Number(item.unit_price ?? 0),
       quantity: Number(item.quantity ?? 0),
       weightLbs: item.variant?.weight == null ? null : Number(item.variant.weight),
+      sku: item.variant_sku ?? item.variant?.sku ?? null,
+      productHandle: item.product_handle ?? null,
+      unit: typeof item.variant?.metadata?.unit === "string" ? item.variant.metadata.unit : null,
     }))
   )
 
@@ -163,6 +170,9 @@ async calculatePrice(
       calculated_amount: 0,
       is_calculated_price_tax_inclusive: true
     }
+  }
+  if (freeParcel.reason === "tube_ships_freight") {
+    this.logger_.info(`[shipstation] free parcel shipping skipped: cart ${context.id} has tube (ships freight)`)
   }
   if (freeParcel.reason === "missing_weight") {
     this.logger_.warn(
