@@ -129,7 +129,7 @@ export default function BulkPricingModal({ isOpen, onClose, productTitle, produc
         <div className="p-6">
           {/* Subtext */}
           <p className="text-sm font-light mb-5" style={{ color: "#6b7280" }}>
-            Fill out the form below for exclusive B2B volume discounts.
+            Free parcel shipping on orders $100+ (up to 120 lbs; freight quoted). Fill out the form below for exclusive B2B volume discounts.
           </p>
 
           {/* Blurred discount preview */}

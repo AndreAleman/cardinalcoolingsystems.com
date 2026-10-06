@@ -41,6 +41,11 @@ export default function ShippingPolicy() {
           destination, and service level. Orders over 120 lbs, and all tube
           orders, ship by freight carrier; see Freight Shipments below.
         </p>
+        <p>
+          Parcel shipping is free on orders with an items subtotal of $100 or
+          more (before tax, shipping and discounts) when the whole shipment is
+          120 lbs or less.
+        </p>
 
         <h2>Freight Shipments</h2>
         <p>

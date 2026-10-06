@@ -193,9 +193,9 @@ export default function Nav({ className = "" }: NavProps) {
       >
         <div className="flex items-center justify-center gap-6 px-6 h-9">
           <p className="text-xs font-light tracking-wide text-center" style={{ color: "rgba(255,255,255,0.75)" }}>
-            <span className="font-medium text-white">Ships in 1–2 business days</span>
+            <span className="font-medium text-white">Free parcel shipping</span> on orders over $100
             <span className="hidden sm:inline mx-3" style={{ color: "rgba(255,255,255,0.25)" }}>·</span>
-            <span className="hidden sm:inline">3A Certified 304 &amp; 316L</span>
+            <span className="hidden sm:inline">Ships in 1–2 business days</span>
           </p>
         </div>
       </div>
