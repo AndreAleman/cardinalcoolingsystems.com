@@ -45,34 +45,43 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   )
 }
 
-// No placeholder or logo stand-in when a product has no photo: Google
-// Merchant Center rejects placeholder product images. The container's
-// neutral background shows instead.
 const ImageOrPlaceholder = ({
   image,
   size,
 }: Pick<ThumbnailProps, "size"> & { image?: string }) => {
-  const [failed, setFailed] = React.useState(false)
+  const logoPath = "/images/logo/new-cardinal-cooling-logo.svg"
+  const [imgSrc, setImgSrc] = React.useState(image || logoPath)
+  const [isLogo, setIsLogo] = React.useState(!image)
 
   React.useEffect(() => {
-    setFailed(false)
+    setImgSrc(image || logoPath)
+    setIsLogo(!image)
   }, [image])
 
-  if (!image || failed) {
-    return <div className="w-full h-full absolute inset-0" aria-hidden="true" />
-  }
-
   return (
-    <div className="w-full h-full absolute inset-0">
+    <div className={clx(
+      "w-full h-full absolute inset-0",
+      { "bg-red-600": isLogo }
+    )}>
       <Image
-        src={image}
+        src={imgSrc}
         alt="Product thumbnail"
         fill
-        className="absolute inset-0 w-full h-full object-cover object-center"
+        className={clx(
+  "absolute inset-0 w-full h-full",
+  {
+    "object-cover object-center": !isLogo,
+    "object-contain object-center p-4": isLogo
+  }
+)}
+style={isLogo ? { filter: "brightness(0) invert(1)" } : undefined}
         draggable={false}
         quality={50}
         sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
-        onError={() => setFailed(true)}
+        onError={() => {
+          setImgSrc(logoPath)
+          setIsLogo(true)
+        }}
       />
     </div>
   )
