@@ -33,12 +33,10 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
   // Calculate items-only subtotal (excluding shipping)
   const itemsSubtotal = item_subtotal ?? (subtotal ?? 0) - (shipping_total ?? 0)
 
-  // Free shipping threshold: $100
-  const FREE_SHIPPING_THRESHOLD = 100
-  const isFreeShipping = itemsSubtotal >= FREE_SHIPPING_THRESHOLD
-
-  // Recalculate display total - if free shipping, don't add shipping cost
-  const shippingAmount = isFreeShipping ? 0 : (shipping_total ?? 0)
+  // Show the shipping the backend actually charges. This used to zero
+  // shipping in the display above a $100 subtotal (and promise "free
+  // shipping"), while the order was still charged the real rate.
+  const shippingAmount = shipping_total ?? 0
   const displayTotal = itemsSubtotal + shippingAmount + (tax_total ?? 0) - (discount_total ?? 0) - (gift_card_total ?? 0)
 
   return (
@@ -68,22 +66,9 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
         <div className="flex items-center justify-between">
           <span>Shipping</span>
           <span data-testid="cart-shipping" data-value={shippingAmount}>
-            {isFreeShipping ? (
-              <span className="text-green-600 font-medium">FREE</span>
-            ) : (
-              convertToLocale({ amount: shipping_total ?? 0, currency_code })
-            )}
+            {convertToLocale({ amount: shippingAmount, currency_code })}
           </span>
         </div>
-        {/* Free Shipping Progress */}
-        {!isFreeShipping && itemsSubtotal > 0 && (
-          <div className="text-xs text-ui-fg-subtle italic">
-            Add {convertToLocale({ 
-              amount: FREE_SHIPPING_THRESHOLD - itemsSubtotal, 
-              currency_code 
-            })} more for free shipping
-          </div>
-        )}
         <div className="flex justify-between">
           <span className="flex gap-x-1 items-center ">Taxes</span>
           <span data-testid="cart-taxes" data-value={tax_total || 0}>

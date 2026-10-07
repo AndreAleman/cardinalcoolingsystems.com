@@ -1,11 +1,11 @@
-import { decidePayment, totalOrderWeightLbs } from "../payment-rules";
+import { decidePayment, freightAllowance, totalOrderWeightLbs } from "../payment-rules";
 
 /* The money rules (docs/specs/company-dashboard.md, decided 2026-08-31):
    - Company with invoice payment enabled: every order any size is invoiced.
    - 120 lbs or less: pay in full at checkout.
    - Over 120 lbs (UPS limit), under $7,500: freight must be quoted.
-   - Over 120 lbs, $7,500 or more: freight free -> 50% deposit, balance
-     invoiced 30 days after arrival.
+   - Over 120 lbs, $7,500 or more: 50% deposit, balance invoiced 30 days
+     after arrival; freight on the balance per freightAllowance (ADR-0009).
    - Unknown weight or an unpriced ($0) line: quote only. */
 
 describe("decidePayment", () => {
@@ -52,6 +52,23 @@ describe("decidePayment", () => {
     expect(
       decidePayment({ totalUsd: 500, totalWeightLbs: 10, hasQuoteOnlyLine: true, invoiceEnabled: false })
     ).toBe("quote_required");
+  });
+});
+
+describe("freightAllowance", () => {
+  it("allows freight at $15,000 to a near-lane state and bills it below", () => {
+    expect(freightAllowance({ totalUsd: 15_000, shippingState: "TX" })).toBe("allowed");
+    expect(freightAllowance({ totalUsd: 14_999.99, shippingState: "TX" })).toBe("billed_at_cost");
+  });
+
+  it("needs $21,500 for the far lanes (FL, NY/NJ/DE, New England, OR, WA)", () => {
+    expect(freightAllowance({ totalUsd: 15_000, shippingState: "FL" })).toBe("billed_at_cost");
+    expect(freightAllowance({ totalUsd: 21_500, shippingState: "fl" })).toBe("allowed");
+    expect(freightAllowance({ totalUsd: 21_500, shippingState: "WA" })).toBe("allowed");
+  });
+
+  it("is unknown without a ship-to state", () => {
+    expect(freightAllowance({ totalUsd: 50_000, shippingState: null })).toBe("unknown");
   });
 });
 

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useCartPanel } from "@lib/context/cart-panel-context"
 import { deleteLineItem, updateLineItem } from "@lib/data/cart"
+import { TUBE_STICK_FT, isTubeLineItem, sticksLabel } from "@lib/util/tube-sticks"
 import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
@@ -190,6 +191,9 @@ export default function CartPanel() {
                 const isUpdating = updatingId === item.id
                 const unitPrice = item.unit_price ?? 0
                 const lineTotal = unitPrice * item.quantity
+                // Tube: feet in whole 20 ft sticks (lib/util/tube-sticks.ts).
+                const tube = isTubeLineItem(item as any)
+                const step = tube ? TUBE_STICK_FT : 1
 
                 return (
                   <li
@@ -267,8 +271,8 @@ export default function CartPanel() {
                           style={{ borderRadius: "5px" }}
                         >
                           <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                            disabled={item.quantity <= 1 || isUpdating}
+                            onClick={() => handleQuantityChange(item.id, item.quantity - step)}
+                            disabled={item.quantity <= step || isUpdating}
                             aria-label="Decrease quantity"
                             className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                             style={{ color: "#374151" }}
@@ -278,13 +282,13 @@ export default function CartPanel() {
                             </svg>
                           </button>
                           <span
-                            className="w-8 text-center text-sm font-medium select-none"
+                            className={`${tube ? "w-12" : "w-8"} text-center text-sm font-medium select-none`}
                             style={{ color: "#111111" }}
                           >
-                            {item.quantity}
+                            {tube ? `${item.quantity} ft` : item.quantity}
                           </span>
                           <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                            onClick={() => handleQuantityChange(item.id, item.quantity + step)}
                             disabled={isUpdating}
                             aria-label="Increase quantity"
                             className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
@@ -301,6 +305,11 @@ export default function CartPanel() {
                           {convertToLocale({ amount: lineTotal, currency_code: currencyCode })}
                         </span>
                       </div>
+                      {tube && (
+                        <p className="text-xs mt-1.5" style={{ color: "#6b7280" }}>
+                          {sticksLabel(item.quantity)} · sold in 20 ft sticks · ships freight
+                        </p>
+                      )}
                     </div>
                   </li>
                 )

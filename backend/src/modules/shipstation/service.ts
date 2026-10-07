@@ -1,6 +1,7 @@
 import { AbstractFulfillmentProviderService, MedusaError } from "@medusajs/framework/utils"
 import { CalculatedShippingOptionPrice, CalculateShippingOptionPriceDTO, CartAddressDTO, CartLineItemDTO, CreateShippingOptionDTO, FulfillmentOption, OrderLineItemDTO, StockLocationAddressDTO } from "@medusajs/framework/types"
 import { ShipStationClient } from "./client"
+import { decideFreeParcelShipping } from "../../utils/free-parcel-shipping"
 import { GetShippingRatesResponse, Rate, ShipStationAddress } from "./types"
 
 export type ShipStationOptions = {
@@ -11,10 +12,12 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
   static identifier = "shipstation"
   protected options_: ShipStationOptions
   protected client: ShipStationClient
+  protected logger_: Pick<Console, "info" | "warn">
 
-  constructor({}, options: ShipStationOptions) {
+  constructor({ logger }: { logger?: Pick<Console, "info" | "warn"> }, options: ShipStationOptions) {
     super()
 
+    this.logger_ = logger ?? console
     this.options_ = options
     this.client = new ShipStationClient(options)
   }
@@ -136,31 +139,45 @@ async calculatePrice(
   data: CalculateShippingOptionPriceDTO["data"], 
   context: CalculateShippingOptionPriceDTO["context"]
 ): Promise<CalculatedShippingOptionPrice> {
-  // ✅ FREE SHIPPING LOGIC - Check cart subtotal
-  const FREE_SHIPPING_THRESHOLD = 10000 // $100.00 in cents
-  
-  // Calculate cart subtotal (items only, excluding shipping and tax)
-  let cartSubtotal = 0
-  for (const item of context.items || []) {
-    const unitPrice = Number(item.unit_price ?? 0)
-    const quantity = Number(item.quantity ?? 0)
-    cartSubtotal += unitPrice * quantity
-  }
+  // Free parcel shipping (ADR-0009): items subtotal $100+ (dollars, before
+  // tax/shipping/discounts) and the whole shipment 120 lbs or less. Heavier
+  // or unweighed shipments take the normal rate path below.
+  // Tube lines (20 ft sticks) always ship freight, so they rule the free
+  // parcel rate out; the line's SKU/handle/unit identify them.
+  const items = (context.items || []) as Array<{
+    unit_price?: unknown
+    quantity?: unknown
+    variant_sku?: string | null
+    product_handle?: string | null
+    variant?: { weight?: unknown; sku?: string | null; metadata?: Record<string, unknown> | null } | null
+  }>
+  const freeParcel = decideFreeParcelShipping(
+    items.map((item) => ({
+      unitPrice: Number(item.unit_price ?? 0),
+      quantity: Number(item.quantity ?? 0),
+      weightLbs: item.variant?.weight == null ? null : Number(item.variant.weight),
+      sku: item.variant_sku ?? item.variant?.sku ?? null,
+      productHandle: item.product_handle ?? null,
+      unit: typeof item.variant?.metadata?.unit === "string" ? item.variant.metadata.unit : null,
+    }))
+  )
 
-  console.log('🚢 ShipStation Calculate Price:', {
-    cartSubtotal,
-    threshold: FREE_SHIPPING_THRESHOLD,
-    isFreeShipping: cartSubtotal >= FREE_SHIPPING_THRESHOLD,
-    items: context.items?.map(i => ({ title: i.title, qty: i.quantity, price: i.unit_price }))
-  })
-
-  // If cart subtotal >= $100, return free shipping
-  if (cartSubtotal >= FREE_SHIPPING_THRESHOLD) {
-    console.log('✅ FREE SHIPPING APPLIED!')
+  if (freeParcel.free) {
+    this.logger_.info(
+      `[shipstation] free parcel shipping: subtotal $${freeParcel.subtotalUsd}, ${freeParcel.weightLbs} lbs`
+    )
     return {
       calculated_amount: 0,
       is_calculated_price_tax_inclusive: true
     }
+  }
+  if (freeParcel.reason === "tube_ships_freight") {
+    this.logger_.info(`[shipstation] free parcel shipping skipped: cart ${context.id} has tube (ships freight)`)
+  }
+  if (freeParcel.reason === "missing_weight") {
+    this.logger_.warn(
+      `[shipstation] free parcel shipping skipped: a cart line has no variant weight (cart ${context.id}, subtotal $${freeParcel.subtotalUsd})`
+    )
   }
 
   // Otherwise, calculate normal ShipStation rate
@@ -194,8 +211,6 @@ async calculatePrice(
   const calculatedPrice = !rate ? 0 : rate.shipping_amount.amount + rate.insurance_amount.amount + 
     rate.confirmation_amount.amount + rate.other_amount.amount + 
     (rate.tax_amount?.amount || 0)
-
-  console.log('💰 ShipStation Rate:', calculatedPrice)
 
   return {
     calculated_amount: calculatedPrice,

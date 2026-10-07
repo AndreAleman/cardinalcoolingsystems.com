@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, FormEvent, useRef } from "react"
+import { useState, useEffect, FormEvent, useRef } from "react"
 import { useBotGuard } from "@modules/common/components/bot-guard"
 import { filesToAttachments } from "@lib/util/attachments"
 import { captureEvent, identifyUser } from "@lib/util/posthog"
@@ -39,6 +39,24 @@ export default function ContactPage({ params }: Props) {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const [attachedFiles, setAttachedFiles] = useState<File[]>([])
   const formRef = useRef<HTMLFormElement>(null)
+  // Product and category pages link here with ?part= / ?product= / ?category=
+  // so the quote arrives with the part already named. Read from the URL in an
+  // effect rather than useSearchParams to keep the page statically rendered.
+  const [prefill, setPrefill] = useState<{ text: string; part?: string; category?: string } | null>(null)
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search)
+    const part = q.get("part") ?? undefined
+    const product = q.get("product") ?? undefined
+    const category = q.get("category") ?? undefined
+    if (!part && !product && !category) return
+    const lines = [
+      part || product ? `Part: ${[part, product].filter(Boolean).join(" — ")}` : null,
+      category ? `Category: ${category}` : null,
+      "Quantity: ",
+      "Size / connection: ",
+    ].filter(Boolean)
+    setPrefill({ text: lines.join("\n"), part, category })
+  }, [])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -73,6 +91,7 @@ export default function ContactPage({ params }: Props) {
       )
 
       if (response.ok) {
+        const result = (await response.json().catch(() => ({}))) as { suspectedScam?: boolean }
         if (typeof window !== "undefined") {
           window.dataLayer = window.dataLayer || []
           window.dataLayer.push({
@@ -85,6 +104,9 @@ export default function ContactPage({ params }: Props) {
         captureEvent("contact_form_submitted", {
           form_location: "contact_page",
           email: data.email,
+          prefill_part: prefill?.part,
+          prefill_category: prefill?.category,
+          suspected_scam: result.suspectedScam === true,
         })
         identifyUser(data.email, {
           email: data.email,
@@ -255,9 +277,11 @@ export default function ContactPage({ params }: Props) {
                 <div>
                   <label className="block text-xs text-gray-500 mb-1.5">Specifications</label>
                   <textarea
+                    key={prefill?.text ?? "empty"}
                     name="message"
                     required
                     rows={5}
+                    defaultValue={prefill?.text}
                     placeholder="Details regarding pressure, fittings, and estimated quantity..."
                     className={`${inputClass} resize-none`}
                     style={{ borderRadius: "5px" }}

@@ -1,6 +1,7 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { Modules } from "@medusajs/framework/utils"
 import { ContactFormType } from "./validators"
+import { scamSignals } from "./scam-signals"
 
 export async function POST(
   req: MedusaRequest<ContactFormType>,
@@ -9,6 +10,8 @@ export async function POST(
   // Use req.body instead of req.validatedBody if validator isn't applied
   const { name, lastName, email, phone, message, attachments } =
     req.validatedBody || req.body
+
+  const scam = scamSignals({ message, phone, email })
 
   const notificationModuleService = req.scope.resolve(Modules.NOTIFICATION)
 
@@ -23,6 +26,7 @@ export async function POST(
       phone: phone || "Not provided",
       message,
       attachmentFilenames: attachments?.map((a) => a.filename) ?? [],
+      scamReasons: scam.reasons,
     },
     attachments: attachments?.length
       ? attachments.map((a) => ({
@@ -34,6 +38,8 @@ export async function POST(
       : null,
   })
 
-  res.json({ success: true })
+  // The storefront records the flag on its analytics event so suspected scams
+  // stop counting as leads.
+  res.json({ success: true, suspectedScam: scam.suspected })
 }
 

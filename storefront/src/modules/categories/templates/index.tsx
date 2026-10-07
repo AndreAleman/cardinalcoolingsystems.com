@@ -1,51 +1,16 @@
-"use client"
-
 import { notFound } from "next/navigation"
-import { Suspense, useState } from "react"
+import { Suspense } from "react"
+import FaqAccordion from "@modules/categories/components/faq-accordion"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { categoryImage as realCategoryImage } from "@lib/util/category-visibility"
+import { isStainlessTubeCategory, STAINLESS_TUBE_PAGE_PATH } from "@lib/stainless-tube"
 
 type FaqItem = { question: string; answer: string }
-
-function FaqAccordion({ faqs }: { faqs: FaqItem[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
-  return (
-    <div className="divide-y divide-gray-100">
-      {faqs.map((faq, idx) => (
-        <div key={idx}>
-          <button
-            className="w-full flex items-center justify-between py-5 text-left gap-4"
-            onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-            aria-expanded={openIndex === idx}
-          >
-            <span className="text-sm font-medium leading-snug" style={{ color: "#111111" }}>
-              {faq.question}
-            </span>
-            <span
-              className="flex-shrink-0 w-5 h-5 flex items-center justify-center transition-transform duration-200"
-              style={{ transform: openIndex === idx ? "rotate(45deg)" : "rotate(0deg)", color: "#E3000F" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </span>
-          </button>
-          {openIndex === idx && (
-            <div className="pb-5">
-              <p className="text-sm font-light leading-relaxed" style={{ color: "#555555" }}>
-                {faq.answer}
-              </p>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
 
 function CategoryCard({ cat, getImage }: { cat: any; getImage: (c: any) => string | null }) {
   const img = getImage(cat)
@@ -67,16 +32,7 @@ function CategoryCard({ cat, getImage }: { cat: any; getImage: (c: any) => strin
             className="w-full h-full group-hover:scale-105 transition-transform duration-500"
             style={{ objectFit: "contain" }}
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center p-8" style={{ backgroundColor: "#E3000F" }}>
-            <img
-              src="/images/logo/new-cardinal-cooling-logo.svg"
-              alt="Cardinal Cooling Systems"
-              className="w-full h-auto"
-              style={{ filter: "brightness(0) invert(1)" }}
-            />
-          </div>
-        )}
+        ) : null /* no placeholder image: GMC rejects them */}
       </div>
       <div className="p-4">
         <p className="text-sm font-semibold leading-snug transition-colors group-hover:text-red-600 mb-1" style={{ color: "#111111" }}>
@@ -111,16 +67,9 @@ export default function CategoryTemplate({
 
   if (!category || !countryCode) notFound()
 
-  const getImage = (cat: any): string | null => {
-    if (cat.metadata?.image) return cat.metadata.image as string
-    if (cat.metadata?.featured_image) return cat.metadata.featured_image as string
-    const products = cat.products ?? []
-    for (const p of products) {
-      if (p.thumbnail) return p.thumbnail
-      if (p.images?.[0]?.url) return p.images[0].url
-    }
-    return null
-  }
+  // Real product photo only (own products, then descendants); never a placeholder.
+  const getImage = (cat: any): string | null =>
+    realCategoryImage(cat, allCategories as any[])
 
   const categoryImage = getImage(category)
   // The page's single <h1> is the category name rendered in the dark header.
@@ -177,6 +126,27 @@ export default function CategoryTemplate({
           </div>
         )}
 
+        {/* Stainless tube is quoted per order: point buyers at the size
+            table + quote form on the landing page. */}
+        {isStainlessTubeCategory(category.handle) && (
+          <div className="py-6 border-b border-gray-100">
+            <LocalizedClientLink
+              href={STAINLESS_TUBE_PAGE_PATH}
+              className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 transition-colors"
+              style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px" }}
+              data-testid="stainless-tube-page-banner"
+            >
+              <span className="text-sm" style={{ color: "#374151" }}>
+                <strong className="font-semibold" style={{ color: "#111111" }}>Stainless tubing is quoted per order.</strong>{" "}
+                See every size, alloy and wall, and get pricing back within 48 hours.
+              </span>
+              <span className="text-sm font-semibold whitespace-nowrap group-hover:underline" style={{ color: "#E3000F" }}>
+                Sizes &amp; quote →
+              </span>
+            </LocalizedClientLink>
+          </div>
+        )}
+
         {/* Tier 1 & 2: Subcategories grid */}
         {hasChildren && (
           <div className="py-10 border-b border-gray-100">
@@ -221,16 +191,7 @@ export default function CategoryTemplate({
                           className="w-full h-full group-hover:scale-105 transition-transform duration-500"
                           style={{ objectFit: "contain" }}
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center p-8" style={{ backgroundColor: "#E3000F" }}>
-                          <img
-                            src="/images/logo/new-cardinal-cooling-logo.svg"
-                            alt="Cardinal Cooling Systems"
-                            className="w-full h-auto"
-                            style={{ filter: "brightness(0) invert(1)" }}
-                          />
-                        </div>
-                      )}
+                      ) : null}
                     </div>
                     <div className="p-3">
                       <p className="text-xs font-semibold leading-snug transition-colors group-hover:text-red-600 line-clamp-2" style={{ color: "#111111" }}>
@@ -243,6 +204,24 @@ export default function CategoryTemplate({
             </div>
           </div>
         )}
+
+        {/* Quote path: directory and search visitors arrive with a BOM, not a cart */}
+        <div
+          className="mt-10 px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+          style={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+        >
+          <p className="text-sm m-0" style={{ color: "#374151" }}>
+            Have a parts list or spec? Send it over and we quote the same business day.
+          </p>
+          <LocalizedClientLink
+            href={`/contact?category=${encodeURIComponent(category.name)}`}
+            className="inline-flex items-center justify-center h-10 px-5 text-sm font-semibold text-white whitespace-nowrap transition-colors duration-150"
+            style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
+            data-testid="category-request-quote-link"
+          >
+            Request a quote
+          </LocalizedClientLink>
+        </div>
 
         {/* Products */}
         <div className="py-10">

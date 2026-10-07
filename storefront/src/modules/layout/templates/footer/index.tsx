@@ -1,6 +1,8 @@
 import { getCategoriesList } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import NewsletterForm from "@modules/layout/components/newsletter-form"
+import PaymentIcons from "@modules/common/components/payment-icons"
+import { STAINLESS_TUBE_PAGE_PATH } from "@lib/stainless-tube"
 
 export default async function Footer() {
   const { product_categories } = await getCategoriesList(0, 50)
@@ -52,6 +54,16 @@ export default async function Footer() {
               Product Categories
             </h3>
             <ul className="space-y-3">
+              <li>
+                <LocalizedClientLink
+                  href={STAINLESS_TUBE_PAGE_PATH}
+                  className="text-sm transition-colors hover:text-white"
+                  style={{ color: "rgba(255,255,255,0.6)" }}
+                  data-testid="stainless-tube-footer-link"
+                >
+                  Stainless Steel Tubing &amp; Pipe
+                </LocalizedClientLink>
+              </li>
               {parentCategories.map((c) => (
                 <li key={c.id}>
                   <LocalizedClientLink
@@ -79,7 +91,9 @@ export default async function Footer() {
               {[
                 { label: "About Us", href: "/about" },
                 { label: "Contact Us", href: "/contact" },
-                { label: "Shipping & Returns", href: "/shipping-returns" },
+                { label: "Shipping Policy", href: "/shipping-policy" },
+                { label: "Return Policy", href: "/return-policy" },
+                { label: "Track Your Order", href: "/account/orders" },
                 { label: "Terms of Service", href: "/terms-of-service" },
                 { label: "Privacy Policy", href: "/privacy-policy" },
               ].map((item) => (
@@ -159,12 +173,7 @@ export default async function Footer() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 py-8">
 
           {/* Payment icons */}
-          <div className="flex items-center gap-3">
-            <img src="/images/payments/visa.svg" alt="Visa" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
-            <img src="/images/payments/mastercard.svg" alt="Mastercard" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
-            <img src="/images/payments/amex.svg" alt="American Express" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
-            <img src="/images/payments/discover.svg" alt="Discover" width={36} height={28} loading="lazy" decoding="async" className="h-7 w-auto" />
-          </div>
+          <PaymentIcons />
 
           {/* SSL */}
           <div
@@ -177,17 +186,11 @@ export default async function Footer() {
             Secure SSL Encrypted Checkout
           </div>
 
-          {/* Copyright + links */}
+          {/* Copyright (policy links live once, in the Company column) */}
           <div
             className="flex flex-wrap items-center gap-4 text-xs"
             style={{ color: "rgba(255,255,255,0.35)" }}
           >
-            <LocalizedClientLink href="/privacy-policy" className="hover:text-white transition-colors">
-              Privacy Policy
-            </LocalizedClientLink>
-            <LocalizedClientLink href="/terms-of-service" className="hover:text-white transition-colors">
-              Terms of Service
-            </LocalizedClientLink>
             <span>© {currentYear} Cardinal Cooling Systems. All rights reserved.</span>
           </div>
 

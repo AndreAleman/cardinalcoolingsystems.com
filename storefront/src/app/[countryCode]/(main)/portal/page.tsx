@@ -45,7 +45,7 @@ const benefitRows = [
   {
     eyebrow: "Instant confirmation",
     title: "Order placed, quote sent — same screen",
-    copy: "You get an order confirmation and a quote request receipt in one step. We follow up on quotes fast, and your order ships on the normal schedule — stock items in 1 business day.",
+    copy: "You get an order confirmation and a quote request receipt in one step. We follow up on quotes fast, and your order ships on the normal schedule — stock items in 1–2 business days.",
     image: "/portal/portal-confirmation.png",
     alt: "Confirmation screen showing an order placed and a quote request sent",
     eager: false,
@@ -248,7 +248,7 @@ export default function PortalLandingPage({
             <CtaButton countryCode={countryCode} label="Create your company account" />
           </div>
           <p className="text-xs font-light mt-6" style={{ color: "#555555" }}>
-            Free forever. No credit card to sign up. Stock orders ship in 1 business day.
+            Free forever. No credit card to sign up. Stock orders ship in 1–2 business days.
           </p>
         </div>
       </section>

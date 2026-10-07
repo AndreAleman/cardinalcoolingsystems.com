@@ -4,6 +4,7 @@ import ItemsPreviewTemplate from "@modules/cart/templates/preview"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
+import PaymentIcons from "@modules/common/components/payment-icons"
 
 const CheckoutSummary = ({ cart }: { cart: any }) => {
   // Only show shipping total if there's actually a shipping method selected
@@ -33,6 +34,10 @@ const CheckoutSummary = ({ cart }: { cart: any }) => {
         <Divider />
         
         <CartTotals totals={totals} />
+        <div className="flex items-center justify-between gap-3 my-4">
+          <span className="text-sm text-ui-fg-subtle">We accept</span>
+          <PaymentIcons iconClassName="h-6 w-auto" data-testid="checkout-payment-icons" />
+        </div>
         
         <ItemsPreviewTemplate items={cart?.items} />
       </div>

@@ -37,6 +37,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      // Stainless sanitary tube/pipe landing page (quote-only, size table)
+      url: `${baseUrl}/${countryCode}/stainless-steel-tubing`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/${countryCode}/blog`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -47,6 +54,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/${countryCode}/shipping-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/${countryCode}/return-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
     },
   ]
 
@@ -67,7 +86,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  // Product categories (Medusa) — e.g. /us/categories/valves
+  // Product categories (Medusa) — e.g. /us/categories/valves.
+  // listCategories() already drops categories with no published products.
   const productCategories = await listCategories()
 
   const categoryPageUrls: MetadataRoute.Sitemap = productCategories

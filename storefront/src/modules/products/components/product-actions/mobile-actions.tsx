@@ -18,6 +18,8 @@ type MobileActionsProps = {
   show: boolean
   optionsDisabled: boolean
   isQuoteOnly?: boolean
+  /* Where "Request a quote" goes; defaults to the contact page. */
+  quoteHref?: string
   countryCode?: string
 }
 
@@ -32,6 +34,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({
   show,
   optionsDisabled,
   isQuoteOnly,
+  quoteHref,
   countryCode,
 }) => {
   const { state, open, close } = useToggleState()
@@ -68,6 +71,11 @@ const MobileActions: React.FC<MobileActionsProps> = ({
               <span className="text-sm font-medium truncate max-w-[60%]" style={{ color: "#111111" }} data-testid="mobile-title">
                 {product.title}
               </span>
+              {!selectedPrice && isQuoteOnly && (
+                <span className="text-sm font-semibold" style={{ color: "#111111" }}>
+                  Quote only
+                </span>
+              )}
               {selectedPrice && (
                 <div className="flex items-center gap-x-2 text-sm">
                   {selectedPrice.price_type === "sale" && (
@@ -100,7 +108,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({
 
               {isQuoteOnly ? (
                 <Link
-                  href={`/${countryCode}/contact`}
+                  href={quoteHref ?? `/${countryCode}/contact`}
                   className="h-11 flex items-center justify-center gap-2 text-sm font-semibold text-white transition-all duration-200"
                   style={{ backgroundColor: "#E3000F", borderRadius: "5px" }}
                   data-testid="mobile-request-quote-link"

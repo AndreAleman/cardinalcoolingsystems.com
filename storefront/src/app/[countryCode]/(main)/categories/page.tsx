@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import { getCategoriesList } from "@lib/data/categories"
 import Link from "next/link"
+import { categoryImage } from "@lib/util/category-visibility"
 
 type Props = {
   params: { countryCode: string }
@@ -25,16 +26,9 @@ export default async function CategoriesPage({ params }: Props) {
   // Shuffle for random order
   const shuffled = [...parentCategories].sort(() => Math.random() - 0.5)
 
-  const getImage = (category: any): string | null => {
-    if (category.metadata?.image) return category.metadata.image as string
-    if (category.metadata?.featured_image) return category.metadata.featured_image as string
-    const products = category.products ?? []
-    for (const p of products) {
-      if (p.thumbnail) return p.thumbnail
-      if (p.images?.[0]?.url) return p.images[0].url
-    }
-    return null
-  }
+  // Real product photo only (own products, then subcategories); never a placeholder.
+  const getImage = (category: any): string | null =>
+    categoryImage(category, product_categories as any[])
 
   return (
     <div className="bg-white">
@@ -86,13 +80,7 @@ export default async function CategoriesPage({ params }: Props) {
                           alt={category.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <svg className="w-12 h-12" style={{ color: "#d1d5db" }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-                          </svg>
-                        </div>
-                      )}
+                      ) : null}
                       {/* Count badge */}
                       {(productCount > 0 || childCount > 0) && (
                         <span

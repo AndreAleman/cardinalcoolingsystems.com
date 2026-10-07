@@ -25,6 +25,17 @@ export async function GET(req: NextRequest) {
           // ✅ Home page: [countryCode]/(main)/page.tsx
           revalidatePath("/[countryCode]/(main)", "page")
           break
+        case "categories":
+          // Category index + every category page (titles/H1s come from Medusa metadata)
+          revalidatePath("/[countryCode]/(main)/categories", "page")
+          revalidatePath("/[countryCode]/(main)/categories/[...category]", "page")
+          break
+        case "blog":
+          // Blog index, category listings and every post (content comes from Sanity)
+          revalidatePath("/[countryCode]/(main)/blog", "page")
+          revalidatePath("/[countryCode]/(main)/blog/category/[slug]", "page")
+          revalidatePath("/[countryCode]/(main)/blog/[slug]", "page")
+          break
       }
     })
   )

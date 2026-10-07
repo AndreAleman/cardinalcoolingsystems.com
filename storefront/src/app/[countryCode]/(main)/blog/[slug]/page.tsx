@@ -165,7 +165,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post.title} | Cardinal Cooling Systems Blog`,
+    title: post.title,
     description: description || `Read our expert article about ${post.title.toLowerCase()}. Technical insights on stainless steel sanitary fittings.`,
     alternates: {
       canonical: `https://cardinalcoolingsystems.com/us/blog/${slug}`
@@ -190,11 +190,37 @@ export default async function BlogPostPage({ params }: Props) {
     notFound()
   }
 
-  // ... rest of your existing code stays exactly the same
-
+  // Origin signal for Google: two posts were canonicalized to unrelated spam
+  // domains after an empty crawl (#37). Organization schema lives in layout.tsx.
+  const postUrl = `https://cardinalcoolingsystems.com/us/blog/${slug}`
+  const blogPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    url: postUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+    ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
+    ...(post.mainImage?.asset?.url ? { image: [post.mainImage.asset.url] } : {}),
+    ...(post.excerpt ? { description: post.excerpt } : {}),
+    author: post.author?.name
+      ? { "@type": "Person", name: post.author.name }
+      : { "@type": "Organization", name: "Cardinal Cooling Systems" },
+    publisher: {
+      "@type": "Organization",
+      name: "Cardinal Cooling Systems",
+      url: "https://cardinalcoolingsystems.com",
+      logo: { "@type": "ImageObject", url: "https://cardinalcoolingsystems.com/images/og-image.jpeg" },
+    },
+  }
 
   return (
     <div className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(blogPostingSchema).replace(/</g, "\\u003c"),
+        }}
+      />
       {/* Breadcrumb */}
       <section className="bg-gray-50 pt-32 pb-6">
         <div className="max-w-4xl mx-auto px-4">

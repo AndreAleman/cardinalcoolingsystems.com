@@ -14,9 +14,26 @@ export default function ProductPrice({
   })
 
   const selectedPrice = variant ? variantPrice : cheapestPrice
+  // Tube is priced per foot (variant/product metadata.unit, set by scripts/seo/apply-tube-pricing.py)
+  const unit = (variant?.metadata?.unit ?? product.metadata?.unit) as string | undefined
 
+  /* No payable price ($0, missing) = Quote-Only (lib/util/quote-only.ts).
+     The product is already fetched server-side, so this is final — never
+     a loading state and never "$0.00". */
   if (!selectedPrice) {
-    return <div className="block w-32 h-9 bg-gray-100 animate-pulse" style={{ borderRadius: "5px" }} />
+    return (
+      <div className="flex flex-col gap-y-1" data-testid="product-price-quote-only">
+        <p className="text-xs font-medium" style={{ color: "#9ca3af" }}>
+          Price
+        </p>
+        <span className="text-3xl font-semibold tracking-tight" style={{ color: "#111111" }}>
+          Quote only
+        </span>
+        <p className="text-xs font-light" style={{ color: "#9ca3af" }}>
+          Priced per order. Request a quote for this configuration.
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -36,6 +53,9 @@ export default function ProductPrice({
         >
           {selectedPrice.calculated_price}
         </span>
+        {unit === "ft" && (
+          <span className="text-base font-medium" style={{ color: "#6b7280" }}>/ ft</span>
+        )}
 
         {selectedPrice.price_type === "sale" && (
           <span
@@ -60,9 +80,11 @@ export default function ProductPrice({
 
       {/* Subtitle */}
       <p className="text-xs font-light" style={{ color: "#9ca3af" }}>
-        {!variant
-          ? "Final price depends on selected options"
-          : "Price for selected configuration"}
+        {unit === "ft"
+          ? "Price per foot · supplied in 20 ft lengths · ships freight"
+          : !variant
+            ? "Final price depends on selected options"
+            : "Price for selected configuration"}
       </p>
     </div>
   )

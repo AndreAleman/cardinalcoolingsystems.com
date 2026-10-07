@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { sdk } from "@lib/config"
 import { HttpTypes } from "@medusajs/types"
+import { nonEmptyCategoryIds, pruneEmptyCategories } from "@lib/util/category-visibility"
 
 interface MobileMenuProps {
   className?: string
@@ -21,10 +22,16 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
       try {
         const response = await sdk.store.category.list({
           include_descendants_tree: true,
-          fields: "id,name,handle,parent_category_id,category_children.id,category_children.name,category_children.handle,category_children.category_children.id,category_children.category_children.name,category_children.category_children.handle,category_children.category_children.category_children.id,category_children.category_children.category_children.name,category_children.category_children.category_children.handle"
+          limit: 200,
+          fields: "id,name,handle,parent_category_id,products.id,category_children.id,category_children.name,category_children.handle,category_children.category_children.id,category_children.category_children.name,category_children.category_children.handle,category_children.category_children.category_children.id,category_children.category_children.category_children.name,category_children.category_children.category_children.handle"
         })
         
-        const allCategories = response.product_categories || []
+        // Hide categories with no published products (GMC rejects empty categories)
+        const fetched = response.product_categories || []
+        const allCategories = pruneEmptyCategories(
+          fetched,
+          nonEmptyCategoryIds(fetched as any)
+        )
         const parentCategories = allCategories.filter(cat => 
           cat.parent_category_id === null || cat.parent_category_id === undefined
         )

@@ -10,6 +10,8 @@ import { redirect } from "next/navigation"
 import { getAuthHeaders, getCartId, removeCartId, setCartId } from "./cookies"
 import { getProductsById } from "./products"
 import { getRegion } from "./regions"
+import { isVariantQuoteOnly } from "@lib/util/quote-only"
+import { isTubeItem, isTubeLineItem, roundUpToSticks } from "@lib/util/tube-sticks"
 
 export async function retrieveCart() {
   const cartId = getCartId()
@@ -79,6 +81,58 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
     .catch(medusaError)
 }
 
+/*
+  Quote-Only parts never enter a paid cart (docs/adr/0001, CONTEXT.md
+  "Quote-Only Line", lib/util/quote-only.ts): requires_quote metadata or
+  no payable price ($0 / missing). The UI already swaps Add to Cart for
+  "Request a quote"; this is the server-side backstop for stale pages and
+  direct calls. It looks up the live price with the buyer's own auth, so a
+  Company price list that does price the part still lets it through. If the
+  lookup itself fails it lets the add proceed, so a catalog hiccup never
+  blocks a normal purchase.
+
+  Returns whether the variant is tube (sold in 20 ft sticks,
+  lib/util/tube-sticks.ts) so the caller can round the quantity; a failed
+  lookup falls back to the SKU-free answer "not tube" and the backend's
+  cart hook still rejects a non-multiple of 20.
+*/
+async function assertNotQuoteOnly(variantId: string, regionId: string): Promise<{ tube: boolean }> {
+  let product: HttpTypes.StoreProduct | undefined
+  try {
+    const { products } = await sdk.client.fetch<{
+      products: HttpTypes.StoreProduct[]
+    }>("/store/products", {
+      method: "GET",
+      query: {
+        variants: { id: [variantId] },
+        region_id: regionId,
+        fields: "id,handle,metadata,*variants,+variants.metadata,*variants.calculated_price",
+        limit: 1,
+      },
+      headers: getAuthHeaders(),
+      cache: "no-store",
+    })
+    product = products?.[0]
+  } catch {
+    return { tube: false }
+  }
+  const variant = product?.variants?.find((v) => v.id === variantId)
+  if (!product || !variant) return { tube: false }
+  if (isVariantQuoteOnly(product, variant)) {
+    throw new Error(
+      "This part is quote only. Request a quote instead of adding it to the cart."
+    )
+  }
+  return {
+    tube: isTubeItem({
+      sku: variant.sku,
+      metadata: variant.metadata as Record<string, unknown> | null,
+      productHandle: product.handle,
+      productMetadata: product.metadata as Record<string, unknown> | null,
+    }),
+  }
+}
+
 export async function addToCart({
   variantId,
   quantity,
@@ -97,12 +151,16 @@ export async function addToCart({
     throw new Error("Error retrieving or creating cart")
   }
 
+  const { tube } = await assertNotQuoteOnly(variantId, cart.region_id!)
+
+  // Tube is sold in whole 20 ft sticks. The tube line already in the cart is
+  // a whole number of sticks, so a rounded add keeps the total whole too.
   await sdk.store.cart
     .createLineItem(
       cart.id,
       {
         variant_id: variantId,
-        quantity,
+        quantity: tube ? roundUpToSticks(quantity) : quantity,
       },
       {},
       getAuthHeaders()
@@ -129,8 +187,17 @@ export async function updateLineItem({
     throw new Error("Missing cart ID when updating line item")
   }
 
+  // Tube lines stay whole 20 ft sticks (lib/util/tube-sticks.ts): the UI
+  // already rounds, this covers stale pages and direct calls.
+  let finalQuantity = quantity
+  if (quantity > 0) {
+    const cart = await retrieveCart()
+    const line = cart?.items?.find((i) => i.id === lineId)
+    if (line && isTubeLineItem(line as any)) finalQuantity = roundUpToSticks(quantity)
+  }
+
   await sdk.store.cart
-    .updateLineItem(cartId, lineId, { quantity }, {}, getAuthHeaders())
+    .updateLineItem(cartId, lineId, { quantity: finalQuantity }, {}, getAuthHeaders())
     .then(() => {
       revalidateTag("cart")
     })

@@ -63,7 +63,14 @@ const displayPrice = cheapestPrice?.calculated_price_number && cheapestPrice.cal
           <div className="flex items-center justify-between pt-2">
             {/* Price on the left */}
             <div className="flex items-center">
-              {displayPrice && <PreviewPrice price={displayPrice} />}
+              {displayPrice ? (
+                <PreviewPrice price={displayPrice} />
+              ) : (
+                /* No payable price ($0 / missing) = Quote-Only, never "$0.00" */
+                <Text className="text-ui-fg-muted text-sm" data-testid="price-quote-only">
+                  Quote only
+                </Text>
+              )}
             </div>
             {/* View button on the right */}
             <div className="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-colors duration-200 text-xs font-medium flex items-center gap-1">
