@@ -3,6 +3,13 @@ import { Modules } from '@medusajs/framework/utils'
 import { INotificationModuleService, IOrderModuleService } from '@medusajs/framework/types'
 import { SubscriberArgs, SubscriberConfig } from '@medusajs/medusa'
 import { EmailTemplates } from '../modules/email-notifications/templates'
+import { hit } from '../lib/rate-limit'
+import { resolveCompanyContext } from '../utils/company-context'
+import { CARDINAL_SIGNUP_MAIL_CAP, mailCapVerdict } from '../utils/abuse-policy'
+
+/* How long a fresh registration gets to finish its Company step
+   before we tell Cardinal about it on its own. */
+const COMPANY_GRACE_MS = Number(process.env.SIGNUP_COMPANY_GRACE_MS ?? 90_000)
 
 type OrderPlacedEvent = {
   id: string
@@ -35,7 +42,19 @@ export default async function adminNotificationHandler({
         break
 
       case 'customer.created':
-        await handleUserCreated(data as UserCreatedEvent, container, notificationModuleService, adminEmail)
+        /*
+          One email per signup: a portal signup already sends Cardinal
+          the "new Company" email, so the registration email is only
+          for an account that never got a Company (the Company step
+          failed, or the buyer bailed). Wait out the grace period
+          WITHOUT holding the event worker, then decide.
+        */
+        setTimeout(() => {
+          handleUserCreated(data as UserCreatedEvent, container, notificationModuleService, adminEmail).catch(
+            (error: any) =>
+              console.error('[AdminSubscriber] ❌ Error sending registration notification:', error?.message)
+          )
+        }, COMPANY_GRACE_MS).unref?.()
         break
 
       default:
@@ -113,7 +132,7 @@ async function handleUserCreated(
     data: [customer]
   } = await query.graph({
     entity: 'customer',
-    fields: ['id', 'email', 'first_name', 'last_name', 'created_at'],
+    fields: ['id', 'email', 'first_name', 'last_name', 'created_at', 'has_account'],
     filters: { id: data.id }
   })
 
@@ -127,6 +146,20 @@ async function handleUserCreated(
     email: customer.email,
     name: `${customer.first_name || ''} ${customer.last_name || ''}`
   })
+
+  // Already a Team Member → the "new Company" email covered this signup.
+  const membership = await resolveCompanyContext(container, data.id)
+  if (membership) {
+    console.log('[AdminSubscriber] Customer has a Company; registration email skipped')
+    return
+  }
+
+  // Same hourly cap as the Company signup email: a flood costs one notice.
+  const count = await hit('mail:cardinal-signup', CARDINAL_SIGNUP_MAIL_CAP)
+  if (count !== null && mailCapVerdict(count) !== 'send') {
+    console.warn('[AdminSubscriber] Signup email cap reached; registration email dropped')
+    return
+  }
 
   console.log(`[AdminSubscriber] Sending customer registration notification to: ${adminEmail}`)
 

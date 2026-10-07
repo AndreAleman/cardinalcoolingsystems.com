@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, FormEvent, useRef } from "react"
+import { useBotGuard } from "@modules/common/components/bot-guard"
 
 declare global {
   interface Window {
@@ -16,6 +17,7 @@ interface BulkPricingModalProps {
 }
 
 export default function BulkPricingModal({ isOpen, onClose, productTitle, productSku }: BulkPricingModalProps) {
+  const guard = useBotGuard()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const formRef = useRef<HTMLFormElement>(null)
@@ -58,7 +60,7 @@ export default function BulkPricingModal({ isOpen, onClose, productTitle, produc
             "Content-Type": "application/json",
             "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify({ ...data, ...(await guard.values()) }),
         }
       )
 
@@ -88,6 +90,7 @@ export default function BulkPricingModal({ isOpen, onClose, productTitle, produc
       console.error("Bulk pricing inquiry error:", error)
       setSubmitStatus("error")
     } finally {
+      guard.reset()
       setIsSubmitting(false)
     }
   }
@@ -243,6 +246,7 @@ export default function BulkPricingModal({ isOpen, onClose, productTitle, produc
             >
               {isSubmitting ? "Sending…" : "Request Bulk Pricing →"}
             </button>
+            {guard.field}
           </form>
         </div>
       </div>

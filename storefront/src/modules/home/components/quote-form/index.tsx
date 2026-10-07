@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, FormEvent } from "react";
+import { useBotGuard } from "@modules/common/components/bot-guard";
 import { captureEvent, identifyUser } from "@lib/util/posthog";
 import { filesToAttachments } from "@lib/util/attachments";
 import AttachmentInput from "@modules/common/components/attachment-input";
@@ -27,6 +28,7 @@ const INITIAL_STATE: FormState = {
 };
 
 export default function QuoteForm() {
+  const guard = useBotGuard();
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -61,6 +63,7 @@ export default function QuoteForm() {
           // Map to the shape your existing /store/contact endpoint expects.
           // projectType + specifications are combined into `message`.
           body: JSON.stringify({
+            ...(await guard.values()),
             name: form.firstName,
             lastName: form.lastName,
             email: form.email,
@@ -72,6 +75,8 @@ export default function QuoteForm() {
           }),
         }
       );
+
+      guard.reset();
 
       if (!res.ok) throw new Error("Request failed");
 
@@ -415,6 +420,7 @@ export default function QuoteForm() {
                   aleman@cardinalcoolingsystems.com
                 </a>
               </p>
+              {guard.field}
             </form>
           )}
         </div>

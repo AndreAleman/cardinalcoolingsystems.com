@@ -5,6 +5,7 @@ import medusaError from "@lib/util/medusa-error"
 import { revalidateTag } from "next/cache"
 import { cache } from "react"
 import { getAuthHeaders } from "./cookies"
+import { trustHeaders } from "./storefront-trust"
 
 export type Company = {
   id: string
@@ -74,7 +75,9 @@ export async function createCompany(input: {
   const result = await sdk.client
     .fetch<CompanySignupResult>("/store/companies", {
       method: "POST",
-      headers: getAuthHeaders(),
+      // trustHeaders: the backend only takes signups from this server,
+      // and rate-limits by the buyer's own address.
+      headers: { ...getAuthHeaders(), ...trustHeaders() },
       body: { name: input.name, phone: input.phone },
     })
     .catch(medusaError)

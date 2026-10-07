@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { useBotGuard } from "@modules/common/components/bot-guard"
 import { ArrowRight } from "lucide-react"
 import { captureEvent, identifyUser } from "@lib/util/posthog"
 import { filesToAttachments } from "@lib/util/attachments"
@@ -22,6 +23,7 @@ type FormData = {
 }
 
 export default function ContactForm() {
+  const guard = useBotGuard()
   const [formData, setFormData] = useState<FormData>({
     name: "",
     lastName: "",
@@ -65,6 +67,7 @@ export default function ContactForm() {
           'x-publishable-api-key': process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!
         },
         body: JSON.stringify({
+          ...(await guard.values()),
           name: formData.name,
           lastName: formData.lastName,
           email: formData.email,
@@ -127,6 +130,7 @@ export default function ContactForm() {
       console.error('Contact form error:', error)
       setSubmitStatus('error')
     } finally {
+      guard.reset()
       setIsSubmitting(false)
     }
   }
@@ -319,6 +323,7 @@ export default function ContactForm() {
               Cardinal Cooling Systems ensures NDA compliance.
             </p>
           </div>
+          {guard.field}
         </form>
       </div>
     </section>

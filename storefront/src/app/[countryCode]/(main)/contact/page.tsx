@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState, useEffect, FormEvent, useRef } from "react"
+import { useBotGuard } from "@modules/common/components/bot-guard"
 import { filesToAttachments } from "@lib/util/attachments"
 import { captureEvent, identifyUser } from "@lib/util/posthog"
 import AttachmentInput from "@modules/common/components/attachment-input"
@@ -33,6 +34,7 @@ const faqs = [
 
 export default function ContactPage({ params }: Props) {
   const { countryCode } = params
+  const guard = useBotGuard()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const [attachedFiles, setAttachedFiles] = useState<File[]>([])
@@ -81,9 +83,10 @@ export default function ContactPage({ params }: Props) {
             "Content-Type": "application/json",
             "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
           },
-          body: JSON.stringify(
-            attachments.length > 0 ? { ...data, attachments } : data
-          ),
+          body: JSON.stringify({
+            ...(attachments.length > 0 ? { ...data, attachments } : data),
+            ...(await guard.values()),
+          }),
         }
       )
 
@@ -121,6 +124,7 @@ export default function ContactPage({ params }: Props) {
       console.error("Contact form error:", error)
       setSubmitStatus("error")
     } finally {
+      guard.reset()
       setIsSubmitting(false)
     }
   }
@@ -314,6 +318,7 @@ export default function ContactPage({ params }: Props) {
                   )}
                 </button>
 
+                {guard.field}
               </form>
             </div>
           </div>

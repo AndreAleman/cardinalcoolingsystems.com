@@ -30,6 +30,13 @@ export const ContactFormSchema = z.object({
           MAX_ATTACHMENTS_TOTAL_BASE64_CHARS,
       "Attachments exceed the 10MB total size limit"
     ),
+  // Sent by some forms; not used by the email but must not fail validation.
+  projectType: z.string().max(200).optional(),
+  // Bot protection (see utils/abuse-policy.ts). All optional here: the
+  // abuse-guard middlewares decide, before this validator runs.
+  turnstile_token: z.string().max(2048).optional(),
+  website: z.string().max(500).optional(),
+  elapsed_ms: z.number().optional(),
 })
 
 export type ContactFormType = z.infer<typeof ContactFormSchema>

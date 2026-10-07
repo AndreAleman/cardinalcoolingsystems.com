@@ -2,6 +2,13 @@
 
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
+import {
+  authLogin,
+  authRegister,
+  friendlyGuardError,
+  trustHeaders,
+  turnstileTokenFrom,
+} from "./storefront-trust"
 import { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
@@ -70,25 +77,21 @@ export async function signup(_currentState: unknown, formData: FormData) {
 
   if (!existingCustomer) {
     try {
-      const token = await sdk.auth.register("customer", "emailpass", {
-        email: customerForm.email,
-        password: password,
-      })
+      const token = await authRegister(
+        customerForm.email,
+        password,
+        turnstileTokenFrom(formData)
+      )
 
-      const customHeaders = { authorization: `Bearer ${token}` }
+      const customHeaders = { authorization: `Bearer ${token}`, ...trustHeaders() }
 
       await sdk.store.customer.create(customerForm, {}, customHeaders)
 
-      const loginToken = await sdk.auth.login("customer", "emailpass", {
-        email: customerForm.email,
-        password,
-      })
-
-      setAuthToken(typeof loginToken === 'string' ? loginToken : loginToken.location)
+      setAuthToken(await authLogin(customerForm.email, password))
 
       revalidateTag("customer")
     } catch (error: any) {
-      return error.toString()
+      return friendlyGuardError(error) ?? error.toString()
     }
   }
 
@@ -109,14 +112,10 @@ export async function login(_currentState: unknown, formData: FormData) {
   const password = formData.get("password") as string
 
   try {
-    await sdk.auth
-      .login("customer", "emailpass", { email, password })
-      .then((token) => {
-        setAuthToken(typeof token === 'string' ? token : token.location)
-        revalidateTag("customer")
-      })
+    setAuthToken(await authLogin(email, password))
+    revalidateTag("customer")
   } catch (error: any) {
-    return error.toString()
+    return friendlyGuardError(error) ?? error.toString()
   }
 }
 
@@ -286,32 +285,26 @@ async function signInOrRegister(input: {
   password: string
   first_name?: string
   last_name?: string
+  turnstile_token?: string | null
 }) {
   try {
-    const token = await sdk.auth.login("customer", "emailpass", {
-      email: input.email,
-      password: input.password,
-    })
-    setAuthToken(typeof token === "string" ? token : token.location)
+    setAuthToken(await authLogin(input.email, input.password))
     revalidateTag("customer")
     return
   } catch {
     /* no account yet, or wrong password — try to create */
   }
-  const regToken = await sdk.auth.register("customer", "emailpass", {
-    email: input.email,
-    password: input.password,
-  })
+  const regToken = await authRegister(
+    input.email,
+    input.password,
+    input.turnstile_token ?? null
+  )
   await sdk.store.customer.create(
     { email: input.email, first_name: input.first_name, last_name: input.last_name },
     {},
-    { authorization: `Bearer ${regToken}` }
+    { authorization: `Bearer ${regToken}`, ...trustHeaders() }
   )
-  const token = await sdk.auth.login("customer", "emailpass", {
-    email: input.email,
-    password: input.password,
-  })
-  setAuthToken(typeof token === "string" ? token : token.location)
+  setAuthToken(await authLogin(input.email, input.password))
   revalidateTag("customer")
 }
 
@@ -331,6 +324,7 @@ export async function acceptInviteSignup(_state: unknown, formData: FormData) {
         password,
         first_name: formData.get("first_name") as string,
         last_name: formData.get("last_name") as string,
+        turnstile_token: turnstileTokenFrom(formData),
       })
     } catch (error: any) {
       return "Could not sign you in. If you already have an account with this email, use its password."

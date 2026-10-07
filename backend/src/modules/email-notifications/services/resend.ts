@@ -132,6 +132,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         return "Your request was rejected"
       case EmailTemplates.COMPANY_SIGNUP_ADMIN: {
         const name = (data as any)?.company_name ?? "a company"
+        if ((data as any)?.flood) return "Signup volume is unusually high — check Medusa Admin"
         return (data as any)?.status === "approved"
           ? `New signup (auto-approved): ${name}`
           : `Needs your approval: ${name}`
