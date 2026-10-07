@@ -56,15 +56,26 @@ Written 2026-10-06 for any agent or engineer picking up cardinalcoolingsystems.c
 - Lead emails: subject `Quote request from <First Last> — <email domain>`, reply-to the buyer; `[Likely scam]` prefix + reason banner when `backend/src/api/store/contact/scam-signals.ts` matches; PostHog event carries `suspected_scam`, `prefill_part`, `prefill_category`.
 - Tube product `id-od-pol-tube-a270-3a-import` (prod_01K5SVZZMX8TRQMH12FKS7AAW3): 21 variants priced per foot, real lb/ft weights, metadata `unit: ft`, `cost_per_ft`, `case_qty_ft`, `sanitube_sku`, `priced_at: 2026-10`.
 
-## 5. Open PRs (waiting on Andres to merge)
+## 5. PR state (updated 2026-10-06, end of day)
 
-| PR | Branch | What |
+**Merged and live:** #28 retitles/301s/revalidate, #36 quote path + scam classifier, #38 BlogPosting schema, #40 "/ ft" tube label, #42 freight policy + `freightAllowance()`, #43 this handoff.
+
+**Waiting on Andres to merge (all merge clean against master; the backend start command runs `medusa db:migrate`, so #25's migration is safe):**
+
+| PR | What | Note |
 |---|---|---|
-| #38 | `ai/37-article-schema` | BlogPosting JSON-LD on every post. After deploy: in Search Console, **Request indexing** for the CDU post, the valve-operation post, and `/us/categories/clamp-gaskets` |
-| #40 | `ai/39-tube-pricing` | "/ ft" label and per-foot subtitle on tube prices; the pricing script |
-| #42 | `ai/41-freight-copy` | Freight policy page wording; `freightAllowance()`; deposit orders stamped `metadata.freight`; admin deposit widget shows whether to add freight to the balance invoice; ADR-0009 |
+| #34 | remove unused Cowbird logo files | trivial |
+| #30 | `import-clamp-butterfly-valves.ts` script | script only; run later with `apply` after a dry run |
+| #29 | Apollo website visitor tracker in `tracking-scripts.tsx` | third-party script on every page; owner wanted it |
+| #32 | server-render the category product grid | SEO win; touches `categories/templates/index.tsx` |
+| #25 | instant portal access for Approved Domains | includes a migration; see ADR-0007 |
+| #44 | tube landing page `/us/stainless-steel-tubing` with per-foot size chart + A312 pipe product (supersedes #31 and #33; close those after merge) | pipe import script included, **not run** |
 
-Merge order does not matter; none touch the same files. Anyone starting new work should branch from `master` **after** these merge, or expect conflicts in `payment-rules.ts`, the blog page, and the product-price component.
+**Hold:** #26 bot protection (Turnstile, honeypot, rate limits), stacked on #25. Needs `TURNSTILE_SECRET_KEY` (backend), `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (storefront), `STOREFRONT_SHARED_SECRET` (both) set on Railway first; Turnstile keys come from the Cloudflare dashboard.
+
+**Close as superseded after #44 merges:** #31, #33.
+
+Branch from `master` after the merges above; the hot files are `product-actions/index.tsx`, `categories/templates/index.tsx`, `payment-rules.ts`, `product-price/index.tsx`, `stainless-steel-tubing/page.tsx`.
 
 ## 6. Scripts and how to run them
 
@@ -75,7 +86,7 @@ All in the Cardinal repo (some only on their branch until merged). Each reads cr
 | `scripts/seo/apply-retitles-medusa.py` (master) | Sets category `seo_title`/`h1` from `scripts/seo/retitles.json` |
 | `scripts/seo/apply-retitles-sanity.py` (master) | Patches blog post titles in Sanity from the same JSON |
 | `scripts/seo/apply-tube-pricing.py` (`ai/39-tube-pricing`) | Prices/weights/creates tube variants from the embedded October list. Flags: `--dry-run`, `--margin 0.30`, `--unit ft\|stick` |
-| `scripts/content/dc-news-digest.py` (untracked, main checkout) | Daily data-center news digest → `~/Desktop/dc-news/<date>.md`, scored for liquid-cooling relevance. Feeds: Data Center Knowledge, DCD, Uptime Institute, The Register off-prem, Electronics Cooling, ServeTheHome, Vertiv |
+| `scripts/content/dc-news-digest.py` | Daily data-center news digest → `~/Desktop/dc-news/<date>.md`, scored for liquid-cooling relevance. Feeds: Data Center Knowledge, DCD, Uptime Institute, The Register off-prem, Electronics Cooling, ServeTheHome, Vertiv |
 | OpenSEO MCP helper pattern | POST `http://localhost:3001/mcp` with `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":<tool>,"arguments":{...}}}`; tools include `get_ranked_keywords`, `research_keywords` (seeds as `[{"seed":...}]`), `get_serp_results` (queries as `[{"keyword":...}]`), `get_search_console_performance` (`dateRange` enum `last_28_days` etc.), `inspect_urls`, `get_backlinks_profile` |
 
 ## 7. Data
@@ -166,7 +177,7 @@ Do not chase: "data center liquid cooling" (system-level), "quick disconnect" (P
 - `Andres-Weekly-Schedule.xlsx` — hours budget, 30-minute weekly grid, daily checklist.
 - `CCS-Tube-Pricing-2026-10.xlsx` — tube pricing math + free-freight lanes.
 - `dc-news/<date>.md` — daily news digest output.
-- `sanitube-agent-prompt.md` — task brief for the Sanitube parity work.
+- `sanitube-agent-prompt.md` — the Sanitube brief: create the A270 tube products on sanitube.us at the listed per-foot prices, nothing else (`docs/agents/sanitube-tube-import-prompt.md`).
 
 ## 11. Working rules for agents on this repo
 
@@ -177,3 +188,45 @@ Do not chase: "data center liquid cooling" (system-level), "quick disconnect" (P
 - Copy style: short declarative sentences, spec tables over prose, real part numbers, no marketing adjectives, no AI tells. Run a de-slop pass before shipping any page text.
 - Treat every "lead" claim with suspicion until the submission content has been read. Never cite Thomasnet conversion numbers.
 - Keep CONTEXT.md vocabulary (Company, Quote Request, Quote-Only Line, Money Rules, etc.); money-rule changes get an ADR in `docs/adr/`.
+
+---
+
+## 12. Start here, next agent (task queue with specs)
+
+Work the queue top to bottom. Each item is one issue, one branch `ai/<issue>-<slug>` from `master`, one PR. Check Section 5 first: if the listed PRs are not merged yet, ask Andres to merge them before starting anything that touches the hot files.
+
+### T1. Tri-clamp dimensions chart page (reference page, earns links)
+- Route: `storefront/src/app/[countryCode]/(main)/tri-clamp-dimensions/page.tsx`, server-rendered, title "Tri-Clamp Dimensions & Sizes Chart (1/2\" to 12\")", H1 "Tri-Clamp Dimensions and Sizes Chart". Add to `storefront/src/app/[countryCode]/sitemap.ts`.
+- Table per line size: tube OD, ferrule flange OD, gasket ID, clamp size/style (13MHHM etc.), matching SKUs from the store's clamp-ferrules, clamp-gaskets and clamps categories (query the backend; SKU families `14M…` ferrules, `40MP…` gaskets, `13MHHM…` clamps). Use ISO 2852 / ASME BPE DT-4 tables for flange ODs and verify against the variant option values already in Medusa; if a number cannot be verified, leave the cell out rather than guess.
+- One SVG drawing of a clamp joint with the labeled dimensions (inline SVG, no external image).
+- FAQ + FAQPage JSON-LD (copy the pattern in `stainless-steel-tubing/page.tsx`), short answers only.
+- Link to it from `/categories/clamp-fittings`, `/categories/clamp-gaskets`, `/categories/clamps`, the existing post `/us/blog/dimensions-sizing-tri-clamp-fittings` (which should then link to the chart as the canonical table), and the tubing page.
+- Target queries: "tri clamp dimensions" 170/mo, "tri clamp sizes" 170, "tri clamp torque specs" (add a torque row per size if the supplier publishes one; otherwise omit).
+
+### T2. Category copy for the top six (data, not code)
+- Categories: `clamp-fittings`, `tubes`, `clamp-gaskets`, `valves`, `sanitary-ball-valves`, `butterfly-valves`.
+- Write 200–400 words of spec-led copy into category `metadata.seo_content` (HTML; the template demotes any `<h1>` to `<h2>`) and 4 Q&As into `metadata.faq_items` (JSON array of `{question, answer}`; see `categories/templates/index.tsx`). Content: what the parts are, where they sit in a cooling or process loop, size range, alloys, ends, pressure/temperature notes, standards (3-A, A270, BPE where true), a comparison table where it helps, and which gasket/clamp pairs with what.
+- Do it with a script like `scripts/seo/apply-retitles-medusa.py` (merge metadata, never overwrite other keys), `--dry-run` first, approval from Andres, then apply, then `GET /api/revalidate?tags=categories`.
+- Style: short declarative sentences, part numbers, no marketing adjectives, nothing that cannot be checked against the catalog.
+
+### T3. Data-center liquid-cooling pillar
+- New route `/us/data-center-liquid-cooling` (server-rendered). Structure by loop stage: facility water → CDU → rack manifold → cold plate. Each stage: what Cardinal supplies (link the categories and the priced tube), 2–3 spec notes, and the matching existing posts (the 11 DC posts; list in Section 4 of the Retitles tab).
+- Rebuild `/us/data-center-cooling` as a server component with H1 "Stainless Steel Tubing, Fittings & Valves for Data Center Liquid Cooling" and product links, or 301 it to the pillar; pick one, do not keep two pages.
+- Every DC post gets a link up to the pillar and 2–3 product links (they currently have none).
+- Target queries: "stainless steel for data center cooling systems" (162 impr @ 13 in GSC, the best one), "cdu fittings", "coolant distribution unit piping", "data center manifold fittings", "closed loop cooling system for data centers".
+
+### T4. Size-level product pages
+- Today sizes live in `?alloy=&size=` query params on one product URL, so Google sees one page per product. Design: one indexable URL per size/alloy (route `products/[handle]/[variant-slug]` or canonical variant pages), with a spec table (OD, wall, weight, pressure rating where known, part number) and title `2" Tri-Clamp 90° Elbow, 316L | 14MP-200`. Start with the top five products by GSC impressions; measure before expanding.
+- Catalog scope for Cardinal size pages is the Sanitube A-level list (`~/colibri-repos/sanitube.us/pricing-reports/a-level-price-list-upload.csv`, 1,102 SKUs). Sanitube's own site is a separate, narrower job (tube products only) with its own brief.
+
+### T5. Directories and outreach (no code)
+- From aleman@cardinalcoolingsystems.com, submit the Directories tab entries in `CCS-SEO-Action-Plan.xlsx` (Thomasnet first; GlobalSpec, IQS, Crunchbase, D&B, Bing Places, LinkedIn page, DCD profile, Mission Critical buyers guide, Data Center Map). One consistent description: "Cardinal Cooling Systems stocks 304 and 316L stainless sanitary tube, tri-clamp and weld fittings, and valves for data center liquid cooling and food-processing loops. Same-day quotes on parts lists and BOMs." NAP = the Regus Miami address and (630) 947-9955.
+- Pitch one contributed article to Consulting-Specifying Engineer or Electronics Cooling (topic: specifying stainless vs polymer piping for secondary loops, with pressure/temperature data).
+
+### T6. Cowbird
+- Connect cowbirddepot.com's Search Console property to the Cowbird OpenSEO project (`8d3d0eaa-…`) from its Integrations page (Andres signs in), then repeat the retitle pass for Cowbird with the food-processing keyword set (3-A, dairy, brewing, I-line, bevel seat).
+
+### Weekly, for whoever is on duty
+- Run `python3 scripts/content/dc-news-digest.py` each morning and draft one LinkedIn post or op-ed from the top story for Andres to edit.
+- Monday: pull Search Console pages at positions 4–20 via OpenSEO and strengthen titles/internal links on the top three.
+- Never report form submissions as leads without reading them (Section 7e).
