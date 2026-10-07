@@ -6,6 +6,7 @@ import { CONSENT_EVENT, getConsent } from "./consent"
 
 const GTM_ID = "GTM-W3H2TDDZ"
 const GA_ID = "G-LJL2LPB4T5"
+const APOLLO_APP_ID = "693c4f4d58d9f700152552ad"
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY
 // Same-origin proxy (see rewrites in next.config.js) so ad blockers
 // don't drop analytics requests
@@ -67,6 +68,13 @@ gtag('config', '${GA_ID}');`}
 
       <Script id="rb2b-init" strategy="lazyOnload">
         {`!function(key) {if (window.reb2b) return;window.reb2b = {loaded: true};var s = document.createElement("script");s.async = true;s.src = "https://ddwl4m2hdecbv.cloudfront.net/b/" + key + "/" + key + ".js.gz";document.getElementsByTagName("script")[0].parentNode.insertBefore(s, document.getElementsByTagName("script")[0]);}("EN4M0HJL37OM");`}
+      </Script>
+
+      <Script id="apollo-init" strategy="lazyOnload">
+        {`(function(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
+o.onload=function(){window.trackingFunctions.onLoad({appId:"${APOLLO_APP_ID}"})},
+document.head.appendChild(o)})();`}
       </Script>
 
       {POSTHOG_KEY && (
