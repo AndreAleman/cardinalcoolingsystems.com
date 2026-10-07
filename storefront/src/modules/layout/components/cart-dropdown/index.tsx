@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
 
 import { convertToLocale } from "@lib/util/money"
+import { isTubeLineItem, sticksLabel } from "@lib/util/tube-sticks"
 import { HttpTypes } from "@medusajs/types"
 import DeleteButton from "@modules/common/components/delete-button"
 import LineItemOptions from "@modules/common/components/line-item-options"
@@ -147,7 +148,10 @@ const CartDropdown = ({
                                   data-testid="cart-item-quantity"
                                   data-value={item.quantity}
                                 >
-                                  Quantity: {item.quantity}
+                                  Quantity:{" "}
+                                  {isTubeLineItem(item as any)
+                                    ? sticksLabel(item.quantity)
+                                    : item.quantity}
                                 </span>
                               </div>
                               <div className="flex justify-end">

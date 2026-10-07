@@ -4,6 +4,7 @@ import {
   MedusaError,
   Modules,
 } from "@medusajs/framework/utils";
+import { isTubeItem, roundUpToSticks } from "../../../utils/tube-sticks";
 
 /*
   Build a cart for Quote-Only Lines through the cart MODULE, not the
@@ -44,7 +45,10 @@ export const buildQuoteCartStep = createStep(
         "id",
         "sku",
         "title",
+        "metadata",
         "product.id",
+        "product.handle",
+        "product.metadata",
         "product.title",
         "product.thumbnail",
         "prices.amount",
@@ -80,8 +84,15 @@ export const buildQuoteCartStep = createStep(
         // reservation into draft-order creation — the exact checks
         // quote-only lines fail (no price / over stock). The real
         // variant id rides in metadata for admin traceability.
+        // Tube is sold in whole 20 ft sticks: quote what can ship.
+        const tube = isTubeItem({
+          sku: variant.sku,
+          metadata: variant.metadata,
+          productHandle: variant.product?.handle,
+          productMetadata: variant.product?.metadata,
+        });
         return {
-          quantity: item.quantity,
+          quantity: tube ? roundUpToSticks(item.quantity) : item.quantity,
           unit_price: Number(price?.amount ?? 0),
           title: variant.title ?? variant.product?.title ?? "Part",
           subtitle: variant.product?.title ?? undefined,

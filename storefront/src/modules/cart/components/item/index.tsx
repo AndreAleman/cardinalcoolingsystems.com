@@ -13,6 +13,13 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import Spinner from "@modules/common/icons/spinner"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { useState, useEffect, useRef } from "react"
+import {
+  TUBE_STICK_FT,
+  isTubeLineItem,
+  roundUpToSticks,
+  roundedUpNote,
+  sticksLabel,
+} from "@lib/util/tube-sticks"
 
 type ItemProps = {
   item: HttpTypes.StoreCartLineItem
@@ -24,6 +31,12 @@ const Item = ({ item, type = "full" }: ItemProps) => {
   const [error, setError] = useState<string | null>(null)
   const [localQuantity, setLocalQuantity] = useState(item.quantity) // Local state for immediate UI updates
   const debounceRef = useRef<NodeJS.Timeout>()
+  // Tube is sold in 20 ft sticks (lib/util/tube-sticks.ts): quantity is feet,
+  // step 20, typed values round up on blur with a note.
+  const tube = isTubeLineItem(item as any)
+  const step = tube ? TUBE_STICK_FT : 1
+  const [tubeDraft, setTubeDraft] = useState<string | null>(null)
+  const [tubeNote, setTubeNote] = useState<string | null>(null)
 
   const { handle } = item.variant?.product ?? {}
 
@@ -78,30 +91,48 @@ const Item = ({ item, type = "full" }: ItemProps) => {
 
   // Improved max quantity logic
   const getMaxQuantity = () => {
+    const cap = tube ? TUBE_STICK_FT * 100 : 99
     if (item.variant?.manage_inventory && item.variant?.inventory_quantity) {
-      return Math.min(item.variant.inventory_quantity, 99)
+      const max = Math.min(item.variant.inventory_quantity, cap)
+      return tube ? Math.max(TUBE_STICK_FT, Math.floor(max / TUBE_STICK_FT) * TUBE_STICK_FT) : max
     }
-    return 99
+    return cap
   }
 
   const maxQuantity = getMaxQuantity()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (tube) {
+      setTubeDraft(e.target.value)
+      return
+    }
     const value = parseInt(e.target.value)
     if (value >= 1 && value <= maxQuantity) {
       changeQuantity(value)
     }
   }
 
+  const commitTubeDraft = () => {
+    if (!tube || tubeDraft === null) return
+    const requested = parseInt(tubeDraft, 10)
+    setTubeDraft(null)
+    if (!Number.isFinite(requested) || requested < 1) return
+    const rounded = Math.min(roundUpToSticks(requested), maxQuantity)
+    setTubeNote(roundedUpNote(requested, rounded))
+    changeQuantity(rounded)
+  }
+
   const incrementQuantity = () => {
-    if (localQuantity < maxQuantity) {
-      changeQuantity(localQuantity + 1)
+    if (localQuantity + step <= maxQuantity) {
+      setTubeNote(null)
+      changeQuantity(localQuantity + step)
     }
   }
 
   const decrementQuantity = () => {
-    if (localQuantity > 1) {
-      changeQuantity(localQuantity - 1)
+    if (localQuantity - step >= step) {
+      setTubeNote(null)
+      changeQuantity(localQuantity - step)
     }
   }
 
@@ -142,7 +173,7 @@ const Item = ({ item, type = "full" }: ItemProps) => {
             <div className="flex items-center border border-ui-border-base rounded-md">
               <button
                 onClick={decrementQuantity}
-                disabled={localQuantity <= 1 || updating}
+                disabled={localQuantity <= step || updating}
                 className="w-8 h-8 flex items-center justify-center text-ui-fg-base hover:bg-ui-bg-subtle disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-l-md"
                 aria-label="Decrease quantity"
                 type="button"
@@ -154,10 +185,13 @@ const Item = ({ item, type = "full" }: ItemProps) => {
               
               <input
                 type="number"
-                min="1"
+                min={step}
+                step={step}
                 max={maxQuantity}
-                value={localQuantity}
+                value={tube && tubeDraft !== null ? tubeDraft : localQuantity}
                 onChange={handleInputChange}
+                onBlur={commitTubeDraft}
+                aria-label={tube ? "Length in feet (20 ft sticks)" : "Quantity"}
                 disabled={updating}
                 className="w-16 h-8 text-center border-0 border-x border-ui-border-base focus:outline-none focus:ring-0 text-sm font-medium text-ui-fg-base bg-transparent disabled:opacity-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 data-testid="product-quantity-input"
@@ -165,7 +199,7 @@ const Item = ({ item, type = "full" }: ItemProps) => {
               
               <button
                 onClick={incrementQuantity}
-                disabled={localQuantity >= maxQuantity || updating}
+                disabled={localQuantity + step > maxQuantity || updating}
                 className="w-8 h-8 flex items-center justify-center text-ui-fg-base hover:bg-ui-bg-subtle disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-r-md"
                 aria-label="Increase quantity"
                 type="button"
@@ -184,8 +218,19 @@ const Item = ({ item, type = "full" }: ItemProps) => {
             )}
           </div>
           
+          {tube && (
+            <Text className="text-xs text-ui-fg-muted mt-1" data-testid="tube-stick-note">
+              {sticksLabel(localQuantity)} · sold in 20 ft sticks
+            </Text>
+          )}
+          {tube && tubeNote && (
+            <Text className="text-xs text-amber-700 mt-1" role="status">
+              {tubeNote}
+            </Text>
+          )}
+
           {/* Show max quantity hint if limited */}
-          {maxQuantity < 99 && (
+          {maxQuantity < (tube ? TUBE_STICK_FT * 100 : 99) && (
             <Text className="text-xs text-ui-fg-muted mt-1">
               Max: {maxQuantity}
             </Text>
@@ -209,7 +254,7 @@ const Item = ({ item, type = "full" }: ItemProps) => {
         >
           {type === "preview" && (
             <span className="flex gap-x-1 ">
-              <Text className="text-ui-fg-muted">{localQuantity}x </Text>
+              <Text className="text-ui-fg-muted">{tube ? `${sticksLabel(localQuantity)} × ` : `${localQuantity}x `}</Text>
               <LineItemUnitPrice item={item} style="tight" />
             </span>
           )}

@@ -63,10 +63,14 @@ import type { AddressPickerValue } from "./address-picker"
 import {
   planCart,
   isQuoteOnlyLine,
+  isTubePortalLine,
+  normalizePortalQty,
+  portalQtyStep,
   quoteOnlyReason,
   type CartPlan,
   type PortalCartLine,
 } from "./money-rules"
+import { roundedUpNote, sticksLabel } from "@lib/util/tube-sticks"
 import {
   buildVariantRowMap,
   productVariantToRow,
@@ -237,6 +241,15 @@ export default function QuickOrder({
 
   const addRowToOrder = (line: PortalCartLine) => {
     addLine(line)
+    if (isTubePortalLine(line)) {
+      // Tube is sold in whole 20 ft sticks; addLine rounds up.
+      const qty = normalizePortalQty(line, line.qty)
+      toast.success(`Added ${sticksLabel(qty)} of ${line.sku}`, {
+        description: roundedUpNote(line.qty, qty) ?? undefined,
+      })
+      setRowQty((prev) => ({ ...prev, [line.variantId]: qty }))
+      return
+    }
     toast.success(`Added ${line.qty}× ${line.sku}`)
   }
 
@@ -260,12 +273,22 @@ export default function QuickOrder({
         countryCode
       )
       const rowMap = buildVariantRowMap(products)
+      const roundedTube: string[] = []
       for (const m of payload.matched) {
         const row = rowMap[m.variantId]
         if (row) {
-          addLine(rowToCartLine(row, m.quantity))
+          const line = rowToCartLine(row, m.quantity)
+          // Tube lines land as whole 20 ft sticks (addLine rounds up).
+          const qty = normalizePortalQty(line, m.quantity)
+          if (qty !== m.quantity) roundedTube.push(`${line.sku}: ${m.quantity} ft → ${sticksLabel(qty)}`)
+          addLine(line)
           loadedCount++
         }
+      }
+      if (roundedTube.length) {
+        toast.info("Tube is sold in 20 ft sticks, so these were rounded up", {
+          description: roundedTube.join("; "),
+        })
       }
     }
 
@@ -521,7 +544,8 @@ export default function QuickOrder({
   }
 
   const renderRow = (row: VariantRow, key: string) => {
-    const qty = rowQty[row.variantId] ?? 1
+    const step = row.tube ? portalQtyStep({ sku: row.sku ?? "", tube: true }) : 1
+    const qty = rowQty[row.variantId] ?? step
     const probe = rowToCartLine(row, qty)
     const quoteOnly = isQuoteOnlyLine(probe)
     const outOfStock =
@@ -596,7 +620,8 @@ export default function QuickOrder({
         <Table.Cell className="align-middle text-right">
           <input
             type="number"
-            min={1}
+            min={step}
+            step={step}
             value={qty}
             onChange={(e) =>
               setRowQty((prev) => ({
@@ -604,9 +629,23 @@ export default function QuickOrder({
                 [row.variantId]: Math.max(1, Number(e.target.value) || 1),
               }))
             }
+            onBlur={() => {
+              // Tube: typed feet round up to whole 20 ft sticks.
+              if (row.tube && qty % step !== 0) {
+                setRowQty((prev) => ({
+                  ...prev,
+                  [row.variantId]: normalizePortalQty({ sku: row.sku ?? "", tube: true }, qty),
+                }))
+              }
+            }}
             className={`${inputClass} w-20 text-right tabular-nums`}
-            aria-label={`Quantity for ${row.sku}`}
+            aria-label={row.tube ? `Length in feet for ${row.sku} (20 ft sticks)` : `Quantity for ${row.sku}`}
           />
+          {row.tube && (
+            <div className="text-[13px] text-[#6b7280] mt-1">
+              ft · 20 ft sticks
+            </div>
+          )}
           {quoteOnly &&
             row.manageInventory &&
             row.inventoryQuantity != null &&
@@ -800,19 +839,22 @@ export default function QuickOrder({
                     )}
                     <button
                       type="button"
-                      onClick={() => updateQty(line.variantId, line.qty - 1)}
-                      disabled={line.qty <= 1}
+                      onClick={() => updateQty(line.variantId, line.qty - portalQtyStep(line))}
+                      disabled={line.qty <= portalQtyStep(line)}
                       aria-label={`Decrease ${line.sku} quantity`}
                       className="w-10 h-10 flex items-center justify-center rounded-[5px] border border-gray-300 text-[18px] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       −
                     </button>
-                    <span className="text-[16px] font-medium w-8 text-center tabular-nums">
-                      {line.qty}
+                    <span
+                      className={`text-[16px] font-medium ${isTubePortalLine(line) ? "w-14" : "w-8"} text-center tabular-nums`}
+                      title={isTubePortalLine(line) ? sticksLabel(line.qty) : undefined}
+                    >
+                      {isTubePortalLine(line) ? `${line.qty} ft` : line.qty}
                     </span>
                     <button
                       type="button"
-                      onClick={() => updateQty(line.variantId, line.qty + 1)}
+                      onClick={() => updateQty(line.variantId, line.qty + portalQtyStep(line))}
                       aria-label={`Increase ${line.sku} quantity`}
                       className="w-10 h-10 flex items-center justify-center rounded-[5px] border border-gray-300 text-[18px] hover:bg-gray-50"
                     >

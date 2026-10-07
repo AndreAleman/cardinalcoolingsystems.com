@@ -23,6 +23,13 @@ import {
   STAINLESS_TUBE_PAGE_PATH,
   stainlessTubeQuoteHref,
 } from "@lib/stainless-tube"
+import {
+  TUBE_STICK_FT,
+  isTubeItem,
+  roundUpToSticks,
+  roundedUpNote,
+  sticksLabel,
+} from "@lib/util/tube-sticks"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -64,6 +71,11 @@ export default function ProductActions({
   })
   const [isAdding, setIsAdding] = useState(false)
   const [quantity, setQuantity] = useState(1)
+  const quantityState = quantity
+  // Tube only: the raw text while the buyer types, committed (rounded up to
+  // whole 20 ft sticks) on blur, plus the note shown when it was rounded.
+  const [tubeDraft, setTubeDraft] = useState<string | null>(null)
+  const [tubeNote, setTubeNote] = useState<string | null>(null)
   const [bulkModalOpen, setBulkModalOpen] = useState(false)
   const countryCode = useParams().countryCode as string
 
@@ -170,16 +182,52 @@ export default function ProductActions({
     return selectedVariant?.inventory_quantity || 0
   }, [selectedVariant])
 
+  // Tube is priced per foot and sold in 20 ft sticks (lib/util/tube-sticks.ts):
+  // the quantity is feet, min 20, step 20.
+  const isTubeVariant = isTubeItem({
+    sku: selectedVariant?.sku,
+    metadata: selectedVariant?.metadata as Record<string, unknown> | null,
+    productHandle: selectedVariant ? product.handle : null,
+    productMetadata: selectedVariant ? (product.metadata as Record<string, unknown> | null) : null,
+  })
+  const step = isTubeVariant ? TUBE_STICK_FT : 1
+  const minQuantity = step
+  const maxQuantity = isTubeVariant
+    ? availableStock
+      ? Math.max(TUBE_STICK_FT, Math.floor(availableStock / TUBE_STICK_FT) * TUBE_STICK_FT)
+      : TUBE_STICK_FT * 100
+    : availableStock || 999
+
+  // Switching between tube and non-tube variants resets to a valid quantity.
+  useEffect(() => {
+    setTubeDraft(null)
+    setTubeNote(null)
+    setQuantity((q) => (isTubeVariant ? roundUpToSticks(q) : q % TUBE_STICK_FT === 0 && q >= TUBE_STICK_FT ? 1 : q))
+  }, [isTubeVariant])
+
   const actionsRef = useRef<HTMLDivElement>(null)
   const inView = useIntersection(actionsRef, "0px")
 
   const handleQuantityChange = (newQuantity: number) => {
-    const maxQuantity = availableStock || 999
-    setQuantity(Math.max(1, Math.min(newQuantity, maxQuantity)))
+    setTubeDraft(null)
+    setTubeNote(null)
+    setQuantity(Math.max(minQuantity, Math.min(newQuantity, maxQuantity)))
+  }
+
+  /* Tube: typed feet round up to whole sticks, with a note when they did. */
+  const commitTubeDraft = (): number => {
+    if (tubeDraft === null) return quantity
+    const requested = parseInt(tubeDraft, 10)
+    const rounded = Math.min(roundUpToSticks(requested), maxQuantity)
+    setQuantity(rounded)
+    setTubeDraft(null)
+    setTubeNote(roundedUpNote(requested, rounded))
+    return rounded
   }
 
   const handleAddToCart = async () => {
     if (!selectedVariant?.id || isQuoteOnly) return
+    const quantity = isTubeVariant ? commitTubeDraft() : quantityState
     setIsAdding(true)
     try {
       await addToCart({ variantId: selectedVariant.id, quantity, countryCode })
@@ -201,11 +249,14 @@ export default function ProductActions({
           },
         })
       }
-      toast.success(`✓ Added ${quantity} ${quantity > 1 ? "items" : "item"} to cart!`, {
-        position: "bottom-right",
-        autoClose: 3000,
-      })
-      setQuantity(1)
+      toast.success(
+        isTubeVariant
+          ? `✓ Added ${sticksLabel(quantity)} to cart!`
+          : `✓ Added ${quantity} ${quantity > 1 ? "items" : "item"} to cart!`,
+        { position: "bottom-right", autoClose: 3000 }
+      )
+      setQuantity(minQuantity)
+      setTubeNote(null)
     } catch (error) {
       console.error("Failed to add to cart:", error)
       toast.error("Failed to add item to cart. Please try again.", { position: "bottom-right", autoClose: 3000 })
@@ -294,12 +345,14 @@ export default function ProductActions({
         {/* Quantity + stock */}
         {selectedVariant && (inStock || isQuoteOnly) && (
           <div className="flex flex-col gap-y-2">
-            <p className="text-sm font-medium" style={{ color: "#111111" }}>Quantity</p>
+            <p className="text-sm font-medium" style={{ color: "#111111" }}>
+              {isTubeVariant ? "Length (ft)" : "Quantity"}
+            </p>
             <div className="flex items-center justify-between">
               <div className="flex items-center border border-gray-200" style={{ borderRadius: "5px" }}>
                 <button
-                  onClick={() => handleQuantityChange(quantity - 1)}
-                  disabled={quantity <= 1 || !!disabled || isAdding}
+                  onClick={() => handleQuantityChange(quantity - step)}
+                  disabled={quantity <= minQuantity || !!disabled || isAdding}
                   className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   aria-label="Decrease quantity"
                 >
@@ -309,17 +362,26 @@ export default function ProductActions({
                 </button>
                 <input
                   type="number"
-                  min="1"
-                  max={availableStock || 999}
-                  value={quantity}
-                  onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                  min={minQuantity}
+                  step={step}
+                  max={maxQuantity}
+                  value={isTubeVariant && tubeDraft !== null ? tubeDraft : quantity}
+                  onChange={(e) =>
+                    isTubeVariant
+                      ? setTubeDraft(e.target.value)
+                      : handleQuantityChange(parseInt(e.target.value) || 1)
+                  }
+                  onBlur={() => {
+                    if (isTubeVariant) commitTubeDraft()
+                  }}
                   disabled={!!disabled || isAdding}
-                  className="w-12 h-10 text-center text-sm font-medium border-0 focus:ring-0 focus:outline-none bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  aria-label={isTubeVariant ? "Quantity in feet (20 ft sticks)" : "Quantity"}
+                  className={`${isTubeVariant ? "w-16" : "w-12"} h-10 text-center text-sm font-medium border-0 focus:ring-0 focus:outline-none bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                   style={{ color: "#111111" }}
                 />
                 <button
-                  onClick={() => handleQuantityChange(quantity + 1)}
-                  disabled={(!!availableStock && quantity >= availableStock) || !!disabled || isAdding}
+                  onClick={() => handleQuantityChange(quantity + step)}
+                  disabled={quantity + step > maxQuantity || !!disabled || isAdding}
                   className="w-10 h-10 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   aria-label="Increase quantity"
                 >
@@ -335,6 +397,16 @@ export default function ProductActions({
                 </span>
               )}
             </div>
+            {isTubeVariant && (
+              <p className="text-sm m-0" style={{ color: "#6b7280" }} data-testid="tube-stick-note">
+                {sticksLabel(tubeDraft === null ? quantity : roundUpToSticks(parseInt(tubeDraft, 10)))}. Sold in 20 ft sticks; cut-to-length by quote.
+              </p>
+            )}
+            {isTubeVariant && tubeNote && (
+              <p className="text-sm m-0" style={{ color: "#d97706" }} role="status">
+                {tubeNote}
+              </p>
+            )}
           </div>
         )}
 
@@ -452,10 +524,17 @@ export default function ProductActions({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
                 </svg>
               </div>
-              <span className="text-sm" style={{ color: "#374151" }}>
-                <strong className="font-medium">Free parcel shipping</strong> on orders over $100{" "}
-                <span className="text-xs" style={{ color: "#6b7280" }}>(up to 120 lbs; freight quoted)</span>
-              </span>
+              {isTubeVariant ? (
+                <span className="text-sm" style={{ color: "#374151" }}>
+                  <strong className="font-medium">Ships freight</strong>{" "}
+                  <span className="text-xs" style={{ color: "#6b7280" }}>(tube is not eligible for free parcel shipping)</span>
+                </span>
+              ) : (
+                <span className="text-sm" style={{ color: "#374151" }}>
+                  <strong className="font-medium">Free parcel shipping</strong> on orders over $100{" "}
+                  <span className="text-xs" style={{ color: "#6b7280" }}>(up to 120 lbs; freight quoted)</span>
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-x-2.5">
               <div className="w-6 h-6 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(227,0,15,0.08)", borderRadius: "4px" }}>
