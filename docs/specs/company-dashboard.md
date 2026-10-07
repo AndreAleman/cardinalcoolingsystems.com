@@ -181,6 +181,11 @@ override anything below that conflicts:
   pending/declined states and their screens remain in code for declined
   companies. Slice 5 shipped alongside: `/portal` landing page (the
   cold-email destination, real screenshots) + homepage section.
+- **Instant access narrowed to Approved Domains (2026-09-20,
+  ADR-0007)**: only signups from an email domain on the Approved Domain
+  list (the companies Cardinal is emailing) are born APPROVED. Everyone
+  else is born PENDING, is sent nothing, and gets the Welcome Code when
+  Cardinal approves. Decline now works on Approved Companies in admin.
 
 **Delivery is in five slices**, each reviewed and released on its own (see Out of Scope for what each excludes). The slices are: (1) Companies, approval, invites, roles, Price Lists, the Dashboard with Quick Order + stock rule + Quote Requests/Quotes + Favorites + Order Again + Orders, Medusa Admin pages, approvals and Spending Limits switched off; (2) Deposit Threshold, Deposit, Balance Invoice, ACH; (3) PO Upload; (4) Spend Tiers, Referral, Win-Back, Reorder Nudge; (5) marketing homepage section and landing page.
 

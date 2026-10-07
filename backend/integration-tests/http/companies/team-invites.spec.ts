@@ -8,6 +8,7 @@ import {
   generateStoreHeaders,
 } from "../../utils/store";
 import { customerHeaders, TEST_JWT_SECRET } from "../../utils/customer-auth";
+import { approveDomains } from "../../utils/approved-domains";
 
 jest.setTimeout(180 * 1000);
 
@@ -49,6 +50,7 @@ medusaIntegrationTestRunner({
       bo = await mk("bo@acme.test", "Bo");
       mallory = await mk("mallory@evil.test", "Mallory");
 
+      await approveDomains(container);
       // Instant access (2026-09-05): signup approves the Company on the
       // spot, so no admin approve step is needed (and approving an
       // already-approved Company is a 400).

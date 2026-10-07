@@ -8,6 +8,7 @@ import {
 } from "../../utils/store";
 import { adminHeaders, createAdminUser } from "../../utils/admin";
 import { customerHeaders, TEST_JWT_SECRET } from "../../utils/customer-auth";
+import { approveDomains } from "../../utils/approved-domains";
 
 jest.setTimeout(120 * 1000);
 
@@ -43,6 +44,7 @@ medusaIntegrationTestRunner({
         { email: "bo@bravo.test", first_name: "Bo", last_name: "Bravo" },
       ]);
 
+      await approveDomains(container);
       companyA = (await api.post("/store/companies", { name: "Alpha Cooling", phone: "555-0101" }, headersOf(ada))).data.company;
       companyB = (await api.post("/store/companies", { name: "Bravo Cooling", phone: "555-0102" }, headersOf(bo))).data.company;
 

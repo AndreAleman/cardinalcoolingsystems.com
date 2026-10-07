@@ -33,7 +33,7 @@ export type CompanyMembership = {
 
 /*
   The signed-in Team Member's Company. Resolved server-side from the
-  auth token only (ADR-0004). Null when not signed in or when the
+  auth token only (ADR-0007). Null when not signed in or when the
   customer is not a Team Member of any Company (a retail customer).
   Any other failure (backend down) is surfaced, not hidden as "retail".
 */
@@ -58,12 +58,14 @@ export const getCompany = cache(async function (): Promise<CompanyMembership | n
     })
 })
 
-export type CompanySignupResult = CompanyMembership & { welcome_code: string }
+// welcome_code is null for a Pending Company — it is issued on approval.
+export type CompanySignupResult = CompanyMembership & { welcome_code: string | null }
 
 /*
-  Create the signed-in customer's Company (Pending until Cardinal
-  approves it). Name and phone are both required by the backend.
-  Returns the Welcome Code so it can be shown at once.
+  Create the signed-in customer's Company. Approved at once for an
+  Approved Domain, otherwise Pending until Cardinal approves it.
+  Name and phone are both required by the backend. Returns the
+  Welcome Code when one was issued (instant approval only).
 */
 export async function createCompany(input: {
   name: string
