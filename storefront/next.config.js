@@ -42,7 +42,10 @@ const nextConfig = {
     },
   },
   images: {
-    formats: ['image/avif', 'image/webp'],
+    // WebP only: AVIF encodes several times slower, and the optimizer cache
+    // (.next/cache/images) is wiped on every Railway deploy, so cold encodes
+    // are common — with AVIF they queued up to 35s on the store page.
+    formats: ['image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
