@@ -19,10 +19,13 @@ From now on:
 - Frame: square 1600×1600, product's longest side at 85% of the frame —
   inside Google Merchant Center's 75–90% band — centered, on a floor with a
   soft contact shadow.
-- Backdrop per store, picked as the complement of the store's brand color
-  so tiles stand out from the header and buttons without tinting the steel:
-  - Cardinal (red brand): cool ice blue.
-  - Cowbird Depot (royal-blue brand): warm stone.
+- Backdrop per store, chosen against the store's brand color so tiles
+  stand out from the header and buttons without tinting the steel:
+  - Cardinal (red brand): cool ice blue — red's complement, and it reads
+    cold and clean for a cooling company.
+  - Cowbird Depot (royal-blue/navy brand): cool slate gray — sits inside
+    the navy scheme and stays distinct from Cardinal's blue. (Warm stone,
+    the color-wheel complement, was rendered and passed over by the owner.)
   - SaniTube (cyan brand, gray logo): neutral steel gray.
 - The main image is always a Product Photo. Lifestyle Photos go after it
   (Google wants the main image focused on the product). Drawings and 3-A

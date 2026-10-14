@@ -163,7 +163,7 @@ A studio image of the exact item for sale, cut out of its original background an
 _Avoid_: Hero image, render
 
 **Backdrop**:
-The one background every Product Photo in a store sits on: soft gradient, light floor, contact shadow. Each store has its own — Cardinal ice blue, Cowbird warm stone, SaniTube steel gray — chosen to contrast with that store's brand color.
+The one background every Product Photo in a store sits on: soft gradient, light floor, contact shadow. Each store has its own — Cardinal ice blue, Cowbird slate gray, SaniTube steel gray — chosen to contrast with that store's brand color.
 _Avoid_: Background color, studio
 
 **Lifestyle Photo**:
