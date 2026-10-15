@@ -155,3 +155,19 @@ A $100-off code for the referring Company. Works once, on an Order of $500 or mo
 
 **Reorder Nudge**:
 A reminder that a Company usually orders a part on a cadence and is past due.
+
+### Catalog
+
+**Product Photo**:
+A studio image of the exact item for sale, cut out of its original background and set on the store's Backdrop. It fills 85% of a square 1600×1600 frame (Google requires 75–90%) and is always the product's main image (ADR-0010).
+_Avoid_: Hero image, render
+
+**Backdrop**:
+The one background every Product Photo in a store sits on: soft gradient, light floor, contact shadow. Each store has its own — Cardinal ice blue, Cowbird slate gray, SaniTube steel gray — chosen to contrast with that store's brand color.
+_Avoid_: Background color, studio
+
+**Lifestyle Photo**:
+A photo of the product in use or in stock (warehouse, forklift, install). Goes after the Product Photos in the gallery; it is the main image only when no Product Photo exists.
+
+**Drawing**:
+A dimensioned line drawing or a 3-A mark in a product gallery. Kept exactly as-is; never put on a Backdrop.
