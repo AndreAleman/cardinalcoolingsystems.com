@@ -161,7 +161,11 @@ class MinioFileProviderService extends AbstractFileProviderService {
     try {
       const parsedFilename = path.parse(file.filename)
       const fileKey = `${parsedFilename.name}-${ulid()}${parsedFilename.ext}`
-      const content = Buffer.from(file.content, 'base64')
+      // Medusa 2.8's /admin/uploads route and the PO-file step both pass
+      // file.content as a binary (latin1) string — see
+      // @medusajs/medusa/dist/api/admin/uploads/route.js. Decoding it as
+      // base64 stored a few bytes of garbage for every upload.
+      const content = Buffer.from(file.content, 'binary')
 
       // Upload file. Send only Content-Type: any x-amz-* header (ACL / metadata)
       // gets folded into the SigV4 signed set and is rewritten by Railway's edge

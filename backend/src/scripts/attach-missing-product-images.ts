@@ -212,7 +212,7 @@ export default async function attachMissingProductImages({
         filename: `${plan.handle}-${i}.${ext}`,
         mimeType: contentType || `image/${ext === "jpg" ? "jpeg" : ext}`,
         // The store's file provider (src/modules/minio-file) decodes base64.
-        content: buffer.toString("base64"),
+        content: buffer.toString("binary"),
         access: "public",
       })
     }
