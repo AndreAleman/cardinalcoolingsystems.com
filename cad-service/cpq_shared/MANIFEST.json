@@ -1,0 +1,12 @@
+{
+  "generated_by": "scripts/sync-cpq-shared.mjs",
+  "tables_hash": "9aa195d46dc2",
+  "files": {
+    "assets/cardinal-logo.svg": "7fb3ae977dd255d375ef763b935ef9d474a9b47af161d941a7f0278feaa979d3",
+    "dimensions/assemblies.json": "b05362f0efbaa4c930677389017ed521b8241cb647598fbcdd3b91a126d36370",
+    "dimensions/bom-templates.json": "8282d63c8ea92fa401c9642c997837fa0cf2941e4868101b30c54640a83417be",
+    "dimensions/end-connections.json": "551cab9ee1e1ab2eca7a48cb47725e3465cdd07172ba05c6025949381081eb6b",
+    "dimensions/materials.json": "cbaca4253f7de3f0755d03887c5a41f4dbdba421b6266b4076ff42e814f7c214",
+    "dimensions/tube-sizes.json": "aa61418011c8ff4cb6139f15833ab6d5235ed0e970f9787e0274b5bed92791cd"
+  }
+}

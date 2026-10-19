@@ -1,0 +1,3707 @@
+{
+  "version": "2026-10-18-cardinal-draft",
+  "status": "draft: Sanitube rows pending Houston sign-off (H2); Cardinal rows pending Todd",
+  "units": "in",
+  "notes": [
+    "profile = OUTER half-section [axial_from_face_in, radius_in], face (0) → weld line (length_in).",
+    "Only bw rows are verified. Every other row is a draft for Houston to check (H2, H28).",
+    "Rows bw, tc, mil, fil, pbs, tbs, mnpt are Sanitube's, unchanged apart from mass_lb (scripts/check-sanitube-tables.mjs compares them).",
+    "Cardinal rows (fl150, fl300, fnpt, grv, bwp, cap) are written by shared/cpq/tools/gen-end-connections.mjs. Flange bolt holes are not modelled.",
+    "mass_lb = T316L density 0.290 lb/in³ × (revolved outer profile − bore), an estimate (verified false). Weights add the two end masses to the tube.",
+    "bore_in: null = tube ID; 0 = closed (cap); otherwise the bore at the face (fnpt thread envelope, grv/bwp pipe ID)."
+  ],
+  "types": [
+    {
+      "code": "bw",
+      "label": "PLAIN WELD END",
+      "short": "BW",
+      "pn_token": "bw",
+      "sort": 1,
+      "aliases": [
+        "PLAIN END"
+      ]
+    },
+    {
+      "code": "tc",
+      "label": "TC FERRULE",
+      "short": "TC",
+      "pn_token": "clmp",
+      "sort": 2
+    },
+    {
+      "code": "mil",
+      "label": "MALE I-LINE FERRULE",
+      "short": "I-LINE M",
+      "pn_token": "mil",
+      "sort": 3
+    },
+    {
+      "code": "fil",
+      "label": "FEMALE I-LINE FERRULE",
+      "short": "I-LINE F",
+      "pn_token": "fil",
+      "sort": 4
+    },
+    {
+      "code": "pbs",
+      "label": "PLAIN BEVEL SEAT FERRULE WITH NUT",
+      "short": "BEVEL SEAT",
+      "pn_token": "pbs",
+      "sort": 5
+    },
+    {
+      "code": "tbs",
+      "label": "THREADED BEVEL SEAT FERRULE WITH NUT",
+      "short": "BEVEL SEAT THD",
+      "pn_token": "tbs",
+      "sort": 6
+    },
+    {
+      "code": "mnpt",
+      "label": "MALE NPT THREAD",
+      "short": "MNPT",
+      "pn_token": "mnpt",
+      "sort": 7
+    },
+    {
+      "code": "fl150",
+      "label": "150# RF FLANGE",
+      "short": "150# FLG",
+      "pn_token": "fl150",
+      "sort": 8
+    },
+    {
+      "code": "fl300",
+      "label": "300# RF FLANGE",
+      "short": "300# FLG",
+      "pn_token": "fl300",
+      "sort": 9
+    },
+    {
+      "code": "fnpt",
+      "label": "FEMALE NPT THREAD",
+      "short": "FNPT",
+      "pn_token": "fnpt",
+      "sort": 10
+    },
+    {
+      "code": "grv",
+      "label": "IPS GROOVED END",
+      "short": "GROOVED",
+      "pn_token": "grv",
+      "sort": 11
+    },
+    {
+      "code": "bwp",
+      "label": "BUTT-WELD PIPE END (SCH 10S)",
+      "short": "BW PIPE",
+      "pn_token": "bwp",
+      "sort": 12
+    },
+    {
+      "code": "cap",
+      "label": "WELDED END CAP",
+      "short": "CAP",
+      "pn_token": "cap",
+      "sort": 13
+    }
+  ],
+  "rows": [
+    {
+      "code": "bw",
+      "size_code": 50,
+      "length_in": 0,
+      "max_od_in": 0.5,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 50,
+      "length_in": 0.5,
+      "max_od_in": 0.984,
+      "profile": [
+        [
+          0,
+          0.492
+        ],
+        [
+          0.1,
+          0.492
+        ],
+        [
+          0.188,
+          0.25
+        ],
+        [
+          0.5,
+          0.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.036,
+      "source": "draft (Phase 4 D3): 1/2\"-3/4\" clamp ferrule, flange OD 0.984\" per sanitaryfittings.us 7MPS / 14WMP tables (2026-10-16); length 0.5\" and profile drafted like the 1\" row (20° clamp-back taper, 0.10\" flange land)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 75,
+      "length_in": 0,
+      "max_od_in": 0.75,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 75,
+      "length_in": 0.5,
+      "max_od_in": 0.984,
+      "profile": [
+        [
+          0,
+          0.492
+        ],
+        [
+          0.1,
+          0.492
+        ],
+        [
+          0.143,
+          0.375
+        ],
+        [
+          0.5,
+          0.375
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.031,
+      "source": "draft (Phase 4 D3): 1/2\"-3/4\" clamp ferrule, flange OD 0.984\" per sanitaryfittings.us 7MPS / 14WMP tables (2026-10-16); length 0.5\" and profile drafted like the 1\" row (20° clamp-back taper, 0.10\" flange land)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 100,
+      "length_in": 0,
+      "max_od_in": 1,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 100,
+      "length_in": 0.5,
+      "max_od_in": 1.984,
+      "profile": [
+        [
+          0,
+          0.992
+        ],
+        [
+          0.1,
+          0.992
+        ],
+        [
+          0.279,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.148,
+      "source": "ASME BPE-2022 hygienic clamp ferrule (Part DT, 14WMP short weld pattern; figure/table no. to confirm, H2); flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 100,
+      "length_in": 1,
+      "max_od_in": 1.5,
+      "profile": [
+        [
+          0,
+          0.75
+        ],
+        [
+          0.35,
+          0.75
+        ],
+        [
+          0.441,
+          0.5
+        ],
+        [
+          1,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.167,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 100,
+      "length_in": 0.875,
+      "max_od_in": 1.625,
+      "profile": [
+        [
+          0,
+          0.8125
+        ],
+        [
+          0.306,
+          0.8125
+        ],
+        [
+          0.42,
+          0.5
+        ],
+        [
+          0.875,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.182,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 100,
+      "length_in": 1.25,
+      "max_od_in": 1.875,
+      "profile": [
+        [
+          0,
+          0.9375
+        ],
+        [
+          0.75,
+          0.9375
+        ],
+        [
+          0.909,
+          0.5
+        ],
+        [
+          1.25,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.54,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 100,
+      "length_in": 1,
+      "max_od_in": 1.875,
+      "profile": [
+        [
+          0,
+          0.9375
+        ],
+        [
+          0.6,
+          0.9375
+        ],
+        [
+          0.759,
+          0.5
+        ],
+        [
+          1,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.44,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 100,
+      "length_in": 0.933,
+      "max_od_in": 1.315,
+      "profile": [
+        [
+          0,
+          0.6575
+        ],
+        [
+          0.683,
+          0.6575
+        ],
+        [
+          0.808,
+          0.5
+        ],
+        [
+          0.933,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.175,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 150,
+      "length_in": 0,
+      "max_od_in": 1.5,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 150,
+      "length_in": 0.5,
+      "max_od_in": 1.984,
+      "profile": [
+        [
+          0,
+          0.992
+        ],
+        [
+          0.1,
+          0.992
+        ],
+        [
+          0.188,
+          0.75
+        ],
+        [
+          0.5,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.097,
+      "source": "ASME BPE-2022 hygienic clamp ferrule (Part DT, 14WMP short weld pattern; figure/table no. to confirm, H2); flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 150,
+      "length_in": 1,
+      "max_od_in": 2,
+      "profile": [
+        [
+          0,
+          1
+        ],
+        [
+          0.35,
+          1
+        ],
+        [
+          0.441,
+          0.75
+        ],
+        [
+          1,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.242,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 150,
+      "length_in": 0.875,
+      "max_od_in": 2.125,
+      "profile": [
+        [
+          0,
+          1.0625
+        ],
+        [
+          0.306,
+          1.0625
+        ],
+        [
+          0.42,
+          0.75
+        ],
+        [
+          0.875,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.26,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 150,
+      "length_in": 1.25,
+      "max_od_in": 2.375,
+      "profile": [
+        [
+          0,
+          1.1875
+        ],
+        [
+          0.75,
+          1.1875
+        ],
+        [
+          0.909,
+          0.75
+        ],
+        [
+          1.25,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.742,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 150,
+      "length_in": 1,
+      "max_od_in": 2.375,
+      "profile": [
+        [
+          0,
+          1.1875
+        ],
+        [
+          0.6,
+          1.1875
+        ],
+        [
+          0.759,
+          0.75
+        ],
+        [
+          1,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.605,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 150,
+      "length_in": 0.974,
+      "max_od_in": 1.9,
+      "profile": [
+        [
+          0,
+          0.95
+        ],
+        [
+          0.724,
+          0.95
+        ],
+        [
+          0.849,
+          0.75
+        ],
+        [
+          0.974,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.326,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 200,
+      "length_in": 0,
+      "max_od_in": 2,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 200,
+      "length_in": 0.5,
+      "max_od_in": 2.516,
+      "profile": [
+        [
+          0,
+          1.258
+        ],
+        [
+          0.1,
+          1.258
+        ],
+        [
+          0.194,
+          1
+        ],
+        [
+          0.5,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.134,
+      "source": "ASME BPE-2022 hygienic clamp ferrule (Part DT, 14WMP short weld pattern; figure/table no. to confirm, H2); flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 200,
+      "length_in": 1,
+      "max_od_in": 2.5,
+      "profile": [
+        [
+          0,
+          1.25
+        ],
+        [
+          0.35,
+          1.25
+        ],
+        [
+          0.441,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.316,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 200,
+      "length_in": 0.875,
+      "max_od_in": 2.625,
+      "profile": [
+        [
+          0,
+          1.3125
+        ],
+        [
+          0.306,
+          1.3125
+        ],
+        [
+          0.42,
+          1
+        ],
+        [
+          0.875,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.338,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 200,
+      "length_in": 1.25,
+      "max_od_in": 2.875,
+      "profile": [
+        [
+          0,
+          1.4375
+        ],
+        [
+          0.75,
+          1.4375
+        ],
+        [
+          0.909,
+          1
+        ],
+        [
+          1.25,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.945,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 200,
+      "length_in": 1,
+      "max_od_in": 2.875,
+      "profile": [
+        [
+          0,
+          1.4375
+        ],
+        [
+          0.6,
+          1.4375
+        ],
+        [
+          0.759,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.77,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 200,
+      "length_in": 1.007,
+      "max_od_in": 2.375,
+      "profile": [
+        [
+          0,
+          1.1875
+        ],
+        [
+          0.757,
+          1.1875
+        ],
+        [
+          0.882,
+          1
+        ],
+        [
+          1.007,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.421,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 250,
+      "length_in": 0,
+      "max_od_in": 2.5,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 250,
+      "length_in": 0.5,
+      "max_od_in": 3.047,
+      "profile": [
+        [
+          0,
+          1.5235
+        ],
+        [
+          0.1,
+          1.5235
+        ],
+        [
+          0.2,
+          1.25
+        ],
+        [
+          0.5,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.175,
+      "source": "ASME BPE-2022 hygienic clamp ferrule (Part DT, 14WMP short weld pattern; figure/table no. to confirm, H2); flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 250,
+      "length_in": 1,
+      "max_od_in": 3,
+      "profile": [
+        [
+          0,
+          1.5
+        ],
+        [
+          0.35,
+          1.5
+        ],
+        [
+          0.441,
+          1.25
+        ],
+        [
+          1,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.391,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 250,
+      "length_in": 0.875,
+      "max_od_in": 3.125,
+      "profile": [
+        [
+          0,
+          1.5625
+        ],
+        [
+          0.306,
+          1.5625
+        ],
+        [
+          0.42,
+          1.25
+        ],
+        [
+          0.875,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.415,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 250,
+      "length_in": 1.25,
+      "max_od_in": 3.375,
+      "profile": [
+        [
+          0,
+          1.6875
+        ],
+        [
+          0.75,
+          1.6875
+        ],
+        [
+          0.909,
+          1.25
+        ],
+        [
+          1.25,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.147,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 250,
+      "length_in": 1,
+      "max_od_in": 3.375,
+      "profile": [
+        [
+          0,
+          1.6875
+        ],
+        [
+          0.6,
+          1.6875
+        ],
+        [
+          0.759,
+          1.25
+        ],
+        [
+          1,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.935,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 250,
+      "length_in": 1.388,
+      "max_od_in": 2.875,
+      "profile": [
+        [
+          0,
+          1.4375
+        ],
+        [
+          1.138,
+          1.4375
+        ],
+        [
+          1.263,
+          1.25
+        ],
+        [
+          1.388,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.751,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 300,
+      "length_in": 0,
+      "max_od_in": 3,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 300,
+      "length_in": 0.5,
+      "max_od_in": 3.579,
+      "profile": [
+        [
+          0,
+          1.7895
+        ],
+        [
+          0.1,
+          1.7895
+        ],
+        [
+          0.205,
+          1.5
+        ],
+        [
+          0.5,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.218,
+      "source": "ASME BPE-2022 hygienic clamp ferrule (Part DT, 14WMP short weld pattern; figure/table no. to confirm, H2); flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 300,
+      "length_in": 1,
+      "max_od_in": 3.5,
+      "profile": [
+        [
+          0,
+          1.75
+        ],
+        [
+          0.35,
+          1.75
+        ],
+        [
+          0.441,
+          1.5
+        ],
+        [
+          1,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.466,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 300,
+      "length_in": 0.875,
+      "max_od_in": 3.625,
+      "profile": [
+        [
+          0,
+          1.8125
+        ],
+        [
+          0.306,
+          1.8125
+        ],
+        [
+          0.42,
+          1.5
+        ],
+        [
+          0.875,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.493,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 300,
+      "length_in": 1.25,
+      "max_od_in": 3.875,
+      "profile": [
+        [
+          0,
+          1.9375
+        ],
+        [
+          0.75,
+          1.9375
+        ],
+        [
+          0.909,
+          1.5
+        ],
+        [
+          1.25,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.349,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 300,
+      "length_in": 1,
+      "max_od_in": 3.875,
+      "profile": [
+        [
+          0,
+          1.9375
+        ],
+        [
+          0.6,
+          1.9375
+        ],
+        [
+          0.759,
+          1.5
+        ],
+        [
+          1,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.1,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 300,
+      "length_in": 1.45,
+      "max_od_in": 3.5,
+      "profile": [
+        [
+          0,
+          1.75
+        ],
+        [
+          1.2,
+          1.75
+        ],
+        [
+          1.325,
+          1.5
+        ],
+        [
+          1.45,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.185,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 400,
+      "length_in": 0,
+      "max_od_in": 4,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 400,
+      "length_in": 0.625,
+      "max_od_in": 4.682,
+      "profile": [
+        [
+          0,
+          2.341
+        ],
+        [
+          0.1,
+          2.341
+        ],
+        [
+          0.224,
+          2
+        ],
+        [
+          0.625,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.401,
+      "source": "ASME BPE-2022 hygienic clamp ferrule (Part DT, 14WMP short weld pattern; figure/table no. to confirm, H2); flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 400,
+      "length_in": 1.125,
+      "max_od_in": 4.6,
+      "profile": [
+        [
+          0,
+          2.3
+        ],
+        [
+          0.394,
+          2.3
+        ],
+        [
+          0.503,
+          2
+        ],
+        [
+          1.125,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.859,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 400,
+      "length_in": 1,
+      "max_od_in": 4.75,
+      "profile": [
+        [
+          0,
+          2.375
+        ],
+        [
+          0.35,
+          2.375
+        ],
+        [
+          0.486,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.918,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 400,
+      "length_in": 1.375,
+      "max_od_in": 5,
+      "profile": [
+        [
+          0,
+          2.5
+        ],
+        [
+          0.825,
+          2.5
+        ],
+        [
+          1.007,
+          2
+        ],
+        [
+          1.375,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 2.278,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 400,
+      "length_in": 1.125,
+      "max_od_in": 5,
+      "profile": [
+        [
+          0,
+          2.5
+        ],
+        [
+          0.675,
+          2.5
+        ],
+        [
+          0.857,
+          2
+        ],
+        [
+          1.125,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.897,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 400,
+      "length_in": 1.55,
+      "max_od_in": 4.5,
+      "profile": [
+        [
+          0,
+          2.25
+        ],
+        [
+          1.3,
+          2.25
+        ],
+        [
+          1.425,
+          2
+        ],
+        [
+          1.55,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.777,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 600,
+      "length_in": 0,
+      "max_od_in": 6,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 600,
+      "length_in": 0.875,
+      "max_od_in": 6.562,
+      "profile": [
+        [
+          0,
+          3.281
+        ],
+        [
+          0.1,
+          3.281
+        ],
+        [
+          0.202,
+          3
+        ],
+        [
+          0.875,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 0.753,
+      "source": "ASME BPE-2022 hygienic clamp ferrule (Part DT, 14WMP short weld pattern; figure/table no. to confirm, H2); flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 600,
+      "length_in": 1.25,
+      "max_od_in": 6.75,
+      "profile": [
+        [
+          0,
+          3.375
+        ],
+        [
+          0.438,
+          3.375
+        ],
+        [
+          0.574,
+          3
+        ],
+        [
+          1.25,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.83,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 600,
+      "length_in": 1.125,
+      "max_od_in": 6.875,
+      "profile": [
+        [
+          0,
+          3.4375
+        ],
+        [
+          0.394,
+          3.4375
+        ],
+        [
+          0.553,
+          3
+        ],
+        [
+          1.125,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.868,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 600,
+      "length_in": 1.5,
+      "max_od_in": 7.25,
+      "profile": [
+        [
+          0,
+          3.625
+        ],
+        [
+          0.9,
+          3.625
+        ],
+        [
+          1.127,
+          3
+        ],
+        [
+          1.5,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 4.687,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 600,
+      "length_in": 1.25,
+      "max_od_in": 7.25,
+      "profile": [
+        [
+          0,
+          3.625
+        ],
+        [
+          0.75,
+          3.625
+        ],
+        [
+          0.977,
+          3
+        ],
+        [
+          1.25,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 3.975,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 600,
+      "length_in": 1.763,
+      "max_od_in": 6.625,
+      "profile": [
+        [
+          0,
+          3.3125
+        ],
+        [
+          1.513,
+          3.3125
+        ],
+        [
+          1.638,
+          3
+        ],
+        [
+          1.763,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 3.861,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 800,
+      "length_in": 0,
+      "max_od_in": 8,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 800,
+      "length_in": 0.875,
+      "max_od_in": 8.602,
+      "profile": [
+        [
+          0,
+          4.301
+        ],
+        [
+          0.1,
+          4.301
+        ],
+        [
+          0.21,
+          4
+        ],
+        [
+          0.875,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.037,
+      "source": "draft: BPE clamp ferrule table stops at 6\"; flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 800,
+      "length_in": 1.25,
+      "max_od_in": 8.75,
+      "profile": [
+        [
+          0,
+          4.375
+        ],
+        [
+          0.438,
+          4.375
+        ],
+        [
+          0.574,
+          4
+        ],
+        [
+          1.25,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 2.424,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 800,
+      "length_in": 1.125,
+      "max_od_in": 8.875,
+      "profile": [
+        [
+          0,
+          4.4375
+        ],
+        [
+          0.394,
+          4.4375
+        ],
+        [
+          0.553,
+          4
+        ],
+        [
+          1.125,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 2.469,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 800,
+      "length_in": 1.5,
+      "max_od_in": 9.25,
+      "profile": [
+        [
+          0,
+          4.625
+        ],
+        [
+          0.9,
+          4.625
+        ],
+        [
+          1.127,
+          4
+        ],
+        [
+          1.5,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 6.139,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 800,
+      "length_in": 1.25,
+      "max_od_in": 9.25,
+      "profile": [
+        [
+          0,
+          4.625
+        ],
+        [
+          0.75,
+          4.625
+        ],
+        [
+          0.977,
+          4
+        ],
+        [
+          1.25,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 5.207,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 800,
+      "length_in": 1.963,
+      "max_od_in": 8.625,
+      "profile": [
+        [
+          0,
+          4.3125
+        ],
+        [
+          1.713,
+          4.3125
+        ],
+        [
+          1.838,
+          4
+        ],
+        [
+          1.963,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 5.738,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 1000,
+      "length_in": 0,
+      "max_od_in": 10,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 1000,
+      "length_in": 0.875,
+      "max_od_in": 10.57,
+      "profile": [
+        [
+          0,
+          5.285
+        ],
+        [
+          0.1,
+          5.285
+        ],
+        [
+          0.204,
+          5
+        ],
+        [
+          0.875,
+          5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.264,
+      "source": "draft: BPE clamp ferrule table stops at 6\"; flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 1000,
+      "length_in": 1.25,
+      "max_od_in": 10.75,
+      "profile": [
+        [
+          0,
+          5.375
+        ],
+        [
+          0.438,
+          5.375
+        ],
+        [
+          0.574,
+          5
+        ],
+        [
+          1.25,
+          5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 3.018,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 1000,
+      "length_in": 1.125,
+      "max_od_in": 10.875,
+      "profile": [
+        [
+          0,
+          5.4375
+        ],
+        [
+          0.394,
+          5.4375
+        ],
+        [
+          0.553,
+          5
+        ],
+        [
+          1.125,
+          5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 3.07,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 1000,
+      "length_in": 1.5,
+      "max_od_in": 11.25,
+      "profile": [
+        [
+          0,
+          5.625
+        ],
+        [
+          0.9,
+          5.625
+        ],
+        [
+          1.127,
+          5
+        ],
+        [
+          1.5,
+          5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 7.592,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 1000,
+      "length_in": 1.25,
+      "max_od_in": 11.25,
+      "profile": [
+        [
+          0,
+          5.625
+        ],
+        [
+          0.75,
+          5.625
+        ],
+        [
+          0.977,
+          5
+        ],
+        [
+          1.25,
+          5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 6.439,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 1000,
+      "length_in": 2.175,
+      "max_od_in": 10.75,
+      "profile": [
+        [
+          0,
+          5.375
+        ],
+        [
+          1.925,
+          5.375
+        ],
+        [
+          2.05,
+          5
+        ],
+        [
+          2.175,
+          5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 9.179,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "bw",
+      "size_code": 1200,
+      "length_in": 0,
+      "max_od_in": 12,
+      "profile": [],
+      "bore_in": null,
+      "mass_lb": 0,
+      "source": "n/a (plain weld end: square-cut tube)",
+      "verified": true
+    },
+    {
+      "code": "tc",
+      "size_code": 1200,
+      "length_in": 0.875,
+      "max_od_in": 12.57,
+      "profile": [
+        [
+          0,
+          6.285
+        ],
+        [
+          0.1,
+          6.285
+        ],
+        [
+          0.204,
+          6
+        ],
+        [
+          0.875,
+          6
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 1.62,
+      "source": "draft: BPE clamp ferrule table stops at 6\"; flange OD + length from 14WMP catalog (duvasanitary.com, sanitaryfittings.us, 2026-10-16); 20° clamp-back taper and 0.10\" flange land are draft",
+      "verified": false
+    },
+    {
+      "code": "mil",
+      "size_code": 1200,
+      "length_in": 1.25,
+      "max_od_in": 12.75,
+      "profile": [
+        [
+          0,
+          6.375
+        ],
+        [
+          0.438,
+          6.375
+        ],
+        [
+          0.574,
+          6
+        ],
+        [
+          1.25,
+          6
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 3.76,
+      "source": "draft estimate: 3-A I-Line male ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.50–0.75\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "fil",
+      "size_code": 1200,
+      "length_in": 1.125,
+      "max_od_in": 12.875,
+      "profile": [
+        [
+          0,
+          6.4375
+        ],
+        [
+          0.394,
+          6.4375
+        ],
+        [
+          0.553,
+          6
+        ],
+        [
+          1.125,
+          6
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 3.804,
+      "source": "draft estimate: 3-A I-Line female ferrule envelope (no ASME BPE table); flange OD ≈ tube OD + 0.625–0.875\", length 0.875–1.125\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "pbs",
+      "size_code": 1200,
+      "length_in": 1.5,
+      "max_od_in": 13.25,
+      "profile": [
+        [
+          0,
+          6.625
+        ],
+        [
+          0.9,
+          6.625
+        ],
+        [
+          1.127,
+          6
+        ],
+        [
+          1.5,
+          6
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 9.221,
+      "source": "draft estimate: 3-A bevel seat ferrule + hex nut envelope (no ASME BPE table); nut OD ≈ tube OD + 0.875–1.25\", length 1.25–1.5\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "tbs",
+      "size_code": 1200,
+      "length_in": 1.25,
+      "max_od_in": 13.25,
+      "profile": [
+        [
+          0,
+          6.625
+        ],
+        [
+          0.75,
+          6.625
+        ],
+        [
+          0.977,
+          6
+        ],
+        [
+          1.25,
+          6
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 7.818,
+      "source": "draft estimate: 3-A threaded bevel seat ferrule envelope (no ASME BPE table); thread/nut OD ≈ tube OD + 0.875–1.25\", length 1.0–1.25\"; needs Houston/supplier dims (H2)",
+      "verified": false
+    },
+    {
+      "code": "mnpt",
+      "size_code": 1200,
+      "length_in": 2.375,
+      "max_od_in": 12.75,
+      "profile": [
+        [
+          0,
+          6.375
+        ],
+        [
+          2.125,
+          6.375
+        ],
+        [
+          2.25,
+          6
+        ],
+        [
+          2.375,
+          6
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 12.331,
+      "source": "ASME B1.20.1 NPT, same nominal size as tube (provisional, H28): pipe OD D and effective thread length L2, + 0.25\" weld transition (draft)",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 100,
+      "length_in": 2.19,
+      "max_od_in": 4.25,
+      "profile": [
+        [
+          0,
+          1
+        ],
+        [
+          0.06,
+          1
+        ],
+        [
+          0.06,
+          2.125
+        ],
+        [
+          0.56,
+          2.125
+        ],
+        [
+          0.56,
+          0.97
+        ],
+        [
+          2.19,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 2.564,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 1 (tube nominal = NPS): flange OD 4.25\", thickness 0.56\" incl. 0.06\" raised face (RF Ø2\"), hub Ø1.94\" tapering to the tube OD over the 2.19\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 100,
+      "length_in": 2.44,
+      "max_od_in": 4.88,
+      "profile": [
+        [
+          0,
+          1
+        ],
+        [
+          0.06,
+          1
+        ],
+        [
+          0.06,
+          2.44
+        ],
+        [
+          0.69,
+          2.44
+        ],
+        [
+          0.69,
+          1.06
+        ],
+        [
+          2.44,
+          0.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 4.063,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 1 (tube nominal = NPS): flange OD 4.88\", thickness 0.69\" incl. 0.06\" raised face (RF Ø2\"), hub Ø2.12\" tapering to the tube OD over the 2.44\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 100,
+      "length_in": 1.183,
+      "max_od_in": 1.815,
+      "profile": [
+        [
+          0,
+          0.9075
+        ],
+        [
+          0.933,
+          0.9075
+        ],
+        [
+          1.058,
+          0.5
+        ],
+        [
+          1.183,
+          0.5
+        ]
+      ],
+      "bore_in": 1.315,
+      "mass_lb": 0.376,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 1.315\" (bore_in = thread envelope) and effective thread length L2 0.683\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 100,
+      "length_in": 2.656,
+      "max_od_in": 1.315,
+      "profile": [
+        [
+          0,
+          0.6575
+        ],
+        [
+          0.625,
+          0.6575
+        ],
+        [
+          0.625,
+          0.595
+        ],
+        [
+          0.906,
+          0.595
+        ],
+        [
+          0.906,
+          0.6575
+        ],
+        [
+          1.906,
+          0.6575
+        ],
+        [
+          2.406,
+          0.5
+        ],
+        [
+          2.656,
+          0.5
+        ]
+      ],
+      "bore_in": 1.097,
+      "mass_lb": 0.265,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 1: pipe OD 1.315\" Sch 10S (ASME B36.19M, wall 0.109\"), gasket seat A 0.625\", groove width B 0.281\", groove Ø1.19\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 100,
+      "length_in": 3,
+      "max_od_in": 1.315,
+      "profile": [
+        [
+          0,
+          0.6575
+        ],
+        [
+          2,
+          0.6575
+        ],
+        [
+          2.5,
+          0.5
+        ],
+        [
+          3,
+          0.5
+        ]
+      ],
+      "bore_in": 1.097,
+      "mass_lb": 0.31,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 1 Sch 10S pipe (ASME B36.19M: OD 1.315\", wall 0.109\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 100,
+      "length_in": 0.625,
+      "max_od_in": 1,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.0417,
+          0.2764
+        ],
+        [
+          0.0833,
+          0.3727
+        ],
+        [
+          0.125,
+          0.433
+        ],
+        [
+          0.1667,
+          0.4714
+        ],
+        [
+          0.2083,
+          0.493
+        ],
+        [
+          0.25,
+          0.5
+        ],
+        [
+          0.625,
+          0.5
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 0.037,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 0.25\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 150,
+      "length_in": 2.44,
+      "max_od_in": 5,
+      "profile": [
+        [
+          0,
+          1.44
+        ],
+        [
+          0.06,
+          1.44
+        ],
+        [
+          0.06,
+          2.5
+        ],
+        [
+          0.69,
+          2.5
+        ],
+        [
+          0.69,
+          1.28
+        ],
+        [
+          2.44,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 4.337,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 1-1/2 (tube nominal = NPS): flange OD 5\", thickness 0.69\" incl. 0.06\" raised face (RF Ø2.88\"), hub Ø2.56\" tapering to the tube OD over the 2.44\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 150,
+      "length_in": 2.69,
+      "max_od_in": 6.12,
+      "profile": [
+        [
+          0,
+          1.44
+        ],
+        [
+          0.06,
+          1.44
+        ],
+        [
+          0.06,
+          3.06
+        ],
+        [
+          0.81,
+          3.06
+        ],
+        [
+          0.81,
+          1.375
+        ],
+        [
+          2.69,
+          0.75
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 7.351,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 1-1/2 (tube nominal = NPS): flange OD 6.12\", thickness 0.81\" incl. 0.06\" raised face (RF Ø2.88\"), hub Ø2.75\" tapering to the tube OD over the 2.69\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 150,
+      "length_in": 1.224,
+      "max_od_in": 2.4,
+      "profile": [
+        [
+          0,
+          1.2
+        ],
+        [
+          0.974,
+          1.2
+        ],
+        [
+          1.099,
+          0.75
+        ],
+        [
+          1.224,
+          0.75
+        ]
+      ],
+      "bore_in": 1.9,
+      "mass_lb": 0.544,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 1.9\" (bore_in = thread envelope) and effective thread length L2 0.724\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 150,
+      "length_in": 2.656,
+      "max_od_in": 1.9,
+      "profile": [
+        [
+          0,
+          0.95
+        ],
+        [
+          0.625,
+          0.95
+        ],
+        [
+          0.625,
+          0.8875
+        ],
+        [
+          0.906,
+          0.8875
+        ],
+        [
+          0.906,
+          0.95
+        ],
+        [
+          1.906,
+          0.95
+        ],
+        [
+          2.406,
+          0.75
+        ],
+        [
+          2.656,
+          0.75
+        ]
+      ],
+      "bore_in": 1.682,
+      "mass_lb": 0.395,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 1-1/2: pipe OD 1.9\" Sch 10S (ASME B36.19M, wall 0.109\"), gasket seat A 0.625\", groove width B 0.281\", groove Ø1.775\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 150,
+      "length_in": 3,
+      "max_od_in": 1.9,
+      "profile": [
+        [
+          0,
+          0.95
+        ],
+        [
+          2,
+          0.95
+        ],
+        [
+          2.5,
+          0.75
+        ],
+        [
+          3,
+          0.75
+        ]
+      ],
+      "bore_in": 1.682,
+      "mass_lb": 0.463,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 1-1/2 Sch 10S pipe (ASME B36.19M: OD 1.9\", wall 0.109\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 150,
+      "length_in": 0.75,
+      "max_od_in": 1.5,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.0625,
+          0.4146
+        ],
+        [
+          0.125,
+          0.559
+        ],
+        [
+          0.1875,
+          0.6495
+        ],
+        [
+          0.25,
+          0.7071
+        ],
+        [
+          0.3125,
+          0.7395
+        ],
+        [
+          0.375,
+          0.75
+        ],
+        [
+          0.75,
+          0.75
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 0.071,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 0.375\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 200,
+      "length_in": 2.5,
+      "max_od_in": 6,
+      "profile": [
+        [
+          0,
+          1.81
+        ],
+        [
+          0.06,
+          1.81
+        ],
+        [
+          0.06,
+          3
+        ],
+        [
+          0.75,
+          3
+        ],
+        [
+          0.75,
+          1.53
+        ],
+        [
+          2.5,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 6.434,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 2 (tube nominal = NPS): flange OD 6\", thickness 0.75\" incl. 0.06\" raised face (RF Ø3.62\"), hub Ø3.06\" tapering to the tube OD over the 2.5\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 200,
+      "length_in": 2.75,
+      "max_od_in": 6.5,
+      "profile": [
+        [
+          0,
+          1.81
+        ],
+        [
+          0.06,
+          1.81
+        ],
+        [
+          0.06,
+          3.25
+        ],
+        [
+          0.88,
+          3.25
+        ],
+        [
+          0.88,
+          1.655
+        ],
+        [
+          2.75,
+          1
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 8.943,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 2 (tube nominal = NPS): flange OD 6.5\", thickness 0.88\" incl. 0.06\" raised face (RF Ø3.62\"), hub Ø3.31\" tapering to the tube OD over the 2.75\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 200,
+      "length_in": 1.257,
+      "max_od_in": 2.875,
+      "profile": [
+        [
+          0,
+          1.4375
+        ],
+        [
+          1.007,
+          1.4375
+        ],
+        [
+          1.132,
+          1
+        ],
+        [
+          1.257,
+          1
+        ]
+      ],
+      "bore_in": 2.375,
+      "mass_lb": 0.688,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 2.375\" (bore_in = thread envelope) and effective thread length L2 0.757\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 200,
+      "length_in": 2.719,
+      "max_od_in": 2.375,
+      "profile": [
+        [
+          0,
+          1.1875
+        ],
+        [
+          0.625,
+          1.1875
+        ],
+        [
+          0.625,
+          1.125
+        ],
+        [
+          0.969,
+          1.125
+        ],
+        [
+          0.969,
+          1.1875
+        ],
+        [
+          1.969,
+          1.1875
+        ],
+        [
+          2.469,
+          1
+        ],
+        [
+          2.719,
+          1
+        ]
+      ],
+      "bore_in": 2.157,
+      "mass_lb": 0.51,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 2: pipe OD 2.375\" Sch 10S (ASME B36.19M, wall 0.109\"), gasket seat A 0.625\", groove width B 0.344\", groove Ø2.25\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 200,
+      "length_in": 3,
+      "max_od_in": 2.375,
+      "profile": [
+        [
+          0,
+          1.1875
+        ],
+        [
+          2,
+          1.1875
+        ],
+        [
+          2.5,
+          1
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "bore_in": 2.157,
+      "mass_lb": 0.591,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 2 Sch 10S pipe (ASME B36.19M: OD 2.375\", wall 0.109\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 200,
+      "length_in": 0.875,
+      "max_od_in": 2,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.0833,
+          0.5528
+        ],
+        [
+          0.1667,
+          0.7454
+        ],
+        [
+          0.25,
+          0.866
+        ],
+        [
+          0.3333,
+          0.9428
+        ],
+        [
+          0.4167,
+          0.986
+        ],
+        [
+          0.5,
+          1
+        ],
+        [
+          0.875,
+          1
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 0.114,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 0.5\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 250,
+      "length_in": 2.75,
+      "max_od_in": 7,
+      "profile": [
+        [
+          0,
+          2.06
+        ],
+        [
+          0.06,
+          2.06
+        ],
+        [
+          0.06,
+          3.5
+        ],
+        [
+          0.88,
+          3.5
+        ],
+        [
+          0.88,
+          1.78
+        ],
+        [
+          2.75,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 9.816,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 2-1/2 (tube nominal = NPS): flange OD 7\", thickness 0.88\" incl. 0.06\" raised face (RF Ø4.12\"), hub Ø3.56\" tapering to the tube OD over the 2.75\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 250,
+      "length_in": 3,
+      "max_od_in": 7.5,
+      "profile": [
+        [
+          0,
+          2.06
+        ],
+        [
+          0.06,
+          2.06
+        ],
+        [
+          0.06,
+          3.75
+        ],
+        [
+          1,
+          3.75
+        ],
+        [
+          1,
+          1.97
+        ],
+        [
+          3,
+          1.25
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 13.239,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 2-1/2 (tube nominal = NPS): flange OD 7.5\", thickness 1\" incl. 0.06\" raised face (RF Ø4.12\"), hub Ø3.94\" tapering to the tube OD over the 3\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 250,
+      "length_in": 1.638,
+      "max_od_in": 3.375,
+      "profile": [
+        [
+          0,
+          1.6875
+        ],
+        [
+          1.388,
+          1.6875
+        ],
+        [
+          1.513,
+          1.25
+        ],
+        [
+          1.638,
+          1.25
+        ]
+      ],
+      "bore_in": 2.875,
+      "mass_lb": 1.094,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 2.875\" (bore_in = thread envelope) and effective thread length L2 1.138\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 250,
+      "length_in": 2.719,
+      "max_od_in": 2.875,
+      "profile": [
+        [
+          0,
+          1.4375
+        ],
+        [
+          0.625,
+          1.4375
+        ],
+        [
+          0.625,
+          1.36
+        ],
+        [
+          0.969,
+          1.36
+        ],
+        [
+          0.969,
+          1.4375
+        ],
+        [
+          1.969,
+          1.4375
+        ],
+        [
+          2.469,
+          1.25
+        ],
+        [
+          2.719,
+          1.25
+        ]
+      ],
+      "bore_in": 2.635,
+      "mass_lb": 0.671,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 2-1/2: pipe OD 2.875\" Sch 10S (ASME B36.19M, wall 0.12\"), gasket seat A 0.625\", groove width B 0.344\", groove Ø2.72\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 250,
+      "length_in": 3,
+      "max_od_in": 2.875,
+      "profile": [
+        [
+          0,
+          1.4375
+        ],
+        [
+          2,
+          1.4375
+        ],
+        [
+          2.5,
+          1.25
+        ],
+        [
+          3,
+          1.25
+        ]
+      ],
+      "bore_in": 2.635,
+      "mass_lb": 0.785,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 2-1/2 Sch 10S pipe (ASME B36.19M: OD 2.875\", wall 0.12\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 250,
+      "length_in": 1,
+      "max_od_in": 2.5,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.1042,
+          0.691
+        ],
+        [
+          0.2083,
+          0.9317
+        ],
+        [
+          0.3125,
+          1.0825
+        ],
+        [
+          0.4167,
+          1.1785
+        ],
+        [
+          0.5208,
+          1.2325
+        ],
+        [
+          0.625,
+          1.25
+        ],
+        [
+          1,
+          1.25
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 0.167,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 0.625\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 300,
+      "length_in": 2.75,
+      "max_od_in": 7.5,
+      "profile": [
+        [
+          0,
+          2.5
+        ],
+        [
+          0.06,
+          2.5
+        ],
+        [
+          0.06,
+          3.75
+        ],
+        [
+          0.94,
+          3.75
+        ],
+        [
+          0.94,
+          2.125
+        ],
+        [
+          2.75,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 11.928,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 3 (tube nominal = NPS): flange OD 7.5\", thickness 0.94\" incl. 0.06\" raised face (RF Ø5\"), hub Ø4.25\" tapering to the tube OD over the 2.75\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 300,
+      "length_in": 3.12,
+      "max_od_in": 8.25,
+      "profile": [
+        [
+          0,
+          2.5
+        ],
+        [
+          0.06,
+          2.5
+        ],
+        [
+          0.06,
+          4.125
+        ],
+        [
+          1.12,
+          4.125
+        ],
+        [
+          1.12,
+          2.31
+        ],
+        [
+          3.12,
+          1.5
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 17.633,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 3 (tube nominal = NPS): flange OD 8.25\", thickness 1.12\" incl. 0.06\" raised face (RF Ø5\"), hub Ø4.62\" tapering to the tube OD over the 3.12\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 300,
+      "length_in": 1.7,
+      "max_od_in": 4,
+      "profile": [
+        [
+          0,
+          2
+        ],
+        [
+          1.45,
+          2
+        ],
+        [
+          1.575,
+          1.5
+        ],
+        [
+          1.7,
+          1.5
+        ]
+      ],
+      "bore_in": 3.5,
+      "mass_lb": 1.377,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 3.5\" (bore_in = thread envelope) and effective thread length L2 1.2\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 300,
+      "length_in": 2.719,
+      "max_od_in": 3.5,
+      "profile": [
+        [
+          0,
+          1.75
+        ],
+        [
+          0.625,
+          1.75
+        ],
+        [
+          0.625,
+          1.672
+        ],
+        [
+          0.969,
+          1.672
+        ],
+        [
+          0.969,
+          1.75
+        ],
+        [
+          1.969,
+          1.75
+        ],
+        [
+          2.469,
+          1.5
+        ],
+        [
+          2.719,
+          1.5
+        ]
+      ],
+      "bore_in": 3.26,
+      "mass_lb": 0.821,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 3: pipe OD 3.5\" Sch 10S (ASME B36.19M, wall 0.12\"), gasket seat A 0.625\", groove width B 0.344\", groove Ø3.344\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 300,
+      "length_in": 3,
+      "max_od_in": 3.5,
+      "profile": [
+        [
+          0,
+          1.75
+        ],
+        [
+          2,
+          1.75
+        ],
+        [
+          2.5,
+          1.5
+        ],
+        [
+          3,
+          1.5
+        ]
+      ],
+      "bore_in": 3.26,
+      "mass_lb": 0.96,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 3 Sch 10S pipe (ASME B36.19M: OD 3.5\", wall 0.12\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 300,
+      "length_in": 1.125,
+      "max_od_in": 3,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.125,
+          0.8292
+        ],
+        [
+          0.25,
+          1.118
+        ],
+        [
+          0.375,
+          1.299
+        ],
+        [
+          0.5,
+          1.4142
+        ],
+        [
+          0.625,
+          1.479
+        ],
+        [
+          0.75,
+          1.5
+        ],
+        [
+          1.125,
+          1.5
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 0.23,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 0.75\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 400,
+      "length_in": 3,
+      "max_od_in": 9,
+      "profile": [
+        [
+          0,
+          3.095
+        ],
+        [
+          0.06,
+          3.095
+        ],
+        [
+          0.06,
+          4.5
+        ],
+        [
+          0.94,
+          4.5
+        ],
+        [
+          0.94,
+          2.655
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 16.949,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 4 (tube nominal = NPS): flange OD 9\", thickness 0.94\" incl. 0.06\" raised face (RF Ø6.19\"), hub Ø5.31\" tapering to the tube OD over the 3\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 400,
+      "length_in": 3.38,
+      "max_od_in": 10,
+      "profile": [
+        [
+          0,
+          3.095
+        ],
+        [
+          0.06,
+          3.095
+        ],
+        [
+          0.06,
+          5
+        ],
+        [
+          1.25,
+          5
+        ],
+        [
+          1.25,
+          2.875
+        ],
+        [
+          3.38,
+          2
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 27.965,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 4 (tube nominal = NPS): flange OD 10\", thickness 1.25\" incl. 0.06\" raised face (RF Ø6.19\"), hub Ø5.75\" tapering to the tube OD over the 3.38\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 400,
+      "length_in": 1.8,
+      "max_od_in": 5,
+      "profile": [
+        [
+          0,
+          2.5
+        ],
+        [
+          1.55,
+          2.5
+        ],
+        [
+          1.675,
+          2
+        ],
+        [
+          1.8,
+          2
+        ]
+      ],
+      "bore_in": 4.5,
+      "mass_lb": 1.874,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 4.5\" (bore_in = thread envelope) and effective thread length L2 1.3\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 400,
+      "length_in": 2.719,
+      "max_od_in": 4.5,
+      "profile": [
+        [
+          0,
+          2.25
+        ],
+        [
+          0.625,
+          2.25
+        ],
+        [
+          0.625,
+          2.167
+        ],
+        [
+          0.969,
+          2.167
+        ],
+        [
+          0.969,
+          2.25
+        ],
+        [
+          1.969,
+          2.25
+        ],
+        [
+          2.469,
+          2
+        ],
+        [
+          2.719,
+          2
+        ]
+      ],
+      "bore_in": 4.26,
+      "mass_lb": 1.094,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 4: pipe OD 4.5\" Sch 10S (ASME B36.19M, wall 0.12\"), gasket seat A 0.625\", groove width B 0.344\", groove Ø4.334\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 400,
+      "length_in": 3,
+      "max_od_in": 4.5,
+      "profile": [
+        [
+          0,
+          2.25
+        ],
+        [
+          2,
+          2.25
+        ],
+        [
+          2.5,
+          2
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "bore_in": 4.26,
+      "mass_lb": 1.298,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 4 Sch 10S pipe (ASME B36.19M: OD 4.5\", wall 0.12\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 400,
+      "length_in": 1.375,
+      "max_od_in": 4,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.1667,
+          1.1055
+        ],
+        [
+          0.3333,
+          1.4907
+        ],
+        [
+          0.5,
+          1.7321
+        ],
+        [
+          0.6667,
+          1.8856
+        ],
+        [
+          0.8333,
+          1.972
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1.375,
+          2
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 0.485,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 1\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 600,
+      "length_in": 3.5,
+      "max_od_in": 11,
+      "profile": [
+        [
+          0,
+          4.25
+        ],
+        [
+          0.06,
+          4.25
+        ],
+        [
+          0.06,
+          5.5
+        ],
+        [
+          1,
+          5.5
+        ],
+        [
+          1,
+          3.78
+        ],
+        [
+          3.5,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 26.533,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 6 (tube nominal = NPS): flange OD 11\", thickness 1\" incl. 0.06\" raised face (RF Ø8.5\"), hub Ø7.56\" tapering to the tube OD over the 3.5\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 600,
+      "length_in": 3.88,
+      "max_od_in": 12.5,
+      "profile": [
+        [
+          0,
+          4.25
+        ],
+        [
+          0.06,
+          4.25
+        ],
+        [
+          0.06,
+          6.25
+        ],
+        [
+          1.44,
+          6.25
+        ],
+        [
+          1.44,
+          4.06
+        ],
+        [
+          3.88,
+          3
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 48.463,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 6 (tube nominal = NPS): flange OD 12.5\", thickness 1.44\" incl. 0.06\" raised face (RF Ø8.5\"), hub Ø8.12\" tapering to the tube OD over the 3.88\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 600,
+      "length_in": 2.013,
+      "max_od_in": 7.125,
+      "profile": [
+        [
+          0,
+          3.5625
+        ],
+        [
+          1.763,
+          3.5625
+        ],
+        [
+          1.888,
+          3
+        ],
+        [
+          2.013,
+          3
+        ]
+      ],
+      "bore_in": 6.625,
+      "mass_lb": 3.111,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 6.625\" (bore_in = thread envelope) and effective thread length L2 1.513\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 600,
+      "length_in": 2.719,
+      "max_od_in": 6.625,
+      "profile": [
+        [
+          0,
+          3.3125
+        ],
+        [
+          0.625,
+          3.3125
+        ],
+        [
+          0.625,
+          3.2275
+        ],
+        [
+          0.969,
+          3.2275
+        ],
+        [
+          0.969,
+          3.3125
+        ],
+        [
+          1.969,
+          3.3125
+        ],
+        [
+          2.469,
+          3
+        ],
+        [
+          2.719,
+          3
+        ]
+      ],
+      "bore_in": 6.357,
+      "mass_lb": 1.876,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 6: pipe OD 6.625\" Sch 10S (ASME B36.19M, wall 0.134\"), gasket seat A 0.625\", groove width B 0.344\", groove Ø6.455\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 600,
+      "length_in": 3,
+      "max_od_in": 6.625,
+      "profile": [
+        [
+          0,
+          3.3125
+        ],
+        [
+          2,
+          3.3125
+        ],
+        [
+          2.5,
+          3
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "bore_in": 6.357,
+      "mass_lb": 2.221,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 6 Sch 10S pipe (ASME B36.19M: OD 6.625\", wall 0.134\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 600,
+      "length_in": 1.875,
+      "max_od_in": 6,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.25,
+          1.6583
+        ],
+        [
+          0.5,
+          2.2361
+        ],
+        [
+          0.75,
+          2.5981
+        ],
+        [
+          1,
+          2.8284
+        ],
+        [
+          1.25,
+          2.958
+        ],
+        [
+          1.5,
+          3
+        ],
+        [
+          1.875,
+          3
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 1.332,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 1.5\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    },
+    {
+      "code": "fl150",
+      "size_code": 800,
+      "length_in": 4,
+      "max_od_in": 13.5,
+      "profile": [
+        [
+          0,
+          5.31
+        ],
+        [
+          0.06,
+          5.31
+        ],
+        [
+          0.06,
+          6.75
+        ],
+        [
+          1.12,
+          6.75
+        ],
+        [
+          1.12,
+          4.845
+        ],
+        [
+          4,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 41.844,
+      "source": "draft: ASME B16.5-2020 Class 150 raised-face weld-neck flange, NPS 8 (tube nominal = NPS): flange OD 13.5\", thickness 1.12\" incl. 0.06\" raised face (RF Ø10.62\"), hub Ø9.69\" tapering to the tube OD over the 4\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fl300",
+      "size_code": 800,
+      "length_in": 4.38,
+      "max_od_in": 15,
+      "profile": [
+        [
+          0,
+          5.31
+        ],
+        [
+          0.06,
+          5.31
+        ],
+        [
+          0.06,
+          7.5
+        ],
+        [
+          1.62,
+          7.5
+        ],
+        [
+          1.62,
+          5.125
+        ],
+        [
+          4.38,
+          4
+        ]
+      ],
+      "bore_in": null,
+      "mass_lb": 73.681,
+      "source": "draft: ASME B16.5-2020 Class 300 raised-face weld-neck flange, NPS 8 (tube nominal = NPS): flange OD 15\", thickness 1.62\" incl. 0.06\" raised face (RF Ø10.62\"), hub Ø10.25\" tapering to the tube OD over the 4.38\" weld-neck length. Approximates a tube-OD slip-on / weld-neck adapter. Bolt holes are not modelled (mass slightly high). Transcribed, to verify.",
+      "verified": false
+    },
+    {
+      "code": "fnpt",
+      "size_code": 800,
+      "length_in": 2.213,
+      "max_od_in": 9.125,
+      "profile": [
+        [
+          0,
+          4.5625
+        ],
+        [
+          1.963,
+          4.5625
+        ],
+        [
+          2.088,
+          4
+        ],
+        [
+          2.213,
+          4
+        ]
+      ],
+      "bore_in": 8.625,
+      "mass_lb": 4.432,
+      "source": "draft: female NPT half-coupling envelope, same nominal size as tube: ASME B1.20.1 pipe OD D 8.625\" (bore_in = thread envelope) and effective thread length L2 1.713\" + 0.25\" body; body OD ≈ D + 0.5\"; 0.125\" taper + 0.125\" weld land to the tube OD. Draft.",
+      "verified": false
+    },
+    {
+      "code": "grv",
+      "size_code": 800,
+      "length_in": 2.969,
+      "max_od_in": 8.625,
+      "profile": [
+        [
+          0,
+          4.3125
+        ],
+        [
+          0.75,
+          4.3125
+        ],
+        [
+          0.75,
+          4.2205
+        ],
+        [
+          1.219,
+          4.2205
+        ],
+        [
+          1.219,
+          4.3125
+        ],
+        [
+          2.219,
+          4.3125
+        ],
+        [
+          2.719,
+          4
+        ],
+        [
+          2.969,
+          4
+        ]
+      ],
+      "bore_in": 8.329,
+      "mass_lb": 2.877,
+      "source": "draft: IPS roll-grooved end per AWWA C606 / Victaulic roll-groove spec, NPS 8: pipe OD 8.625\" Sch 10S (ASME B36.19M, wall 0.148\"), gasket seat A 0.75\", groove width B 0.469\", groove Ø8.441\" (groove approximated as a square revolved notch); 1\" of pipe past the groove, 0.5\" cone to the tube OD, 0.25\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "bwp",
+      "size_code": 800,
+      "length_in": 3,
+      "max_od_in": 8.625,
+      "profile": [
+        [
+          0,
+          4.3125
+        ],
+        [
+          2,
+          4.3125
+        ],
+        [
+          2.5,
+          4
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "bore_in": 8.329,
+      "mass_lb": 3.158,
+      "source": "draft: butt-weld pipe adapter, plain square end of NPS 8 Sch 10S pipe (ASME B36.19M: OD 8.625\", wall 0.148\"), 2\" of pipe, 0.5\" cone to the tube OD, 0.5\" weld land. Draft.",
+      "verified": false
+    },
+    {
+      "code": "cap",
+      "size_code": 800,
+      "length_in": 2.375,
+      "max_od_in": 8,
+      "profile": [
+        [
+          0,
+          0
+        ],
+        [
+          0.3333,
+          2.2111
+        ],
+        [
+          0.6667,
+          2.9814
+        ],
+        [
+          1,
+          3.4641
+        ],
+        [
+          1.3333,
+          3.7712
+        ],
+        [
+          1.6667,
+          3.9441
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2.375,
+          4
+        ]
+      ],
+      "bore_in": 0,
+      "mass_lb": 2.296,
+      "source": "draft: butt-weld end cap (closed end; bore_in 0), 2:1 ellipsoidal head on the tube OD/wall (depth OD/4 = 2\") + 0.375\" straight skirt to the weld line; cf. ASME B16.9 / BPE sanitary end caps. Draft.",
+      "verified": false
+    }
+  ]
+}
