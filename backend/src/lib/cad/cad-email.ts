@@ -63,8 +63,21 @@ export function cadEmailFrom(notification: NotificationLike): CadEmailLike {
   }
 }
 
-/** null when no notification module is registered (no RESEND_API_KEY / SENDGRID_API_KEY). */
-export function cadEmailFromContainer(container: { resolve: <T = any>(key: string) => T }): CadEmailLike | null {
+/**
+ * True when medusa-config.js registers an email provider (the same condition it uses). Medusa 2.8
+ * loads the notification module even with no provider, so resolving it is not enough: a send would
+ * throw "Could not find a notification provider for channel: email".
+ */
+export function emailProviderConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
+  return !!((env.RESEND_API_KEY && env.RESEND_FROM_EMAIL) || (env.SENDGRID_API_KEY && env.SENDGRID_FROM_EMAIL))
+}
+
+/** null when no email provider is configured (no RESEND_API_KEY / SENDGRID_API_KEY) or no module. */
+export function cadEmailFromContainer(
+  container: { resolve: <T = any>(key: string) => T },
+  env: NodeJS.ProcessEnv = process.env,
+): CadEmailLike | null {
+  if (!emailProviderConfigured(env)) return null
   try {
     return cadEmailFrom(container.resolve<NotificationLike>(Modules.NOTIFICATION))
   } catch {

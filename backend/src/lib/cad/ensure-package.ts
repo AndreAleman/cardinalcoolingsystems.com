@@ -64,6 +64,11 @@ function defaultDeps(container: Container): EnsureCadPackageDeps {
 
 const inflight = new Map<string, Promise<CadPackageDTO>>()
 
+/** Medusa 2.8's generated update*() always returns an array (create*() returns one row for one). */
+function one<T>(r: T | T[]): T {
+  return Array.isArray(r) ? r[0] : r
+}
+
 /** The `expected` block cad-service checks its own geometry against (STEP kinds), else undefined. */
 export function expectedGeometry(builderType: BuilderType, options: Options): Record<string, unknown> | undefined {
   const b = getBuilder(builderType as string)
@@ -111,7 +116,7 @@ async function claimRow(service: CadRequestModuleService, cacheKey: string, inpu
   const existing = await service.findPackageByCacheKey(cacheKey)
   if (existing) {
     if (existing.status === "ready") return existing
-    return (await service.updateCadPackages({ id: existing.id, status: "generating", error: null })) as unknown as CadPackageDTO
+    return one(await service.updateCadPackages({ id: existing.id, status: "generating", error: null })) as unknown as CadPackageDTO
   }
   const counted = !!input.countAgainstCap
   try {
@@ -173,7 +178,7 @@ async function generate(
     if (step) await deps.store.put(keys.step, step, "model/step")
     await deps.store.put(keys.pdf, pdf, "application/pdf")
     const sha = (b: Buffer) => crypto.createHash("sha256").update(b).digest("hex")
-    const updated = await service.updateCadPackages({
+    const updated = one(await service.updateCadPackages({
       id: row.id,
       status: "ready",
       step_key: step ? keys.step : null,
@@ -185,7 +190,7 @@ async function generate(
       generator_version: String(res.generator_version || CAD_GENERATOR_VERSION),
       generated_at: new Date(),
       error: null,
-    })
+    }))
     deps.logger?.info(`[cad] generated ${cacheKey} (${step ? `${step.length} + ` : "PDF only, "}${pdf.length} bytes)`)
     return updated as unknown as CadPackageDTO
   } catch (err: any) {

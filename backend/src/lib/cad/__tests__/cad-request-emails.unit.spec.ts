@@ -164,3 +164,17 @@ describe("recipients and URLs", () => {
     expect(adminUrl("/cad-requests/x", { BACKEND_URL: "http://localhost:9053" } as any)).toBe("http://localhost:9053/app/cad-requests/x")
   })
 })
+
+describe("cadEmailFromContainer", () => {
+  const { cadEmailFromContainer, emailProviderConfigured } = require("../cad-email")
+  const container = { resolve: () => ({ createNotifications: jest.fn() }) }
+  it("is null without an email provider (Medusa 2.8 resolves the notification module anyway)", () => {
+    expect(emailProviderConfigured({} as any)).toBe(false)
+    expect(cadEmailFromContainer(container, {} as any)).toBeNull()
+  })
+  it("sends through the module when Resend (or SendGrid) is configured", () => {
+    const env = { RESEND_API_KEY: "re_x", RESEND_FROM_EMAIL: "a@b.com" } as any
+    expect(emailProviderConfigured(env)).toBe(true)
+    expect(cadEmailFromContainer(container, env)).not.toBeNull()
+  })
+})

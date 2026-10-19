@@ -73,7 +73,8 @@ class CadRequestModuleService extends MedusaService({
       ...(input.require_review !== undefined ? {require_review: input.require_review} : {}),
       updated_by: input.updated_by ?? null,
     })
-    return updated as unknown as CadSettingDTO
+    // Medusa 2.8's generated update*() returns an array.
+    return (Array.isArray(updated) ? updated[0] : updated) as unknown as CadSettingDTO
   }
 
   /** CAD Review (R1): true unless staff turned review off. */

@@ -151,3 +151,15 @@ describe("renderDrawingSvg", () => {
     expect(renderDrawingSvg("transition", o, TRANSITION_BUILDER.partNumber(o), "10/18/2026")).toBe(golden.replace(/\n$/, ""))
   })
 })
+
+describe("Medusa 2.8 update*() returns an array", () => {
+  it("claiming a reserved row and marking it ready still works", async () => {
+    const { service, container, deps } = setup()
+    const realUpdate = service.updateCadPackages.bind(service)
+    service.updateCadPackages = (async (data: any) => [await realUpdate(data)]) as any
+    service.addPackage({ part_number: PN, cache_key: cadCacheKey(PN), status: "generating", counted_against_cap: true, cap_day: "2026-10-18" })
+    const pkg = await ensureCadPackage(container, input(), deps)
+    expect(pkg).toMatchObject({ status: "ready", counted_against_cap: true })
+    expect(service.packages[0].status).toBe("ready")
+  })
+})
