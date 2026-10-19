@@ -2,7 +2,7 @@
 // Turnstile middlewares (visitors only), and the body validator.
 
 import { getBuilder } from "../../../../lib/cpq-shared"
-import { parseBuilderOptions } from "../../../../lib/cad/builder-options"
+import { cadBlockingReasons, parseBuilderOptions } from "../../../../lib/cad/builder-options"
 import { cadClientIp, honeypotResponse } from "../helpers"
 import { cadHoneypot, cadTurnstile } from "../middlewares"
 import { StoreCreateCadRequest } from "../validators"
@@ -93,5 +93,18 @@ describe("visitor-only bot guards", () => {
     const next = jest.fn()
     cadTurnstile(req({}, { auth_context: { actor_type: "customer", actor_id: "cus_1" } }), res(), next)
     expect(next).toHaveBeenCalled()
+  })
+})
+
+describe("cadBlockingReasons", () => {
+  const parsed = (type: string, o: Record<string, unknown>) => (parseBuilderOptions(type, o) as any).value
+  it("a 48-drop manifold (header over one 20 ft stick) still gets CAD files", () => {
+    const p = parsed("row-manifold", { drops: 48 })
+    expect(p.builder.standardRange(p.options).reasons.map((r: any) => r.code)).toContain("header_over_stick")
+    expect(cadBlockingReasons(p)).toEqual([])
+  })
+  it("geometry problems still refuse CAD (ends overlapping on a short transition)", () => {
+    const p = parsed("transition", { a: "pbs", b: "fl300", od: 800, odb: 800, len: 2 })
+    expect(cadBlockingReasons(p).map((r) => r.code)).toContain("ends_overlap")
   })
 })

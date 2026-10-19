@@ -26,7 +26,7 @@
 import type { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys, MedusaError, Modules } from "@medusajs/framework/utils"
 import { CAD_ALLOWANCE_MESSAGES, admitCadRequest } from "../../../lib/cad/admission"
-import { parseBuilderOptions, type ParsedBuilderOptions } from "../../../lib/cad/builder-options"
+import { cadBlockingReasons, parseBuilderOptions, type ParsedBuilderOptions } from "../../../lib/cad/builder-options"
 import { PART_NUMBER_RE } from "../../../lib/cad/cache-key"
 import { cadServiceEnabled } from "../../../lib/cad/cad-service-client"
 import { cadFiles } from "../../../lib/cad/download"
@@ -100,8 +100,9 @@ export const POST = async (req: AuthenticatedMedusaRequest<StoreCreateCadRequest
     assertBusinessEmail(email)
   }
 
-  // Standard Range: outside → no CAD Package, nothing recorded (the quote path handles it).
-  if (!builder.standardRange(options).ok) {
+  // Standard Range: geometry outside it → no CAD Package, nothing recorded (the quote path handles
+  // it). Advisory flags (a header over one stick, a DN port to confirm) still get files.
+  if (cadBlockingReasons({ builder, options }).length) {
     return res.status(400).json({
       type: "invalid_data",
       code: "outside_standard_range",
