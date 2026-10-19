@@ -10,7 +10,7 @@ import { BuilderSheet } from "@lib/cpq/shared/drawing"
 import { localBomRows, resolvedBomRows } from "@lib/builder/bom-view"
 import { cadKindsLabel } from "@lib/builder/cad"
 import { fieldsFor } from "@lib/builder/fields"
-import { pricingModeTag, pricingView } from "@lib/builder/pricing-view"
+import { formatAsOf, pricingModeTag, pricingView } from "@lib/builder/pricing-view"
 import { ignoredParamsNotice, unitNoun, unitsOf } from "@lib/builder/state"
 import { useBuilderState } from "@modules/builder/lib/use-builder-state"
 import { useMemo, useState, type ReactNode } from "react"
@@ -122,7 +122,14 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
               {mode === "quote" ? "Reference drawing. Certified drawing on quote approval." : "Reference drawing."}
             </figcaption>
           </figure>
-          <BomTable rows={rows} unitNoun={unitNoun(type, 1)} currency={currency} total={listTotal} />
+          <BomTable
+            rows={rows}
+            unitNoun={unitNoun(type, 1)}
+            currency={currency}
+            total={listTotal}
+            basis={done ? done.price_basis : null}
+            asOf={done ? formatAsOf(done.priced_at) : ""}
+          />
           <SpecBlock text={done?.spec_block || local.specBlock} />
           <CadPanel key={key} type={type} options={options} partNumber={partNumber} pricingMode={mode} reviewReasons={cadBlockers} />
         </div>

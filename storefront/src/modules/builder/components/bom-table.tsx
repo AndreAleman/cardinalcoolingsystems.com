@@ -5,6 +5,9 @@
 // the same rows stacked, so the prices aren't hidden off-screen in a sideways scroller.
 
 import { listLeadTime, type BomRow } from "@lib/builder/bom-view"
+import { SIGN_IN_PROMPT } from "@lib/builder/pricing-view"
+import type { PriceBasis } from "@lib/builder/types"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/money"
 import { clx } from "@medusajs/ui"
 
@@ -21,15 +24,24 @@ export default function BomTable({
   unitNoun,
   currency,
   total,
+  basis = null,
+  asOf = "",
 }: {
   rows: BomRow[]
   unitNoun: string
   currency: string
   /** Instant list total, shown in the footer; null for Quote. */
   total: number | null
+  /** B2: whose prices the rows show (null until the resolve answers) and their as-of date. */
+  basis?: PriceBasis | null
+  asOf?: string
 }) {
   const money = (n: number | null) => (n === null ? "—" : convertToLocale({ amount: n, currency_code: currency }))
   const price = (n: number | null, r: BomRow) => (n === null ? (r.stock === "checking" ? "…" : "Quote") : money(n))
+  // A Quote configuration (every kit with a spool or hose today) still shows its stocked lines'
+  // posted prices, so they carry their basis and as-of date here too (B2). The sign-in prompt is
+  // only repeated here when there is no price block above (Quote).
+  const priced = basis !== null && rows.some((r) => r.unitPrice !== null)
   return (
     <section aria-label="Bill of materials" className="border border-neutral-200 bg-white" data-testid="bom-table">
       <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-neutral-200 px-4 py-3">
@@ -37,6 +49,20 @@ export default function BomTable({
         <p className="text-xs text-neutral-500" data-testid="bom-lead-time">
           Whole list: {listLeadTime(rows)}
         </p>
+        {priced ? (
+          <p className="w-full text-xs text-neutral-500" data-testid="bom-price-basis" data-basis={basis}>
+            {basis === "company" ? "Your company prices" : "List prices"}
+            {asOf ? `, as of ${asOf}` : ""}
+            {basis !== "company" && total === null ? (
+              <>
+                {" · "}
+                <LocalizedClientLink href="/account" className="font-medium text-cardinal-red underline">
+                  {SIGN_IN_PROMPT}
+                </LocalizedClientLink>
+              </>
+            ) : null}
+          </p>
+        ) : null}
       </header>
       <ul className="divide-y divide-neutral-100 xsmall:hidden" data-testid="bom-cards">
         {rows.map((r, i) => (
