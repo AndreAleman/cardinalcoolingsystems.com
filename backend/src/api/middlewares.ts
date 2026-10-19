@@ -19,6 +19,8 @@ import { adminQuotesMiddlewares } from "./admin/quotes/middlewares"
 import { storeApprovalsMiddlewares } from "./store/approvals/middlewares"
 import { adminApprovalsMiddlewares } from "./admin/approvals/middlewares"
 import { adminOrdersMiddlewares } from "./admin/orders/middlewares"
+import { storeBuildMiddlewares } from "./store/build/middlewares"
+import { adminBuildConfigurationsMiddlewares } from "./admin/build-configurations/middlewares"
 import {
   honeypot,
   rateLimit,
@@ -68,6 +70,8 @@ export default defineMiddlewares({
     ...storeApprovalsMiddlewares,
     ...adminApprovalsMiddlewares,
     ...adminOrdersMiddlewares,
+    ...storeBuildMiddlewares,
+    ...adminBuildConfigurationsMiddlewares,
     {
       matcher: "/product-feed",
       methods: ["GET"],
