@@ -6,6 +6,8 @@ export type EmailItem = {
   sku: string
   title: string | null
   qty: number
+  /** Cardinal Builder line: configuration rows shown under the line. */
+  details?: string[]
 }
 
 /** Itemized SKU + qty list shared by the quote/approval lifecycle emails. */
@@ -18,6 +20,11 @@ export const ItemList: React.FC<{ items: EmailItem[] }> = ({ items }) => (
         <Text key={i} className="m-0 text-sm">
           <strong>{item.sku}</strong>
           {item.title ? ` — ${item.title}` : ''} × {item.qty}
+          {(item.details ?? []).map((d, j) => (
+            <span key={j} className="block pl-3 text-xs text-gray-600">
+              {d}
+            </span>
+          ))}
         </Text>
       ))
     )}
