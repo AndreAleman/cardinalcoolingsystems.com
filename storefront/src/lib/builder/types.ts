@@ -105,12 +105,15 @@ export type CadDownloadStatus = "ready" | "preparing" | "queued" | "expired" | "
 export type CadDownloadDTO = {
   status: CadDownloadStatus
   builder_type?: BuilderType
+  builder_title?: string
+  /** False for the PDF-only builders (cdu-kit, strainer, hose; B8). */
+  has_step?: boolean
   part_number: string
   description: string
   display_id: number | null
   configuration_display: { label: string; value: string }[]
-  /** "/build/<type>?v=1&…" (no country prefix). */
-  share_path: string
+  /** "/build/<type>?v=1&…" (no country prefix), or null when the stored options don't parse. */
+  share_path: string | null
   expires_at: string | null
   downloads_remaining: number | null
   files: CadFile[]

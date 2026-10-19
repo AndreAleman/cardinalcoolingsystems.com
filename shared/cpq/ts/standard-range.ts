@@ -123,3 +123,17 @@ export function checkHoseRange(o: HoseOptions, g: HoseGeometry): StandardRange {
   }
   return result(reasons)
 }
+
+/**
+ * Standard Range flags that do NOT stop a CAD Package: the geometry is sound, the drawing carries
+ * the ENGINEERING REVIEW stamp, and staff review every package anyway (plan B7). A manifold longer
+ * than one 20 ft stick (every 48-drop manifold) needs a welded header joint, not a different
+ * model; a DN hygienic-flange port size needs confirming, not redrawing. Shared so the storefront's
+ * CAD panel and POST /store/cad-requests refuse exactly the same configurations.
+ */
+export const CAD_ADVISORY_RANGE_CODES: readonly string[] = ["header_over_stick", "dn_port_confirm"]
+
+/** The Standard Range reasons that refuse CAD files (geometry that may not model or mislead). */
+export function cadBlockingRangeReasons(range: StandardRange): ReviewReason[] {
+  return range.reasons.filter((r) => !CAD_ADVISORY_RANGE_CODES.includes(r.code))
+}

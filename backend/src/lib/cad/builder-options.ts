@@ -2,7 +2,7 @@
 // canonical options object (shared/cpq/ts/option-keys.ts); everything else goes through the
 // registry (getBuilder), never a switch on builder_type.
 
-import { getBuilder, isBuilderType, type BuilderDef, type BuilderType, type Options, type ParamSource } from "../cpq-shared"
+import { cadBlockingRangeReasons, getBuilder, isBuilderType, type BuilderDef, type BuilderType, type Options, type ParamSource } from "../cpq-shared"
 
 export type ParsedBuilderOptions = {
   type: BuilderType
@@ -53,15 +53,11 @@ export function builderHasStep(type: string | null | undefined): boolean {
   return isBuilderType(type) ? getBuilder(type as string).hasStep : false
 }
 
-/**
- * Standard Range flags that do NOT stop a CAD Package: the geometry is sound, the drawing carries
- * the ENGINEERING REVIEW stamp, and staff review every package anyway (plan B7). A manifold longer
- * than one 20 ft stick (every 48-drop manifold) needs a welded header joint, not a different
- * model; a DN hygienic-flange port size needs confirming, not redrawing.
- */
-export const CAD_ADVISORY_RANGE_CODES: readonly string[] = ["header_over_stick", "dn_port_confirm"]
+// Advisory Standard Range codes live in shared/cpq (standard-range.ts) so the storefront's CAD
+// panel refuses exactly what this route refuses.
+export { CAD_ADVISORY_RANGE_CODES } from "../cpq-shared"
 
 /** The Standard Range reasons that refuse CAD files (geometry that may not model or mislead). */
 export function cadBlockingReasons(parsed: Pick<ParsedBuilderOptions, "builder" | "options">): { code: string; message: string }[] {
-  return parsed.builder.standardRange(parsed.options).reasons.filter((r) => !CAD_ADVISORY_RANGE_CODES.includes(r.code))
+  return cadBlockingRangeReasons(parsed.builder.standardRange(parsed.options))
 }

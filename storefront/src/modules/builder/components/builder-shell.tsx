@@ -5,7 +5,7 @@
 // and renders the form, the Part Number card (badge before price), the actions, the drawing
 // (shared BuilderSheet, no 3D), the BOM, the Spec Block and the CAD panel.
 
-import type { BuilderType, Options } from "@lib/cpq/shared"
+import { cadBlockingRangeReasons, type BuilderType, type Options } from "@lib/cpq/shared"
 import { BuilderSheet } from "@lib/cpq/shared/drawing"
 import { localBomRows, resolvedBomRows } from "@lib/builder/bom-view"
 import { cadKindsLabel } from "@lib/builder/cad"
@@ -50,6 +50,8 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
   const units = unitsOf(type, options)
   const weightLb = done && done.weight_lb_per_unit > 0 ? done.weight_lb_per_unit : local.weightLb
   const reviewReasons = local.standardRange.reasons.map((r) => r.message)
+  // Advisory flags (a header over one stick, a DN port to confirm) still get CAD files (backend rule).
+  const cadBlockers = cadBlockingRangeReasons(local.standardRange).map((r) => r.message)
   // Instant lines are added from the resolver's part number (the adapter SKU when stocked).
   const addPartNumber = done?.part_number || partNumber
   const rows = done ? resolvedBomRows(done.bom, local.bom) : localBomRows(local.bom)
@@ -122,7 +124,7 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
           </figure>
           <BomTable rows={rows} unitNoun={unitNoun(type, 1)} currency={currency} total={listTotal} />
           <SpecBlock text={done?.spec_block || local.specBlock} />
-          <CadPanel key={key} type={type} options={options} partNumber={partNumber} pricingMode={mode} reviewReasons={reviewReasons} />
+          <CadPanel key={key} type={type} options={options} partNumber={partNumber} pricingMode={mode} reviewReasons={cadBlockers} />
         </div>
       </div>
     </div>

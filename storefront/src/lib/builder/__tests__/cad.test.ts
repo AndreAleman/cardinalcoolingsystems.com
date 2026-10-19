@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { getBuilder } from "@lib/cpq/shared"
-import { cadKindsFor, cadReviewMessage, configFromSharePath, mapCadRequestResponse, validateCadContact } from "../cad"
+import { CAD_MESSAGES, cadKindsFor, cadReviewMessage, configFromSharePath, mapCadRequestResponse, validateCadContact } from "../cad"
 import { isBusinessEmail } from "@lib/util/business-email"
 
 describe("CAD helpers", () => {
@@ -37,6 +37,12 @@ describe("CAD helpers", () => {
     expect(mapCadRequestResponse(429, { code: "ip_daily" })).toMatchObject({ ok: false, code: "ip_daily" })
     expect(mapCadRequestResponse(503, null)).toMatchObject({ ok: false, code: "unavailable" })
     expect(mapCadRequestResponse(403, { code: "turnstile_failed" })).toMatchObject({ ok: false, code: "turnstile" })
+    // Backend contract: the bot guard's 403, the short-window rate limit and a blocked allowance.
+    expect(mapCadRequestResponse(403, { code: "challenge_failed", message: "x" })).toMatchObject({ ok: false, code: "turnstile" })
+    expect(mapCadRequestResponse(429, { code: "rate_limited", message: "x" })).toMatchObject({ ok: false, code: "ip_daily", message: CAD_MESSAGES.rate_limited })
+    expect(
+      mapCadRequestResponse(429, { type: "cad_allowance", code: "email_allowance", outcome: "blocked", message: "Limit reached." }),
+    ).toMatchObject({ ok: false, code: "email_allowance", message: "Limit reached." })
     expect(mapCadRequestResponse(400, { message: "Bad email" })).toMatchObject({ ok: false, code: "invalid", message: "Bad email" })
   })
 

@@ -13,6 +13,7 @@ export const CAD_MESSAGES = {
   ip_daily: "Too many CAD requests from this network today. Please try again tomorrow, or request a quote.",
   outside_standard_range:
     "This configuration needs engineering review, so CAD files aren't available yet. Add it to your Quote List instead.",
+  rate_limited: "Too many requests from your network. Please wait a few minutes and try again.",
   unavailable: "CAD downloads are temporarily unavailable.",
   turnstile: "We couldn't verify your browser. Please reload the page and try again.",
   generic: "Something went wrong requesting CAD files. Please try again.",
@@ -141,11 +142,13 @@ export function mapCadRequestResponse(status: number, body: unknown, email?: str
   const message = str(b?.message)
 
   if (status === 503 || type === "cad_unavailable") return fail("unavailable", CAD_MESSAGES.unavailable)
-  if ((status === 400 || status === 403) && /turnstile/i.test(`${code ?? ""} ${type ?? ""}`)) {
+  // Backend bot guard: 403 { code: "challenge_failed" } when the Turnstile check fails.
+  if ((status === 400 || status === 403) && /turnstile|challenge_failed/i.test(`${code ?? ""} ${type ?? ""}`)) {
     return fail("turnstile", CAD_MESSAGES.turnstile)
   }
   if (status === 429) {
     if (code === "email_allowance") return fail("email_allowance", message ?? CAD_MESSAGES.email_allowance)
+    if (code === "rate_limited") return fail("ip_daily", CAD_MESSAGES.rate_limited)
     return fail("ip_daily", message ?? CAD_MESSAGES.ip_daily)
   }
   if (code === "outside_standard_range" || type === "outside_standard_range") {

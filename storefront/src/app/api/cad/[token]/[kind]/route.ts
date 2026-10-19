@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic"
 const BACKEND_URL = (process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000").replace(/\/$/, "")
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || ""
 
-const PASS_THROUGH = ["content-type", "content-length", "content-disposition", "etag", "last-modified"]
+const PASS_THROUGH = ["content-type", "content-length", "content-disposition", "etag", "last-modified", "x-downloads-remaining"]
 
 const textResponse = (status: number) =>
   new Response(cadProxyErrorMessage(status), {

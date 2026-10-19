@@ -55,6 +55,11 @@ export default function CadDownloadTemplate({ token, download: d, countryCode }:
         <Panel tone="info" testId="cad-download-ready">
           {exhausted ? <p>This link has reached its download limit. Request the files again from the builder.</p> : null}
           <CadFileLinks token={token} files={d.files} disabled={exhausted} />
+          {d.has_step === false ? (
+            <p className="text-xs text-neutral-600" data-testid="cad-download-pdf-only">
+              Drawing and bill of materials only. STEP files for the stocked parts are available on request.
+            </p>
+          ) : null}
           {expires || remaining !== null ? (
             <p className="text-xs text-neutral-500">
               {[expires ? `Link expires ${expires}` : null, remaining !== null ? `${remaining} download${remaining === 1 ? "" : "s"} left` : null]

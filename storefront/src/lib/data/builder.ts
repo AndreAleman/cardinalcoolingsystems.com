@@ -135,8 +135,8 @@ export async function addBuildToQuoteList(input: {
 
 /**
  * CAD request behind the work-email gate (B7/B8). The bot-guard fields ride in the body, as on
- * the contact form, and the buyer's address + Turnstile token in the trust headers. The bot
- * guard's honeypot (`website`) is also sent as the contract's `company_website`.
+ * the contact form, and the buyer's address + Turnstile token in the trust headers. The honeypot
+ * field is `website`; the backend validator is strict, so no other field name may be sent.
  */
 export async function requestCadFiles(input: CadRequestInput): Promise<CadRequestResult> {
   const opts = canonical(input?.builder_type, input?.options ?? {})
@@ -160,7 +160,6 @@ export async function requestCadFiles(input: CadRequestInput): Promise<CadReques
         name: contact.value.name,
         company: contact.value.company,
         email: contact.value.email,
-        company_website: input.website ?? "",
         website: input.website ?? "",
         elapsed_ms: input.elapsed_ms,
         turnstile_token: input.turnstile_token,
@@ -190,9 +189,11 @@ export async function getCadDownload(token: string): Promise<CadDownloadDTO | nu
   const json = (await readJson(res)) as { cad_download?: CadDownloadDTO } | null
   const dto = json?.cad_download
   if (!dto) throw new Error("cad-downloads: empty body")
+  // B8: a PDF-only builder never offers a STEP, even if the package somehow listed one.
+  const files = sortCadFiles(dto.files)
   return {
     ...dto,
     configuration_display: Array.isArray(dto.configuration_display) ? dto.configuration_display : [],
-    files: sortCadFiles(dto.files),
+    files: dto.has_step === false ? files.filter((f) => f.kind !== "step") : files,
   }
 }
