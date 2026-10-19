@@ -71,6 +71,10 @@ const medusaConfig = {
       resolve: "./src/modules/favorite",
     },
     {
+      // Cardinal Builder: every resolved Configuration (plan B5).
+      resolve: "./src/modules/build-configuration",
+    },
+    {
       resolve: "./src/modules/sanity",
       options: {
         api_token: process.env.SANITY_API_TOKEN,
