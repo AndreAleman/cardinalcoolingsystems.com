@@ -90,6 +90,11 @@ export const GuestQuote = z.object({
   phone: z.string().max(50).optional(),
   po_number: z.string().max(100, "PO number too long").optional(),
   notes: z.string().max(2000).optional(),
+  // Bot protection (utils/abuse-policy.ts, ADR-0008), as on /store/contact.
+  // Optional here: the abuse-guard middlewares decide before this runs.
+  turnstile_token: z.string().max(2048).optional(),
+  website: z.string().max(500).optional(),
+  elapsed_ms: z.number().optional(),
 });
 
 export type GuestQuoteType = z.infer<typeof GuestQuote>;
