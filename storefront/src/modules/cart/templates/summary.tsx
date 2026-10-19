@@ -63,7 +63,7 @@ const Summary = ({ cart, customer }: SummaryProps) => {
           <Button className="w-full h-10">Go to checkout</Button>
         </LocalizedClientLink>
       )}
-      <RequestQuoteModal customer={customer} items={cart.items} />
+      <RequestQuoteModal customer={customer} items={cart.items} primary={quoteOnly} />
       <div className="flex items-center justify-between gap-3 pt-2">
         <span className="text-sm text-ui-fg-subtle">We accept</span>
         <PaymentIcons iconClassName="h-6 w-auto" data-testid="cart-payment-icons" />

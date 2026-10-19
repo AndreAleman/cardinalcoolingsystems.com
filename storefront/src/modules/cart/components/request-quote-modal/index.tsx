@@ -34,6 +34,8 @@ type Props = {
   customer?: HttpTypes.StoreCustomer | null
   /** The cart's lines: builder lines are listed and set the analytics source. */
   items?: HttpTypes.StoreCartLineItem[] | null
+  /** The cart can't check out (a builder Quote line): this is the main action, not an alternative. */
+  primary?: boolean
 }
 
 type Guard = ReturnType<typeof useBotGuard>
@@ -45,7 +47,7 @@ function GuardField({ guardRef }: { guardRef: MutableRefObject<Guard | null> }) 
   return guard.field
 }
 
-const RequestQuoteModal = ({ customer, items }: Props) => {
+const RequestQuoteModal = ({ customer, items, primary = false }: Props) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [sent, setSent] = useState(false)
@@ -128,12 +130,12 @@ const RequestQuoteModal = ({ customer, items }: Props) => {
   return (
     <>
       <Button
-        variant="secondary"
+        variant={primary ? "primary" : "secondary"}
         className="w-full h-10"
         onClick={() => setOpen(true)}
         data-testid="request-quote-button"
       >
-        Request a Quote instead
+        {primary ? "Request a Quote" : "Request a Quote instead"}
       </Button>
 
       {open && (

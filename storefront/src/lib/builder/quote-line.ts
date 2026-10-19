@@ -67,7 +67,8 @@ export function builderLineView(item: LineLike): BuilderLineView | null {
   return {
     partNumber: str(m.part_number) ?? "",
     builderType: str(m.builder_type),
-    display: displayRows(m.configuration_display),
+    // The Part Number is shown on its own line; don't repeat it in the configuration summary.
+    display: displayRows(m.configuration_display).filter((r) => r.label.toLowerCase() !== "part number"),
     quote: m.pricing_mode === "quote",
     leadTime,
     title: str(item!.product_title) ?? str(item!.title) ?? "Builder configuration",
