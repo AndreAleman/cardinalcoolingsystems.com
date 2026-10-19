@@ -12,19 +12,40 @@
   the page refreshes only when the visitor closes the confirmation, so
   the message can't be missed. Signed-in Team Members may use it too —
   their name/email prefill from the customer record.
+
+  Hardened like the contact form (plan B4): honeypot `website`,
+  `elapsed_ms` and the Turnstile token ride in the body. On success it
+  fires PostHog contact_form_submitted with source "builder" when the
+  cart holds a Cardinal Builder line, otherwise "cart"; the GTM
+  quote_requested push is unchanged. Builder lines are listed with their
+  Part Number, configuration and Quote badge.
 */
 
-import { useState } from "react"
+import { useRef, useState, type MutableRefObject } from "react"
 import { useRouter } from "next/navigation"
 import { Button, Input, Textarea } from "@medusajs/ui"
 import { HttpTypes } from "@medusajs/types"
 import { finalizeGuestQuote, submitGuestQuote } from "@lib/data/guest-quote"
+import { builderLineView, guestQuoteSource } from "@lib/builder/quote-line"
+import { captureEvent, identifyUser } from "@lib/util/posthog"
+import { useBotGuard } from "@modules/common/components/bot-guard"
 
 type Props = {
   customer?: HttpTypes.StoreCustomer | null
+  /** The cart's lines: builder lines are listed and set the analytics source. */
+  items?: HttpTypes.StoreCartLineItem[] | null
 }
 
-const RequestQuoteModal = ({ customer }: Props) => {
+type Guard = ReturnType<typeof useBotGuard>
+
+/* Mounted inside the <form> so the bot guard arms on it (its effect looks for the closest form). */
+function GuardField({ guardRef }: { guardRef: MutableRefObject<Guard | null> }) {
+  const guard = useBotGuard()
+  guardRef.current = guard
+  return guard.field
+}
+
+const RequestQuoteModal = ({ customer, items }: Props) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [sent, setSent] = useState(false)
@@ -37,6 +58,10 @@ const RequestQuoteModal = ({ customer }: Props) => {
   const [companyName, setCompanyName] = useState("")
   const [phone, setPhone] = useState(customer?.phone ?? "")
   const [notes, setNotes] = useState("")
+  const guardRef = useRef<Guard | null>(null)
+  const builderLines = (items ?? [])
+    .map((i) => ({ id: i.id, quantity: i.quantity, view: builderLineView(i as any) }))
+    .filter((x) => x.view !== null)
 
   const close = async () => {
     if (submitting) return
@@ -57,15 +82,33 @@ const RequestQuoteModal = ({ customer }: Props) => {
     setError(null)
     setSubmitting(true)
     try {
-      await submitGuestQuote({
+      const bot = guardRef.current ? await guardRef.current.values() : undefined
+      const res = await submitGuestQuote({
         email: email.trim(),
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         company_name: companyName.trim(),
         phone: phone.trim() || undefined,
         notes: notes.trim() || undefined,
+        ...bot,
       })
+      if (!res.success) {
+        setError(res.message)
+        return
+      }
       setSent(true)
+      captureEvent("contact_form_submitted", {
+        source: guestQuoteSource(items as any),
+        form_location: "guest_quote",
+        email: email.trim(),
+        builder_lines: builderLines.length,
+      })
+      identifyUser(email.trim(), {
+        email: email.trim(),
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        company: companyName.trim(),
+      })
       // Mirror the site's other GTM pushes (contact_form_submitted is untouched).
       try {
         const w = window as any
@@ -77,6 +120,7 @@ const RequestQuoteModal = ({ customer }: Props) => {
     } catch (err: any) {
       setError(err?.message ?? "Something went wrong. Please try again.")
     } finally {
+      guardRef.current?.reset()
       setSubmitting(false)
     }
   }
@@ -143,7 +187,7 @@ const RequestQuoteModal = ({ customer }: Props) => {
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
+              <form onSubmit={handleSubmit} className="relative flex flex-col gap-4 p-6">
                 <div className="flex items-start justify-between">
                   <div>
                     <h2 className="text-xl font-semibold m-0">
@@ -279,6 +323,37 @@ const RequestQuoteModal = ({ customer }: Props) => {
                     className="text-[16px]"
                   />
                 </div>
+
+                {builderLines.length > 0 && (
+                  <div
+                    className="flex flex-col gap-2 border border-neutral-200 bg-neutral-50 p-3"
+                    data-testid="guest-quote-builder-lines"
+                  >
+                    <p className="text-[13px] font-semibold uppercase tracking-wide text-neutral-600 m-0">
+                      Configurations to quote
+                    </p>
+                    {builderLines.map(({ id, quantity, view }) => (
+                      <div key={id} className="text-[14px]">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-mono font-semibold break-all">{view!.partNumber}</span>
+                          {view!.quote && (
+                            <span className="bg-neutral-900 px-1.5 py-0.5 text-[11px] font-semibold uppercase text-white">
+                              Quote
+                            </span>
+                          )}
+                          <span className="text-neutral-500">× {quantity}</span>
+                        </div>
+                        {view!.display.length > 0 && (
+                          <p className="text-[13px] text-neutral-600 m-0">
+                            {view!.display.map((r) => `${r.label}: ${r.value}`).join(" · ")}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <GuardField guardRef={guardRef} />
 
                 {error && (
                   <p

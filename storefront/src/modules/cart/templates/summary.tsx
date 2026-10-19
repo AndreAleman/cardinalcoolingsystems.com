@@ -8,6 +8,7 @@ import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import RequestQuoteModal from "@modules/cart/components/request-quote-modal"
 import { captureEvent } from "@lib/util/posthog"
+import { cartHasBuilderQuoteLine } from "@lib/builder/quote-line"
 import { HttpTypes } from "@medusajs/types"
 import PaymentIcons from "@modules/common/components/payment-icons"
 
@@ -30,6 +31,8 @@ function getCheckoutStep(cart: HttpTypes.StoreCart) {
 
 const Summary = ({ cart, customer }: SummaryProps) => {
   const step = getCheckoutStep(cart)
+  // Plan B3: a Cardinal Builder Quote line can't be paid for; the cart goes to a quote instead.
+  const quoteOnly = cartHasBuilderQuoteLine(cart.items as any)
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -39,21 +42,28 @@ const Summary = ({ cart, customer }: SummaryProps) => {
       <DiscountCode cart={cart} />
       <Divider />
       <CartTotals totals={cart} />
-      <LocalizedClientLink
-        href={"/checkout?step=" + step}
-        data-testid="checkout-button"
-        onClick={() =>
-          captureEvent("checkout_started", {
-            cart_id: cart.id,
-            value: cart.total,
-            currency: cart.currency_code,
-            num_items: cart.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0,
-          })
-        }
-      >
-        <Button className="w-full h-10">Go to checkout</Button>
-      </LocalizedClientLink>
-      <RequestQuoteModal customer={customer} />
+      {quoteOnly ? (
+        <p className="text-sm text-ui-fg-subtle" data-testid="builder-quote-only-note">
+          Your list includes a configuration we price per order. Request a quote and we&apos;ll reply with a firm price
+          within 1 business day.
+        </p>
+      ) : (
+        <LocalizedClientLink
+          href={"/checkout?step=" + step}
+          data-testid="checkout-button"
+          onClick={() =>
+            captureEvent("checkout_started", {
+              cart_id: cart.id,
+              value: cart.total,
+              currency: cart.currency_code,
+              num_items: cart.items?.reduce((sum, i) => sum + i.quantity, 0) ?? 0,
+            })
+          }
+        >
+          <Button className="w-full h-10">Go to checkout</Button>
+        </LocalizedClientLink>
+      )}
+      <RequestQuoteModal customer={customer} items={cart.items} />
       <div className="flex items-center justify-between gap-3 pt-2">
         <span className="text-sm text-ui-fg-subtle">We accept</span>
         <PaymentIcons iconClassName="h-6 w-auto" data-testid="cart-payment-icons" />
