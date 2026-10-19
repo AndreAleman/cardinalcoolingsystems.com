@@ -35,12 +35,16 @@ function stockOf(l: ResolvedBomLine, fabricated: boolean): BomRow["stock"] {
 
 function noteOf(l: ResolvedBomLine, stock: BomRow["stock"]): string | null {
   if (l.resolved && stock === "in_stock") return l.note || null
-  if (l.reason && l.reason.trim()) return l.reason.trim()
+  const reason = (l.reason || "").trim()
+  // The resolver's "Made to order: <label>" / "Not stocked: <label>" only repeat the row and its
+  // badge; the plain-language notes below say the same thing once.
+  const echo = reason === `Made to order: ${l.label}` || reason === `Not stocked: ${l.label}`
+  if (reason && !echo) return reason
+  if (stock === "made_to_order") return l.note || null
   if (stock === "short") {
     return typeof l.stock_qty === "number" ? `${l.stock_qty} on hand; the rest is quoted.` : "Not enough on hand; quoted."
   }
   if (stock === "not_stocked") return "We don't stock this part yet: priced in your quote."
-  if (stock === "made_to_order") return "Welded or cut to length: priced in your quote."
   return null
 }
 

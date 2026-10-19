@@ -1,7 +1,8 @@
 "use client"
 
 // BOM table: one row per part, quantity per unit and in total, unit price, line total, a stock
-// badge, the line's lead time and a note under any line that isn't Instant.
+// badge, the line's lead time and a note under any line that isn't Instant. Phones (< xsmall) get
+// the same rows stacked, so the prices aren't hidden off-screen in a sideways scroller.
 
 import { listLeadTime, type BomRow } from "@lib/builder/bom-view"
 import { convertToLocale } from "@lib/util/money"
@@ -28,6 +29,7 @@ export default function BomTable({
   total: number | null
 }) {
   const money = (n: number | null) => (n === null ? "—" : convertToLocale({ amount: n, currency_code: currency }))
+  const price = (n: number | null, r: BomRow) => (n === null ? (r.stock === "checking" ? "…" : "Quote") : money(n))
   return (
     <section aria-label="Bill of materials" className="border border-neutral-200 bg-white" data-testid="bom-table">
       <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-neutral-200 px-4 py-3">
@@ -36,8 +38,39 @@ export default function BomTable({
           Whole list: {listLeadTime(rows)}
         </p>
       </header>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-left text-sm">
+      <ul className="divide-y divide-neutral-100 xsmall:hidden" data-testid="bom-cards">
+        {rows.map((r, i) => (
+          <li key={`${r.role}-${i}`} className="flex flex-col gap-2 px-4 py-3 text-sm" data-testid="bom-card" data-stock={r.stock}>
+            <div>
+              <p className="text-neutral-900">{r.label}</p>
+              {r.sku ? <p className="break-all font-mono text-xs text-neutral-500">{r.sku}</p> : null}
+              {r.note ? <p className="mt-1 text-xs text-neutral-500">{r.note}</p> : null}
+            </div>
+            <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+              <dt className="text-neutral-500">Per {unitNoun} / total</dt>
+              <dd className="text-right tabular-nums text-neutral-900">
+                {r.qtyPerUnit} / {r.qtyTotal}
+              </dd>
+              <dt className="text-neutral-500">Unit price</dt>
+              <dd className="text-right tabular-nums text-neutral-900">{price(r.unitPrice, r)}</dd>
+              <dt className="text-neutral-500">Line total</dt>
+              <dd className="text-right font-semibold tabular-nums text-neutral-900">{price(r.lineTotal, r)}</dd>
+            </dl>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={clx("inline-block border px-2 py-0.5 text-xs font-medium", STOCK_CLS[r.stock])}>{r.stockLabel}</span>
+              <span className="text-xs text-neutral-500">{r.leadTime}</span>
+            </div>
+          </li>
+        ))}
+        {total !== null ? (
+          <li className="flex justify-between bg-neutral-50 px-4 py-3 text-sm font-semibold text-neutral-900">
+            <span>Total</span>
+            <span className="tabular-nums">{money(total)}</span>
+          </li>
+        ) : null}
+      </ul>
+      <div className="hidden overflow-x-auto xsmall:block">
+        <table className="w-full min-w-[600px] text-left text-sm">
           <thead className="bg-neutral-50 text-xs uppercase tracking-wide text-neutral-500">
             <tr>
               <th scope="col" className="px-4 py-2 font-medium">
@@ -74,8 +107,8 @@ export default function BomTable({
                 </td>
                 <td className="px-3 py-3 text-right tabular-nums">{r.qtyPerUnit}</td>
                 <td className="px-3 py-3 text-right tabular-nums">{r.qtyTotal}</td>
-                <td className="px-3 py-3 text-right tabular-nums">{r.unitPrice === null ? (r.stock === "checking" ? "…" : "Quote") : money(r.unitPrice)}</td>
-                <td className="px-3 py-3 text-right tabular-nums">{r.lineTotal === null ? (r.stock === "checking" ? "…" : "Quote") : money(r.lineTotal)}</td>
+                <td className="px-3 py-3 text-right tabular-nums">{price(r.unitPrice, r)}</td>
+                <td className="px-3 py-3 text-right tabular-nums">{price(r.lineTotal, r)}</td>
                 <td className="px-4 py-3">
                   <span className={clx("inline-block border px-2 py-0.5 text-xs font-medium", STOCK_CLS[r.stock])}>{r.stockLabel}</span>
                   <p className="mt-1 text-xs text-neutral-500">{r.leadTime}</p>
