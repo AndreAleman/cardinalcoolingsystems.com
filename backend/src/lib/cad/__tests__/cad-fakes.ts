@@ -1,8 +1,9 @@
 // In-memory fakes for the CAD Request subscriber / queue job tests. Not a test file itself (no
-// .unit.spec), and __tests__ is skipped by Medusa's subscriber loader.
+// .unit.spec). Kept under lib/cad: Medusa 2.8 loads every file under src/subscribers and src/jobs,
+// __tests__ included.
 
-import { getBuilder } from "../../lib/cpq-shared"
-import type { CadProcessDeps, CadRequestRecord, CadRequestServiceLike } from "../cad-request-process"
+import { getBuilder } from "../../cpq-shared"
+import type { CadProcessDeps, CadRequestRecord, CadRequestServiceLike } from "../../../subscribers/cad-request-process"
 
 export const TRANSITION_OPTIONS = { ...getBuilder("transition").defaults }
 export const MANIFOLD_OPTIONS = { ...getBuilder("row-manifold").defaults }

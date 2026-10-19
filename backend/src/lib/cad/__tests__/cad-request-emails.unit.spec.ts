@@ -4,12 +4,12 @@
 
 import * as React from "react"
 import { render } from "@react-email/render"
-import { generateEmailTemplate, EmailTemplates } from "../../modules/email-notifications/templates"
-import { CadRequestLinkTemplate } from "../../modules/email-notifications/templates/cad-request-link"
-import { CadRequestQueuedTemplate } from "../../modules/email-notifications/templates/cad-request-queued"
-import { CadRequestAlertTemplate, cadAlertSubject, type CadRequestAlertKind, type CadRequestAlertProps } from "../../modules/email-notifications/templates/cad-request-alert"
-import { CAD_REFERENCE_ONLY_NOTE } from "../../modules/email-notifications/templates/cad-request-rows"
-import { adminUrl, cadDownloadUrl, cadEmailFrom, cadRequestRecipients, storefrontUrl } from "../../lib/cad/cad-email"
+import { generateEmailTemplate, EmailTemplates } from "../../../modules/email-notifications/templates"
+import { CadRequestLinkTemplate } from "../../../modules/email-notifications/templates/cad-request-link"
+import { CadRequestQueuedTemplate } from "../../../modules/email-notifications/templates/cad-request-queued"
+import { CadRequestAlertTemplate, cadAlertSubject, type CadRequestAlertKind, type CadRequestAlertProps } from "../../../modules/email-notifications/templates/cad-request-alert"
+import { CAD_REFERENCE_ONLY_NOTE } from "../../../modules/email-notifications/templates/cad-request-rows"
+import { adminUrl, cadDownloadUrl, cadEmailFrom, cadRequestRecipients, storefrontUrl } from "../cad-email"
 
 const configuration = [
   { label: "End A", value: "TRI-CLAMP FERRULE" },

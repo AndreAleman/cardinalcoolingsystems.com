@@ -1,11 +1,11 @@
 // CAD Review (plan B7; Sanitube docs/cpq-cad-review-plan.md R1–R11): the subscriber, approve and
 // the hourly job with `require_review` on (the default), with fakes.
 
-jest.mock("../../lib/cad/ensure-package", () => ({ ensurePackageForRequest: jest.fn() }))
+jest.mock("../ensure-package", () => ({ ensurePackageForRequest: jest.fn() }))
 
-import { nextReleaseAt } from "../../lib/cad/business-day"
-import { processCadQueue, type CadQueueDeps } from "../../jobs/process-cad-queue"
-import { approveCadRequest, handleCadRequestCreated, releaseCadRequest, retryCadRequest, reviewRequired } from "../cad-request-process"
+import { nextReleaseAt } from "../business-day"
+import { processCadQueue, type CadQueueDeps } from "../../../jobs/process-cad-queue"
+import { approveCadRequest, handleCadRequestCreated, releaseCadRequest, retryCadRequest, reviewRequired } from "../../../subscribers/cad-request-process"
 import { FakeCadService, makeDeps, makeRequest } from "./cad-fakes"
 
 function reviewOn(rows: Parameters<typeof makeRequest>[0][] = [{}]) {

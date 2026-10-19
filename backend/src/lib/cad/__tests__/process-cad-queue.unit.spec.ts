@@ -2,11 +2,11 @@
 // holidays are not skipped) and fakes for everything else. Review OFF here (the release path that
 // emails); review ON is covered in subscribers/__tests__/cad-review.unit.spec.ts.
 
-jest.mock("../../lib/cad/ensure-package", () => ({ ensurePackageForRequest: jest.fn() }))
+jest.mock("../ensure-package", () => ({ ensurePackageForRequest: jest.fn() }))
 
-import { nextReleaseAt } from "../../lib/cad/business-day"
-import { isQueuedRequestDue, processCadQueue, config, type CadQueueDeps } from "../process-cad-queue"
-import { FakeCadService, MANIFOLD_OPTIONS, makeDeps, makeRequest } from "../../subscribers/__tests__/cad-fakes"
+import { nextReleaseAt } from "../business-day"
+import { isQueuedRequestDue, processCadQueue, config, type CadQueueDeps } from "../../../jobs/process-cad-queue"
+import { FakeCadService, MANIFOLD_OPTIONS, makeDeps, makeRequest } from "./cad-fakes"
 
 const utc = (s: string) => new Date(s)
 

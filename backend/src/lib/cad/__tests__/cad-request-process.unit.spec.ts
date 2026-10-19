@@ -1,10 +1,19 @@
 // cad_request.created / cad_request.released processing with fakes, review OFF (the Sanitube Phase
 // 3 behaviour, still reachable with the admin toggle). Review ON is in cad-review.unit.spec.ts.
 
-jest.mock("../../lib/cad/ensure-package", () => ({ ensurePackageForRequest: jest.fn() }))
+jest.mock("../ensure-package", () => ({ ensurePackageForRequest: jest.fn() }))
 
-import { handleCadRequestCreated, releaseCadRequest, retryCadRequest } from "../cad-request-process"
+import { handleCadRequestCreated, releaseCadRequest, retryCadRequest } from "../../../subscribers/cad-request-process"
 import { FakeCadService, KIT_OPTIONS, MANIFOLD_OPTIONS, makeDeps, makeRequest } from "./cad-fakes"
+
+// Production URLs (the worktree .env may point STOREFRONT_URL at localhost).
+const savedStorefront = process.env.STOREFRONT_URL
+beforeAll(() => {
+  delete process.env.STOREFRONT_URL
+})
+afterAll(() => {
+  if (savedStorefront !== undefined) process.env.STOREFRONT_URL = savedStorefront
+})
 
 function reviewOff(rows: Parameters<typeof makeRequest>[0][] = [{}]) {
   const reqs = rows.map((r) => makeRequest(r))
