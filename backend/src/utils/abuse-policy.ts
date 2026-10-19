@@ -14,6 +14,10 @@ export const RATE_RULES = {
   company: { limit: 3, windowSec: 60 * 60 },
   contact: { limit: 10, windowSec: 60 * 60 },
   login: { limit: 20, windowSec: 15 * 60 },
+  // CAD Requests (Cardinal Builder plan B7): a flood guard in front of the per-email / per-IP CAD
+  // Allowance; the download routes are token-gated, so only floods are limited.
+  cad: { limit: 10, windowSec: 60 * 60 },
+  cad_download: { limit: 300, windowSec: 60 * 60 },
 } as const satisfies Record<string, RateRule>;
 
 export type RateRuleName = keyof typeof RATE_RULES;
