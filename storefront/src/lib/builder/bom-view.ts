@@ -34,7 +34,8 @@ function stockOf(l: ResolvedBomLine, fabricated: boolean): BomRow["stock"] {
 }
 
 function noteOf(l: ResolvedBomLine, stock: BomRow["stock"]): string | null {
-  if (l.resolved && stock === "in_stock") return null
+  if (l.resolved && stock === "in_stock") return l.note || null
+  if (l.reason && l.reason.trim()) return l.reason.trim()
   if (stock === "short") {
     return typeof l.stock_qty === "number" ? `${l.stock_qty} on hand; the rest is quoted.` : "Not enough on hand; quoted."
   }
@@ -50,12 +51,12 @@ function noteOf(l: ResolvedBomLine, stock: BomRow["stock"]): string | null {
 export function resolvedBomRows(lines: readonly ResolvedBomLine[], local?: Bom | null): BomRow[] {
   return lines.map((l, i) => {
     const twin = local?.lines[i]?.role === l.role ? local.lines[i] : local?.lines.find((x) => x.role === l.role)
-    const fabricated = twin ? twin.kind === "fabricated" : l.lead_time === "custom" && !l.sku
+    const fabricated = l.kind ? l.kind === "fabricated" : twin ? twin.kind === "fabricated" : l.lead_time === "custom" && !l.sku
     const stock = stockOf(l, fabricated)
     return {
       role: l.role,
       label: l.label,
-      sku: l.sku,
+      sku: l.sku ?? l.part_number ?? null,
       qtyPerUnit: l.qty_per_unit,
       qtyTotal: l.qty_total,
       unitPrice: typeof l.unit_price === "number" && l.unit_price > 0 ? l.unit_price : null,

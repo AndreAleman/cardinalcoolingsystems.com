@@ -61,6 +61,15 @@ describe("pricingView", () => {
     expect(v.signInPrompt).toBe(false)
   })
 
+  it("Quote uses the resolver's quote_promise when given", () => {
+    const v = pricingView({
+      status: "done",
+      result: resolved({ pricing_mode: "quote", price_per_unit: null, price_total: null, quote_promise: "Firm quote soon" }),
+      staticLeadTime: CUSTOM,
+    })
+    expect(v.price).toEqual({ kind: "quote", promise: "Firm quote soon" })
+  })
+
   it("an 'instant' result with no usable price is shown as Quote, never $0", () => {
     const v = pricingView({ status: "done", result: resolved({ price_per_unit: 0 }), staticLeadTime: STOCK })
     expect(v.mode).toBe("quote")

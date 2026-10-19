@@ -101,7 +101,7 @@ export function pricingView(input: {
       mode: "quote",
       badge: "Quote",
       reason: quoteReasonLine(result.quote_reasons),
-      price: { kind: "quote", promise: QUOTE_PROMISE },
+      price: { kind: "quote", promise: result.quote_promise || QUOTE_PROMISE },
       signInPrompt: false,
       leadTime: result.lead_time?.label || staticLeadTime.label,
       error: false,

@@ -23,6 +23,12 @@ export type ResolvedBomLine = {
   weight_lb: number | null
   lead_time: "stock" | "custom"
   resolved: boolean
+  /** "fabricated" = welded or cut to length (never Instant). */
+  kind?: "sku" | "fabricated"
+  /** Why the line isn't Instant (null/absent when it is). */
+  reason?: string | null
+  part_number?: string | null
+  note?: string | null
 }
 
 /** POST /store/build/resolve response. */
@@ -45,12 +51,16 @@ export type ResolveResponse = {
   priced_at: string
   weight_lb_per_unit: number
   lead_time: { kind: "stock" | "custom"; label: string }
-  standard_range: { ok: boolean; reasons: (string | { code?: string; message: string })[] }
+  standard_range: { ok: boolean; reasons: { code: string; message: string }[] }
   spec_block: string
   configuration_id: string | null
+  /** "/build/<type>?v=1&…" (no country prefix). */
+  share_path?: string
+  /** The quote promise in Quote mode; null when Instant. */
+  quote_promise?: string | null
   /**
-   * Transition only: a stocked adapter that does the same job, priced Instant. Not in the plan's
-   * response list; the storefront reads it when present (see the report).
+   * Transition only: the stocked adapter that does the same job. When it resolves, the whole
+   * response is Instant with that single adapter line.
    */
   stocked_alternative?: StockedAlternative | null
 }
@@ -58,17 +68,27 @@ export type ResolveResponse = {
 export type StockedAlternative = {
   sku: string
   variant_id: string | null
-  label: string
   unit_price: number | null
-  in_stock: boolean | null
-  stock_qty?: number | null
-  product_handle?: string | null
+}
+
+export type QuoteLineAdded = {
+  kind: "variant" | "quote_only" | "quote"
+  sku?: string
+  variant_id?: string
+  quantity: number
+  part_number?: string
+  title?: string
+  configuration_id?: string
 }
 
 /** POST /store/build/quote-lines response. */
 export type QuoteLinesResponse = {
   cart_id: string
-  added: unknown[]
+  pricing_mode: PricingMode
+  part_number: string
+  configuration_id: string | null
+  ignored: string[]
+  added: QuoteLineAdded[]
 }
 
 /** Server-action result wrapper: actions never throw across the boundary (Next strips messages). */
