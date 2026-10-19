@@ -171,3 +171,51 @@ A photo of the product in use or in stock (warehouse, forklift, install). Goes a
 
 **Drawing**:
 A dimensioned line drawing or a 3-A mark in a product gallery. Kept exactly as-is; never put on a Backdrop.
+
+### Builder
+
+**Builder**:
+A page where a buyer starts from the equipment they are connecting and gets back a BOM, a Part Number, a Pricing Mode, a drawing and a Spec Block. There are five: the CDU Hookup Kit, the Row Manifold, the Transition Spool, the Strainer and the Hose Assembly.
+_Avoid_: Configurator, CPQ, Smart Fitting Builder (that is Sanitube's)
+
+**Configuration**:
+One complete set of choices on a Builder. Its share link is its identity: the same choices always give the same link, the same Part Number and the same BOM. Every Configuration a buyer prices is saved, so Cardinal can see what to stock next.
+_Avoid_: Build, design, quote
+
+**Pricing Mode**:
+How a Configuration is priced, shown as a badge before any price: Instant or Quote.
+_Avoid_: Price type, quote flag
+
+**Instant**:
+The Pricing Mode of a Configuration whose every BOM line is a posted part with a price, a weight and enough stock. Its price is the sum of those posted prices, and it ships in 1–2 business days.
+
+**Quote**:
+The Pricing Mode of a Configuration that includes anything welded or cut to length, or any part Cardinal does not stock. The page shows the lead time and the promise of a firm quote within one business day, never a made-up price (ADR-0011).
+_Avoid_: Custom price, estimate
+
+**BOM**:
+The bill of materials of a Configuration: one line per part, with its quantity per unit (per CDU, per manifold) and in total. A line is either a stocked part or a fabricated item (a spool, a cut of tube, a document).
+_Avoid_: Parts list, cut sheet
+
+**Part Number**:
+The name of a Configuration's part, in the same scheme as Sanitube so Todd's shop reads it without translation: the two ends, the kind of part, its key dimensions, the alloy digit (4 = 304L, 6 = 316L) and the size (e.g. `clmp-fl150-tspool-l12-6-200`).
+_Avoid_: SKU (a SKU is a posted catalog part), model number
+
+**Kit Part Number**:
+The Part Number of a CDU Hookup Kit: `kit-cdu-` plus eight characters derived from the kit's BOM. Two kits with the same parts have the same Kit Part Number, whatever page they were built on.
+
+**Spec Block**:
+The paragraph under every Builder result that a buyer pastes into a submittal: alloy, finish, standard, weld method, cleaning and passivation, test pressure, certificates.
+_Avoid_: Description, spec sheet
+
+**CDU Hookup Kit**:
+Everything between a CDU's supply and return ports and the facility or TCS pipe, per CDU: the runs (welded spool or braided hose), ferrules, clamps, gaskets, isolation valves, a supply-side strainer and any adapter to a non-tri-clamp far end.
+_Avoid_: CDU kit, hose kit, connection kit
+
+**Row Manifold**:
+A header with drops at a fixed pitch that feeds a row of racks from the TCS loop, built to the OCP row-manifold guideline. Always Quote.
+_Avoid_: Header, distribution manifold
+
+**Transition Spool**:
+A welded spool with a sanitary end on the CDU side and a facility end (flange, NPT, grooved or butt-weld pipe) on the other, reducing when the two sizes differ. Always Quote; when a stocked adapter does the same job, the page offers it instead.
+_Avoid_: Adapter spool, transition fitting

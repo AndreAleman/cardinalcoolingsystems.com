@@ -1,0 +1,21 @@
+{
+  "generated_by": "scripts/sync-cpq-shared.mjs",
+  "tables_hash": "9aa195d46dc2",
+  "files": {
+    "assets/cardinal-logo.svg": "f1d777396209fdea20b21d8c36ba1cb3e42b6c88e67bcbb6d7ffad71f634c8a5",
+    "dimensions/assemblies.json": "b05362f0efbaa4c930677389017ed521b8241cb647598fbcdd3b91a126d36370",
+    "dimensions/bom-templates.json": "8282d63c8ea92fa401c9642c997837fa0cf2941e4868101b30c54640a83417be",
+    "dimensions/end-connections.json": "551cab9ee1e1ab2eca7a48cb47725e3465cdd07172ba05c6025949381081eb6b",
+    "dimensions/materials.json": "cbaca4253f7de3f0755d03887c5a41f4dbdba421b6266b4076ff42e814f7c214",
+    "dimensions/tube-sizes.json": "aa61418011c8ff4cb6139f15833ab6d5235ed0e970f9787e0274b5bed92791cd",
+    "fixtures/hose-sheet-golden.svg": "c16df0c46434e229bb01d2f89615a9f6bcd1f4fe37a4b6cd8948a11aecd55f58",
+    "fixtures/kit-sheet-golden.svg": "ff6fa510374b6a73929d0ee496cee70549a3fa47dfaae2e1f112ba8a06d465a8",
+    "fixtures/manifold-golden.json": "c93181a286d6626966f7b2fe27daca2d11686fc69a91d1b2e16a144f33584245",
+    "fixtures/manifold-sheet-golden.svg": "dcbe3ab682aab95d53cf29ffb61839235d451e7c727bfe097ab9538c7c697b47",
+    "fixtures/manifold-valves-sheet-golden.svg": "9f0b51ba94d32f366c5ee690f52df835fd1a910391217f1a5b53bdc46c358114",
+    "fixtures/strainer-sheet-golden.svg": "a96a6d216c40049b39f62da2a021d3dc28410a8f65558fc0c68fc8761822742c",
+    "fixtures/transition-golden.json": "99ea0b2f4af6fa245890e762d4efc93ff8f9acea521f0f1bec72a4002d959bc3",
+    "fixtures/transition-reducing-sheet-golden.svg": "1d004dd578cdd018f7ffb5727b4b8b9b0df7834c6afa5446b93616119e95d7af",
+    "fixtures/transition-sheet-golden.svg": "18ad8c500569a41ca8d947f56386454db53620cac131df408a7fbdde3c15d4bc"
+  }
+}

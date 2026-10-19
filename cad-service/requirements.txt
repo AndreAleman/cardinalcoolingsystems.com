@@ -1,0 +1,6 @@
+# Runtime (pinned exact; same pins as Sanitube's cad-service, docs/specs/cardinal-builder-plan.md B9)
+cadquery==2.8.0
+cairosvg==2.9.1
+fastapi==0.143.3
+uvicorn[standard]==0.54.0
+pydantic==2.14.1

@@ -17,7 +17,8 @@ coverage
 # package-lock.json
 yarn.lock
 medusa-db.sql
-build
+# Root build output only: /store/build (Cardinal Builder) is source.
+/build
 .cache
 
 .yarn/*
@@ -28,3 +29,5 @@ build
 !.yarn/versions
 src/scripts/description-to-meta.ts
 
+# CAD Package files (lib/cad/cad-store.ts filesystem driver, local runs only)
+.cad-cache

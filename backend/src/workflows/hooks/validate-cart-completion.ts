@@ -10,6 +10,10 @@ import {
   decidePayment,
   totalOrderWeightLbs,
 } from "../../utils/payment-rules";
+import {
+  BUILDER_QUOTE_CART_MESSAGE,
+  isBuilderQuoteLine,
+} from "../../utils/builder-quote-line";
 
 /*
   Gate cart completion:
@@ -17,7 +21,10 @@ import {
   2. the freight rules apply to everyone — over 120 lbs (or unknown
      weight) can't be paid at checkout; heavy $7,500+ orders take the
      deposit path from the dashboard, not the card screen;
-  3. a Team Member with a spending limit can't complete a cart that
+  3. a Cardinal Builder Quote line (metadata.builder, pricing_mode
+     "quote") makes the cart quote-only (plan B3) — it goes through
+     Guest Quote or Request Quote, never checkout;
+  4. a Team Member with a spending limit can't complete a cart that
      would push their windowed spend over it. Inert today — every
      Employee.spending_limit defaults to 0 (= no limit).
 */
@@ -36,6 +43,7 @@ completeCartWorkflow.hooks.validate(async ({ cart }, { container }) => {
       "items.quantity",
       "items.unit_price",
       "items.variant_id",
+      "items.metadata",
     ],
     filters: { id: cart.id },
   });
@@ -53,7 +61,15 @@ completeCartWorkflow.hooks.validate(async ({ cart }, { container }) => {
     quantity: number;
     unit_price: number | null;
     variant_id: string | null;
+    metadata?: Record<string, unknown> | null;
   }[];
+
+  if (items.some(isBuilderQuoteLine)) {
+    throw new MedusaError(
+      MedusaError.Types.NOT_ALLOWED,
+      BUILDER_QUOTE_CART_MESSAGE
+    );
+  }
 
   if (items.length > 0) {
     const variantIds = items

@@ -20,6 +20,7 @@ import {
   roundedUpNote,
   sticksLabel,
 } from "@lib/util/tube-sticks"
+import { builderLineView, type BuilderLineView } from "@lib/builder/quote-line"
 
 type ItemProps = {
   item: HttpTypes.StoreCartLineItem
@@ -39,6 +40,8 @@ const Item = ({ item, type = "full" }: ItemProps) => {
   const [tubeNote, setTubeNote] = useState<string | null>(null)
 
   const { handle } = item.variant?.product ?? {}
+  // Cardinal Builder lines (plan B3): a Quote line has no variant and a $0 placeholder price.
+  const builder = builderLineView(item as any)
 
   // Update local quantity when item quantity changes (from external updates)
   useEffect(() => {
@@ -136,6 +139,10 @@ const Item = ({ item, type = "full" }: ItemProps) => {
     }
   }
 
+  if (builder?.quote) {
+    return <BuilderQuoteRow item={item} view={builder} type={type} />
+  }
+
   return (
     <Table.Row className="w-full" data-testid="product-row">
       <Table.Cell className="!pl-0 p-4 w-24">
@@ -162,6 +169,11 @@ const Item = ({ item, type = "full" }: ItemProps) => {
           {item.product_title}
         </Text>
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
+        {builder?.partNumber && (
+          <Text className="text-xs text-ui-fg-muted font-mono" data-testid="builder-line-part-number">
+            From {builder.partNumber}
+          </Text>
+        )}
       </Table.Cell>
 
       {type === "full" && (
@@ -261,6 +273,66 @@ const Item = ({ item, type = "full" }: ItemProps) => {
           <LineItemPrice item={item} style="tight" />
         </span>
       </Table.Cell>
+    </Table.Row>
+  )
+}
+
+/*
+  A builder Quote line: Part Number, configuration and a "Quote" badge
+  instead of a $0.00 price. Quantity is the configuration's units (set in
+  the builder); the line can be removed here.
+*/
+function BuilderQuoteRow({
+  item,
+  view,
+  type,
+}: {
+  item: HttpTypes.StoreCartLineItem
+  view: BuilderLineView
+  type: "full" | "preview"
+}) {
+  const badge = (
+    <span
+      className="inline-block bg-neutral-900 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white"
+      data-testid="builder-line-quote-badge"
+    >
+      Quote
+    </span>
+  )
+  return (
+    <Table.Row className="w-full" data-testid="builder-line-row">
+      <Table.Cell className="!pl-0 p-4 w-24">
+        <div
+          className={clx("flex aspect-square items-center justify-center bg-neutral-100 text-[10px] font-semibold uppercase text-neutral-500", {
+            "w-16": type === "preview",
+            "small:w-24 w-12": type === "full",
+          })}
+        >
+          Built
+        </div>
+      </Table.Cell>
+      <Table.Cell className="text-left">
+        <Text className="txt-medium-plus text-ui-fg-base">{view.title}</Text>
+        <Text className="font-mono text-sm text-ui-fg-base break-all" data-testid="builder-line-part-number">
+          {view.partNumber}
+        </Text>
+        {view.display.length > 0 && (
+          <Text className="text-xs text-ui-fg-muted" data-testid="builder-line-configuration">
+            {view.display.map((r) => `${r.label}: ${r.value}`).join(" · ")}
+          </Text>
+        )}
+        {view.leadTime && <Text className="text-xs text-ui-fg-muted">{view.leadTime}</Text>}
+      </Table.Cell>
+      {type === "full" && (
+        <Table.Cell>
+          <div className="flex gap-2 items-center">
+            <DeleteButton id={item.id} data-testid="product-delete-button" />
+            <span className="text-sm text-ui-fg-base">× {item.quantity}</span>
+          </div>
+        </Table.Cell>
+      )}
+      {type === "full" && <Table.Cell className="hidden small:table-cell">{badge}</Table.Cell>}
+      <Table.Cell className="!pr-0 text-right">{badge}</Table.Cell>
     </Table.Row>
   )
 }

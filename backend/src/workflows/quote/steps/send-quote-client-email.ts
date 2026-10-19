@@ -4,6 +4,7 @@ import {
   Modules,
 } from "@medusajs/framework/utils";
 import { STOREFRONT_URL } from "../../../lib/constants";
+import { builderLineDetails } from "../../../utils/builder-quote-line";
 
 /*
   Customer-facing quote lifecycle emails:
@@ -18,6 +19,8 @@ export type QuoteEmailItem = {
   sku: string;
   title: string | null;
   qty: number;
+  /** Cardinal Builder line: its configuration rows ("Part Number: …"). */
+  details?: string[];
 };
 
 type Input = {
@@ -67,6 +70,7 @@ export const sendQuoteClientEmailStep = createStep(
         "items.title",
         "items.quantity",
         "items.variant_sku",
+        "items.metadata",
       ],
       filters: { id: quote.draft_order_id },
     });
@@ -84,6 +88,7 @@ export const sendQuoteClientEmailStep = createStep(
         sku: (it?.variant_sku as string) || "(no SKU)",
         title: (it?.title as string) || null,
         qty: Number(it?.quantity ?? 0),
+        details: builderLineDetails(it),
       })
     );
     const customerFirstName = (order?.customer?.first_name as string) || null;
