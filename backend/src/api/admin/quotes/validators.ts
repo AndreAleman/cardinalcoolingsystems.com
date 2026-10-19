@@ -56,6 +56,10 @@ export const AdminSetQuoteLinePricing = z
             item_id: z.string().min(1),
             cost: z.number().min(0),
             markup_pct: z.number().min(0),
+            // Plan B6. Omitted = unchanged, null = cleared.
+            benchmark_price: z.number().min(0).nullable().optional(),
+            benchmark_source: z.string().max(500).nullable().optional(),
+            approved_price: z.number().min(0).nullable().optional(),
           })
           .strict()
       )

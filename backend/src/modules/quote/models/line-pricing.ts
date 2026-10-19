@@ -15,5 +15,11 @@ export const LinePricing = model.define("quote_line_pricing", {
   item_id: model.text(),
   cost: model.float(),
   markup_pct: model.float(),
+  // Quote workflow (Cardinal Builder plan B6). Dollars as-is, like cost
+  // (Todd's price). benchmark = the competitor price Cardinal checks the
+  // selling price against; approved = the selling price Cardinal signed off.
+  benchmark_price: model.float().nullable(),
+  benchmark_source: model.text().nullable(),
+  approved_price: model.float().nullable(),
   quote: model.belongsTo(() => Quote, { mappedBy: "line_pricings" }),
 });
