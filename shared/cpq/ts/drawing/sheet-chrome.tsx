@@ -59,7 +59,7 @@ export type SheetProps<G> = {
   standardRange: { ok: boolean; reasons: { message: string }[] }
   /** "10/18/2026" */
   drawnDate: string
-  /** Storefront "/images/logo/new-cardinal-cooling-logo.svg"; backend PDF render "cardinal-logo.svg". */
+  /** Storefront "/images/logo/cardinal-logo-ink.svg"; backend PDF render "cardinal-logo.svg". */
   logoHref: string
   /** Quote (default) adds "CERTIFIED DRAWING ON QUOTE APPROVAL". */
   pricingMode?: PricingModeTag

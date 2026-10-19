@@ -51,7 +51,7 @@ export type BuilderSheetProps = {
   standardRange?: StandardRange
   /** "10/18/2026" */
   drawnDate: string
-  /** Storefront "/images/logo/new-cardinal-cooling-logo.svg"; backend PDF render "cardinal-logo.svg". */
+  /** Storefront "/images/logo/cardinal-logo-ink.svg"; backend PDF render "cardinal-logo.svg". */
   logoHref: string
   /** "quote" (default) adds "CERTIFIED DRAWING ON QUOTE APPROVAL". */
   pricingMode?: PricingModeTag

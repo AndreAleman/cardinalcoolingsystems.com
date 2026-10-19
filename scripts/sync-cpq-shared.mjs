@@ -52,6 +52,9 @@ const TABLES = [
   ["assemblies.json", "ASSEMBLIES_TABLE", "AssembliesTable"],
 ]
 const LOGO = "assets/cardinal-logo.svg"
+// The ink (#0a0a0a) logo, served by the storefront for the on-page drawing (the site header's
+// /images/logo/new-cardinal-cooling-logo.svg is white and vanishes on the white sheet).
+const STOREFRONT_LOGO = "storefront/public/images/logo/cardinal-logo-ink.svg"
 
 const sha256 = (buf) => crypto.createHash("sha256").update(buf).digest("hex")
 
@@ -168,6 +171,14 @@ function main() {
 
   for (const target of TS_TARGETS) syncTarget(target, tsFiles, check, drift)
   syncTarget(CAD_TARGET, cadFiles, check, drift)
+
+  const logo = fs.readFileSync(path.join(SHARED, LOGO))
+  const logoPath = path.join(ROOT, STOREFRONT_LOGO)
+  const logoSame = sameContent(logoPath, logo)
+  if (!logoSame) {
+    if (check) drift.push(`${STOREFRONT_LOGO} ${logoSame === null ? "(missing)" : "(differs)"}`)
+    else fs.writeFileSync(logoPath, logo)
+  }
 
   const targets = TS_TARGETS.length + 1
   if (check) {

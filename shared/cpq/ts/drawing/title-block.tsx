@@ -28,7 +28,7 @@ export type TitleBlockProps = {
   drawnDate: string
   weightLb: number
   notes: string[]
-  /** Logo image href: storefront "/images/logo/new-cardinal-cooling-logo.svg", PDF render "cardinal-logo.svg". */
+  /** Logo image href: storefront "/images/logo/cardinal-logo-ink.svg", PDF render "cardinal-logo.svg". */
   logoHref: string
   /** Quote mode adds "CERTIFIED DRAWING ON QUOTE APPROVAL" (spec "Shared components"). */
   pricingMode: PricingModeTag

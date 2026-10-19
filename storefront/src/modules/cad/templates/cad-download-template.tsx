@@ -11,7 +11,7 @@ import Link from "next/link"
 import CadFileLinks from "../components/cad-file-links"
 import PreparingAutoRefresh from "../components/preparing-auto-refresh"
 
-const LOGO_HREF = "/images/logo/new-cardinal-cooling-logo.svg"
+const LOGO_HREF = "/images/logo/cardinal-logo-ink.svg"
 
 function Panel({ tone, children, testId }: { tone: "info" | "warn"; children: React.ReactNode; testId: string }) {
   const cls = tone === "warn" ? "border-amber-300 bg-amber-50 text-amber-900" : "border-neutral-200 bg-white text-neutral-800"

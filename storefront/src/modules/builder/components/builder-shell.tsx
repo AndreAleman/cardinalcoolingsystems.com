@@ -22,7 +22,7 @@ import PartNumberCard from "./part-number-card"
 import SpecBlock from "./spec-block"
 import StockedAlternativeCallout from "./stocked-alternative"
 
-export const LOGO_HREF = "/images/logo/new-cardinal-cooling-logo.svg"
+export const LOGO_HREF = "/images/logo/cardinal-logo-ink.svg"
 
 export type BuilderShellProps = {
   type: BuilderType
