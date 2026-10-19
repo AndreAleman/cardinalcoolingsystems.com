@@ -1,0 +1,15 @@
+[project]
+name = "cardinal-cad-service"
+version = "1"
+description = "STEP + PDF CAD Packages for the Cardinal Builder"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]
+markers = [
+  "cad: needs CadQuery (slow first import)",
+  "pdf: needs CairoSVG + the system cairo library (skipped when libcairo is missing)",
+]
