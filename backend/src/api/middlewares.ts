@@ -21,6 +21,8 @@ import { adminApprovalsMiddlewares } from "./admin/approvals/middlewares"
 import { adminOrdersMiddlewares } from "./admin/orders/middlewares"
 import { storeBuildMiddlewares } from "./store/build/middlewares"
 import { adminBuildConfigurationsMiddlewares } from "./admin/build-configurations/middlewares"
+import { storeCadRequestsMiddlewares } from "./store/cad-requests/middlewares"
+import { adminCadRequestsMiddlewares } from "./admin/cad-requests/middlewares"
 import {
   honeypot,
   rateLimit,
@@ -72,6 +74,9 @@ export default defineMiddlewares({
     ...adminOrdersMiddlewares,
     ...storeBuildMiddlewares,
     ...adminBuildConfigurationsMiddlewares,
+    // CAD Requests (Cardinal Builder plan B7): bot protection + validators.
+    ...storeCadRequestsMiddlewares,
+    ...adminCadRequestsMiddlewares,
     {
       matcher: "/product-feed",
       methods: ["GET"],

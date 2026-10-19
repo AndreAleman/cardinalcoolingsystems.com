@@ -75,6 +75,10 @@ const medusaConfig = {
       resolve: "./src/modules/build-configuration",
     },
     {
+      // CAD Requests + CAD Packages + settings (Cardinal Builder plan B7).
+      resolve: "./src/modules/cad-request",
+    },
+    {
       resolve: "./src/modules/sanity",
       options: {
         api_token: process.env.SANITY_API_TOKEN,

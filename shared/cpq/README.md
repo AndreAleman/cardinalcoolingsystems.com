@@ -8,7 +8,7 @@ The single source of truth for the Cardinal Builder's tables, maths, Part Number
 - `ts/*.ts`: pure modules, ES2021, no DOM/Node APIs, extensionless imports. They compile under the storefront config (bundler, strict, ES5 target) and the backend config (Node16/CJS). `builders.ts` is the registry (`BUILDERS`, `getBuilder`); each builder lives in `builder-*.ts`. Nothing switches on `builder_type`.
 - `ts/drawing/*.{ts,tsx}`: the Engineering View sheets (`BuilderSheet`, `DRAWING_VERSION`). JSX plus `import type` from `"react"`; no hooks, no browser APIs; React 18. Bump `DRAWING_VERSION` on any visible change and rewrite the goldens.
 - `fixtures/*-golden.json` / `*-golden.svg`: geometry vectors (input options + `expected`) and React 18 sheet renders, written by `backend/src/lib/__tests__/cpq-shared-drawing.unit.spec.ts` with `CPQ_UPDATE_FIXTURES=1`, copied to cad-service.
-- `assets/cardinal-logo.svg`: the title-block logo (copy of `storefront/public/images/logo/new-cardinal-cooling-logo.svg`).
+- `assets/cardinal-logo.svg`: the title-block logo: `storefront/public/images/logo/new-cardinal-cooling-logo.svg` with its white fills turned to the sheet ink `#0a0a0a`, so it shows on the white title block (the storefront original is white, for the dark nav; CairoSVG ignores masks, so the mask-based `logo-main-3.svg` cannot be used).
 
 ## Editing
 
