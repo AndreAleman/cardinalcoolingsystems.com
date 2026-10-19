@@ -17,7 +17,8 @@ coverage
 # package-lock.json
 yarn.lock
 medusa-db.sql
-build
+# Root build output only: /store/build (Cardinal Builder) is source.
+/build
 .cache
 
 .yarn/*

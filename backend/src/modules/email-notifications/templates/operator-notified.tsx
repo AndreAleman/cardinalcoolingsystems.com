@@ -140,6 +140,12 @@ OperatorNotifiedTemplate.PreviewProps = {
   items: [
     { sku: 'CC-90E-150', title: '90° elbow, 1.5"', qty: 12 },
     { sku: 'CC-TC-200', title: 'Tri-clamp, 2"', qty: 4 },
+    {
+      sku: 'clmp-fl150-tspool-l12-6-200',
+      title: '2" TRANSITION SPOOL 12" OAL TC X 150# FLG T316L',
+      qty: 2,
+      details: ['Part Number: clmp-fl150-tspool-l12-6-200', 'End A: Tri-clamp', 'End B: ANSI 150 flange'],
+    },
   ],
   adminUrl: 'https://backend.cardinalcoolingsystems.com/app/quotes/quote_123',
   messageText: null,

@@ -66,6 +66,16 @@ const buildPricingPayload = async (req: AuthenticatedMedusaRequest) => {
         markup_pct: row ? row.markup_pct : null,
         computed_sell:
           row != null ? computeSellPrice(row.cost, row.markup_pct) : null,
+        // Plan B6 (admin only, like cost).
+        benchmark_price: row?.benchmark_price ?? null,
+        benchmark_source: row?.benchmark_source ?? null,
+        approved_price: row?.approved_price ?? null,
+        // Builder Quote line: its Part Number, so Todd prices the right part.
+        part_number:
+          item.metadata?.builder === true &&
+          item.metadata?.pricing_mode === "quote"
+            ? ((item.metadata.part_number as string) ?? null)
+            : null,
       };
     });
 
@@ -93,6 +103,9 @@ export const POST = async (
         item_id: price.item_id!,
         cost: price.cost!,
         markup_pct: price.markup_pct!,
+        benchmark_price: price.benchmark_price,
+        benchmark_source: price.benchmark_source,
+        approved_price: price.approved_price,
       })),
     },
   });

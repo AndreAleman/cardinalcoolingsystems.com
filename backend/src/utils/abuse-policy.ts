@@ -13,6 +13,8 @@ export const RATE_RULES = {
   register: { limit: 5, windowSec: 60 * 60 },
   company: { limit: 3, windowSec: 60 * 60 },
   contact: { limit: 10, windowSec: 60 * 60 },
+  // Guest Quote (Cardinal Builder plan B4): same budget as contact, own counter.
+  guest_quote: { limit: 10, windowSec: 60 * 60 },
   login: { limit: 20, windowSec: 15 * 60 },
 } as const satisfies Record<string, RateRule>;
 
