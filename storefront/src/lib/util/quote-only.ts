@@ -18,6 +18,11 @@ import { HttpTypes } from "@medusajs/types"
 
   No "use client" on purpose: server components (product pages,
   listings, the add-to-cart server action) and client components share it.
+
+  Cardinal Builder Quote lines (plan B3) are custom cart lines at a $0
+  placeholder with metadata.builder === true and no variant. These rules
+  never see them (they take a variant), and they are not broken $0 parts:
+  the cart shows them as "Quote" via lib/builder/quote-line.ts.
 */
 
 export type CatalogQuoteOnlyReason = "quote-only part" | "price unavailable"
