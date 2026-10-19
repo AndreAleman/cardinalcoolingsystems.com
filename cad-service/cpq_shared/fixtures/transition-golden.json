@@ -1,0 +1,300 @@
+{
+  "version": 1,
+  "description": "Golden transition vectors: input options (canonical), Part Number, the expected geometry block cad-service checks (every leaf within tolerance), weight. Written by backend/src/lib/__tests__/cpq-shared-drawing.unit.spec.ts with CPQ_UPDATE_FIXTURES=1.",
+  "tolerance": 0.001,
+  "vectors": [
+    {
+      "name": "plan golden: 2in TC x 150# flange 12in T316L",
+      "input": {
+        "a": "tc",
+        "b": "fl150",
+        "od": 200,
+        "odb": 200,
+        "len": 12,
+        "alloy": "t316l",
+        "qty": 1
+      },
+      "share_query": "v=1&a=tc&b=fl150&od=200&odb=200&len=12&alloy=t316l&qty=1",
+      "part_number": "clmp-fl150-tspool-l12-6-200",
+      "expected": {
+        "overallLength": 12,
+        "tubeStraight": 9,
+        "weldA": [
+          0.5,
+          0
+        ],
+        "weldB": [
+          9.5,
+          0
+        ],
+        "reducer": null,
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              12,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "bbox": {
+          "minX": 0,
+          "minY": -3,
+          "maxX": 12,
+          "maxY": 3
+        },
+        "tubeVolumeIn3": 3.556204
+      },
+      "weight_lb": 7.599299,
+      "standard_range": []
+    },
+    {
+      "name": "reducing: 2in TC x 1-1/2in 150# flange 12in",
+      "input": {
+        "a": "tc",
+        "b": "fl150",
+        "od": 200,
+        "odb": 150,
+        "len": 12,
+        "alloy": "t316l",
+        "qty": 1
+      },
+      "share_query": "v=1&a=tc&b=fl150&od=200&odb=150&len=12&alloy=t316l&qty=1",
+      "part_number": "clmp-fl150-tspool-l12-6-200-150",
+      "expected": {
+        "overallLength": 12,
+        "tubeStraight": 6.06,
+        "weldA": [
+          0.5,
+          0
+        ],
+        "weldB": [
+          9.56,
+          0
+        ],
+        "reducer": {
+          "x0": 6.56,
+          "x1": 9.56
+        },
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              12,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "bbox": {
+          "minX": 0,
+          "minY": -2.5,
+          "maxX": 12,
+          "maxY": 2.5
+        },
+        "tubeVolumeIn3": 3.42676
+      },
+      "weight_lb": 5.46476,
+      "standard_range": []
+    },
+    {
+      "name": "long: 4in bevel seat x grooved 60in",
+      "input": {
+        "a": "pbs",
+        "b": "grv",
+        "od": 400,
+        "odb": 400,
+        "len": 60,
+        "alloy": "t316l",
+        "qty": 1
+      },
+      "share_query": "v=1&a=pbs&b=grv&od=400&odb=400&len=60&alloy=t316l&qty=1",
+      "part_number": "pbs-grv-tspool-l60-6-400",
+      "expected": {
+        "overallLength": 60,
+        "tubeStraight": 55.906,
+        "weldA": [
+          1.375,
+          0
+        ],
+        "weldB": [
+          57.281,
+          0
+        ],
+        "reducer": null,
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              60,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "bbox": {
+          "minX": 0,
+          "minY": -2.5,
+          "maxX": 60,
+          "maxY": 2.5
+        },
+        "tubeVolumeIn3": 57.100506
+      },
+      "weight_lb": 19.931147,
+      "standard_range": []
+    },
+    {
+      "name": "short: 8in TC x 300# flange 6in",
+      "input": {
+        "a": "tc",
+        "b": "fl300",
+        "od": 800,
+        "odb": 800,
+        "len": 6,
+        "alloy": "t316l",
+        "qty": 1
+      },
+      "share_query": "v=1&a=tc&b=fl300&od=800&odb=800&len=6&alloy=t316l&qty=1",
+      "part_number": "clmp-fl300-tspool-l6-6-800",
+      "expected": {
+        "overallLength": 6,
+        "tubeStraight": 0.745,
+        "weldA": [
+          0.875,
+          0
+        ],
+        "weldB": [
+          1.62,
+          0
+        ],
+        "reducer": null,
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              6,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "bbox": {
+          "minX": 0,
+          "minY": -7.5,
+          "maxX": 6,
+          "maxY": 7.5
+        },
+        "tubeVolumeIn3": 2.013097
+      },
+      "weight_lb": 75.301798,
+      "standard_range": []
+    },
+    {
+      "name": "butt-weld pipe: 3in bw x bwp 24.125in T304L",
+      "input": {
+        "a": "bw",
+        "b": "bwp",
+        "od": 300,
+        "odb": 300,
+        "len": 24.125,
+        "alloy": "t304l",
+        "qty": 1
+      },
+      "share_query": "v=1&a=bw&b=bwp&od=300&odb=300&len=24.125&alloy=t304l&qty=1",
+      "part_number": "bw-bwp-tspool-l24p125-4-300",
+      "expected": {
+        "overallLength": 24.125,
+        "tubeStraight": 21.125,
+        "weldA": [
+          0,
+          0
+        ],
+        "weldB": [
+          21.125,
+          0
+        ],
+        "reducer": null,
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              24.125,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "bbox": {
+          "minX": 0,
+          "minY": -1.75,
+          "maxX": 24.125,
+          "maxY": 1.75
+        },
+        "tubeVolumeIn3": 12.661001
+      },
+      "weight_lb": 4.619029,
+      "standard_range": []
+    }
+  ]
+}

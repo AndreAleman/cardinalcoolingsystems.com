@@ -63,12 +63,13 @@ export function checkManifoldRange(o: RowManifoldOptions, g: ManifoldGeometry): 
   const drop = tubeDims(o.drop)
   const dropEnd = g.branches.find((b) => b.role === "drop")
   const valve = o.dstyle === "bv" ? valveRow("bv", o.drop) : null
-  const envelope = Math.max(drop.od, dropEnd ? dropEnd.end.maxOd : 0, valve ? drop.od * 1.6 : 0)
+  // A drop ball valve's handle swings about 1.5 × the valve body length (draft).
+  const envelope = Math.max(drop.od, dropEnd ? dropEnd.end.maxOd : 0, valve ? valve.length_in * 1.5 : 0)
   const minPitch = envelope + ASSEMBLIES.manifold.min_pitch_clearance_in
   if (o.pitch < minPitch - 1e-9) {
     reasons.push({
       code: "pitch_tight",
-      message: `${formatInches(o.pitch)} pitch leaves under ${formatDim(ASSEMBLIES.manifold.min_pitch_clearance_in)}" between drops (engineering review)`,
+      message: `${formatInches(o.pitch)} pitch leaves under ${formatDim(ASSEMBLIES.manifold.min_pitch_clearance_in)}" between drop ${valve ? "valves" : "ferrules"} (engineering review)`,
     })
   }
   if (dropEnd && dropEnd.stubLength < 0.5 - 1e-9) {
