@@ -12,7 +12,7 @@ In the `cardinal_cooling_systems` project:
 1. **New service → GitHub repo** (this repo). Settings:
    - **Root Directory:** `cad-service`
    - **Builder:** Dockerfile (picked up from `cad-service/railway.json`: `dockerfilePath: Dockerfile`, healthcheck `/health` with a 300 s timeout, restart on failure, watch `cad-service/**`).
-   - **Service name:** `cad-service` (the private hostname becomes `cad-service.railway.internal`).
+   - **Service name:** `cad-service`. Renaming a service does **not** change its private hostname. A service created under a random name keeps it; production's is `athletic-embrace.railway.internal`. Always use a Railway reference to it; never type the hostname by hand.
 2. **Networking:** do **not** generate a public domain. The backend reaches it over Railway's private network; uvicorn binds `::` on `$PORT` (8080 by default).
 3. **Variables** (cad-service):
 
@@ -30,7 +30,7 @@ On the backend service (`cardinal_cooling_systems` backend):
 
 | Variable | Value | Notes |
 |---|---|---|
-| `CAD_SERVICE_URL` | `http://cad-service.railway.internal:8080` | private network; no trailing slash needed |
+| `CAD_SERVICE_URL` | `http://${{cad-service.RAILWAY_PRIVATE_DOMAIN}}:8080` | Railway reference variable: it follows the service's real private hostname |
 | `CAD_SERVICE_TOKEN` | the same secret as the cad-service | without both, `POST /store/cad-requests` answers 503 `cad_unavailable` |
 | `CAD_REQUEST_INBOX_EMAIL` | `aleman@cardinalcoolingsystems.com` | staff alerts (review, queued, failed, allowance). Comma-separated list allowed. This is also the default when unset |
 | `STOREFRONT_URL` | `https://cardinalcoolingsystems.com` | already set; emailed links are `{STOREFRONT_URL}/us/cad/download/{token}` and `{STOREFRONT_URL}/us/build/...` |
@@ -44,11 +44,15 @@ Without MinIO (local only) files go to `backend/.cad-cache` (git-ignored; `CAD_C
 
 ## 3. Order
 
-1. **Run the migration first**, against production, from the release commit:
-   ```bash
-   cd backend && npx medusa db:migrate --skip-links   # applies Migration20261019030000 (cad_request, cad_package, cad_setting)
-   ```
-   It only creates three new tables, so the code running before the push is unaffected.
+1. **Run the migrations by hand. Deploys do not run them.**
+   - `init-backend` only migrates when it seeds an empty database. On production it logs "Database is already seeded" and skips the migrations.
+   - Run `npx medusa db:migrate --skip-links` from `/app/.medusa/server`, inside the backend container, using Railway SSH.
+   - Run it after the deploy that ships the migration files; before that deploy, the files aren't in the container.
+
+   The builder release added three migrations, all additive. They were run on production on 2026-10-19:
+   - `Migration20261019015851`: build_configuration
+   - `Migration20261019015900`: quote line pricing
+   - `Migration20261019030000`: cad_request, cad_package, cad_setting
 2. **Deploy the cad-service** (step 1) and wait for it to be healthy.
 3. **Set the backend variables** (step 2).
 4. **Push / merge** the backend (and the storefront, whose CAD panel calls these routes).
@@ -56,7 +60,7 @@ Without MinIO (local only) files go to `backend/.cad-cache` (git-ignored; `CAD_C
 
 ## 4. Health checks
 
-- **cad-service:** Railway healthcheck `/health`. From the backend container: `curl -s http://cad-service.railway.internal:8080/health` →
+- **cad-service:** Railway healthcheck `/health`. From the backend container, which has no curl, fetch `$CAD_SERVICE_URL/health` with `node -e` →
   `{"ok":true,"generator_version":"1","tables_hash":"9aa195d46dc2","warm":true,"pdf":true,"kinds":{"transition":"step+pdf","row-manifold":"step+pdf","cdu-kit":"pdf","strainer":"pdf","hose":"pdf"}}`
   (the `tables_hash` changes whenever the tables do; it must equal the backend's).
 - **Admin:** Medusa Admin → **CAD Requests**. The header badge reads **CAD service: healthy** with the generator version and tables hash; "not configured" means `CAD_SERVICE_URL`/`CAD_SERVICE_TOKEN` are missing on the backend, "unreachable" means the service is down or the URL is wrong.
