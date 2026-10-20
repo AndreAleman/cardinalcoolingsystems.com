@@ -5,13 +5,16 @@ import Nav from "@modules/layout/templates/nav"
 import { getBaseURL } from "@lib/util/env"
 import NavSpacer from "@modules/layout/components/nav-spacer"
 
+const DEFAULT_DESCRIPTION =
+  "Stainless steel sanitary tube, fittings and valves, and hookup kits for data center liquid cooling."
+
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
   title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
-  description: "Your premium source for stainless steel tubing, fittings, and valves",
+  description: DEFAULT_DESCRIPTION,
   openGraph: {
     title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
-    description: "Your premium source for stainless steel tubing, fittings, and valves",
+    description: DEFAULT_DESCRIPTION,
     url: getBaseURL(),
     siteName: "Cardinal Cooling Systems",
     images: [
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Stainless Steel Tubing, Fittings, and Valves | Cardinal Cooling Systems",
-    description: "Your premium source for stainless steel tubing, fittings, and valves",
+    description: DEFAULT_DESCRIPTION,
   },
 }
 

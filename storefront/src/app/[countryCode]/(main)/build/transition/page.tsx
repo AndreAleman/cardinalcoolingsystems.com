@@ -1,8 +1,9 @@
-import { canonicalUrl, decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
+import { decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
 import BuilderShell from "@modules/builder/components/builder-shell"
 import { makeCite } from "@modules/builder/components/footnotes"
 import { LeadTimeFacts } from "@modules/builder/components/page-bits"
 import BuilderPage, { ContentSection } from "@modules/builder/templates/builder-page"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -18,12 +19,13 @@ type Props = { params: { countryCode: string }; searchParams: SearchParams }
 const CITATIONS = ["vertivCdu600Spec", "ocpManifold"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "Tri-Clamp to Flange, NPT or Grooved: Transition Spool Builder | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "Tri-Clamp to Flange, NPT or Grooved: Transition Spool Builder",
     description:
       "Join a sanitary tri-clamp CDU loop to ANSI 150/300 flange, NPT, grooved or butt-weld pipe: transition spools 1\"–8\", 2\"–72\" long, 316L or 304L, reducing when sizes differ. Stocked adapters (e.g. 2\" sanitary to NPT) at posted prices.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build/transition") },
-  }
+    path: "/build/transition",
+  })
 }
 
 export default function TransitionPage({ params, searchParams }: Props) {

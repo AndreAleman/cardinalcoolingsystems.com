@@ -1,7 +1,7 @@
-import { canonicalUrl } from "@lib/builder/page"
 import { CONNECTION_DRAWINGS, LoopDiagram, type ConnectionKey } from "@modules/builder/components/connection-drawings"
 import { makeCite } from "@modules/builder/components/footnotes"
 import BuilderPage, { ContentSection } from "@modules/builder/templates/builder-page"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -16,12 +16,13 @@ type Props = { params: { countryCode: string } }
 const CITATIONS = ["boyd10u", "ocpManifold", "vertivCdu600Spec", "titan"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "Tri-Clamp vs I-Line vs Grooved vs Flanged: Liquid Cooling Connections | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "Tri-Clamp vs I-Line vs Grooved vs Flanged: Liquid Cooling Connections",
     description:
-      "Tri-clamp, I-line, bevel seat, grooved, flanged and NPT connections explained with a drawing of each, and which side of a data center liquid cooling loop each one sits on.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build/connections") },
-  }
+      "Tri-clamp, I-line, bevel seat, grooved, flanged and NPT connections, with a drawing of each and which side of a data center liquid cooling loop each one sits on.",
+    path: "/build/connections",
+  })
 }
 
 type Row = { key: ConnectionKey; name: string; side: string; what: React.ReactNode; where: React.ReactNode }

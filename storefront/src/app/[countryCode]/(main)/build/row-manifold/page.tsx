@@ -1,9 +1,10 @@
 import { ASSEMBLIES } from "@lib/cpq/shared"
-import { canonicalUrl, decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
+import { decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
 import BuilderShell from "@modules/builder/components/builder-shell"
 import { makeCite } from "@modules/builder/components/footnotes"
 import { LeadTimeFacts, MANIFOLD_WE_CAN_SUPPLY, WeCanSupply } from "@modules/builder/components/page-bits"
 import BuilderPage, { ContentSection } from "@modules/builder/templates/builder-page"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -18,12 +19,13 @@ type Props = { params: { countryCode: string }; searchParams: SearchParams }
 const CITATIONS = ["ocpManifold", "titan"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "OCP Row Manifold Builder: TCS Manifold, Stainless 316L, ASTM A380 | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "OCP TCS Row Manifold Builder: 316L Stainless, ASTM A380",
     description:
-      "Configure a TCS row manifold built to the OCP guideline: 316L or 304L stainless, inert-gas welded, passivated to ASTM A380, 1\" sanitary fill points, hydro test and MTRs. Drawing, Part Number and spec block; firm quote within 1 business day.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build/row-manifold") },
-  }
+      "Configure a TCS row manifold to the OCP guideline: 316L or 304L stainless, welded under an inert atmosphere per AWS D10.18, ASTM A380 surface treatment, 1\" sanitary fill points. Drawing, Part Number and spec block; firm quote within 1 business day.",
+    path: "/build/row-manifold",
+  })
 }
 
 export default function RowManifoldPage({ params, searchParams }: Props) {

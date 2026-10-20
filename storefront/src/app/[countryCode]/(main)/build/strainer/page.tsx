@@ -1,9 +1,10 @@
 import { ASSEMBLIES } from "@lib/cpq/shared"
-import { canonicalUrl, decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
+import { decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
 import BuilderShell from "@modules/builder/components/builder-shell"
 import { makeCite } from "@modules/builder/components/footnotes"
 import { LeadTimeFacts } from "@modules/builder/components/page-bits"
 import BuilderPage, { ContentSection } from "@modules/builder/templates/builder-page"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -19,12 +20,13 @@ type Props = { params: { countryCode: string }; searchParams: SearchParams }
 const CITATIONS = ["ocpManifold"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "316L Sanitary Strainer for Data Center Liquid Cooling Loops (20–100 Mesh) | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "316L Sanitary Strainer Builder for Liquid Cooling Loops (20–100 Mesh)",
     description:
       "Configure a 316L inline tri-clamp strainer for a liquid cooling loop: 1\"–6\", short or long body, 20, 40 or 100 mesh, isolation valves and differential-pressure ports, with the clamps and gaskets to install it.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build/strainer") },
-  }
+    path: "/build/strainer",
+  })
 }
 
 export default function StrainerPage({ params, searchParams }: Props) {
