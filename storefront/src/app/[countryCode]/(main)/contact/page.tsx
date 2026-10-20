@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import EmailOff from "@modules/common/components/email-off"
 import { useState, useEffect, FormEvent, useRef } from "react"
 import { useBotGuard } from "@modules/common/components/bot-guard"
 import { filesToAttachments } from "@lib/util/attachments"
@@ -220,9 +221,15 @@ export default function ContactPage({ params }: Props) {
                   <div>
                     <p className="text-sm font-semibold text-gray-900 mb-0.5">Email Us</p>
                     <p className="text-xs text-gray-400 mb-1">Send us your technical questions</p>
-                    <a href="mailto:aleman@cardinalcoolingsystems.com" className="text-sm font-medium transition-colors" style={{ color: "#E3000F" }}>
-                      aleman@cardinalcoolingsystems.com
-                    </a>
+                    <EmailOff
+                      email="aleman@cardinalcoolingsystems.com"
+                      className="text-sm font-medium text-[#E3000F] transition-colors"
+                      testId="contact-email-link"
+                    />
+                    <p className="text-xs text-gray-500 mt-0.5 select-all">
+                      Address:{" "}
+                      <EmailOff email="aleman@cardinalcoolingsystems.com" plain testId="contact-email-text" />
+                    </p>
                     <p className="text-xs text-gray-400 mt-0.5 uppercase tracking-widest">We respond within 24 hours</p>
                   </div>
                 </div>
