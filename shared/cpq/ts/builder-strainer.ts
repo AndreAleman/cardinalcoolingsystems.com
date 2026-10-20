@@ -158,6 +158,8 @@ export const STRAINER_BUILDER = makeBuilder<StrainerOptions, StrainerGeometry>({
   type: "strainer",
   path: "/build/strainer",
   title: "Strainer",
+  unitNoun: { one: "strainer", many: "strainers" },
+  summaryParts: { exclude: ["strainer"] },
   keys: STRAINER_KEYS,
   hasStep: false,
   partNumber: strainerPartNumber,

@@ -334,6 +334,7 @@ export const ROW_MANIFOLD_BUILDER = makeBuilder<RowManifoldOptions, ManifoldGeom
   type: "row-manifold",
   path: "/build/row-manifold",
   title: "Row Manifold",
+  unitNoun: { one: "manifold", many: "manifolds" },
   keys: ROW_MANIFOLD_KEYS,
   hasStep: true,
   partNumber: manifoldPartNumber,

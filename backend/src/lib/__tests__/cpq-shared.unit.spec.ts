@@ -25,6 +25,7 @@ import {
   manifoldGeometry,
   manifoldHeaderLength,
   parsePartNumber,
+  resultSummary,
   sha256Hex,
   spoolPartNumber,
   transitionGeometry,
@@ -758,6 +759,59 @@ describe("spec blocks", () => {
     const o = { ...(kit.defaults as CduKitOptions), run: "hose" as const, far: "grv" as const, port: "tc200" as const }
     expect(kit.bom(o).lines.some((l) => l.role === "ferrule")).toBe(false)
     expect(kit.partNumber({ ...o, alloy: "t304l" })).not.toBe(kit.partNumber(o))
+  })
+})
+
+// ---------------------------------------------------------------- result line
+
+describe("resultSummary (the one-line result under the headline)", () => {
+  it("kit: units, parts summed over every CDU, Quote with the promise while a line is unstocked", () => {
+    const o = { ...(kit.defaults as CduKitOptions), units: 4 }
+    const r = resultSummary("cdu-kit", o)
+    expect(r).toEqual({
+      units: 4,
+      units_label: "4 CDUs",
+      parts: [
+        { key: "hose", label: "hoses", qty: 8 },
+        { key: "ferrule", label: "ferrules", qty: 8 },
+        { key: "clamp", label: "clamps", qty: 16 },
+        { key: "gasket", label: "gaskets", qty: 16 },
+      ],
+      parts_label: "8 hoses, 8 ferrules, 16 clamps, 16 gaskets",
+      price_total: null,
+      pricing_mode: "quote", // no braided hose is stocked: custom before any resolve
+      lead_label: "Custom production, 3–6 weeks",
+      quote_promise: "Firm quote within 1 business day, held 90 days",
+    })
+    const hard = resultSummary("cdu-kit", { ...o, run: "hard", iso: "bv", strainer: "short", spares: "1" })
+    expect(hard.parts_label).toBe("8 spools, 24 ferrules, 44 clamps, 44 gaskets, 8 valves, 4 strainers")
+    expect(resultSummary("cdu-kit", { ...o, units: 1, far: "fl150" }).units_label).toBe("1 CDU")
+    expect(resultSummary("cdu-kit", { ...o, far: "fl150" }).parts.map((p) => p.key)).toEqual(["hose", "clamp", "gasket", "adapter"])
+  })
+
+  it("follows the resolve: Instant shows the total and the stock lead time, Quote never a price", () => {
+    const o = { ...(kit.defaults as CduKitOptions), units: 2 }
+    const instant = resultSummary("cdu-kit", o, null, { pricing_mode: "instant", price_total: 812.4 })
+    expect(instant).toMatchObject({ pricing_mode: "instant", price_total: 812.4, lead_label: "Ships in 1–2 business days", quote_promise: null })
+    const quote = resultSummary("cdu-kit", o, null, { pricing_mode: "quote", price_total: 999 })
+    expect(quote).toMatchObject({ pricing_mode: "quote", price_total: null, lead_label: "Custom production, 3–6 weeks" })
+    // A resolve response's BOM ({ lines: bom, units }) works the same as the shared BOM.
+    const resolved = { lines: kit.bom(o).lines.map((l) => ({ role: l.role, qty_per_unit: l.qty_per_unit, lead_time: "stock" as const })), units: 2 }
+    expect(resultSummary("cdu-kit", o, resolved, null)).toMatchObject({ pricing_mode: null, lead_label: "Ships in 1–2 business days", parts_label: "4 hoses, 4 ferrules, 8 clamps, 8 gaskets" })
+  })
+
+  it("manifold and transition: the units alone; strainer and hose: the install parts, not the unit itself", () => {
+    expect(resultSummary("row-manifold", manifold.defaults)).toMatchObject({ units_label: "2 manifolds", parts: [], parts_label: "", pricing_mode: "quote" })
+    expect(resultSummary("row-manifold", { ...(manifold.defaults as RowManifoldOptions), pair: "0" }).units_label).toBe("1 manifold")
+    expect(resultSummary("transition", { ...(transition.defaults as TransitionOptions), qty: 8 })).toMatchObject({
+      units_label: "8 spools",
+      parts: [],
+      quote_promise: "Firm quote within 1 business day, held 90 days",
+    })
+    expect(resultSummary("strainer", { ...(strainer.defaults as StrainerOptions), qty: 3 }).parts_label).toBe("6 clamps, 6 gaskets")
+    expect(resultSummary("strainer", { ...(strainer.defaults as StrainerOptions), iso: "1", qty: 1 }).parts_label).toBe("4 clamps, 4 gaskets, 2 valves")
+    expect(resultSummary("hose", hose.defaults)).toMatchObject({ units_label: "1 hose", parts_label: "2 clamps, 2 gaskets" })
+    expect(resultSummary("hose", { ...(hose.defaults as HoseOptions), ends: "tc-npt", qty: 1 }).parts_label).toBe("1 clamp, 1 gasket")
   })
 })
 

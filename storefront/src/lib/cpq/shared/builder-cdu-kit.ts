@@ -267,6 +267,8 @@ export const CDU_KIT_BUILDER = makeBuilder<CduKitOptions>({
   type: "cdu-kit",
   path: "/build/cdu-kit",
   title: "CDU Hookup Kit",
+  unitNoun: { one: "CDU", many: "CDUs" },
+  summaryParts: { exclude: [] },
   keys: CDU_KIT_KEYS,
   normalize: (o, ctx) => {
     let out = o

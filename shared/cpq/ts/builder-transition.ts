@@ -234,6 +234,7 @@ export const TRANSITION_BUILDER = makeBuilder<TransitionOptions, TransitionGeome
   type: "transition",
   path: "/build/transition",
   title: "Transition Spool",
+  unitNoun: { one: "spool", many: "spools" },
   keys: TRANSITION_KEYS,
   normalize: (o, ctx) => {
     // odb defaults to od (a plain transition) unless the link gives a valid one.

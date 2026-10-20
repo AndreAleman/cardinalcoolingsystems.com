@@ -158,6 +158,8 @@ export const HOSE_BUILDER = makeBuilder<HoseOptions, HoseGeometry>({
   type: "hose",
   path: "/build/hose",
   title: "Hose Assembly",
+  unitNoun: { one: "hose", many: "hoses" },
+  summaryParts: { exclude: ["hose"] },
   keys: HOSE_KEYS,
   normalize: (o, ctx) => {
     // NPT and flange ends start at 1": a smaller size resets the ends.
