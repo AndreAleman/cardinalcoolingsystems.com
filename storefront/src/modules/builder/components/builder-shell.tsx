@@ -107,7 +107,7 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
   const advancedError = !!error && advanced.some((f) => f.key === error.key)
 
   return (
-    <div className="flex flex-col gap-6" data-testid="builder-shell" data-builder-type={type} data-config-key={key} data-resolve-status={status}>
+    <div className="flex flex-col gap-4 small:gap-6" data-testid="builder-shell" data-builder-type={type} data-config-key={key} data-resolve-status={status}>
       {notice ? (
         <div role="status" className="flex items-start justify-between gap-3 border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" data-testid="ignored-params-notice">
           <span>{notice}</span>

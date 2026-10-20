@@ -90,7 +90,7 @@ export default function BuilderPage({
       <div className="bg-neutral-50 pb-24 small:pb-16" data-testid={testId}>
         {jsonLd ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} /> : null}
         <div className="flex flex-col">
-          <header className="order-1 bg-white px-4 pt-8 xsmall:px-6 small:px-12 small:pt-10">
+          <header className="order-1 bg-white px-4 pt-10 xsmall:px-6 small:px-12 small:pt-10">
             <div className="mx-auto max-w-[1440px]">
               {crumbsNav}
               <div className="hidden xsmall:block">{eyebrowP}</div>
