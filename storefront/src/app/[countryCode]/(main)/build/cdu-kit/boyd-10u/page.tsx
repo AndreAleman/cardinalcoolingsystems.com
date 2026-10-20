@@ -43,6 +43,7 @@ export default function Boyd10uKitPage({ params, searchParams }: Props) {
       }
       citations={CDU_KIT_CITATIONS}
       content={<CduKitContent countryCode={countryCode} />}
+      after={<WeCanSupply countryCode={countryCode} items={KIT_WE_CAN_SUPPLY} />}
     >
       <BuilderShell
         type="cdu-kit"
@@ -50,12 +51,7 @@ export default function Boyd10uKitPage({ params, searchParams }: Props) {
         ignored={ignored}
         drawnDate={drawnDate()}
         formTitle="Configure your Boyd 10U kit"
-        formFooter={
-          <>
-            <GlycolNote />
-            <WeCanSupply countryCode={countryCode} items={KIT_WE_CAN_SUPPLY} />
-          </>
-        }
+        formFooter={<GlycolNote />}
       />
     </BuilderPage>
   )
