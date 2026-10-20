@@ -53,7 +53,7 @@ DEFAULT_CONFIGS = {
         "alloy": "t316l", "finish": "32", "fill": "1", "inst": "0", "docs": ["hydro", "mtr"],
     },
     "cdu-kit": {
-        "cdu": "none", "port": "tc150", "side": "tcs", "run": "hard", "far": "tc", "len": 36, "iso": "none",
+        "cdu": "none", "port": "tc150", "side": "tcs", "run": "hose", "far": "tc", "len": 36, "iso": "none",
         "strainer": "none", "gasket": "epdm", "spares": "0", "units": 1, "alloy": "t316l",
     },
     "strainer": {"size": 200, "body": "short", "mesh": "20", "iso": "0", "dp": "0", "qty": 1},

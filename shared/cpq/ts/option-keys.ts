@@ -20,7 +20,9 @@ export const CDU_KIT_KEYS: readonly KeySpec[] = [
   { key: "cdu", type: "enum", values: ["none", "boyd-10u", "vertiv-cdu-600"], default: "none" },
   { key: "port", type: "enum", values: CDU_PORTS, default: "tc150" },
   { key: "side", type: "enum", values: ["tcs", "fws"], default: "tcs" },
-  { key: "run", type: "enum", values: ["hard", "hose"], default: "hard" },
+  // Default hose (David, 2026-10-20). A link that carries `v` but no `run` predates that and
+  // meant hard pipe (normalize in builder-cdu-kit.ts).
+  { key: "run", type: "enum", values: ["hose", "hard"], default: "hose" },
   // Dependent default: TCS → tc, FWS → fl150 (normalize in builder-cdu-kit.ts).
   { key: "far", type: "enum", values: ["tc", "fl150", "npt", "grv"], default: "tc" },
   { key: "len", type: "int", min: 12, max: 240, default: 36 },

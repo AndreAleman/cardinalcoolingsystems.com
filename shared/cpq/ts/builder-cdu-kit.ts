@@ -273,6 +273,8 @@ export const CDU_KIT_BUILDER = makeBuilder<CduKitOptions>({
       if (ctx.present("port")) ctx.ignore("port")
       out = { ...out, port: model.port }
     }
+    // The run defaulted to hard pipe until 2026-10-20: a link with `v` but no `run` meant hard.
+    if (ctx.version !== undefined && !ctx.present("run")) out = { ...out, run: "hard" }
     // Far end defaults by loop: TCS → tri-clamp, FWS → ANSI 150 flange.
     if (!ctx.given("far")) out = { ...out, far: out.side === "fws" ? "fl150" : "tc" }
     return out

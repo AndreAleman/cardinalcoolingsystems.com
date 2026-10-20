@@ -55,8 +55,8 @@ medusaIntegrationTestRunner({
       return null;
     };
 
-    it("Boyd 10U default kit: Quote (welded spool), stocked lines resolved at list price, Configuration saved", async () => {
-      const res = await resolve({ builder_type: "cdu-kit", options: { cdu: "boyd-10u" } });
+    it("Boyd 10U hard-pipe kit: Quote (welded spool), stocked lines resolved at list price, Configuration saved", async () => {
+      const res = await resolve({ builder_type: "cdu-kit", options: { cdu: "boyd-10u", run: "hard" } });
       expect(res.status).toBe(200);
       const r = res.data;
       expect(r).toMatchObject({
@@ -87,7 +87,7 @@ medusaIntegrationTestRunner({
       const row = await waitForConfiguration(r.config_key);
       expect(row).toMatchObject({ id: r.configuration_id, pricing_mode: "quote", resolve_count: 1, part_number: r.part_number });
 
-      await resolve({ builder_type: "cdu-kit", options: { cdu: "boyd-10u" } });
+      await resolve({ builder_type: "cdu-kit", options: { cdu: "boyd-10u", run: "hard" } });
       const service = getContainer().resolve(BUILD_CONFIGURATION_MODULE) as any;
       for (let i = 0; i < 50; i++) {
         const [again] = await service.listBuildConfigurations({ config_key: r.config_key });
@@ -97,6 +97,32 @@ medusaIntegrationTestRunner({
       const rows = await service.listBuildConfigurations({ config_key: r.config_key });
       expect(rows).toHaveLength(1);
       expect(rows[0].resolve_count).toBe(2);
+    });
+
+    it("304L: the Spec Block, the BOM and the Part Number follow the alloy (the resolve and the page agree)", async () => {
+      const r316 = (await resolve({ builder_type: "cdu-kit", options: { cdu: "boyd-10u", run: "hard", strainer: "short" } })).data;
+      const r304 = (await resolve({ builder_type: "cdu-kit", options: { cdu: "boyd-10u", run: "hard", strainer: "short", alloy: "t304l" } })).data;
+      expect(r304.options.alloy).toBe("t304l");
+      expect(r304.ignored).toEqual([]);
+      expect(r304.spec_block).toContain("welded T304L spools");
+      expect(r304.spec_block).toContain("T304L ferrules, heavy-duty T304 single-pin clamps");
+      expect(r304.spec_block).toContain("T316L inline tri-clamp strainer"); // strainers are 316L only
+      expect(r304.spec_block).not.toBe(r316.spec_block);
+      expect(r304.part_number).not.toBe(r316.part_number);
+      const label = (r: any, role: string) => r.bom.find((l: any) => l.role === role).label;
+      expect(label(r304, "spool")).toContain("T304L");
+      expect(label(r304, "ferrule")).toContain("T304L");
+      expect(label(r304, "clamp")).toContain("T304");
+      // The decoded options the backend prices are exactly what the storefront sends.
+      expect(r304.config_key).toContain("alloy=t304l");
+    });
+
+    it("the default kit is a hose kit; a v=1 link without run still means hard pipe", async () => {
+      const r = (await resolve({ builder_type: "cdu-kit", options: { cdu: "boyd-10u" } })).data;
+      expect(r.options.run).toBe("hose");
+      expect(r.quote_reasons).toEqual([expect.stringMatching(/^Not stocked: Stainless braided hose assembly/)]);
+      const old = (await resolve({ builder_type: "cdu-kit", options: { v: "1", cdu: "boyd-10u" } })).data;
+      expect(old.options.run).toBe("hard");
     });
 
     it("Boyd 10U with ball valves: the stock-0 TCBVS-150 is reported, not priced", async () => {

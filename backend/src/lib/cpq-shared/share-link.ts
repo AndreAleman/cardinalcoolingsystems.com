@@ -10,6 +10,11 @@
 // Decoding is forgiving, as on Sanitube: a key that is present but invalid falls back to its default
 // and is listed in `ignored`; a missing key silently takes its default; an unknown `v` is treated as 1
 // and listed. Unknown keys are ignored silently (UTM tags etc.).
+//
+// Changing a default: encodeQuery always writes every key, so a Share Link never relies on one. A
+// partial link that carries `v` was still written against the old default, so the builder's
+// `normalize` keeps that meaning (ctx.version; e.g. the CDU kit's `run`, hard before 2026-10-20).
+// A link with no `v` (a bare page URL, a hand-written prefill) takes the current default.
 
 import { formatDecimalInches, isEighth, sizeToken } from "./units"
 import type { DecodeResult, KeySpec, OptionError, Options, ParamSource, ValidationResult } from "./types"
@@ -130,6 +135,8 @@ export function defaultOptions<O extends Options>(keys: readonly KeySpec[]): O {
 }
 
 export type DecodeContext = {
+  /** The raw `v` of the source, or undefined when it has none (a bare page URL, a JSON body). */
+  version: string | undefined
   /** True when the key was present in the source (valid or not). */
   present: (key: string) => boolean
   /** True when the key was present AND valid. */
@@ -171,6 +178,7 @@ export function decodeOptions<O extends Options>(
     }
   }
   const ctx: DecodeContext = {
+    version: vRaw === undefined ? undefined : vRaw.trim(),
     present: (k) => present.indexOf(k) >= 0,
     given: (k) => given.indexOf(k) >= 0,
     ignore: (k) => {

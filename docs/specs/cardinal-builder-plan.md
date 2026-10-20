@@ -29,11 +29,11 @@ This plan records the decisions made on 2026-10-18 and the contracts the work st
 
 ## URLs and options (canonical query keys, `v=1`)
 
-Decoding is forgiving: an unknown or invalid value falls back to the default and is reported in `ignored`, as on Sanitube. Every page lives under `/[countryCode]/build/...`.
+Decoding is forgiving: an unknown or invalid value falls back to the default and is reported in `ignored`, as on Sanitube. Share Links always carry every key, so changing a default never changes a shared link; a partial link that carries `v` keeps the default it was written against (the builder's `normalize` reads `ctx.version`), while a link with no `v` takes today's default. `v` stays 1. Every page lives under `/[countryCode]/build/...`.
 
 | Builder (`builder_type`) | Path | Keys (default first) |
 |---|---|---|
-| `cdu-kit` | `/build/cdu-kit` | `cdu` (none\|boyd-10u\|vertiv-cdu-600, pre-fills port), `port` tc100\|tc150\|tc200\|tc250\|tc300\|tc400\|dn50\|dn80 (tc150), `side` tcs\|fws, `run` hard\|hose, `far` tc\|fl150\|npt\|grv (TCS→tc, FWS→fl150), `len` 12–240 (36), `iso` none\|bfv\|bv, `strainer` none\|short\|long, `gasket` epdm\|sil\|ptfe, `spares` 0\|1, `units` 1–200 (1), `alloy` t316l\|t304l |
+| `cdu-kit` | `/build/cdu-kit` | `cdu` (none\|boyd-10u\|vertiv-cdu-600, pre-fills port), `port` tc100\|tc150\|tc200\|tc250\|tc300\|tc400\|dn50\|dn80 (tc150), `side` tcs\|fws, `run` hose\|hard (hose since 2026-10-20; a link with `v` but no `run` predates that and decodes as hard), `far` tc\|fl150\|npt\|grv (TCS→tc, FWS→fl150), `len` 12–240 (36), `iso` none\|bfv\|bv, `strainer` none\|short\|long, `gasket` epdm\|sil\|ptfe, `spares` 0\|1, `units` 1–200 (1), `alloy` t316l\|t304l |
 | `row-manifold` | `/build/row-manifold` | `header` 300\|400\|600\|800 (400), `drops` 2–48 (12), `pitch` 6–96 (24), `drop` 100\|150, `dstyle` tc\|bv\|uqd, `ends` tc\|fl150\|grv\|cap, `pair` 1\|0, `alloy` t316l\|t304l, `finish` 32\|20, `fill` 1\|0, `inst` 0\|1, `docs` comma list of hydro,mtr,pass,weldmap (hydro,mtr) |
 | `transition` | `/build/transition` | `a` tc\|mil\|fil\|pbs\|tbs\|bw, `b` fl150\|fl300\|mnpt\|fnpt\|grv\|bwp, `od` 100–800 (200), `odb` (= od), `len` 2–72 (12), `alloy`, `qty` 1–500 |
 | `strainer` | `/build/strainer` | `size` 100–600 (200), `body` short\|long, `mesh` 20\|40\|100, `iso` 0\|1, `dp` 0\|1, `qty` |

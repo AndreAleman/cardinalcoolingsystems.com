@@ -106,8 +106,8 @@ describe("candidate selection (B1: first candidate that RESOLVES)", () => {
 })
 
 describe("pricing mode and quote_reasons", () => {
-  it("Boyd 10U default kit: Quote (welded spool), stocked lines still resolve", () => {
-    const r = resolve("cdu-kit", { cdu: "boyd-10u" })
+  it("Boyd 10U hard-pipe kit: Quote (welded spool), stocked lines still resolve", () => {
+    const r = resolve("cdu-kit", { cdu: "boyd-10u", run: "hard" })
     expect(r.options).toMatchObject({ cdu: "boyd-10u", port: "tc150", run: "hard", far: "tc" })
     expect(r.pricing_mode).toBe("quote")
     expect(r.price_per_unit).toBeNull()
@@ -131,10 +131,15 @@ describe("pricing mode and quote_reasons", () => {
     expect(r.bom.find((l) => l.role === "valve_bv")).toMatchObject({ sku: "TCBVS-150", resolved: false, in_stock: false, stock_qty: 0 })
   })
 
-  it("hose run: no stocked hose → Quote with a not-stocked reason", () => {
-    const r = resolve("cdu-kit", { cdu: "boyd-10u", run: "hose" })
-    expect(r.pricing_mode).toBe("quote")
-    expect(r.quote_reasons.some((x) => x.startsWith("Not stocked:"))).toBe(true)
+  it("hose run (the default since 2026-10-20): no stocked hose → Quote with a not-stocked reason", () => {
+    for (const raw of [{ cdu: "boyd-10u", run: "hose" }, { cdu: "boyd-10u" }]) {
+      const r = resolve("cdu-kit", raw)
+      expect(r.options).toMatchObject({ run: "hose", far: "tc" })
+      expect(r.pricing_mode).toBe("quote")
+      expect(r.quote_reasons).toEqual([expect.stringMatching(/^Not stocked: Stainless braided hose assembly/)])
+      // Hose ends come with the hose: only the facility-end ferrule per port.
+      expect(r.bom.find((l) => l.role === "ferrule")).toMatchObject({ sku: "14AM76-150", qty_per_unit: 2, resolved: true })
+    }
   })
 
   it("row manifold is always Quote", () => {

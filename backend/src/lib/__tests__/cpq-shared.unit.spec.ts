@@ -9,6 +9,7 @@ import {
   BUILDER_TYPES,
   CDU_MODELS,
   CPQ_TABLES_HASH,
+  DEFAULT_CDU_KIT_OPTIONS,
   END_CONNECTION_ROWS,
   KIT_RULES,
   formatLb,
@@ -96,7 +97,7 @@ describe("builder registry", () => {
 describe("share links", () => {
   it("defaults follow the plan's URL table", () => {
     expect(kit.encode(kit.defaults)).toBe(
-      "v=1&cdu=none&port=tc150&side=tcs&run=hard&far=tc&len=36&iso=none&strainer=none&gasket=epdm&spares=0&units=1&alloy=t316l"
+      "v=1&cdu=none&port=tc150&side=tcs&run=hose&far=tc&len=36&iso=none&strainer=none&gasket=epdm&spares=0&units=1&alloy=t316l"
     )
     expect(manifold.encode(manifold.defaults)).toBe(
       "v=1&header=400&drops=12&pitch=24&drop=100&dstyle=tc&ends=tc&pair=1&alloy=t316l&finish=32&fill=1&inst=0&docs=hydro,mtr"
@@ -150,6 +151,45 @@ describe("share links", () => {
     expect(transition.decode({ od: "400" }).options).toMatchObject({ od: 400, odb: 400 })
     expect(transition.decode({ od: "400", odb: "300" }).options).toMatchObject({ od: 400, odb: 300 })
     expect(transition.decode({ od: "400", odb: "350" })).toMatchObject({ options: { odb: 400 }, ignored: ["odb"] })
+  })
+
+  it("CDU kit defaults (David, 2026-10-20): TCS, hose 36\", no valves or strainer, EPDM, 316L, no spares, 1 CDU", () => {
+    expect(kit.defaults).toEqual({
+      cdu: "none",
+      port: "tc150",
+      side: "tcs",
+      run: "hose",
+      far: "tc",
+      len: 36,
+      iso: "none",
+      strainer: "none",
+      gasket: "epdm",
+      spares: "0",
+      units: 1,
+      alloy: "t316l",
+    })
+    expect(DEFAULT_CDU_KIT_OPTIONS).toEqual(kit.defaults)
+  })
+
+  it("CDU kit: a link with v but no run predates the hose default and still means hard pipe", () => {
+    // Every Share Link carries every key, so an old full link keeps its meaning by construction.
+    const oldFull = "v=1&cdu=none&port=tc150&side=tcs&run=hard&far=tc&len=36&iso=none&strainer=none&gasket=epdm&spares=0&units=1&alloy=t316l"
+    expect(kit.decode(new URLSearchParams(oldFull))).toEqual({ options: { ...kit.defaults, run: "hard" }, ignored: [] })
+    // A partial link written against v=1 (or an unknown v, read as 1) without run: hard, as it meant then.
+    expect(kit.decode(new URLSearchParams("v=1&port=tc200&units=4")).options.run).toBe("hard")
+    expect(kit.decode(new URLSearchParams("v=7&port=tc200")).options.run).toBe("hard")
+    // Explicit run always wins; an invalid run falls back to the current default and is reported.
+    expect(kit.decode(new URLSearchParams("v=1&run=hose")).options.run).toBe("hose")
+    expect(kit.decode(new URLSearchParams("v=1&run=hard")).options.run).toBe("hard")
+    expect(kit.decode(new URLSearchParams("v=1&run=pipe"))).toMatchObject({ options: { run: "hose" }, ignored: ["run"] })
+    // No v (a bare page, a hand-written prefill such as /build/cdu-kit?cdu=boyd-10u&port=tc150, a JSON body): today's default.
+    expect(kit.decode(new URLSearchParams("cdu=boyd-10u&port=tc150")).options.run).toBe("hose")
+    expect(kit.decode({}).options.run).toBe("hose")
+    expect(kit.decode({ port: "tc200" }).options.run).toBe("hose")
+    // The canonical link of a hose kit says so, so it never depends on the default.
+    expect(kit.encode(kit.defaults)).toContain("&run=hose&")
+    // Other builders ignore the version rule.
+    expect(transition.decode(new URLSearchParams("v=1")).options).toEqual(transition.defaults)
   })
 
   it("CDU kit: a known CDU fixes its port (B13); the far end defaults by loop", () => {
