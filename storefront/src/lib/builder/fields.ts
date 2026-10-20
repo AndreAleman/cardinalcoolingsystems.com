@@ -72,7 +72,12 @@ const WORDS: Record<BuilderType, Record<string, Words>> = {
       help: "EPDM peroxide-cured is the default for water and PG25 glycol loops.",
       names: { epdm: "EPDM (peroxide-cured)", sil: "Silicone", ptfe: "PTFE" },
     },
-    spares: { label: "Spares", control: "toggle", names: { "1": "+10% gaskets and 1 spare clamp", "0": "No spares" } },
+    // The unchecked text is the offer itself, so the buyer sees what ticking it adds.
+    spares: {
+      label: "Spares",
+      control: "toggle",
+      names: { "1": "+10% gaskets and 1 spare clamp per CDU", "0": "Add +10% gaskets and 1 spare clamp per CDU" },
+    },
     units: { label: "Number of CDUs", suffix: "CDUs" },
     alloy: ALLOY_WORDS,
   },
