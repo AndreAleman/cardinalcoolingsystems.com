@@ -104,3 +104,23 @@ export function pnNumberToken(n: number): string {
   s = s.replace(/0+$/, "").replace(/\.$/, "")
   return s.replace(".", "p")
 }
+
+// ---------------------------------------------------------------- weights
+// A weight is rounded ONCE, to 0.1 lb, and every total is that rounded per-unit weight × units,
+// so the page, the resolve response and the drawing agree (a pair is exactly 2 × one manifold).
+
+/** Per-unit weight rounded to 0.1 lb. */
+export function roundLb(lb: number): number {
+  return Math.round((lb + Number.EPSILON) * 10) / 10
+}
+
+/** Total weight: the rounded per-unit weight × units (float noise removed). */
+export function totalLb(perUnitLb: number, units: number): number {
+  return Math.round(roundLb(perUnitLb) * units * 10) / 10
+}
+
+/** "88.6", "1,234.5": one decimal, thousands separated. */
+export function formatLb(lb: number): string {
+  const [int, dec] = roundLb(lb).toFixed(1).split(".")
+  return `${int.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${dec}`
+}

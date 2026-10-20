@@ -56,8 +56,8 @@ const SHEETS: { name: string; type: BuilderType; query: string; part: string; te
 ]
 
 describe("cpq-shared drawing goldens (React 18)", () => {
-  it("DRAWING_VERSION is 1", () => {
-    expect(DRAWING_VERSION).toBe(1)
+  it("DRAWING_VERSION is 2 (2026-10-20: manifold d100-clmp, clamp alloy on the kit BOM, weight to 0.1 lb)", () => {
+    expect(DRAWING_VERSION).toBe(2)
   })
 
   for (const s of SHEETS) {

@@ -3,6 +3,7 @@
 
 import type { Box } from "./dimension-layout"
 import { fitFontSize, wrapText } from "./layout"
+import { formatLb } from "../units"
 
 export const INK = "#0a0a0a" // Cardinal black
 export const BRAND = "#D72638" // Cardinal red
@@ -154,7 +155,7 @@ export function TitleBlock({
       </text>
       <Cell x={rx + 94} y={y + 132} w={rw - 94 - 80} h={18} label="WEIGHT" />
       <text x={rx + 94 + 46} y={y + 145} fontSize={10.5} fill={INK}>
-        {`≈ ${weightLb.toFixed(2)} LB`}
+        {`≈ ${formatLb(weightLb)} LB`}
       </text>
       <Cell x={rx + rw - 80} y={y + 132} w={80} h={18} label="SHEET" />
       <text x={rx + rw - 40} y={y + 145} fontSize={10.5} fill={INK}>

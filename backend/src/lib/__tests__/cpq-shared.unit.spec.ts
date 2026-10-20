@@ -10,6 +10,9 @@ import {
   CPQ_TABLES_HASH,
   END_CONNECTION_ROWS,
   KIT_RULES,
+  formatLb,
+  roundLb,
+  totalLb,
   buildBom,
   candidatesFor,
   canonicalBomText,
@@ -496,6 +499,21 @@ describe("geometry and weight", () => {
     const bv = manifoldGeometry({ ...m, dstyle: "bv" })
     expect(manifold.weight({ ...m, dstyle: "bv" }).per_unit_lb - g.approxWeightLb).toBeCloseTo(12 * 3, 9)
     expect(bv.bbox.maxY).toBeCloseTo(7 + 3.5, 9)
+  })
+
+  it("weights round once to 0.1 lb; totals are the rounded weight × units", () => {
+    expect(roundLb(88.64)).toBe(88.6)
+    expect(roundLb(88.65)).toBe(88.7)
+    expect(totalLb(88.64, 2)).toBe(177.2) // not round(177.28) = 177.3
+    expect(totalLb(0.1, 3)).toBe(0.3)
+    expect(formatLb(88.6)).toBe("88.6")
+    expect(formatLb(177.2)).toBe("177.2")
+    expect(formatLb(9)).toBe("9.0")
+    expect(formatLb(1234.56)).toBe("1,234.6")
+    for (const o of manifoldSamples()) {
+      const w = manifold.weight(o).per_unit_lb
+      expect(totalLb(w, 2)).toBeCloseTo(2 * roundLb(w), 9)
+    }
   })
 
   it("kit weight sums its lines; strainer and hose weights include their parts", () => {

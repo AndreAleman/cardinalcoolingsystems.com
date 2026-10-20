@@ -8,14 +8,14 @@
     "dimensions/end-connections.json": "551cab9ee1e1ab2eca7a48cb47725e3465cdd07172ba05c6025949381081eb6b",
     "dimensions/materials.json": "cbaca4253f7de3f0755d03887c5a41f4dbdba421b6266b4076ff42e814f7c214",
     "dimensions/tube-sizes.json": "aa61418011c8ff4cb6139f15833ab6d5235ed0e970f9787e0274b5bed92791cd",
-    "fixtures/hose-sheet-golden.svg": "c16df0c46434e229bb01d2f89615a9f6bcd1f4fe37a4b6cd8948a11aecd55f58",
-    "fixtures/kit-sheet-golden.svg": "20c9cabbd0280d76c63898cce11e931b0ef0b3e61e1d846545a0a23c3b381cff",
+    "fixtures/hose-sheet-golden.svg": "0bfdaa666708ca36c7e9a360641049b83125832498f6cf6b33a6e7895263dac2",
+    "fixtures/kit-sheet-golden.svg": "455321abd5334caa463d990916df5c44d4a028aa4411fd7f7eaf0c657cc2aa34",
     "fixtures/manifold-golden.json": "47e2f647afc04f597f9825832a561bcc32b2cf2426a503979403277106e2c91a",
-    "fixtures/manifold-sheet-golden.svg": "976218eff96d6d72461495dee4bccfc0196720d660f891b4ac04105a80b449ed",
-    "fixtures/manifold-valves-sheet-golden.svg": "80d931e9fd345424da812089a1ba1738cfd4313fb9283c4a0bc9566632e41e52",
-    "fixtures/strainer-sheet-golden.svg": "a96a6d216c40049b39f62da2a021d3dc28410a8f65558fc0c68fc8761822742c",
+    "fixtures/manifold-sheet-golden.svg": "46a232956c8bb394b6197634f6f29d937035f8c4f3aca87a7a14634ea5f19e9a",
+    "fixtures/manifold-valves-sheet-golden.svg": "37ee1f5e7c739d19f9adca964a46e605ab8ed868027bcba027d55c80cf276822",
+    "fixtures/strainer-sheet-golden.svg": "6ddd36d729014e58ba848319c7e0ebcff4c796c67f5db817a6eb3382afa45642",
     "fixtures/transition-golden.json": "99ea0b2f4af6fa245890e762d4efc93ff8f9acea521f0f1bec72a4002d959bc3",
-    "fixtures/transition-reducing-sheet-golden.svg": "1d004dd578cdd018f7ffb5727b4b8b9b0df7834c6afa5446b93616119e95d7af",
-    "fixtures/transition-sheet-golden.svg": "18ad8c500569a41ca8d947f56386454db53620cac131df408a7fbdde3c15d4bc"
+    "fixtures/transition-reducing-sheet-golden.svg": "fc1749927061a2ff9b63da44ca3965d11150e3516dc11942bb1fb5e6e9cb0968",
+    "fixtures/transition-sheet-golden.svg": "be5177a04e6008867dc0d06573072bc430c387995f9d618c4caf7c12a240ba82"
   }
 }
