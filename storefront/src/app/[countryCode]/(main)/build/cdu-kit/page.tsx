@@ -41,6 +41,7 @@ export default function CduKitPage({ params, searchParams }: Props) {
       }
       citations={CDU_KIT_CITATIONS}
       content={<CduKitContent countryCode={countryCode} />}
+      after={<WeCanSupply countryCode={countryCode} items={KIT_WE_CAN_SUPPLY} />}
     >
       <BuilderShell
         type="cdu-kit"
@@ -48,12 +49,7 @@ export default function CduKitPage({ params, searchParams }: Props) {
         ignored={ignored}
         drawnDate={drawnDate()}
         formTitle="Configure your kit"
-        formFooter={
-          <>
-            <GlycolNote />
-            <WeCanSupply countryCode={countryCode} items={KIT_WE_CAN_SUPPLY} />
-          </>
-        }
+        formFooter={<GlycolNote />}
       />
     </BuilderPage>
   )

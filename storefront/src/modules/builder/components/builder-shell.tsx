@@ -2,8 +2,13 @@
 
 // The builder shell: one client island shared by the five builders. The page around it stays
 // server-rendered (question H1, answer, citations). Holds the options (URL-synced), resolves live,
-// and renders the form, the Part Number card (badge before price), the actions, the drawing
-// (shared BuilderSheet, no 3D), the BOM, the Spec Block and the CAD panel.
+// and renders, in reading order (David's review, Oct 20):
+//   1. the result line (count first, then the resolve's price or the quote promise);
+//   2. the primary questions, then one collapsed "Options" section (lib/primary-fields.ts);
+//   3. the Part Number card (badge before price) and Add to Quote List;
+//   4. the picture: the kit schematic (cdu-kit) or the shared drawing (geometry builders);
+//   5. the one BOM table;
+//   6. below the buyer's path to the price: the Spec Block and the CAD panel.
 
 import { cadBlockingRangeReasons, type BuilderType, type Options } from "@lib/cpq/shared"
 import { BuilderSheet } from "@lib/cpq/shared/drawing"
@@ -12,13 +17,19 @@ import { cadKindsLabel } from "@lib/builder/cad"
 import { fieldsFor } from "@lib/builder/fields"
 import { formatAsOf, pricingModeTag, pricingView } from "@lib/builder/pricing-view"
 import { ignoredParamsNotice, unitNoun, unitsOf } from "@lib/builder/state"
+import { optionsSummary, splitFields } from "@modules/builder/lib/primary-fields"
+import { resultSummary, summaryBom } from "@modules/builder/lib/result-summary"
 import { useBuilderState } from "@modules/builder/lib/use-builder-state"
 import { useMemo, useState, type ReactNode } from "react"
 import BomTable from "./bom-table"
 import BuilderActions from "./builder-actions"
 import CadPanel from "./cad-panel"
+import CduPicker from "./cdu-picker"
 import OptionForm from "./option-form"
+import OptionsDisclosure from "./options-disclosure"
 import PartNumberCard from "./part-number-card"
+import ResultLine from "./result-line"
+import { KitSchematic, kitSchematicCaption } from "./schematic/kit-schematic"
 import SpecBlock from "./spec-block"
 import StockedAlternativeCallout from "./stocked-alternative"
 
@@ -31,7 +42,7 @@ export type BuilderShellProps = {
   /** Title-block DRAWN date, computed on the server so SSR and hydration agree. */
   drawnDate: string
   formTitle: string
-  /** Rendered under the form (e.g. "we can supply" lines, a glycol note). */
+  /** Rendered at the end of the Options section (e.g. the glycol note). */
   formFooter?: ReactNode
 }
 
@@ -39,6 +50,10 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
   const { options, key, local, status, result, retry, change, error } = useBuilderState(type, initialOptions)
   const [showIgnored, setShowIgnored] = useState(ignored.length > 0)
   const fields = useMemo(() => fieldsFor(type), [type])
+  const { primary, advanced } = useMemo(() => splitFields(type, fields), [type, fields])
+  const isKit = type === "cdu-kit"
+  // The kit's first question is the combined CDU / port picker; the rest render as fields.
+  const primaryFields = isKit ? primary.filter((f) => f.key !== "cdu") : primary
 
   const view = pricingView({ status, result, staticLeadTime: local.leadTime })
   const mode = pricingModeTag(view)
@@ -81,6 +96,15 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
   )
 
   const notice = showIgnored ? ignoredParamsNotice(ignored) : null
+  const summary = resultSummary({
+    builderType: type,
+    options,
+    units,
+    bom: summaryBom(done, local.bom),
+    view,
+    stockedSku: alt?.sku ?? null,
+  })
+  const advancedError = !!error && advanced.some((f) => f.key === error.key)
 
   return (
     <div className="flex flex-col gap-6" data-testid="builder-shell" data-builder-type={type} data-config-key={key} data-resolve-status={status}>
@@ -93,12 +117,30 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
         </div>
       ) : null}
 
+      <ResultLine summary={summary} reviewReasons={reviewReasons} />
+
       <div className="grid grid-cols-1 gap-6 small:grid-cols-12">
         <div className="small:col-span-5 medium:col-span-4">
-          <div className="flex flex-col gap-6 border border-neutral-200 bg-white p-4 xsmall:p-5 small:sticky small:top-28">
-            <h2 className="text-lg font-semibold text-neutral-900">{formTitle}</h2>
-            <OptionForm fields={fields} options={options} onChange={(k, v) => change(k, v, mode)} error={error} />
-            {formFooter}
+          <div className="flex flex-col gap-4 border border-neutral-200 bg-white p-4 xsmall:p-5 small:sticky small:top-28" data-testid="builder-questions">
+            <h2 className="sr-only">{formTitle}</h2>
+            {isKit ? <CduPicker fields={fields} options={options} onChange={(k, v) => change(k, v, mode)} error={error} /> : null}
+            <OptionForm fields={primaryFields} options={options} onChange={(k, v) => change(k, v, mode)} error={error} layout="grid" />
+            {advanced.length ? (
+              <OptionsDisclosure summary={optionsSummary(type, options, advanced)} forceOpen={advancedError}>
+                <div className="flex flex-col gap-5">
+                  <OptionForm
+                    fields={advanced}
+                    options={options}
+                    onChange={(k, v) => change(k, v, mode)}
+                    error={error}
+                    testId="builder-form-options"
+                  />
+                  {formFooter}
+                </div>
+              </OptionsDisclosure>
+            ) : (
+              formFooter
+            )}
           </div>
         </div>
 
@@ -111,17 +153,32 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
             unitsNoun={unitNoun(type, units)}
             units={units}
             weightLb={weightLb}
-            reviewReasons={reviewReasons}
+            reviewReasons={[]}
             onRetry={retry}
           />
           {alt ? <StockedAlternativeCallout alt={alt} currency={currency} /> : null}
           <BuilderActions type={type} options={options} partNumber={addPartNumber} pricingMode={mode} cadLabel={cadKindsLabel(type)} />
-          <figure className="border border-neutral-200 bg-white p-2" data-testid="builder-drawing">
-            {drawing}
-            <figcaption className="px-2 pb-1 pt-2 text-xs text-neutral-500">
-              {mode === "quote" ? "Reference drawing. Certified drawing on quote approval." : "Reference drawing."}
-            </figcaption>
-          </figure>
+          {isKit ? (
+            <figure className="border border-neutral-200 bg-white px-3 py-3 xsmall:px-4" data-testid="kit-schematic-figure">
+              <div className="hidden xsmall:block">
+                <KitSchematic options={options} title="CDU hookup kit schematic" className="mx-auto h-auto w-full max-w-[720px]" />
+              </div>
+              <figcaption className="text-sm text-neutral-700 xsmall:mt-2 xsmall:text-xs xsmall:text-neutral-500" data-testid="kit-schematic-caption">
+                {kitSchematicCaption(options)}
+              </figcaption>
+            </figure>
+          ) : (
+            <figure className="border border-neutral-200 bg-white p-2" data-testid="builder-drawing">
+              {/* Phones: the sheet keeps a readable size and scrolls sideways instead of shrinking. */}
+              <div className="-mx-2 overflow-x-auto px-2 xsmall:mx-0 xsmall:overflow-visible xsmall:px-0">
+                <div className="min-w-[680px] xsmall:min-w-0">{drawing}</div>
+              </div>
+              <figcaption className="px-2 pb-1 pt-2 text-xs text-neutral-500">
+                {mode === "quote" ? "Reference drawing. Certified drawing on quote approval." : "Reference drawing."}
+                <span className="xsmall:hidden"> Scroll sideways for the full sheet.</span>
+              </figcaption>
+            </figure>
+          )}
           <BomTable
             rows={rows}
             unitNoun={unitNoun(type, 1)}

@@ -47,6 +47,7 @@ export default function RowManifoldPage({ params, searchParams }: Props) {
         </p>
       }
       citations={CITATIONS}
+      after={<WeCanSupply countryCode={countryCode} items={MANIFOLD_WE_CAN_SUPPLY} />}
       content={
         <>
           <LeadTimeFacts />
@@ -94,7 +95,6 @@ export default function RowManifoldPage({ params, searchParams }: Props) {
         ignored={ignored}
         drawnDate={drawnDate()}
         formTitle="Configure your manifold"
-        formFooter={<WeCanSupply countryCode={countryCode} items={MANIFOLD_WE_CAN_SUPPLY} />}
       />
     </BuilderPage>
   )

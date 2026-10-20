@@ -1,8 +1,9 @@
 "use client"
 
 // BOM table: one row per part, quantity per unit and in total, unit price, line total, a stock
-// badge, the line's lead time and a note under any line that isn't Instant. Phones (< xsmall) get
-// the same rows stacked, so the prices aren't hidden off-screen in a sideways scroller.
+// badge, the line's lead time and a note under any line that isn't Instant. The page's one BOM: a
+// single table at every width. Phones (< xsmall) keep Part, Qty and Line total as columns and fold
+// the per-unit quantity, unit price and stock under the part name, so nothing scrolls sideways.
 
 import { listLeadTime, type BomRow } from "@lib/builder/bom-view"
 import { SIGN_IN_PROMPT } from "@lib/builder/pricing-view"
@@ -64,57 +65,28 @@ export default function BomTable({
           </p>
         ) : null}
       </header>
-      <ul className="divide-y divide-neutral-100 xsmall:hidden" data-testid="bom-cards">
-        {rows.map((r, i) => (
-          <li key={`${r.role}-${i}`} className="flex flex-col gap-2 px-4 py-3 text-sm" data-testid="bom-card" data-stock={r.stock}>
-            <div>
-              <p className="text-neutral-900">{r.label}</p>
-              {r.sku ? <p className="break-all font-mono text-xs text-neutral-500">{r.sku}</p> : null}
-              {r.note ? <p className="mt-1 text-xs text-neutral-500">{r.note}</p> : null}
-            </div>
-            <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-              <dt className="text-neutral-500">Per {unitNoun} / total</dt>
-              <dd className="text-right tabular-nums text-neutral-900">
-                {r.qtyPerUnit} / {r.qtyTotal}
-              </dd>
-              <dt className="text-neutral-500">Unit price</dt>
-              <dd className="text-right tabular-nums text-neutral-900">{price(r.unitPrice, r)}</dd>
-              <dt className="text-neutral-500">Line total</dt>
-              <dd className="text-right font-semibold tabular-nums text-neutral-900">{price(r.lineTotal, r)}</dd>
-            </dl>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className={clx("inline-block border px-2 py-0.5 text-xs font-medium", STOCK_CLS[r.stock])}>{r.stockLabel}</span>
-              <span className="text-xs text-neutral-500">{r.leadTime}</span>
-            </div>
-          </li>
-        ))}
-        {total !== null ? (
-          <li className="flex justify-between bg-neutral-50 px-4 py-3 text-sm font-semibold text-neutral-900">
-            <span>Total</span>
-            <span className="tabular-nums">{money(total)}</span>
-          </li>
-        ) : null}
-      </ul>
-      <div className="hidden overflow-x-auto xsmall:block">
-        <table className="w-full min-w-[600px] text-left text-sm">
+      <div className="xsmall:overflow-x-auto">
+        <table className="w-full text-left text-sm xsmall:min-w-[600px]">
           <thead className="bg-neutral-50 text-xs uppercase tracking-wide text-neutral-500">
             <tr>
               <th scope="col" className="px-4 py-2 font-medium">
                 Part
               </th>
-              <th scope="col" className="px-3 py-2 text-right font-medium">
+              <th scope="col" className="hidden px-3 py-2 text-right font-medium xsmall:table-cell">
                 Per {unitNoun}
               </th>
-              <th scope="col" className="px-3 py-2 text-right font-medium">
-                Total qty
+              <th scope="col" className="px-2 py-2 text-right font-medium xsmall:px-3">
+                <span className="xsmall:hidden">Qty</span>
+                <span className="hidden xsmall:inline">Total qty</span>
               </th>
-              <th scope="col" className="px-3 py-2 text-right font-medium">
+              <th scope="col" className="hidden px-3 py-2 text-right font-medium xsmall:table-cell">
                 Unit price
               </th>
               <th scope="col" className="px-3 py-2 text-right font-medium">
-                Line total
+                <span className="xsmall:hidden">Total</span>
+                <span className="hidden xsmall:inline">Line total</span>
               </th>
-              <th scope="col" className="px-4 py-2 font-medium">
+              <th scope="col" className="hidden px-4 py-2 font-medium xsmall:table-cell">
                 Stock / lead time
               </th>
             </tr>
@@ -122,20 +94,28 @@ export default function BomTable({
           <tbody>
             {rows.map((r, i) => (
               <tr key={`${r.role}-${i}`} className="border-t border-neutral-100 align-top" data-testid="bom-row" data-stock={r.stock}>
-                <td className="px-4 py-3">
+                <td className="px-3 py-3 xsmall:px-4">
                   <p className="text-neutral-900">{r.label}</p>
-                  {r.sku ? <p className="font-mono text-xs text-neutral-500">{r.sku}</p> : null}
+                  {r.sku ? <p className="break-all font-mono text-xs text-neutral-500">{r.sku}</p> : null}
                   {r.note ? (
                     <p className="mt-1 text-xs text-neutral-500" data-testid="bom-note">
                       {r.note}
                     </p>
                   ) : null}
+                  {/* Phones: the hidden columns, folded under the part. */}
+                  <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-neutral-500 xsmall:hidden">
+                    <span>
+                      {r.qtyPerUnit} per {unitNoun}
+                      {r.unitPrice !== null ? ` · ${money(r.unitPrice)} each` : ""}
+                    </span>
+                    <span className={clx("inline-block border px-1.5 py-0.5 font-medium", STOCK_CLS[r.stock])}>{r.stockLabel}</span>
+                  </p>
                 </td>
-                <td className="px-3 py-3 text-right tabular-nums">{r.qtyPerUnit}</td>
-                <td className="px-3 py-3 text-right tabular-nums">{r.qtyTotal}</td>
-                <td className="px-3 py-3 text-right tabular-nums">{price(r.unitPrice, r)}</td>
+                <td className="hidden px-3 py-3 text-right tabular-nums xsmall:table-cell">{r.qtyPerUnit}</td>
+                <td className="px-2 py-3 text-right tabular-nums xsmall:px-3">{r.qtyTotal}</td>
+                <td className="hidden px-3 py-3 text-right tabular-nums xsmall:table-cell">{price(r.unitPrice, r)}</td>
                 <td className="px-3 py-3 text-right tabular-nums">{price(r.lineTotal, r)}</td>
-                <td className="px-4 py-3">
+                <td className="hidden px-4 py-3 xsmall:table-cell">
                   <span className={clx("inline-block border px-2 py-0.5 text-xs font-medium", STOCK_CLS[r.stock])}>{r.stockLabel}</span>
                   <p className="mt-1 text-xs text-neutral-500">{r.leadTime}</p>
                 </td>
@@ -145,13 +125,16 @@ export default function BomTable({
           {total !== null ? (
             <tfoot>
               <tr className="border-t border-neutral-200 bg-neutral-50">
-                <td colSpan={4} className="px-4 py-3 text-right text-sm font-semibold text-neutral-900">
+                <td colSpan={2} className="px-4 py-3 text-right text-sm font-semibold text-neutral-900 xsmall:hidden">
+                  Total
+                </td>
+                <td colSpan={4} className="hidden px-4 py-3 text-right text-sm font-semibold text-neutral-900 xsmall:table-cell">
                   Total
                 </td>
                 <td className="px-3 py-3 text-right text-sm font-semibold tabular-nums text-neutral-900" data-testid="bom-total">
                   {money(total)}
                 </td>
-                <td />
+                <td className="hidden xsmall:table-cell" />
               </tr>
             </tfoot>
           ) : null}

@@ -38,6 +38,7 @@ export default function BuilderActions({ type, options, partNumber, pricingMode,
   const [status, setStatus] = useState<{ tone: "ok" | "error" | "info"; text: string; link?: boolean } | null>(null)
   const mainRef = useRef<HTMLButtonElement>(null)
   const [mainVisible, setMainVisible] = useState(true)
+  const barRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const el = mainRef.current
@@ -46,6 +47,23 @@ export default function BuilderActions({ type, options, partNumber, pricingMode,
     io.observe(el)
     return () => io.disconnect()
   }, [])
+
+  // While the sticky bar shows, pad the page bottom by its height so it never covers the footer.
+  useEffect(() => {
+    const bar = barRef.current
+    if (mainVisible || !bar) return
+    const body = document.body
+    const before = body.style.paddingBottom
+    const apply = () => {
+      body.style.paddingBottom = bar.offsetHeight > 0 ? `${bar.offsetHeight}px` : before
+    }
+    apply()
+    window.addEventListener("resize", apply)
+    return () => {
+      window.removeEventListener("resize", apply)
+      body.style.paddingBottom = before
+    }
+  }, [mainVisible])
 
   // A new configuration clears the last message.
   const key = JSON.stringify(options)
@@ -141,6 +159,7 @@ export default function BuilderActions({ type, options, partNumber, pricingMode,
 
       {/* Mobile only: Part Number + CTA while the main button is off screen. */}
       <div
+        ref={barRef}
         className={clx(
           "fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] backdrop-blur small:hidden",
           mainVisible && "hidden",
