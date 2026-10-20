@@ -23,7 +23,7 @@
         ]
       },
       "share_query": "v=1&header=400&drops=12&pitch=24&drop=100&dstyle=tc&ends=tc&pair=1&alloy=t316l&finish=32&fill=1&inst=0&docs=hydro,mtr",
-      "part_number": "clmp-clmp-rman-n12-d100clmp-p24-6-400",
+      "part_number": "clmp-clmp-rman-n12-d100-clmp-p24-6-400",
       "expected": {
         "headerLength": 280,
         "headerTubeLength": 278.75,
@@ -192,7 +192,7 @@
         ]
       },
       "share_query": "v=1&header=400&drops=4&pitch=18&drop=100&dstyle=bv&ends=cap&pair=1&alloy=t316l&finish=32&fill=1&inst=1&docs=hydro,mtr",
-      "part_number": "clmp-cap-rman-n4-d100bv-p18-6-400-ip",
+      "part_number": "clmp-cap-rman-n4-d100-bv-p18-6-400-ip",
       "expected": {
         "headerLength": 70,
         "headerTubeLength": 68,
@@ -317,7 +317,7 @@
         ]
       },
       "share_query": "v=1&header=600&drops=6&pitch=30&drop=150&dstyle=uqd&ends=fl150&pair=1&alloy=t316l&finish=32&fill=0&inst=0&docs=hydro,mtr",
-      "part_number": "fl150-fl150-rman-n6-d150uqd-p30-6-600-nf",
+      "part_number": "fl150-fl150-rman-n6-d150-uqd-p30-6-600-nf",
       "expected": {
         "headerLength": 170,
         "headerTubeLength": 163,

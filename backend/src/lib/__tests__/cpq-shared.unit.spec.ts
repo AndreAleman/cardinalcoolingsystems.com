@@ -194,9 +194,9 @@ describe("part numbers", () => {
     expect(transition.partNumber({ ...transition.defaults, a: "bw", b: "bwp", len: 36.125, alloy: "t304l", od: 800, odb: 800 })).toBe(
       "bw-bwp-tspool-l36p125-4-800"
     )
-    expect(manifold.partNumber(manifold.defaults)).toBe("clmp-clmp-rman-n12-d100clmp-p24-6-400")
+    expect(manifold.partNumber(manifold.defaults)).toBe("clmp-clmp-rman-n12-d100-clmp-p24-6-400")
     expect(manifold.partNumber({ ...manifold.defaults, ends: "cap", dstyle: "uqd", finish: "20", fill: "0", inst: "1" })).toBe(
-      "clmp-cap-rman-n12-d100uqd-p24-6-400-ra20-nf-ip"
+      "clmp-cap-rman-n12-d100-uqd-p24-6-400-ra20-nf-ip"
     )
     expect(strainer.partNumber({ ...strainer.defaults, iso: "1", dp: "1", mesh: "100" })).toBe("clmp-clmp-strn-short-m100-6-200-iso-dp")
     expect(hose.partNumber({ ...hose.defaults, ends: "tc-npt", cover: "ptfe", sleeve: "fire", size: 50 })).toBe(
@@ -231,6 +231,31 @@ describe("part numbers", () => {
     })
   })
 
+  it("manifold: the drop style is its own token (Sanitube scheme); the legacy glued form still parses", () => {
+    let n = 0
+    for (const o of manifoldSamples()) {
+      const pn = manifold.partNumber(o)
+      const t = pn.split("-")
+      expect(t[4]).toBe(`d${String(o.drop).padStart(3, "0")}`)
+      expect(t[5]).toBe({ tc: "clmp", bv: "bv", uqd: "uqd" }[o.dstyle])
+      // Legacy: d100clmp glued (saved configurations, cart lines).
+      const legacy = [...t.slice(0, 4), t[4] + t[5], ...t.slice(6)].join("-")
+      const fromLegacy = parsePartNumber(legacy)
+      const fromNew = parsePartNumber(pn)
+      expect(fromLegacy).toEqual(fromNew)
+      expect(fromLegacy?.builder_type).toBe("row-manifold")
+      // Legacy → options → the current Part Number.
+      expect(manifold.partNumber(fromLegacy!.options as Options)).toBe(pn)
+      n++
+    }
+    expect(n).toBeGreaterThan(300)
+    expect(parsePartNumber("clmp-clmp-rman-n12-d100clmp-p24-6-400")).toEqual(parsePartNumber("clmp-clmp-rman-n12-d100-clmp-p24-6-400"))
+    expect(parsePartNumber("CLMP-CAP-RMAN-N4-D100BV-P18-6-400-IP")).toMatchObject({
+      builder_type: "row-manifold",
+      options: { dstyle: "bv", ends: "cap", drops: 4, pitch: 18, inst: "1" },
+    })
+  })
+
   it("kit: the Part Number is a hash of the canonical BOM (same parts → same number)", () => {
     const seen = new Map<string, string>()
     for (const o of kitSamples()) {
@@ -254,7 +279,7 @@ describe("part numbers", () => {
   })
 
   it("rejects anything that is not a builder Part Number", () => {
-    for (const s of ["14AM76-150", "kit-cdu-xyz", "clmp-fl150-tspool-l12-6-201", "clmp-fl150-tspool-l12-6-200-200", "clmp-clmp-rman-n12-d100clmp-p24-6-400-nf-ra20", "a-b-c", ""]) {
+    for (const s of ["14AM76-150", "kit-cdu-xyz", "clmp-fl150-tspool-l12-6-201", "clmp-fl150-tspool-l12-6-200-200", "clmp-clmp-rman-n12-d100-clmp-p24-6-400-nf-ra20", "clmp-clmp-rman-n12-d100clmp-p24-6-400-nf-ra20", "clmp-clmp-rman-n12-d100-xyz-p24-6-400", "clmp-clmp-rman-n12-d100-clmp-p24-6", "clmp-clmp-rman-n12-d100-clmp-clmp-p24-6-400", "a-b-c", ""]) {
       expect(parsePartNumber(s)).toBeNull()
     }
   })

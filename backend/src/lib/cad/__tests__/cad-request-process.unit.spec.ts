@@ -147,7 +147,7 @@ describe("cad_request.created (review off)", () => {
 
   it("a manifold request carries the manifold rows and Share Link", async () => {
     const { cad, reqs } = reviewOff([
-      { builder_type: "row-manifold", configuration: { ...MANIFOLD_OPTIONS }, part_number: "clmp-clmp-rman-n12-d100clmp-p24-6-400" },
+      { builder_type: "row-manifold", configuration: { ...MANIFOLD_OPTIONS }, part_number: "clmp-clmp-rman-n12-d100-clmp-p24-6-400" },
     ])
     const { deps, sent } = makeDeps(cad)
     expect(await handleCadRequestCreated(deps, reqs[0].id)).toBe("emailed")
