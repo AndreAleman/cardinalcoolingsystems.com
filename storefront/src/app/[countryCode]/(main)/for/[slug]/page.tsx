@@ -73,7 +73,7 @@ export default async function AccountLandingPage({ params, searchParams }: Props
             ) : null}
             {conn ? (
               <p data-testid="account-connection">
-                From your datasheet: {conn.label} (
+                From your {conn.sourceKind}: {conn.label} (
                 <a href={conn.source.url} target="_blank" rel="noopener noreferrer" className="underline">
                   {conn.source.title}
                 </a>

@@ -16,13 +16,13 @@ describe("account pages data (B15)", () => {
     for (const s of slugs) expect(s).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/)
   })
 
-  it("trigger and connection stay null unless verified; only Boyd has a connection", () => {
+  it("trigger and connection stay null unless verified; only Boyd and Vertiv have a connection", () => {
     for (const p of ACCOUNT_PAGES) {
       if (p.trigger) {
         expect(p.trigger.text.length).toBeGreaterThan(0)
         expect(p.trigger.source.url).toMatch(/^https:\/\//)
       }
-      if (p.slug !== "boyd") expect(p.connection).toBeNull()
+      if (p.slug !== "boyd" && p.slug !== "vertiv") expect(p.connection).toBeNull()
     }
   })
 
@@ -33,6 +33,18 @@ describe("account pages data (B15)", () => {
     expect(CDU_PORTS).toContain(boyd.connection!.port)
     expect(CDU_MODELS.find((m) => m.key === boyd.connection!.cdu)!.port).toBe(boyd.connection!.port)
     expect(kitLinkFor(boyd.connection!)).toBe("/build/cdu-kit?cdu=boyd-10u&port=tc150")
+  })
+
+  it("Vertiv: 2-1/2\" sanitary flange from the CoolChip CDU 600 guide, the model's own port", () => {
+    const v = accountPage("vertiv")!
+    expect(v.connection).toMatchObject({ equipment: "CoolChip CDU 600", port: "tc250", cdu: "vertiv-cdu-600" })
+    expect(v.connection!.label).toMatch(/2-1\/2" sanitary flange/)
+    expect(v.connection!.source.url).toBe(
+      "https://www.vertiv.com/4a689f/globalassets/shared/vertiv-coolchip-cdu-600-installation-and-commissioning-guide-sl-07625.pdf",
+    )
+    expect(CDU_PORTS).toContain(v.connection!.port)
+    expect(CDU_MODELS.find((m) => m.key === v.connection!.cdu)!.port).toBe(v.connection!.port)
+    expect(kitLinkFor(v.connection!)).toBe("/build/cdu-kit?cdu=vertiv-cdu-600&port=tc250")
   })
 
   it("lookup is case-insensitive and null for unknown slugs", () => {
