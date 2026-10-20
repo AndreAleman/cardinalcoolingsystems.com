@@ -7,6 +7,7 @@ import path from "node:path"
 import {
   BUILDERS,
   BUILDER_TYPES,
+  CDU_MODELS,
   CPQ_TABLES_HASH,
   END_CONNECTION_ROWS,
   KIT_RULES,
@@ -323,6 +324,31 @@ describe("CDU kit BOM (spec 'BOM rules', per CDU, per port)", () => {
     expect(kit.leadTime(options).kind).toBe("custom")
     // Against the live catalog: the stocked lines resolve; spool, valve (TCBFN6 unpublished) and strainer do not.
     expect(bom.lines.map((l) => resolveLine(l))).toEqual([null, "14AM76-150", "13MHHM-100-150", "GTCE-150", null, null])
+  })
+
+  it("Vertiv CoolChip CDU 600: 2-1/2\" sanitary ports (SL-07625 Rev C Table 4.2), both loops", () => {
+    const model = CDU_MODELS.find((m) => m.key === "vertiv-cdu-600")!
+    expect(model).toMatchObject({ port: "tc250", label: "Vertiv CoolChip CDU 600" })
+    expect(model.source).toContain("SL-07625")
+    expect(model.source).toContain("https://www.vertiv.com/")
+    for (const side of ["tcs", "fws"] as const) {
+      const { options, ignored } = kit.decode({ cdu: "vertiv-cdu-600", side })
+      expect(ignored).toEqual([])
+      expect(options.port).toBe("tc250")
+      const bom = kit.bom({ ...options, run: "hard", far: "tc", iso: "bv", strainer: "short" })
+      expect(line(bom, "ferrule").candidates).toEqual(["14AM76-250", "14WMP6-250"])
+      expect(line(bom, "clamp").candidates).toEqual(["13MHHM-250"])
+      expect(line(bom, "gasket_epdm").candidates).toEqual(["GTCE-250"])
+      expect(line(bom, "valve_bv").candidates).toEqual(["TCBVS-250"])
+      expect(line(bom, "spool").part_number).toBe("clmp-clmp-spool-l36-6-250")
+      expect(line(bom, "strainer").part_number).toBe("clmp-clmp-strn-short-m20-6-250")
+      expect(kit.weight(options).per_unit_lb).toBeGreaterThan(0)
+      expect(kit.describe(options)).toContain('VERTIV COOLCHIP CDU 600, 2-1/2" TC PORTS')
+    }
+    // The 2-1/2" ferrule row matches Vertiv's 77.5 mm flange diameter.
+    expect(endConnectionRow("tc", 250).max_od_in * 25.4).toBeCloseTo(77.5, 0)
+    expect(kit.decode({ cdu: "vertiv-cdu-600", port: "tc150" })).toMatchObject({ options: { port: "tc250" }, ignored: ["port"] })
+    expect(kit.validate({ ...kit.defaults, cdu: "vertiv-cdu-600", port: "tc250" }).ok).toBe(true)
   })
 
   it("spares: +10% gaskets rounded up, 1 clamp per kit; units multiply", () => {
@@ -769,7 +795,7 @@ function hoseSamples(): HoseOptions[] {
 function kitSamples(): CduKitOptions[] {
   const out: CduKitOptions[] = []
   const d = kit.defaults as CduKitOptions
-  for (const port of ["tc100", "tc150", "tc200", "tc300", "tc400", "dn50", "dn80"] as const)
+  for (const port of ["tc100", "tc150", "tc200", "tc250", "tc300", "tc400", "dn50", "dn80"] as const)
     for (const run of ["hard", "hose"] as const)
       for (const far of ["tc", "fl150", "npt", "grv"] as const)
         for (const iso of ["none", "bfv", "bv"] as const)

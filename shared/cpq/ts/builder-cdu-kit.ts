@@ -45,9 +45,16 @@ export const CDU_MODELS: readonly { key: CduKitOptions["cdu"]; label: string; po
     port: "tc150",
     source: "Boyd 10U Cooling Distribution Unit datasheet: 1.5\" sanitary (tri-clamp) supply and return ports",
   },
+  {
+    key: "vertiv-cdu-600",
+    label: "Vertiv CoolChip CDU 600",
+    port: "tc250",
+    source:
+      "Vertiv CoolChip CDU 600 Installation and Commissioning Guide, SL-07625 Rev C 08-25, Table 4.2 and §5.4/5.5: primary (FWS) and secondary (TCS) connections are 2-1/2\" (DN65) sanitary flanges to BS4825 Pt.3 or equivalent, 77.5 mm flange diameter (the 2-1/2\" tri-clamp ferrule). The optional 6-way secondary manifold with 1\" hose barbs is not configured. https://www.vertiv.com/4a689f/globalassets/shared/vertiv-coolchip-cdu-600-installation-and-commissioning-guide-sl-07625.pdf",
+  },
 ]
 
-/** Tube size of a CDU port: tcNNN → NNN; DN50 → 2" (200), DN80 → 3" (300) hygienic flange. */
+/** Tube size of a CDU port: tcNNN → NNN (tc250 = 2-1/2"); DN50 → 2" (200), DN80 → 3" (300) hygienic flange. */
 export function cduPortSize(port: CduPort): SizeCode {
   const m = /^tc(\d+)$/.exec(port)
   if (m) return Number(m[1])

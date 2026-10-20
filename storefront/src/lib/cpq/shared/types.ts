@@ -204,9 +204,9 @@ export type DecodeResult<O> = { options: O; ignored: string[] }
 export type OptionError = { key: string; message: string }
 export type ValidationResult<O> = { ok: true; value: O } | { ok: false; errors: OptionError[] }
 
-export type CduPort = "tc100" | "tc150" | "tc200" | "tc300" | "tc400" | "dn50" | "dn80"
+export type CduPort = "tc100" | "tc150" | "tc200" | "tc250" | "tc300" | "tc400" | "dn50" | "dn80"
 export type CduKitOptions = {
-  cdu: "none" | "boyd-10u"
+  cdu: "none" | "boyd-10u" | "vertiv-cdu-600"
   port: CduPort
   side: "tcs" | "fws"
   run: "hard" | "hose"

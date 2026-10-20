@@ -14,10 +14,10 @@ import type {
 
 const ALLOY: KeySpec = { key: "alloy", type: "enum", values: ["t316l", "t304l"], default: "t316l" }
 
-export const CDU_PORTS = ["tc100", "tc150", "tc200", "tc300", "tc400", "dn50", "dn80"] as const
+export const CDU_PORTS = ["tc100", "tc150", "tc200", "tc250", "tc300", "tc400", "dn50", "dn80"] as const
 
 export const CDU_KIT_KEYS: readonly KeySpec[] = [
-  { key: "cdu", type: "enum", values: ["none", "boyd-10u"], default: "none" },
+  { key: "cdu", type: "enum", values: ["none", "boyd-10u", "vertiv-cdu-600"], default: "none" },
   { key: "port", type: "enum", values: CDU_PORTS, default: "tc150" },
   { key: "side", type: "enum", values: ["tcs", "fws"], default: "tcs" },
   { key: "run", type: "enum", values: ["hard", "hose"], default: "hard" },
