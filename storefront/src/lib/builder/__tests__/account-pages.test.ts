@@ -40,3 +40,22 @@ describe("account pages data (B15)", () => {
     expect(accountPage("nope")).toBeNull()
   })
 })
+
+describe("account pages wording rule", () => {
+  // "Prepared for [Account]'s purchasing and engineering team" is fine; their logo, their tagline
+  // or calling them a "partner" is not.
+  it("never says partner, logo or tagline in the data or the template", async () => {
+    const { readFileSync } = await import("node:fs")
+    const { resolve } = await import("node:path")
+    const root = resolve(__dirname, "../../..")
+    const files = ["lib/builder/account-pages.ts", "app/[countryCode]/(main)/for/[slug]/page.tsx"]
+    for (const f of files) {
+      const text = readFileSync(resolve(root, f), "utf8")
+        .split("\n")
+        .filter((l) => !l.trim().startsWith("//") && !l.trim().startsWith("*"))
+        .join("\n")
+      expect(text, f).not.toMatch(/\bpartner|\blogo\b|\btagline\b/i)
+    }
+    expect(JSON.stringify(ACCOUNT_PAGES)).not.toMatch(/partner|logo|tagline/i)
+  })
+})

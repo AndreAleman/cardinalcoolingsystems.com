@@ -245,7 +245,7 @@ export default function ContactPage({ params }: Props) {
 
               {submitStatus === "success" && (
                 <div className="mb-6 p-4 text-sm font-light" style={{ backgroundColor: "rgba(227,0,15,0.05)", border: "1px solid rgba(227,0,15,0.15)", borderRadius: "5px", color: "#111" }}>
-                  ✓ Message sent. We'll follow up within one business day.
+                  ✓ Message sent. We&apos;ll follow up within one business day.
                 </div>
               )}
               {submitStatus === "error" && (

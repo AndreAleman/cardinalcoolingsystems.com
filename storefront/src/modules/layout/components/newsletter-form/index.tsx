@@ -53,7 +53,7 @@ export default function NewsletterForm() {
   if (status === "success") {
     return (
       <p className="text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
-        ✓ You're subscribed — we'll keep you posted.
+        ✓ You&apos;re subscribed — we&apos;ll keep you posted.
       </p>
     )
   }
