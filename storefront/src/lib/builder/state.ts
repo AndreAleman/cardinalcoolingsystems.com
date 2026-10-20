@@ -96,21 +96,3 @@ export function unitsOf(type: BuilderType, options: Options): number {
   return getBuilder(type as string).bom(options).units
 }
 
-/** Noun for one unit of a builder ("CDU", "manifold", "spool", "strainer", "hose"). */
-export function unitNoun(type: BuilderType, n = 1): string {
-  const one: Record<BuilderType, string> = {
-    "cdu-kit": "CDU",
-    "row-manifold": "manifold",
-    transition: "spool",
-    strainer: "strainer",
-    hose: "hose",
-  }
-  const many: Record<BuilderType, string> = {
-    "cdu-kit": "CDUs",
-    "row-manifold": "manifolds",
-    transition: "spools",
-    strainer: "strainers",
-    hose: "hoses",
-  }
-  return n === 1 ? one[type] : many[type]
-}

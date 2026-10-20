@@ -10,15 +10,15 @@
 //   5. the one BOM table;
 //   6. below the buyer's path to the price: the Spec Block and the CAD panel.
 
-import { cadBlockingRangeReasons, type BuilderType, type Options } from "@lib/cpq/shared"
+import { cadBlockingRangeReasons, getBuilder, type BuilderType, type Options } from "@lib/cpq/shared"
 import { BuilderSheet } from "@lib/cpq/shared/drawing"
 import { localBomRows, resolvedBomRows } from "@lib/builder/bom-view"
 import { cadKindsLabel } from "@lib/builder/cad"
 import { fieldsFor } from "@lib/builder/fields"
 import { formatAsOf, pricingModeTag, pricingView } from "@lib/builder/pricing-view"
-import { ignoredParamsNotice, unitNoun, unitsOf } from "@lib/builder/state"
+import { ignoredParamsNotice, unitsOf } from "@lib/builder/state"
 import { optionsSummary, splitFields } from "@modules/builder/lib/primary-fields"
-import { resultSummary, summaryBom } from "@modules/builder/lib/result-summary"
+import { resultSummary } from "@modules/builder/lib/result-summary"
 import { useBuilderState } from "@modules/builder/lib/use-builder-state"
 import { useMemo, useState, type ReactNode } from "react"
 import BomTable from "./bom-table"
@@ -55,6 +55,8 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
   // The kit's first question is the combined CDU / port picker; the rest render as fields.
   const primaryFields = isKit ? primary.filter((f) => f.key !== "cdu") : primary
 
+  const noun = getBuilder(type as string).unitNoun
+  const unitNoun = (n: number) => (n === 1 ? noun.one : noun.many)
   const view = pricingView({ status, result, staticLeadTime: local.leadTime })
   const mode = pricingModeTag(view)
   const done = status === "done" && result ? result : null
@@ -96,14 +98,7 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
   )
 
   const notice = showIgnored ? ignoredParamsNotice(ignored) : null
-  const summary = resultSummary({
-    builderType: type,
-    options,
-    units,
-    bom: summaryBom(done, local.bom),
-    view,
-    stockedSku: alt?.sku ?? null,
-  })
+  const summary = resultSummary({ builderType: type, options, status, result: done, stockedSku: alt?.sku ?? null })
   const advancedError = !!error && advanced.some((f) => f.key === error.key)
 
   return (
@@ -149,8 +144,8 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
             partNumber={partNumber}
             description={description}
             view={view}
-            unitNoun={unitNoun(type, 1)}
-            unitsNoun={unitNoun(type, units)}
+            unitNoun={unitNoun(1)}
+            unitsNoun={unitNoun(units)}
             units={units}
             weightLb={weightLb}
             reviewReasons={[]}
@@ -181,7 +176,7 @@ export default function BuilderShell({ type, initialOptions, ignored, drawnDate,
           )}
           <BomTable
             rows={rows}
-            unitNoun={unitNoun(type, 1)}
+            unitNoun={unitNoun(1)}
             currency={currency}
             total={listTotal}
             basis={done ? done.price_basis : null}
