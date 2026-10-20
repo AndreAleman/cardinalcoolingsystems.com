@@ -30,7 +30,7 @@ export function generateMetadata({ params }: Props): Metadata {
     countryCode: params.countryCode,
     title: conn ? `${conn.equipment} hookup kit for ${page.company}` : `Sanitary connection parts for ${page.company}`,
     description: conn
-      ? `Prepared for ${page.company}'s purchasing and engineering team: the hookup kit for the ${conn.equipment} (${conn.label}), priced live when every part is stocked.`
+      ? `Prepared for ${page.company}'s purchasing and engineering team: the hookup kit for ${conn.label}, priced live when every part is stocked.`
       : `Prepared for ${page.company}'s purchasing and engineering team: tri-clamp fittings, valves and strainers for data center liquid cooling at posted prices. Send your connection sizes and we'll price your exact BOM in 48 hours.`,
     path: `/for/${page.slug}`,
     robots: NO_INDEX,
