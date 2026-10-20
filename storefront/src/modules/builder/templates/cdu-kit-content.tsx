@@ -7,7 +7,7 @@ import { LeadTimeFacts } from "@modules/builder/components/page-bits"
 import { ContentSection } from "./builder-page"
 import Link from "next/link"
 
-export const CDU_KIT_CITATIONS = ["boyd10u", "vertivCdu600Spec", "ocpManifold", "ocpPg25", "titan"] as const
+export const CDU_KIT_CITATIONS = ["boyd10u", "vertivCdu600", "vertivCdu600Spec", "ocpManifold", "ocpPg25", "titan"] as const
 
 export default function CduKitContent({ countryCode }: { countryCode: string }) {
   const Cite = makeCite(CDU_KIT_CITATIONS)
@@ -18,7 +18,8 @@ export default function CduKitContent({ countryCode }: { countryCode: string }) 
       <ContentSection title="Why these sizes" id="why-these-sizes">
         <p>
           Boyd&apos;s 10U CDU lists 1.5-inch sanitary (tri-clamp) ports
-          <Cite id="boyd10u" />; Vertiv&apos;s CoolChip CDU 600 uses stainless hygienic fittings, and its optional hose sets
+          <Cite id="boyd10u" />; Vertiv&apos;s CoolChip CDU 600 has 2-1/2-inch (DN65) sanitary flanges on both circuits
+          <Cite id="vertivCdu600" /> and uses stainless hygienic fittings, and its optional hose sets
           go from a hygienic flange at the unit to an ANSI 150 lb flange at the far end
           <Cite id="vertivCdu600Spec" />. The kit starts from that port: every ferrule, clamp, gasket and valve is the port
           size, and the far end adapts to whatever the facility or TCS pipe is.
@@ -46,9 +47,9 @@ export default function CduKitContent({ countryCode }: { countryCode: string }) 
               </tr>
               <tr className="border-t border-neutral-100">
                 <td className="px-4 py-3 font-medium text-neutral-900">Vertiv CoolChip CDU 600</td>
-                <td className="px-4 py-3">Stainless hygienic fittings; hose set with hygienic flange to ANSI 150. Port size being confirmed.</td>
+                <td className="px-4 py-3">2-1/2&quot; (DN65) sanitary flange, both sides (Table 4.2)</td>
                 <td className="px-4 py-3">
-                  Guide specification <Cite id="vertivCdu600Spec" />
+                  Installation guide <Cite id="vertivCdu600" />
                 </td>
               </tr>
             </tbody>
