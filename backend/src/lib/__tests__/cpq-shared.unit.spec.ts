@@ -533,6 +533,77 @@ describe("spec blocks", () => {
     expect(hose.specBlock({ ...(hose.defaults as HoseOptions), ends: "tc-npt" })).toContain("male NPT thread")
   })
 
+  it("manifold: a connection shared by the drops and the header ends is named once", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    const tcCount = (o: RowManifoldOptions) => manifold.specBlock(o).split("3-A tri-clamp ferrule").length - 1
+    expect(manifold.specBlock(m)).toContain("3-A tri-clamp ferrule drops and both header ends.")
+    expect(manifold.specBlock({ ...m, ends: "cap" })).toContain("3-A tri-clamp ferrule drops and header inlet, welded end cap far end.")
+    expect(manifold.specBlock({ ...m, dstyle: "bv", ends: "fl150" })).toContain(
+      "each drop a sanitary branch with tri-clamp isolation ball valve; ASME B16.5 Class 150 raised-face flange on both header ends."
+    )
+    for (const o of manifoldSamples()) {
+      expect(tcCount(o)).toBeLessThanOrEqual(1)
+      // No sentence is repeated.
+      const sentences = manifold.specBlock(o).split(". ")
+      expect(new Set(sentences).size).toBe(sentences.length)
+    }
+  })
+
+  it("manifold: test pressure only with hydro, the pair sentence only with pair=1", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    expect(manifold.specBlock(m)).toContain("Hydrostatically tested at 150 psig.")
+    expect(manifold.specBlock({ ...m, docs: ["mtr"] })).not.toContain("psig")
+    expect(manifold.specBlock({ ...m, docs: [] })).not.toMatch(/Hydrostatic|Documentation/)
+    expect(manifold.specBlock(m)).toContain(" Supplied as a supply and return pair (2 manifolds).")
+    expect(manifold.specBlock({ ...m, pair: "0" })).not.toContain("pair")
+    expect(manifold.specBlock({ ...m, docs: ["pass", "weldmap"] })).toContain("Documentation: passivation certificate to ASTM A380, weld map.")
+  })
+
+  it("manifold: every option changes the Spec Block text", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    const base = manifold.specBlock(m)
+    const toggles: Partial<RowManifoldOptions>[] = [
+      { header: 600 },
+      { drops: 8 },
+      { pitch: 30 },
+      { drop: 150 },
+      { dstyle: "bv" },
+      { dstyle: "uqd" },
+      { ends: "fl150" },
+      { ends: "grv" },
+      { ends: "cap" },
+      { pair: "0" },
+      { alloy: "t304l" },
+      { finish: "20" },
+      { fill: "0" },
+      { inst: "1" },
+      { docs: ["hydro"] },
+      { docs: ["mtr"] },
+      { docs: ["hydro", "mtr", "pass"] },
+      { docs: ["hydro", "mtr", "weldmap"] },
+    ]
+    for (const t of toggles) expect(manifold.specBlock({ ...m, ...t })).not.toBe(base)
+    expect(manifold.specBlock({ ...m, alloy: "t304l" })).toContain("T304L stainless steel")
+    expect(manifold.specBlock({ ...m, finish: "20" })).toContain("20 Ra max ID finish")
+    expect(manifold.specBlock({ ...m, fill: "0" })).not.toContain("fill point")
+    expect(manifold.specBlock({ ...m, inst: "1" })).toContain("instrument ports")
+  })
+
+  it("manifold: each checked document adds a quoted BOM line; hydro and MTRs say (included)", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    const docs = (o: RowManifoldOptions) => manifold.bom(o).lines.filter((l) => l.role === "doc")
+    const all = docs({ ...m, docs: ["hydro", "mtr", "pass", "weldmap"] })
+    expect(all.map((l) => l.label)).toEqual([
+      "Hydrostatic test certificate (included)",
+      "MTRs by heat number (included)",
+      "Passivation certificate (ASTM A380), quoted",
+      "Weld map, quoted",
+    ])
+    for (const l of all) expect(l).toMatchObject({ kind: "fabricated", lead_time: "custom", qty_per_unit: 1, candidates: [] })
+    expect(docs({ ...m, docs: [] })).toEqual([])
+    expect(docs({ ...m, docs: ["weldmap"] }).map((l) => l.label)).toEqual(["Weld map, quoted"])
+  })
+
   it("kit: switching the alloy to 304L changes the Spec Block, the BOM descriptions and the Part Number", () => {
     for (const run of ["hard", "hose"] as const)
       for (const far of ["tc", "fl150", "npt", "grv"] as const) {

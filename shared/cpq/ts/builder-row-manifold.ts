@@ -294,7 +294,8 @@ export function manifoldBom(o: RowManifoldOptions): Bom {
       line({
         ...fab,
         role: "doc",
-        label: `${DOC_LABEL[doc]}${INCLUDED_DOCS.indexOf(doc) >= 0 ? " (included)" : ""}`,
+        // Included documents cost nothing extra; the others are priced on the quote.
+        label: `${DOC_LABEL[doc]}${INCLUDED_DOCS.indexOf(doc) >= 0 ? " (included)" : ", quoted"}`,
         qty: 1,
       }),
     )

@@ -49,13 +49,28 @@ const DOC_TEXT: Record<RowManifoldOptions["docs"][number], string> = {
   weldmap: "weld map",
 }
 
+const DROP_STYLE_TEXT: Record<RowManifoldOptions["dstyle"], string> = {
+  tc: END_STANDARD.tc,
+  bv: "sanitary branch with tri-clamp isolation ball valve",
+  uqd: "plain stub, UQD-ready (quick disconnect by others)",
+}
+
+/** Drops and header ends in one clause; a connection shared by both is named once. */
+function manifoldConnections(o: RowManifoldOptions): string {
+  const [a, b] = manifoldEndCodes(o.ends)
+  if (o.dstyle === "tc" && a === "tc") {
+    return b === "tc"
+      ? `${END_STANDARD.tc} drops and both header ends`
+      : `${END_STANDARD.tc} drops and header inlet, ${END_STANDARD[b]} far end`
+  }
+  const ends = a === b ? `${END_STANDARD[a]} on both header ends` : `${END_STANDARD[a]} header inlet, ${END_STANDARD[b]} far end`
+  return `each drop a ${DROP_STYLE_TEXT[o.dstyle]}; ${ends}`
+}
+
+/** Every sentence follows the options: a test, a document or the pair is stated only when chosen. */
 export function manifoldSpecBlock(o: RowManifoldOptions): string {
   const m = ASSEMBLIES.manifold
   const al = alloyOf(o.alloy).label
-  const [a, b] = manifoldEndCodes(o.ends)
-  const ends = a === b ? `${END_STANDARD[a]} both ends` : `${END_STANDARD[a]} inlet, ${END_STANDARD[b]} far end`
-  const style =
-    o.dstyle === "tc" ? "3-A tri-clamp ferrule" : o.dstyle === "bv" ? "sanitary branch with tri-clamp isolation ball valve" : "plain stub, UQD-ready (quick disconnect by others)"
   const ports =
     o.fill === "1"
       ? ` ${sz(m.fill_size_code)} sanitary tri-clamp fill point, ${sz(m.drain_size_code)} drain and ${sz(m.vent_size_code)} air vent.`
@@ -64,12 +79,12 @@ export function manifoldSpecBlock(o: RowManifoldOptions): string {
   const docs = o.docs.map((d) => DOC_TEXT[d])
   return (
     `TCS row manifold built to the OCP guideline for pre-commission preparation of TCS row manifolds. ` +
-    `${sz(o.header)} OD header with ${o.drops} × ${sz(o.drop)} drops at ${formatInches(o.pitch)} centers, ${style}; ${ends}. ` +
+    `${sz(o.header)} OD header with ${o.drops} × ${sz(o.drop)} drops at ${formatInches(o.pitch)} centers; ${manifoldConnections(o)}. ` +
     `${al} stainless steel ASTM A270 sanitary tube (OCP minimum grade 304), ${o.finish} Ra max ID finish.${ports}${inst} ` +
-    `Inert-gas welded (${WELD}); ${CLEAN}. ` +
-    `Hydrostatically tested at ${m.hydro_test_psig} psig.` +
+    `Inert-gas welded (${WELD}); ${CLEAN}.` +
+    (o.docs.indexOf("hydro") >= 0 ? ` Hydrostatically tested at ${m.hydro_test_psig} psig.` : "") +
     (docs.length ? ` Documentation: ${docs.join(", ")}.` : "") +
-    (o.pair === "1" ? " Supplied as a supply and return pair." : "")
+    (o.pair === "1" ? " Supplied as a supply and return pair (2 manifolds)." : "")
   )
 }
 
