@@ -171,5 +171,5 @@ export const STRAINER_BUILDER = makeBuilder<StrainerOptions, StrainerGeometry>({
   weight: strainerWeight,
   bom: strainerBom,
   standardRange: () => okRange(),
-  specBlock: strainerSpecBlock,
+  specBlock: (o) => strainerSpecBlock(o, strainerBom(o)),
 })

@@ -88,6 +88,11 @@ export type BomRoleTemplate = {
   label: string
   /** Candidate SKU patterns in order of preference; {d} {s} {sr} {s2} placeholders. Empty = none stocked. */
   patterns: string[]
+  /**
+   * Fixed material of the whole SKU family, when it does not follow the configuration's alloy
+   * (clamps are T304, strainers T316L). Named in the BOM line and in the Spec Block.
+   */
+  material?: string
   source: string
   verified: boolean
 }
@@ -280,6 +285,12 @@ export type BomLine = {
   part_number?: string
   size_code?: SizeCode
   note?: string
+  /**
+   * The line's material as the BOM names it ("T316L", "T304"): the configuration's alloy for
+   * alloy-following parts, or the role's fixed `material` from bom-templates.json. The Spec Block
+   * reads it from here, so the two can't disagree.
+   */
+  material?: string
 }
 export type Bom = { lines: BomLine[]; units: number }
 

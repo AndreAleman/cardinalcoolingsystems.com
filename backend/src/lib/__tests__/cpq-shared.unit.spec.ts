@@ -507,6 +507,78 @@ describe("spec blocks", () => {
     expect(strainer.specBlock(strainer.defaults)).toContain("841 µm")
     expect(hose.specBlock({ ...(hose.defaults as HoseOptions), ends: "tc-npt" })).toContain("male NPT thread")
   })
+
+  it("kit: switching the alloy to 304L changes the Spec Block, the BOM descriptions and the Part Number", () => {
+    for (const run of ["hard", "hose"] as const)
+      for (const far of ["tc", "fl150", "npt", "grv"] as const) {
+        const o316 = { ...(kit.defaults as CduKitOptions), run, far, strainer: "short" as const, alloy: "t316l" as const }
+        const o304 = { ...o316, alloy: "t304l" as const }
+        const s304 = kit.specBlock(o304)
+        expect(s304).not.toBe(kit.specBlock(o316))
+        expect(s304).toContain("T304L")
+        expect(s304).not.toMatch(/T316L (spools|ferrules|ASME|NPT|IPS)/)
+        expect(kit.partNumber(o304)).not.toBe(kit.partNumber(o316))
+        const labels304 = kit.bom(o304).lines.map((l) => l.label).join("\n")
+        expect(labels304).not.toBe(kit.bom(o316).lines.map((l) => l.label).join("\n"))
+        for (const l of kit.bom(o304).lines.filter((x) => ["spool", "ferrule"].includes(x.role) || /^adapter_(fl150|npt|grv)$/.test(x.role))) {
+          expect(l.label).toContain("T304L")
+          expect(l.material).toBe("T304L")
+        }
+        if (run === "hard") expect(s304).toContain("welded T304L spools")
+      }
+  })
+
+  it("kit and strainer: every material the Spec Block states is the one on its BOM line", () => {
+    for (const o of kitSamples()) {
+      for (const alloy of ["t316l", "t304l"] as const) {
+        const oo = { ...o, alloy }
+        const bom = kit.bom(oo)
+        const spec = kit.specBlock(oo)
+        const of = (role: string) => bom.lines.find((l) => l.role === role)
+        // Every alloy named is a line's material (a 316L strainer can sit in a 304L kit).
+        for (const al of spec.match(/T3\d\dL?/g) ?? []) expect(bom.lines.map((l) => l.material)).toContain(al)
+        if (of("spool")) expect(spec).toContain(`welded ${of("spool")!.material} spools`)
+        if (of("ferrule")) expect(spec).toContain(`${of("ferrule")!.material} ferrules`)
+        else expect(spec).not.toContain("ferrules")
+        expect(spec).toContain(`heavy-duty ${of("clamp")!.material} single-pin clamps`)
+        if (of("strainer")) expect(spec).toContain(`${of("strainer")!.material} inline tri-clamp strainer`)
+        else expect(spec).not.toContain("strainer")
+      }
+    }
+    const sb = strainer.bom(strainer.defaults)
+    const ss = strainer.specBlock(strainer.defaults)
+    expect(ss.startsWith(`${sb.lines[0].material} stainless steel inline tri-clamp strainer`)).toBe(true)
+    expect(ss).toContain(`heavy-duty ${sb.lines[1].material} clamps`)
+  })
+
+  it("no alloy is hard-coded: clamp and strainer materials come from bom-templates.json and are named on the line", () => {
+    const templates = JSON.parse(fs.readFileSync(path.join(ROOT, "shared/cpq/dimensions/bom-templates.json"), "utf8")).roles as {
+      role: string
+      label: string
+      material?: string
+    }[]
+    const clampT = templates.find((r) => r.role === "clamp")!
+    const strainerT = templates.find((r) => r.role === "strainer")!
+    expect(clampT.material).toBe("T304")
+    expect(strainerT.material).toBe("T316L")
+    for (const bom of [kit.bom(kit.defaults), strainer.bom(strainer.defaults), hose.bom(hose.defaults), manifold.bom({ ...(manifold.defaults as RowManifoldOptions), dstyle: "bv" })]) {
+      for (const l of bom.lines.filter((x) => x.role === "clamp")) {
+        expect(l.material).toBe(clampT.material)
+        expect(l.label.startsWith(`${clampT.label}, ${clampT.material}, `)).toBe(true)
+      }
+    }
+    const st = kit.bom({ ...(kit.defaults as CduKitOptions), strainer: "long" }).lines.find((l) => l.role === "strainer")!
+    expect(st).toMatchObject({ material: "T316L" })
+    expect(st.label.startsWith(`${strainerT.label}, T316L, `)).toBe(true)
+    const src = fs.readFileSync(path.join(ROOT, "shared/cpq/ts/spec-block.ts"), "utf8")
+    expect(src).not.toMatch(/T304 (single-pin )?clamps|316L inline/)
+  })
+
+  it("kit: a grooved far end (no stocked SKU) still gives 304L and 316L kits different Part Numbers", () => {
+    const o = { ...(kit.defaults as CduKitOptions), run: "hose" as const, far: "grv" as const, port: "tc200" as const }
+    expect(kit.bom(o).lines.some((l) => l.role === "ferrule")).toBe(false)
+    expect(kit.partNumber({ ...o, alloy: "t304l" })).not.toBe(kit.partNumber(o))
+  })
 })
 
 // ---------------------------------------------------------------- sync guard

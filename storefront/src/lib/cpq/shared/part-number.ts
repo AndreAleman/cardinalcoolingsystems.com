@@ -21,8 +21,9 @@
 //   Hose              clmp-<clmp|mnpt|fl150>-hose-l<len>-<br|sil|ptfe>-6-<size>[-armor|-fire]
 //   Spool (kit run)   <endLo>-<endHi>-spool-l<len>-<d>-<size>   (Sanitube's spool pattern)
 //   CDU Hookup Kit    kit-cdu-<first 8 hex of sha256(canonical BOM)>
-//                     The canonical BOM is every line as role;kind;candidates|…;part_number;qty,
-//                     sorted, joined with "\n". Units are not part of it (the kit is per CDU).
+//                     The canonical BOM is every line as role;kind;candidates|…;part_number;qty
+//                     (+ ;material for a line with neither candidates nor a Part Number), sorted,
+//                     joined with "\n". Units are not part of it (the kit is per CDU).
 
 import { pnNumberToken, sizeToken } from "./units"
 import { alloyOf, endConnectionType, endConnectionTypeByToken } from "./tables"
@@ -141,10 +142,18 @@ export function spoolPartNumber(
   return [ends[0].pn_token, ends[1].pn_token, "spool", `l${pnNumberToken(lengthIn)}`, digitOf(alloy), sizeToken(size)].join("-")
 }
 
-/** Canonical BOM text hashed into the kit Part Number. */
+/**
+ * Canonical BOM text hashed into the kit Part Number. A line with no candidate SKU and no Part
+ * Number of its own (e.g. a grooved far-end adapter nobody stocks) is told apart by its material,
+ * so a 304L kit and a 316L kit never share a number.
+ */
 export function canonicalBomText(bom: Bom): string {
   return bom.lines
-    .map((l) => [l.role, l.kind, l.candidates.join("|"), l.part_number ?? "", String(l.qty_per_unit)].join(";"))
+    .map((l) => {
+      const fields = [l.role, l.kind, l.candidates.join("|"), l.part_number ?? "", String(l.qty_per_unit)]
+      if (!l.candidates.length && l.part_number === undefined && l.material) fields.push(l.material)
+      return fields.join(";")
+    })
     .sort()
     .join("\n")
 }

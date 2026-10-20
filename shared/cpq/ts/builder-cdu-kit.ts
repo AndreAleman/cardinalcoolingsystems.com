@@ -111,6 +111,7 @@ export function kitBom(o: CduKitOptions): Bom {
         kind: "fabricated",
         part_number: spoolPartNumber("tc", "tc", o.len, o.alloy, s),
         size_code: s,
+        material: al.label,
       }),
     )
   } else {
@@ -126,6 +127,7 @@ export function kitBom(o: CduKitOptions): Bom {
         qty: ferrules,
         vars: { d, s },
         size_code: s,
+        material: al.label,
         note: [o.run === "hard" ? "spool weld ends" : "", o.far === "tc" ? "facility pipe end" : ""].filter((x) => x).join(" + "),
       }),
     )
@@ -164,7 +166,9 @@ export function kitBom(o: CduKitOptions): Bom {
   if (st) lines.push(strainerLine(st, r.strainer_ports))
   if (o.far !== "tc") {
     const aRole = FAR_ADAPTER_ROLE[o.far]
-    lines.push(line({ role: aRole, label: `${roleLabel(aRole)}, ${sl} ${al.label} (far end)`, qty: P, vars: { d, s }, size_code: s }))
+    lines.push(
+      line({ role: aRole, label: `${roleLabel(aRole)}, ${sl} ${al.label} (far end)`, qty: P, vars: { d, s }, size_code: s, material: al.label }),
+    )
   }
   if (isDnPort(o.port)) {
     lines.push(
@@ -279,5 +283,5 @@ export const CDU_KIT_BUILDER = makeBuilder<CduKitOptions>({
   weight: kitWeight,
   bom: kitBom,
   standardRange: checkKitRange,
-  specBlock: kitSpecBlock,
+  specBlock: (o) => kitSpecBlock(o, kitBom(o)),
 })
