@@ -62,11 +62,16 @@ Response:
           resolved: boolean }],
   units, price_per_unit | null, price_total | null, currency_code: "usd",
   price_basis: "company" | "list", priced_at (ISO date),
-  weight_lb_per_unit, lead_time: { kind: "stock" | "custom", label },
+  weight_lb_per_unit, weight_lb_total,   // rounded once to 0.1 lb; total = rounded × units
+  lead_time: { kind: "stock" | "custom", label },
   standard_range: { ok, reasons[] }, spec_block: string,
   configuration_id
 }
 ```
+
+The page shows the resolve's Part Number, BOM and Spec Block only while the response's `config_key` equals the page's own; anything else (e.g. a backend deployed without an option value the storefront already offers, which its forgiving decode resets to the default) means the response describes a different Configuration.
+
+The one-line result under the headline comes from the shared `resultSummary(builder_type, options, bom?, pricing?)` (`shared/cpq/ts/result-summary.ts`), so the page and the backend word it the same.
 
 ### `POST /store/build/quote-lines`
 
