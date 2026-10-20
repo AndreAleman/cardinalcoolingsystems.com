@@ -1,7 +1,7 @@
-import { canonicalUrl } from "@lib/builder/page"
 import { CONNECTION_DRAWINGS, LoopDiagram, type ConnectionKey } from "@modules/builder/components/connection-drawings"
 import { makeCite } from "@modules/builder/components/footnotes"
 import BuilderPage, { ContentSection } from "@modules/builder/templates/builder-page"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -13,15 +13,16 @@ import Link from "next/link"
 
 type Props = { params: { countryCode: string } }
 
-const CITATIONS = ["boyd10u", "ocpManifold", "vertivCdu600", "titan"] as const
+const CITATIONS = ["boyd10u", "ocpManifold", "vertivCdu600Spec", "titan"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "Tri-Clamp vs I-Line vs Grooved vs Flanged: Liquid Cooling Connections | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "Tri-Clamp vs I-Line vs Grooved vs Flanged: Liquid Cooling Connections",
     description:
-      "Tri-clamp, I-line, bevel seat, grooved, flanged and NPT connections explained with a drawing of each, and which side of a data center liquid cooling loop each one sits on.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build/connections") },
-  }
+      "Tri-clamp, I-line, bevel seat, grooved, flanged and NPT connections, with a drawing of each and which side of a data center liquid cooling loop each one sits on.",
+    path: "/build/connections",
+  })
 }
 
 type Row = { key: ConnectionKey; name: string; side: string; what: React.ReactNode; where: React.ReactNode }
@@ -71,9 +72,9 @@ export default function ConnectionsPage({ params }: Props) {
       what: "Two flanges bolted face to face over a gasket; ASME B16.5 Class 150 is the common rating on facility water.",
       where: (
         <>
-          On the facility side, and at the CDU on some units: Vertiv&apos;s CoolChip CDU 600 ships a hose set with hygienic
-          flange to ANSI 150
-          <Cite id="vertivCdu600" />.
+          On the facility side, and at the end of some CDU hose sets: Vertiv&apos;s optional CoolChip CDU 600 hose sets have a
+          hygienic flange at the unit and an ANSI 150 lb flange at the facility or TCS end
+          <Cite id="vertivCdu600Spec" />.
         </>
       ),
     },

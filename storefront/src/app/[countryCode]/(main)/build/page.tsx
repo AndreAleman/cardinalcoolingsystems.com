@@ -1,7 +1,7 @@
 import { BUILDER_TYPES, getBuilder, type BuilderType } from "@lib/cpq/shared"
-import { canonicalUrl } from "@lib/builder/page"
 import { LeadTimeFacts } from "@modules/builder/components/page-bits"
 import BuilderPage from "@modules/builder/templates/builder-page"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -9,13 +9,17 @@ import Link from "next/link"
 
 type Props = { params: { countryCode: string } }
 
+/** The primary sources behind the builders, listed once at the bottom of the hub. */
+const CITATIONS = ["boyd10u", "vertivCdu600", "vertivCdu600Spec", "ocpManifold"] as const
+
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "Build a Kit: CDU Hookup Kits, Row Manifolds, Transition Spools, Strainers, Hoses | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "Data Center Liquid Cooling Builders: CDU Hookup Kits, Row Manifolds, Spools, Strainers, Hoses",
     description:
-      "Data center liquid cooling builders: start from the CDU, manifold or pipe you're connecting and get the bill of materials, Part Number, drawing and price. Instant when stocked; firm quote within 1 business day when welded.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build") },
-  }
+      "Start from the CDU, manifold or pipe you're connecting and get the bill of materials, Part Number, drawing and price. Instant when every part is stocked; a firm quote within 1 business day when anything is welded or cut to length.",
+    path: "/build",
+  })
 }
 
 const BLURB: Record<BuilderType, { question: string; pitch: string; mode: string }> = {
@@ -61,7 +65,7 @@ export default function BuildIndexPage({ params }: Props) {
           stocked, a firm quote within 1 business day when anything is welded or cut to length.
         </p>
       }
-      citations={[]}
+      citations={CITATIONS}
       testId="build-index"
       content={<LeadTimeFacts />}
     >

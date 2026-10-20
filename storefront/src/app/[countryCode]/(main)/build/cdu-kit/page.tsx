@@ -1,8 +1,9 @@
-import { canonicalUrl, decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
+import { decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
 import BuilderShell from "@modules/builder/components/builder-shell"
 import { GlycolNote, KIT_WE_CAN_SUPPLY, WeCanSupply } from "@modules/builder/components/page-bits"
 import BuilderPage from "@modules/builder/templates/builder-page"
 import CduKitContent, { CDU_KIT_CITATIONS } from "@modules/builder/templates/cdu-kit-content"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 
 /*
@@ -14,12 +15,13 @@ import { Metadata } from "next"
 type Props = { params: { countryCode: string }; searchParams: SearchParams }
 
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "CDU Piping Connections: Tri-Clamp Hookup Kit & CDU Hose Kit Builder | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "CDU Hookup Kit Builder: Tri-Clamp CDU Piping Connections",
     description:
-      "Build the piping between a coolant distribution unit and the TCS or facility pipe: 1\"–4\" tri-clamp 316L ferrules, clamps, gaskets, valves, strainer, spool or CDU hose kit. Live price when every part is stocked.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build/cdu-kit") },
-  }
+      "CDU Hookup Kit: tri-clamp hoses, spools, valves and strainers sized to your CDU port, priced from stock.",
+    path: "/build/cdu-kit",
+  })
 }
 
 export default function CduKitPage({ params, searchParams }: Props) {
