@@ -35,8 +35,8 @@ export default function CduKitPage({ params, searchParams }: Props) {
       h1="What piping connections does a CDU need?"
       answer={
         <p>
-          A CDU needs a hookup kit for each supply and return port: the run to the facility or TCS pipe (a welded spool or a
-          stainless braided hose), the tri-clamp ferrules, clamps and gaskets at every joint, any isolation valves and
+          A CDU needs a hookup kit for each supply and return port: the run to the facility or TCS pipe (a stainless braided
+          hose by default, or a welded spool), the tri-clamp ferrules, clamps and gaskets at every joint, any isolation valves and
           supply-side strainer, and an adapter when the far end isn&apos;t tri-clamp. Pick your CDU port below and get the bill
           of materials, priced live when every part is stocked.
         </p>

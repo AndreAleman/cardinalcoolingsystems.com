@@ -68,8 +68,8 @@ export default function CduKitContent({ countryCode }: { countryCode: string }) 
           <li>An isolation valve adds two joints (two clamps, two gaskets); the supply-side strainer adds two more.</li>
           <li>A far end that isn&apos;t tri-clamp gets a transition adapter: TC × flange, TC × NPT or TC × grooved.</li>
           <li>
-            The run is a welded spool (Quote: welded to your length) or a stainless braided hose (Instant at a stocked
-            standard length).
+            The run is a stainless braided hose by default (Instant at a stocked standard length) or a welded spool
+            (Quote: welded to your length).
           </li>
           <li>Spares, if you want them: +10% gaskets and one spare clamp per kit.</li>
         </ul>

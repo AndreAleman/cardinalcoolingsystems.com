@@ -20,7 +20,7 @@ export function generateMetadata({ params }: Props): Metadata {
     countryCode: params.countryCode,
     title: "Boyd 10U CDU Hookup Kit: 1.5\" Tri-Clamp",
     description:
-      "Hookup kit for the Boyd 10U CDU, whose datasheet lists 1.5\" sanitary tri-clamp ports: ferrules, clamps, EPDM gaskets, valves, strainer, and spool or braided hose. Priced live when every part is stocked.",
+      "Hookup kit for the Boyd 10U CDU, whose datasheet lists 1.5\" sanitary tri-clamp ports: a stainless braided hose run by default (or a welded spool, quoted), ferrules, clamps, EPDM gaskets, and optional valves and strainer. Priced live when every part is stocked.",
     path: "/build/cdu-kit/boyd-10u",
   })
 }
@@ -39,8 +39,9 @@ export default function Boyd10uKitPage({ params, searchParams }: Props) {
         <p>
           A Boyd 10U CDU needs a 1.5-inch tri-clamp hookup kit: Boyd&apos;s datasheet lists 1.5-inch sanitary (tri-clamp)
           supply and return ports
-          <Cite id="boyd10u" />, so every ferrule, clamp, gasket and valve below is 1.5&quot;. Choose the loop, the run and the
-          far end, and the kit prices live when every part is stocked.
+          <Cite id="boyd10u" />, so every ferrule, clamp, gasket and valve below is 1.5&quot;. The run starts as a stainless braided
+          hose; switch it to a welded spool for hard pipe. Choose the loop, the run and the far end, and the kit prices live
+          when every part is stocked.
         </p>
       }
       citations={CDU_KIT_CITATIONS}
