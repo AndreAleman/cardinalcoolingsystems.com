@@ -610,7 +610,7 @@ describe("geometry and weight", () => {
 describe("spec blocks", () => {
   it("state alloy, finish, weld, A380, test pressure and certs; the manifold cites OCP", () => {
     const m = manifold.specBlock(manifold.defaults)
-    for (const s of ["OCP guideline", "T316L", "32 Ra", "Inert-gas welded", "ASTM A380", "150 psig", "MTRs by heat number"]) expect(m).toContain(s)
+    for (const s of ["OCP guideline", "T316L", "32 Ra", "inert-gas (argon) purge", "ASTM A380", "150 psig", "MTRs by heat number"]) expect(m).toContain(s)
     expect(manifold.specBlock({ ...(manifold.defaults as RowManifoldOptions), finish: "20", docs: ["pass"] })).toContain("20 Ra max ID finish")
     expect(transition.specBlock(transition.defaults)).toContain("ASME B16.5 Class 150 raised-face flange")
     expect(kit.specBlock(kit.defaults)).toContain("PG25")

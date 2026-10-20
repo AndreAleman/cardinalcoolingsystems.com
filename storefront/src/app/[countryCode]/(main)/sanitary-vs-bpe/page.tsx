@@ -100,7 +100,7 @@ export default function SanitaryVsBpePage({ params }: Props) {
 
           <ContentSection title="When to ask for BPE">
             <p>
-              When a project spec names ASME BPE. BPE is available when a project spec names it &mdash;{" "}
+              When a project spec names ASME BPE, we supply it &mdash;{" "}
               <Link
                 href={`/${countryCode}/contact?category=${encodeURIComponent("ASME BPE")}`}
                 className="font-medium text-cardinal-red underline"

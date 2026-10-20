@@ -81,7 +81,7 @@ export function manifoldSpecBlock(o: RowManifoldOptions): string {
     `TCS row manifold built to the OCP guideline for pre-commission preparation of TCS row manifolds. ` +
     `${sz(o.header)} OD header with ${o.drops} × ${sz(o.drop)} drops at ${formatInches(o.pitch)} centers; ${manifoldConnections(o)}. ` +
     `${al} stainless steel ASTM A270 sanitary tube (OCP minimum grade 304), ${o.finish} Ra max ID finish.${ports}${inst} ` +
-    `Inert-gas welded (${WELD}); ${CLEAN}.` +
+    `Welded by ${WELD}; ${CLEAN}.` +
     (o.docs.indexOf("hydro") >= 0 ? ` Hydrostatically tested at ${m.hydro_test_psig} psig.` : "") +
     (docs.length ? ` Documentation: ${docs.join(", ")}.` : "") +
     (o.pair === "1" ? " Supplied as a supply and return pair (2 manifolds)." : "")
