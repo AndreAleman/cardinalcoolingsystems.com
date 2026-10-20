@@ -24,6 +24,7 @@ function resolved(over: Partial<ResolveResponse>): ResolveResponse {
     price_basis: "list",
     priced_at: "2026-10-18",
     weight_lb_per_unit: 10,
+    weight_lb_total: 40,
     lead_time: STOCK,
     standard_range: { ok: true, reasons: [] },
     spec_block: "",
