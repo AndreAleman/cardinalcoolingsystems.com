@@ -52,12 +52,12 @@ const SHEETS: { name: string; type: BuilderType; query: string; part: string; te
   { name: "manifold-valves", type: "row-manifold", query: "drops=4&dstyle=bv&ends=cap&inst=1&pitch=18", part: "row-manifold", texts: ["70", "18", "A (TC)", "B (CAP)", "2× T/P 1/2&quot;"] },
   { name: "strainer", type: "strainer", query: "", part: "strainer", texts: ["10.5", "8", "Ø2", "A (TC)", "B (TC)"] },
   { name: "hose", type: "hose", query: "", part: "hose", texts: ["36", "Ø1.5", "A (TC)", "B (TC)"] },
-  { name: "kit", type: "cdu-kit", query: "cdu=boyd-10u&iso=bfv&strainer=short", part: "cdu-kit", texts: ["BILL OF MATERIALS", "clmp-clmp-spool-l36-6-150", "TCBFN6-150", "10"] },
+  { name: "kit", type: "cdu-kit", query: "cdu=boyd-10u&run=hard&iso=bfv&strainer=short", part: "cdu-kit", texts: ["BILL OF MATERIALS", "clmp-clmp-spool-l36-6-150", "TCBFN6-150", "10"] },
 ]
 
 describe("cpq-shared drawing goldens (React 18)", () => {
-  it("DRAWING_VERSION is 1", () => {
-    expect(DRAWING_VERSION).toBe(1)
+  it("DRAWING_VERSION is 2 (2026-10-20: manifold d100-clmp, clamp alloy on the kit BOM, weight to 0.1 lb)", () => {
+    expect(DRAWING_VERSION).toBe(2)
   })
 
   for (const s of SHEETS) {

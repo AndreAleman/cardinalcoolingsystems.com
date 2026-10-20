@@ -5,7 +5,7 @@
 // lead time. Used by every builder (bom.ts is the public entry point).
 
 import { sizeToken } from "./units"
-import { ASSEMBLIES, BOM_SIZE_RANGES, bomRole, tubeSize } from "./tables"
+import { ASSEMBLIES, BOM_ROLES, BOM_SIZE_RANGES, bomRole, tubeSize } from "./tables"
 import type { Bom, BomLine, BomLineKind, LeadTime, LeadTimeKind, SizeCode } from "./types"
 
 export type CandidateVars = {
@@ -67,6 +67,8 @@ export type LineInput = {
   part_number?: string
   size_code?: SizeCode
   note?: string
+  /** The line's material; defaults to the template role's fixed `material` (bom-templates.json). */
+  material?: string
 }
 
 export function line(input: LineInput): BomLine {
@@ -83,12 +85,23 @@ export function line(input: LineInput): BomLine {
   if (input.part_number !== undefined) out.part_number = input.part_number
   if (input.size_code !== undefined) out.size_code = input.size_code
   if (input.note !== undefined) out.note = input.note
+  const material = input.material ?? roleMaterial(input.template ?? input.role)
+  if (material !== undefined) out.material = material
   return out
 }
 
-/** Template label for a role ("TC ferrule, long weld"). */
+/** The fixed material of a role's SKU family ("T304" for clamps), or undefined when it follows the alloy. */
+export function roleMaterial(role: string): string | undefined {
+  return BOM_ROLES.find((x) => x.role === role)?.material
+}
+
+/**
+ * Template label for a role, naming the role's fixed material when it has one ("TC ferrule, long
+ * weld"; "Heavy-duty single-pin clamp, wing nut, T304").
+ */
 export function roleLabel(role: string): string {
-  return bomRole(role).label
+  const r = bomRole(role)
+  return r.material ? `${r.label}, ${r.material}` : r.label
 }
 
 /** Size label ('1-1/2"'). */

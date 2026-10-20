@@ -1,21 +1,21 @@
 {
   "generated_by": "scripts/sync-cpq-shared.mjs",
-  "tables_hash": "9aa195d46dc2",
+  "tables_hash": "46e4168bb91a",
   "files": {
     "assets/cardinal-logo.svg": "f1d777396209fdea20b21d8c36ba1cb3e42b6c88e67bcbb6d7ffad71f634c8a5",
     "dimensions/assemblies.json": "b05362f0efbaa4c930677389017ed521b8241cb647598fbcdd3b91a126d36370",
-    "dimensions/bom-templates.json": "8282d63c8ea92fa401c9642c997837fa0cf2941e4868101b30c54640a83417be",
+    "dimensions/bom-templates.json": "be222c19cb6f23c67e0ed5c1b23bda10ffe44f34029a5ba0b823a1634128a091",
     "dimensions/end-connections.json": "551cab9ee1e1ab2eca7a48cb47725e3465cdd07172ba05c6025949381081eb6b",
     "dimensions/materials.json": "cbaca4253f7de3f0755d03887c5a41f4dbdba421b6266b4076ff42e814f7c214",
     "dimensions/tube-sizes.json": "aa61418011c8ff4cb6139f15833ab6d5235ed0e970f9787e0274b5bed92791cd",
-    "fixtures/hose-sheet-golden.svg": "c16df0c46434e229bb01d2f89615a9f6bcd1f4fe37a4b6cd8948a11aecd55f58",
-    "fixtures/kit-sheet-golden.svg": "ff6fa510374b6a73929d0ee496cee70549a3fa47dfaae2e1f112ba8a06d465a8",
-    "fixtures/manifold-golden.json": "c93181a286d6626966f7b2fe27daca2d11686fc69a91d1b2e16a144f33584245",
-    "fixtures/manifold-sheet-golden.svg": "dcbe3ab682aab95d53cf29ffb61839235d451e7c727bfe097ab9538c7c697b47",
-    "fixtures/manifold-valves-sheet-golden.svg": "9f0b51ba94d32f366c5ee690f52df835fd1a910391217f1a5b53bdc46c358114",
-    "fixtures/strainer-sheet-golden.svg": "a96a6d216c40049b39f62da2a021d3dc28410a8f65558fc0c68fc8761822742c",
+    "fixtures/hose-sheet-golden.svg": "0bfdaa666708ca36c7e9a360641049b83125832498f6cf6b33a6e7895263dac2",
+    "fixtures/kit-sheet-golden.svg": "455321abd5334caa463d990916df5c44d4a028aa4411fd7f7eaf0c657cc2aa34",
+    "fixtures/manifold-golden.json": "47e2f647afc04f597f9825832a561bcc32b2cf2426a503979403277106e2c91a",
+    "fixtures/manifold-sheet-golden.svg": "46a232956c8bb394b6197634f6f29d937035f8c4f3aca87a7a14634ea5f19e9a",
+    "fixtures/manifold-valves-sheet-golden.svg": "37ee1f5e7c739d19f9adca964a46e605ab8ed868027bcba027d55c80cf276822",
+    "fixtures/strainer-sheet-golden.svg": "6ddd36d729014e58ba848319c7e0ebcff4c796c67f5db817a6eb3382afa45642",
     "fixtures/transition-golden.json": "99ea0b2f4af6fa245890e762d4efc93ff8f9acea521f0f1bec72a4002d959bc3",
-    "fixtures/transition-reducing-sheet-golden.svg": "1d004dd578cdd018f7ffb5727b4b8b9b0df7834c6afa5446b93616119e95d7af",
-    "fixtures/transition-sheet-golden.svg": "18ad8c500569a41ca8d947f56386454db53620cac131df408a7fbdde3c15d4bc"
+    "fixtures/transition-reducing-sheet-golden.svg": "fc1749927061a2ff9b63da44ca3965d11150e3516dc11942bb1fb5e6e9cb0968",
+    "fixtures/transition-sheet-golden.svg": "be5177a04e6008867dc0d06573072bc430c387995f9d618c4caf7c12a240ba82"
   }
 }

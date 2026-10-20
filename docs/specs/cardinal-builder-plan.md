@@ -20,20 +20,20 @@ This plan records the decisions made on 2026-10-18 and the contracts the work st
 | B8 | **CAD scope.** STEP + PDF for the **Transition Spool** and the **Row Manifold** (real geometry). The CDU Kit, Strainer and Hose get the SVG drawing and a PDF (drawing + BOM) but **no STEP**: a kit is several stocked parts, not one solid. Kit pages show "STEP files for the stocked parts on request". |
 | B9 | **Cardinal runs its own cad-service** (forked into `cad-service/`), deployed by David as a private Railway service. It can't share Sanitube's instance, because the service locks to one tables hash. |
 | B10 | **Shared tables.** `shared/cpq/` holds Cardinal's copy of Sanitube's tables (tube sizes, materials, end connections) plus Cardinal additions (flanges, NPT, grooved, butt-weld pipe adapter, end masses, BOM templates). `scripts/sync-cpq-shared.mjs` generates the backend/storefront/cad-service copies with a `--check` drift guard. `scripts/check-sanitube-tables.mjs` compares the rows both sites have against a sibling `sanitube.us` checkout when present, so the two never disagree on a 2" TC ferrule. A real cross-repo package is a later infra decision. |
-| B11 | **Part numbers** follow Sanitube: `<endA>-<endB>-<type>-l<len>-<alloydigit>-<od>`, alloy digit 4 = 304L and 6 = 316L, OD = nominal × 100 padded to 3 digits. Ends are sorted so A×B = B×A, except on reducing transitions, where A keeps its size. Kits are `kit-cdu-<8 hex of sha256(canonical BOM)>`. A parser (missing on Sanitube) is added and round-trip tested. End tokens are Sanitube's (`tc` → `clmp`, H27), so the spec's `tc-fl150-spool-l12-6-200` reads `clmp-fl150-tspool-l12-6-200`. Patterns (`shared/cpq/ts/part-number.ts`): transition `<a>-<b>-tspool-l<len>-<d>-<od>[-<odb>]`; manifold `<endA>-<endB>-rman-n<drops>-d<drop><clmp\|bv\|uqd>-p<pitch>-<d>-<header>[-ra20][-nf][-ip]` (`ends=cap` → `clmp-cap`); strainer `clmp-clmp-strn-<short\|long>-m<mesh>-6-<size>[-iso][-dp]`; hose `clmp-<clmp\|mnpt\|fl150>-hose-l<len>-<br\|sil\|ptfe>-6-<size>[-armor\|-fire]`; a kit's spool run uses Sanitube's `<endLo>-<endHi>-spool-l<len>-<d>-<size>`. |
+| B11 | **Part numbers** follow Sanitube: `<endA>-<endB>-<type>-l<len>-<alloydigit>-<od>`, alloy digit 4 = 304L and 6 = 316L, OD = nominal × 100 padded to 3 digits. Ends are sorted so A×B = B×A, except on reducing transitions, where A keeps its size. Kits are `kit-cdu-<8 hex of sha256(canonical BOM)>`. A parser (missing on Sanitube) is added and round-trip tested. End tokens are Sanitube's (`tc` → `clmp`, H27), so the spec's `tc-fl150-spool-l12-6-200` reads `clmp-fl150-tspool-l12-6-200`. Patterns (`shared/cpq/ts/part-number.ts`): transition `<a>-<b>-tspool-l<len>-<d>-<od>[-<odb>]`; manifold `<endA>-<endB>-rman-n<drops>-d<drop>-<clmp\|bv\|uqd>-p<pitch>-<d>-<header>[-ra20][-nf][-ip]` (`ends=cap` → `clmp-cap`; the drop style is its own token, as in Sanitube's tee `clmp-clmp-tee-clmp-std-6-200`, e.g. `clmp-clmp-rman-n12-d100-clmp-p24-6-400`; the parser also reads the legacy glued `d100clmp` of saved configurations and cart lines, 2026-10-20); strainer `clmp-clmp-strn-<short\|long>-m<mesh>-6-<size>[-iso][-dp]`; hose `clmp-<clmp\|mnpt\|fl150>-hose-l<len>-<br\|sil\|ptfe>-6-<size>[-armor\|-fire]`; a kit's spool run uses Sanitube's `<endLo>-<endHi>-spool-l<len>-<d>-<size>`. |
 | B12 | **Gasket default** is EPDM peroxide-cured (`GTCE-*`), the spec's fallback, until Todd answers. Silicone (`GTCSW-*`) and PTFE (`GTCT-*`) are options. A glycol note is shown. |
-| B13 | **CDU models** offered by name: Boyd 10U (1.5" TC) only. Vertiv CoolChip CDU 600 is added when its port size is confirmed. Never guess a size. |
+| B13 | **CDU models** offered by name: Boyd 10U (1.5" TC) and, since 2026-10-20, the Vertiv CoolChip CDU 600 (`vertiv-cdu-600`, `tc250`: 2-1/2" (DN65) sanitary flanges on both the primary/FWS and secondary/TCS side, to BS4825 Pt.3 or equivalent, 77.5 mm flange diameter; Vertiv *CoolChip CDU 600 Installation and Commissioning Guide*, SL-07625 Rev C 08-25, Table 4.2 and §5.4/5.5, https://www.vertiv.com/4a689f/globalassets/shared/vertiv-coolchip-cdu-600-installation-and-commissioning-guide-sl-07625.pdf). Its optional 6-way secondary manifold with 1" hose barbs is not configured. Never guess a size. |
 | B14 | **Quick disconnects, leak trays, mounting hardware and Cardinal's coupling** are not configured. Each gets a "we can supply" line and a quote link. The manifold offers only a "UQD-ready stub" (FD83 review pending). |
 | B15 | **Per-account pages** (`/us/for/[slug]`, `noindex`, left out of the sitemap): one template plus a data file holding the 21 companies. `trigger` and `connection` stay empty unless verified. Boyd is filled from its datasheet (1.5" TC). An empty connection renders the data-center catalog cut at posted prices and asks for connection sizes. |
 | B16 | **No DataForSEO calls.** Keyword targets from the spec go into titles, H1s and copy as written; volumes are validated later. |
 
 ## URLs and options (canonical query keys, `v=1`)
 
-Decoding is forgiving: an unknown or invalid value falls back to the default and is reported in `ignored`, as on Sanitube. Every page lives under `/[countryCode]/build/...`.
+Decoding is forgiving: an unknown or invalid value falls back to the default and is reported in `ignored`, as on Sanitube. Share Links always carry every key, so changing a default never changes a shared link; a partial link that carries `v` keeps the default it was written against (the builder's `normalize` reads `ctx.version`), while a link with no `v` takes today's default. `v` stays 1. Every page lives under `/[countryCode]/build/...`.
 
 | Builder (`builder_type`) | Path | Keys (default first) |
 |---|---|---|
-| `cdu-kit` | `/build/cdu-kit` | `cdu` (none\|boyd-10u, pre-fills port), `port` tc100\|tc150\|tc200\|tc300\|tc400\|dn50\|dn80 (tc150), `side` tcs\|fws, `run` hard\|hose, `far` tc\|fl150\|npt\|grv (TCS→tc, FWS→fl150), `len` 12–240 (36), `iso` none\|bfv\|bv, `strainer` none\|short\|long, `gasket` epdm\|sil\|ptfe, `spares` 0\|1, `units` 1–200 (1), `alloy` t316l\|t304l |
+| `cdu-kit` | `/build/cdu-kit` | `cdu` (none\|boyd-10u\|vertiv-cdu-600, pre-fills port), `port` tc100\|tc150\|tc200\|tc250\|tc300\|tc400\|dn50\|dn80 (tc150), `side` tcs\|fws, `run` hose\|hard (hose since 2026-10-20; a link with `v` but no `run` predates that and decodes as hard), `far` tc\|fl150\|npt\|grv (TCS→tc, FWS→fl150), `len` 12–240 (36), `iso` none\|bfv\|bv, `strainer` none\|short\|long, `gasket` epdm\|sil\|ptfe, `spares` 0\|1, `units` 1–200 (1), `alloy` t316l\|t304l |
 | `row-manifold` | `/build/row-manifold` | `header` 300\|400\|600\|800 (400), `drops` 2–48 (12), `pitch` 6–96 (24), `drop` 100\|150, `dstyle` tc\|bv\|uqd, `ends` tc\|fl150\|grv\|cap, `pair` 1\|0, `alloy` t316l\|t304l, `finish` 32\|20, `fill` 1\|0, `inst` 0\|1, `docs` comma list of hydro,mtr,pass,weldmap (hydro,mtr) |
 | `transition` | `/build/transition` | `a` tc\|mil\|fil\|pbs\|tbs\|bw, `b` fl150\|fl300\|mnpt\|fnpt\|grv\|bwp, `od` 100–800 (200), `odb` (= od), `len` 2–72 (12), `alloy`, `qty` 1–500 |
 | `strainer` | `/build/strainer` | `size` 100–600 (200), `body` short\|long, `mesh` 20\|40\|100, `iso` 0\|1, `dp` 0\|1, `qty` |
@@ -62,11 +62,16 @@ Response:
           resolved: boolean }],
   units, price_per_unit | null, price_total | null, currency_code: "usd",
   price_basis: "company" | "list", priced_at (ISO date),
-  weight_lb_per_unit, lead_time: { kind: "stock" | "custom", label },
+  weight_lb_per_unit, weight_lb_total,   // rounded once to 0.1 lb; total = rounded × units
+  lead_time: { kind: "stock" | "custom", label },
   standard_range: { ok, reasons[] }, spec_block: string,
   configuration_id
 }
 ```
+
+The page shows the resolve's Part Number, BOM and Spec Block only while the response's `config_key` equals the page's own; anything else (e.g. a backend deployed without an option value the storefront already offers, which its forgiving decode resets to the default) means the response describes a different Configuration.
+
+The one-line result under the headline comes from the shared `resultSummary(builder_type, options, bom?, pricing?)` (`shared/cpq/ts/result-summary.ts`), so the page and the backend word it the same.
 
 ### `POST /store/build/quote-lines`
 

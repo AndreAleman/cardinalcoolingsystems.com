@@ -240,7 +240,7 @@ def test_400_manifold(light_client, mutate):
 @pytest.mark.parametrize(
     "kind, mutate",
     [
-        ("cdu-kit", lambda b: b["config"].update(port="tc250")),
+        ("cdu-kit", lambda b: b["config"].update(port="tc350")),
         ("cdu-kit", lambda b: b["config"].update(units=0)),
         ("cdu-kit", lambda b: b["config"].update(len=241)),
         ("strainer", lambda b: b["config"].update(size=800)),
@@ -347,6 +347,14 @@ def test_200_pdf_only_kinds(light_client, kind):
         assert raw.startswith(b"%PDF") and "pdf" in body["timings_ms"]
     else:
         assert body["pdf"] is None
+
+
+def test_200_vertiv_cdu_600_kit(light_client):
+    """Vertiv CoolChip CDU 600: 2-1/2\" sanitary ports (tc250), shared option-keys.ts."""
+    body = body_for("cdu-kit")
+    body["config"].update(cdu="vertiv-cdu-600", port="tc250")
+    r = light_client.post("/v1/packages/cdu-kit", json=body, headers=AUTH)
+    assert r.status_code == 200, r.text
 
 
 @pytest.mark.cad

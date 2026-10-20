@@ -115,8 +115,8 @@ class RowManifoldConfigIn(BaseModel):
 class CduKitConfigIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    cdu: Literal["none", "boyd-10u"]
-    port: Literal["tc100", "tc150", "tc200", "tc300", "tc400", "dn50", "dn80"]
+    cdu: Literal["none", "boyd-10u", "vertiv-cdu-600"]
+    port: Literal["tc100", "tc150", "tc200", "tc250", "tc300", "tc400", "dn50", "dn80"]
     side: Literal["tcs", "fws"]
     run: Literal["hard", "hose"]
     far: Literal["tc", "fl150", "npt", "grv"]

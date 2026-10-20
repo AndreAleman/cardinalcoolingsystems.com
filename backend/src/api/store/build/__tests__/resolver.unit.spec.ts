@@ -1,4 +1,4 @@
-import { candidatesFor, getBuilder, line, type BomLine } from "../../../../lib/cpq-shared"
+import { candidatesFor, formatLb, getBuilder, line, roundLb, totalLb, type BomLine } from "../../../../lib/cpq-shared"
 import {
   checkCandidate,
   instantTotals,
@@ -106,8 +106,8 @@ describe("candidate selection (B1: first candidate that RESOLVES)", () => {
 })
 
 describe("pricing mode and quote_reasons", () => {
-  it("Boyd 10U default kit: Quote (welded spool), stocked lines still resolve", () => {
-    const r = resolve("cdu-kit", { cdu: "boyd-10u" })
+  it("Boyd 10U hard-pipe kit: Quote (welded spool), stocked lines still resolve", () => {
+    const r = resolve("cdu-kit", { cdu: "boyd-10u", run: "hard" })
     expect(r.options).toMatchObject({ cdu: "boyd-10u", port: "tc150", run: "hard", far: "tc" })
     expect(r.pricing_mode).toBe("quote")
     expect(r.price_per_unit).toBeNull()
@@ -131,10 +131,15 @@ describe("pricing mode and quote_reasons", () => {
     expect(r.bom.find((l) => l.role === "valve_bv")).toMatchObject({ sku: "TCBVS-150", resolved: false, in_stock: false, stock_qty: 0 })
   })
 
-  it("hose run: no stocked hose → Quote with a not-stocked reason", () => {
-    const r = resolve("cdu-kit", { cdu: "boyd-10u", run: "hose" })
-    expect(r.pricing_mode).toBe("quote")
-    expect(r.quote_reasons.some((x) => x.startsWith("Not stocked:"))).toBe(true)
+  it("hose run (the default since 2026-10-20): no stocked hose → Quote with a not-stocked reason", () => {
+    for (const raw of [{ cdu: "boyd-10u", run: "hose" }, { cdu: "boyd-10u" }]) {
+      const r = resolve("cdu-kit", raw)
+      expect(r.options).toMatchObject({ run: "hose", far: "tc" })
+      expect(r.pricing_mode).toBe("quote")
+      expect(r.quote_reasons).toEqual([expect.stringMatching(/^Not stocked: Stainless braided hose assembly/)])
+      // Hose ends come with the hose: only the facility-end ferrule per port.
+      expect(r.bom.find((l) => l.role === "ferrule")).toMatchObject({ sku: "14AM76-150", qty_per_unit: 2, resolved: true })
+    }
   })
 
   it("row manifold is always Quote", () => {
@@ -204,6 +209,34 @@ describe("transition stocked alternative", () => {
     const r = resolve("transition", { a: "bw", b: "fl150", od: 200 })
     expect(r.pricing_mode).toBe("quote")
     expect(r.stocked_alternative).toBeNull()
+  })
+})
+
+describe("weight: rounded once to 0.1 lb; the total is the rounded weight × units", () => {
+  it("a manifold pair weighs exactly 2 × one manifold, as the drawing's title block shows it", () => {
+    for (const raw of [{}, { header: 600, drops: 24, dstyle: "bv" }, { drops: 7, pitch: 13, pair: "1" }, { header: 300, drop: 150, drops: 31 }]) {
+      const r = resolve("row-manifold", raw)
+      const exact = getBuilder("row-manifold").weight(r.options as any).per_unit_lb
+      expect(r.weight_lb_per_unit).toBe(roundLb(exact))
+      expect(Number.isInteger(Math.round(r.weight_lb_per_unit * 10))).toBe(true)
+      expect(r.weight_lb_per_unit * 10).toBeCloseTo(Math.round(r.weight_lb_per_unit * 10), 9)
+      expect(r.units).toBe(2)
+      expect(r.weight_lb_total).toBe(totalLb(exact, 2))
+      expect(formatLb(r.weight_lb_total)).toBe(formatLb(2 * r.weight_lb_per_unit))
+      expect(r.weight_lb_total * 10).toBeCloseTo(2 * r.weight_lb_per_unit * 10, 9)
+    }
+    // The default 4" manifold: per-manifold and pair both to one decimal.
+    const d = resolve("row-manifold", {})
+    expect(`≈ ${formatLb(d.weight_lb_per_unit)} lb each · ${formatLb(d.weight_lb_total)} lb for the pair`).toMatch(
+      /^≈ \d+\.\d lb each · \d+\.\d lb for the pair$/
+    )
+  })
+
+  it("units multiply the rounded weight for every builder", () => {
+    const k = resolve("cdu-kit", { units: 7 })
+    expect(k.weight_lb_total).toBe(totalLb(k.weight_lb_per_unit, 7))
+    const alt = resolve("transition", { a: "tc", b: "fl150", od: 200, qty: 3 })
+    expect(alt.weight_lb_total).toBe(totalLb(alt.weight_lb_per_unit, 3))
   })
 })
 

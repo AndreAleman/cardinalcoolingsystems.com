@@ -9,8 +9,11 @@
 //                     clmp-fl150-tspool-l12-6-200; reducing: clmp-fl150-tspool-l12-6-200-150.
 //                     Ends sorted by End Connection sort order (A×B = B×A); on a reducing
 //                     transition A keeps its place, because the first size belongs to it.
-//   Row Manifold      <endA>-<endB>-rman-n<drops>-d<drop><dstyle>-p<pitch>-<d>-<header>[-ra20][-nf][-ip]
-//                     clmp-clmp-rman-n12-d100clmp-p24-6-400. dstyle token clmp | bv | uqd.
+//   Row Manifold      <endA>-<endB>-rman-n<drops>-d<drop>-<dstyle>-p<pitch>-<d>-<header>[-ra20][-nf][-ip]
+//                     clmp-clmp-rman-n12-d100-clmp-p24-6-400. dstyle token clmp | bv | uqd, its own
+//                     token like Sanitube's tee outlet (clmp-clmp-tee-clmp-std-6-200). The parser
+//                     also reads the legacy glued form (d100clmp) of saved configurations and
+//                     cart lines.
 //                     ends=cap → clmp-cap (TC inlet, welded cap at the far end).
 //                     Suffixes in this order: -ra20 (20 Ra ID), -nf (no fill/drain/vent), -ip
 //                     (instrument ports). pair and docs do not change the part.
@@ -18,8 +21,9 @@
 //   Hose              clmp-<clmp|mnpt|fl150>-hose-l<len>-<br|sil|ptfe>-6-<size>[-armor|-fire]
 //   Spool (kit run)   <endLo>-<endHi>-spool-l<len>-<d>-<size>   (Sanitube's spool pattern)
 //   CDU Hookup Kit    kit-cdu-<first 8 hex of sha256(canonical BOM)>
-//                     The canonical BOM is every line as role;kind;candidates|…;part_number;qty,
-//                     sorted, joined with "\n". Units are not part of it (the kit is per CDU).
+//                     The canonical BOM is every line as role;kind;candidates|…;part_number;qty
+//                     (+ ;material for a line with neither candidates nor a Part Number), sorted,
+//                     joined with "\n". Units are not part of it (the kit is per CDU).
 
 import { pnNumberToken, sizeToken } from "./units"
 import { alloyOf, endConnectionType, endConnectionTypeByToken } from "./tables"
@@ -86,7 +90,8 @@ export function manifoldPartNumber(o: RowManifoldOptions): string {
     endConnectionType(b).pn_token,
     "rman",
     `n${o.drops}`,
-    `d${sizeToken(o.drop)}${DSTYLE_TOKEN[o.dstyle]}`,
+    `d${sizeToken(o.drop)}`,
+    DSTYLE_TOKEN[o.dstyle],
     `p${pnNumberToken(o.pitch)}`,
     digitOf(o.alloy),
     sizeToken(o.header),
@@ -138,10 +143,18 @@ export function spoolPartNumber(
   return [ends[0].pn_token, ends[1].pn_token, "spool", `l${pnNumberToken(lengthIn)}`, digitOf(alloy), sizeToken(size)].join("-")
 }
 
-/** Canonical BOM text hashed into the kit Part Number. */
+/**
+ * Canonical BOM text hashed into the kit Part Number. A line with no candidate SKU and no Part
+ * Number of its own (e.g. a grooved far-end adapter nobody stocks) is told apart by its material,
+ * so a 304L kit and a 316L kit never share a number.
+ */
 export function canonicalBomText(bom: Bom): string {
   return bom.lines
-    .map((l) => [l.role, l.kind, l.candidates.join("|"), l.part_number ?? "", String(l.qty_per_unit)].join(";"))
+    .map((l) => {
+      const fields = [l.role, l.kind, l.candidates.join("|"), l.part_number ?? "", String(l.qty_per_unit)]
+      if (!l.candidates.length && l.part_number === undefined && l.material) fields.push(l.material)
+      return fields.join(";")
+    })
     .sort()
     .join("\n")
 }
@@ -212,23 +225,30 @@ function parseTransition(t: string[]): ParsedPartNumber | null {
   }
 }
 
+const DSTYLE_BY_TOKEN: Record<string, RowManifoldOptions["dstyle"]> = { clmp: "tc", bv: "bv", uqd: "uqd" }
+
 function parseManifold(t: string[]): ParsedPartNumber | null {
-  if (t.length < 8) return null
+  // Current form: …-d100-clmp-p24-…; legacy glued form (before 2026-10-20): …-d100clmp-p24-….
+  const glued = /^d(\d{3})(clmp|bv|uqd)$/.exec(t[4] ?? "")
+  const split = glued ? null : /^d(\d{3})$/.exec(t[4] ?? "")
+  if (!glued && !(split && Object.prototype.hasOwnProperty.call(DSTYLE_BY_TOKEN, t[5] ?? ""))) return null
+  const dropTok = glued ? glued[1] : split![1]
+  const dstyle = DSTYLE_BY_TOKEN[glued ? glued[2] : t[5]]
+  const r = glued ? t.slice(5) : t.slice(6) // p<pitch>, digit, header, flags…
+  if (r.length < 3) return null
   const a = endOf(t[0])
   const b = endOf(t[1])
   let ends: RowManifoldOptions["ends"] | null = null
   if (a === "tc" && b === "cap") ends = "cap"
   else if (a && a === b && (a === "tc" || a === "fl150" || a === "grv")) ends = a
   const n = /^n(\d+)$/.exec(t[3])
-  const d = /^d(\d{3})(clmp|bv|uqd)$/.exec(t[4])
-  const p = /^p(\d+)$/.exec(t[5])
-  const alloy = alloyOfDigit(t[6])
-  const header = sizeOf(t[7], MANIFOLD_HEADER_SIZES)
-  const flags = flagsOf(t.slice(8), ["ra20", "nf", "ip"])
-  if (!ends || !n || !d || !p || !alloy || header === null || !flags) return null
-  const drop = sizeOf(d[1], MANIFOLD_DROP_SIZES)
+  const p = /^p(\d+)$/.exec(r[0])
+  const alloy = alloyOfDigit(r[1])
+  const header = sizeOf(r[2], MANIFOLD_HEADER_SIZES)
+  const flags = flagsOf(r.slice(3), ["ra20", "nf", "ip"])
+  if (!ends || !n || !p || !alloy || header === null || !flags) return null
+  const drop = sizeOf(dropTok, MANIFOLD_DROP_SIZES)
   if (drop === null) return null
-  const dstyle = d[2] === "clmp" ? "tc" : (d[2] as "bv" | "uqd")
   return {
     builder_type: "row-manifold",
     options: {

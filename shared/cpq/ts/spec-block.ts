@@ -5,7 +5,7 @@
 import { formatInches } from "./units"
 import { ASSEMBLIES, alloyOf, tubeDims } from "./tables"
 import { manifoldEndCodes, hoseEndB } from "./part-number"
-import type { CduKitOptions, HoseOptions, RowManifoldOptions, StrainerOptions, TransitionOptions } from "./types"
+import type { Bom, BomLine, CduKitOptions, HoseOptions, RowManifoldOptions, StrainerOptions, TransitionOptions } from "./types"
 
 const sz = (code: number) => tubeDims(code).label
 
@@ -49,13 +49,28 @@ const DOC_TEXT: Record<RowManifoldOptions["docs"][number], string> = {
   weldmap: "weld map",
 }
 
+const DROP_STYLE_TEXT: Record<RowManifoldOptions["dstyle"], string> = {
+  tc: END_STANDARD.tc,
+  bv: "sanitary branch with tri-clamp isolation ball valve",
+  uqd: "plain stub, UQD-ready (quick disconnect by others)",
+}
+
+/** Drops and header ends in one clause; a connection shared by both is named once. */
+function manifoldConnections(o: RowManifoldOptions): string {
+  const [a, b] = manifoldEndCodes(o.ends)
+  if (o.dstyle === "tc" && a === "tc") {
+    return b === "tc"
+      ? `${END_STANDARD.tc} drops and both header ends`
+      : `${END_STANDARD.tc} drops and header inlet, ${END_STANDARD[b]} far end`
+  }
+  const ends = a === b ? `${END_STANDARD[a]} on both header ends` : `${END_STANDARD[a]} header inlet, ${END_STANDARD[b]} far end`
+  return `each drop a ${DROP_STYLE_TEXT[o.dstyle]}; ${ends}`
+}
+
+/** Every sentence follows the options: a test, a document or the pair is stated only when chosen. */
 export function manifoldSpecBlock(o: RowManifoldOptions): string {
   const m = ASSEMBLIES.manifold
   const al = alloyOf(o.alloy).label
-  const [a, b] = manifoldEndCodes(o.ends)
-  const ends = a === b ? `${END_STANDARD[a]} both ends` : `${END_STANDARD[a]} inlet, ${END_STANDARD[b]} far end`
-  const style =
-    o.dstyle === "tc" ? "3-A tri-clamp ferrule" : o.dstyle === "bv" ? "sanitary branch with tri-clamp isolation ball valve" : "plain stub, UQD-ready (quick disconnect by others)"
   const ports =
     o.fill === "1"
       ? ` ${sz(m.fill_size_code)} sanitary tri-clamp fill point, ${sz(m.drain_size_code)} drain and ${sz(m.vent_size_code)} air vent.`
@@ -64,12 +79,12 @@ export function manifoldSpecBlock(o: RowManifoldOptions): string {
   const docs = o.docs.map((d) => DOC_TEXT[d])
   return (
     `TCS row manifold built to the OCP guideline for pre-commission preparation of TCS row manifolds. ` +
-    `${sz(o.header)} OD header with ${o.drops} × ${sz(o.drop)} drops at ${formatInches(o.pitch)} centers, ${style}; ${ends}. ` +
+    `${sz(o.header)} OD header with ${o.drops} × ${sz(o.drop)} drops at ${formatInches(o.pitch)} centers; ${manifoldConnections(o)}. ` +
     `${al} stainless steel ASTM A270 sanitary tube (OCP minimum grade 304), ${o.finish} Ra max ID finish.${ports}${inst} ` +
-    `Inert-gas welded (${WELD}); ${CLEAN}. ` +
-    `Hydrostatically tested at ${m.hydro_test_psig} psig.` +
+    `Inert-gas welded (${WELD}); ${CLEAN}.` +
+    (o.docs.indexOf("hydro") >= 0 ? ` Hydrostatically tested at ${m.hydro_test_psig} psig.` : "") +
     (docs.length ? ` Documentation: ${docs.join(", ")}.` : "") +
-    (o.pair === "1" ? " Supplied as a supply and return pair." : "")
+    (o.pair === "1" ? " Supplied as a supply and return pair (2 manifolds)." : "")
   )
 }
 
@@ -79,24 +94,60 @@ const GASKET_TEXT: Record<CduKitOptions["gasket"], string> = {
   ptfe: "PTFE gaskets",
 }
 
-export function kitSpecBlock(o: CduKitOptions): string {
-  const al = alloyOf(o.alloy).label
-  const run = o.run === "hard" ? `welded ${al} spools, ${formatInches(o.len)} face to face` : `stainless braided hose assemblies, ${formatInches(o.len)}`
-  const far = { tc: "3-A tri-clamp", fl150: "ASME B16.5 Class 150 flange adapter", npt: "NPT adapter", grv: "IPS grooved adapter" }[o.far]
-  const iso = { none: "", bfv: " Tri-clamp butterfly isolation valve on each port.", bv: " Tri-clamp 3-piece ball isolation valve on each port." }[o.iso]
-  const strainer = o.strainer === "none" ? "" : ` 316L inline tri-clamp strainer (${o.strainer} body) on the supply side.`
+const FAR_TEXT: Record<CduKitOptions["far"], string> = {
+  tc: "3-A tri-clamp",
+  fl150: "ASME B16.5 Class 150 flange adapter",
+  npt: "NPT adapter",
+  grv: "IPS grooved adapter",
+}
+
+/** First line of a role (or a role prefix ending in "_"). */
+function lineOf(bom: Bom, role: string): BomLine | undefined {
+  return bom.lines.find((l) => (role.endsWith("_") ? l.role.indexOf(role) === 0 : l.role === role))
+}
+
+/**
+ * Built from the kit's own BOM lines plus the options, so the paragraph and the BOM can't
+ * disagree: every material comes from the line (`material`: the configuration's alloy for spools,
+ * ferrules and adapters; the SKU family's fixed material for clamps and strainers).
+ */
+export function kitSpecBlock(o: CduKitOptions, bom: Bom): string {
+  const spool = lineOf(bom, "spool")
+  const run = spool
+    ? `welded ${spool.material} spools, ${formatInches(o.len)} face to face`
+    : `stainless braided hose assemblies, ${formatInches(o.len)}`
+  const adapter = bom.lines.find((l) => l.role.indexOf("adapter_") === 0 && l.role !== "adapter_dn")
+  const far = adapter?.material ? `${adapter.material} ${FAR_TEXT[o.far]}` : FAR_TEXT[o.far]
+  const dn = lineOf(bom, "adapter_dn") ? ` ${o.port.toUpperCase()} hygienic flange × tri-clamp adapter at each CDU port.` : ""
+  const iso = lineOf(bom, "valve_bfv")
+    ? " Tri-clamp butterfly isolation valve on each port."
+    : lineOf(bom, "valve_bv")
+      ? " Tri-clamp 3-piece ball isolation valve on each port."
+      : ""
+  const st = lineOf(bom, "strainer")
+  const strainer = st ? ` ${st.material} inline tri-clamp strainer (${o.strainer} body) on the supply side.` : ""
+  const ferrule = lineOf(bom, "ferrule")
+  const clamp = lineOf(bom, "clamp")
+  const connections = [
+    ferrule ? `${ferrule.material} ferrules` : "",
+    clamp ? `heavy-duty ${clamp.material} single-pin clamps` : "",
+    lineOf(bom, "gasket_") ? GASKET_TEXT[o.gasket] : "",
+  ].filter((x) => x)
   return (
-    `CDU hookup kit, per CDU: supply and return runs of ${run}, ${far} far end.${iso}${strainer} ` +
-    `3-A sanitary tri-clamp connections: ${al} ferrules, heavy-duty T304 single-pin clamps, ${GASKET_TEXT[o.gasket]}. ` +
+    `CDU hookup kit, per CDU: supply and return runs of ${run}, ${far} far end.${dn}${iso}${strainer} ` +
+    `3-A sanitary tri-clamp connections: ${connections.join(", ")}. ` +
     `Sanitary grade (3-A) throughout; ASME BPE documentation available on request.`
   )
 }
 
-export function strainerSpecBlock(o: StrainerOptions): string {
+/** Built from the strainer's BOM lines (body and clamp materials) plus the options. */
+export function strainerSpecBlock(o: StrainerOptions, bom: Bom): string {
   const micron = ASSEMBLIES.strainer.mesh.find((m) => String(m.mesh) === o.mesh)?.micron
+  const body = lineOf(bom, "strainer")?.material
+  const clamp = lineOf(bom, "clamp")?.material
   return (
-    `316L stainless steel inline tri-clamp strainer, ${sz(o.size)}, ${o.body} body, ${o.mesh} mesh screen (${micron} µm openings). ` +
-    `Installed with heavy-duty T304 clamps and EPDM (peroxide-cured) gaskets.` +
+    `${body} stainless steel inline tri-clamp strainer, ${sz(o.size)}, ${o.body} body, ${o.mesh} mesh screen (${micron} µm openings). ` +
+    `Installed with heavy-duty ${clamp} clamps and EPDM (peroxide-cured) gaskets.` +
     (o.iso === "1" ? " Tri-clamp ball isolation valve either side." : "") +
     (o.dp === "1" ? ` Differential-pressure ports, 2 × ${sz(ASSEMBLIES.strainer.dp_port_size_code)} tri-clamp.` : "") +
     ` 3-A sanitary construction.`

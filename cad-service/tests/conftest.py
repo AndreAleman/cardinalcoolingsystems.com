@@ -18,8 +18,8 @@ TOL = TRANSITION_GOLDEN["tolerance"]
 SHEET_GOLDENS = {
     "transition": (tables.FIXTURES_DIR / "transition-sheet-golden.svg", "clmp-fl150-tspool-l12-6-200"),
     "transition-reducing": (tables.FIXTURES_DIR / "transition-reducing-sheet-golden.svg", "clmp-fl150-tspool-l12-6-200-150"),
-    "row-manifold": (tables.FIXTURES_DIR / "manifold-sheet-golden.svg", "clmp-clmp-rman-n12-d100clmp-p24-6-400"),
-    "row-manifold-valves": (tables.FIXTURES_DIR / "manifold-valves-sheet-golden.svg", "clmp-cap-rman-n4-d100bv-p18-6-400-ip"),
+    "row-manifold": (tables.FIXTURES_DIR / "manifold-sheet-golden.svg", "clmp-clmp-rman-n12-d100-clmp-p24-6-400"),
+    "row-manifold-valves": (tables.FIXTURES_DIR / "manifold-valves-sheet-golden.svg", "clmp-cap-rman-n4-d100-bv-p18-6-400-ip"),
     "cdu-kit": (tables.FIXTURES_DIR / "kit-sheet-golden.svg", "kit-cdu-a5ad698f"),
     "strainer": (tables.FIXTURES_DIR / "strainer-sheet-golden.svg", "clmp-clmp-strn-short-m20-6-200"),
     "hose": (tables.FIXTURES_DIR / "hose-sheet-golden.svg", "clmp-clmp-hose-l36-br-6-150"),
@@ -53,7 +53,7 @@ DEFAULT_CONFIGS = {
         "alloy": "t316l", "finish": "32", "fill": "1", "inst": "0", "docs": ["hydro", "mtr"],
     },
     "cdu-kit": {
-        "cdu": "none", "port": "tc150", "side": "tcs", "run": "hard", "far": "tc", "len": 36, "iso": "none",
+        "cdu": "none", "port": "tc150", "side": "tcs", "run": "hose", "far": "tc", "len": 36, "iso": "none",
         "strainer": "none", "gasket": "epdm", "spares": "0", "units": 1, "alloy": "t316l",
     },
     "strainer": {"size": 200, "body": "short", "mesh": "20", "iso": "0", "dp": "0", "qty": 1},

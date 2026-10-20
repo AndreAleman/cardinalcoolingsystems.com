@@ -29,7 +29,10 @@ const WORDS: Record<BuilderType, Record<string, Words>> = {
     cdu: {
       label: "Pick my CDU",
       help: "Known units, port read from the manufacturer's datasheet. More are added as datasheets are confirmed.",
-      names: Object.fromEntries(CDU_MODELS.map((m) => [m.key, m.key === "none" ? "Not listed / enter the port" : m.label])),
+      names: {
+        ...Object.fromEntries(CDU_MODELS.map((m) => [m.key, m.key === "none" ? "Not listed / enter the port" : m.label])),
+        "vertiv-cdu-600": 'Vertiv CoolChip CDU 600 (2-1/2" sanitary)',
+      },
     },
     port: {
       label: "CDU port connection",
@@ -37,6 +40,7 @@ const WORDS: Record<BuilderType, Record<string, Words>> = {
         tc100: '1" tri-clamp',
         tc150: '1.5" tri-clamp',
         tc200: '2" tri-clamp',
+        tc250: '2.5" tri-clamp',
         tc300: '3" tri-clamp',
         tc400: '4" tri-clamp',
         dn50: "DN50 hygienic flange",
@@ -68,7 +72,12 @@ const WORDS: Record<BuilderType, Record<string, Words>> = {
       help: "EPDM peroxide-cured is the default for water and PG25 glycol loops.",
       names: { epdm: "EPDM (peroxide-cured)", sil: "Silicone", ptfe: "PTFE" },
     },
-    spares: { label: "Spares", control: "toggle", names: { "1": "+10% gaskets and 1 spare clamp", "0": "No spares" } },
+    // The unchecked text is the offer itself, so the buyer sees what ticking it adds.
+    spares: {
+      label: "Spares",
+      control: "toggle",
+      names: { "1": "+10% gaskets and 1 spare clamp per CDU", "0": "Add +10% gaskets and 1 spare clamp per CDU" },
+    },
     units: { label: "Number of CDUs", suffix: "CDUs" },
     alloy: ALLOY_WORDS,
   },

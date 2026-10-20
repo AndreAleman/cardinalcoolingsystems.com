@@ -4,7 +4,7 @@
 import type { TubeSizesTable, EndConnectionsTable, MaterialsTable, BomTemplatesTable, AssembliesTable } from "./types"
 
 // Version of shared/cpq/dimensions/*.json: part of the CAD Package cache key.
-export const CPQ_TABLES_HASH = "9aa195d46dc2"
+export const CPQ_TABLES_HASH = "46e4168bb91a"
 
 // shared/cpq/dimensions/tube-sizes.json
 export const TUBE_SIZES_TABLE: TubeSizesTable = {
@@ -3851,6 +3851,7 @@ export const BOM_TEMPLATES_TABLE: BomTemplatesTable = {
     "Placeholders: {d} alloy digit (4 = 304L, 6 = 316L), {s} size token (nominal × 100, 3 digits: 050, 150, 1000), {sr} the ranged size token from size_ranges (13MHHM-100-150 covers 1\" and 1-1/2\"), {s2} a second size token (reducers).",
     "A pattern whose {sr} has no range at that size is skipped. An empty `patterns` list means no stocked SKU exists: the line can never resolve and the configuration is Quote (B1). Adding the SKU to the store and its pattern here turns the line Instant with no other code change.",
     "Valves, clamps and gaskets have no alloy variants: valves are 316 bodies, clamps T304, gaskets elastomer/PTFE.",
+    "`material` is the fixed material of a SKU family that does not follow the configuration's alloy (clamps T304, strainers T316L). The BOM line names it and the Spec Block reads it from the line.",
     "kit_rules drive the CDU Hookup Kit BOM (spec 'BOM rules'): per CDU, per port."
   ],
   "size_ranges": {
@@ -3877,6 +3878,7 @@ export const BOM_TEMPLATES_TABLE: BomTemplatesTable = {
         "13MHHM-{s}",
         "13MHHM-{sr}"
       ],
+      "material": "T304",
       "source": "live catalog 2026-10-18: single-pin-heavy-duty-clamp-with-wing-nut 13MHHM-* (T304): 050-075, 100-150, 200, 250, 300, 400, 500, 600, 800, 1000, 1200 (1\" and 1-1/2\" share 13MHHM-100-150)",
       "verified": false
     },
@@ -3994,8 +3996,9 @@ export const BOM_TEMPLATES_TABLE: BomTemplatesTable = {
     },
     {
       "role": "strainer",
-      "label": "316L inline TC strainer",
+      "label": "Inline TC strainer",
       "patterns": [],
+      "material": "T316L",
       "source": "no strainer on the live catalog 2026-10-18 (only y-ball check valves 45BY6); B1: resolves Quote",
       "verified": false
     },
