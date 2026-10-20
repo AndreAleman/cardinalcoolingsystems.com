@@ -7,7 +7,7 @@ import { LeadTimeFacts } from "@modules/builder/components/page-bits"
 import { ContentSection } from "./builder-page"
 import Link from "next/link"
 
-export const CDU_KIT_CITATIONS = ["boyd10u", "vertivCdu600", "ocpManifold", "titan"] as const
+export const CDU_KIT_CITATIONS = ["boyd10u", "vertivCdu600Spec", "ocpManifold", "ocpPg25", "titan"] as const
 
 export default function CduKitContent({ countryCode }: { countryCode: string }) {
   const Cite = makeCite(CDU_KIT_CITATIONS)
@@ -18,9 +18,9 @@ export default function CduKitContent({ countryCode }: { countryCode: string }) 
       <ContentSection title="Why these sizes" id="why-these-sizes">
         <p>
           Boyd&apos;s 10U CDU lists 1.5-inch sanitary (tri-clamp) ports
-          <Cite id="boyd10u" />; Vertiv&apos;s CoolChip CDU 600 connects with stainless hygienic fittings and ships a hose
-          set with hygienic flange to ANSI 150
-          <Cite id="vertivCdu600" />. The kit starts from that port: every ferrule, clamp, gasket and valve is the port
+          <Cite id="boyd10u" />; Vertiv&apos;s CoolChip CDU 600 uses stainless hygienic fittings, and its optional hose sets
+          go from a hygienic flange at the unit to an ANSI 150 lb flange at the far end
+          <Cite id="vertivCdu600Spec" />. The kit starts from that port: every ferrule, clamp, gasket and valve is the port
           size, and the far end adapts to whatever the facility or TCS pipe is.
         </p>
         <div className="overflow-x-auto border border-neutral-200 bg-white">
@@ -48,7 +48,7 @@ export default function CduKitContent({ countryCode }: { countryCode: string }) 
                 <td className="px-4 py-3 font-medium text-neutral-900">Vertiv CoolChip CDU 600</td>
                 <td className="px-4 py-3">Stainless hygienic fittings; hose set with hygienic flange to ANSI 150. Port size being confirmed.</td>
                 <td className="px-4 py-3">
-                  Guide specification <Cite id="vertivCdu600" />
+                  Guide specification <Cite id="vertivCdu600Spec" />
                 </td>
               </tr>
             </tbody>
@@ -80,8 +80,11 @@ export default function CduKitContent({ countryCode }: { countryCode: string }) 
 
       <ContentSection title="Gaskets for PG25 glycol loops">
         <p>
-          The kit defaults to EPDM peroxide-cured gaskets, the choice that matches the OCP loop-back guidance
-          <Cite id="ocpManifold" /> and suits water and PG25 propylene glycol. Silicone and PTFE are options.
+          The kit defaults to peroxide-cured EPDM gaskets. The OCP row-manifold guideline makes pre-commissioning loop backs from peroxide-cured EPDM or flexible stainless
+          steel
+          <Cite id="ocpManifold" />, and the OCP PG25 guideline recommends peroxide-cured EPDM because sulfur-cured EPDM can
+          add sulfate to the fluid over time
+          <Cite id="ocpPg25" />. Silicone and PTFE are options.
         </p>
       </ContentSection>
 

@@ -15,7 +15,7 @@ import Link from "next/link"
 
 type Props = { params: { countryCode: string }; searchParams: SearchParams }
 
-const CITATIONS = ["vertivCdu600"] as const
+const CITATIONS = ["vertivCdu600Spec"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
   return {
@@ -73,10 +73,10 @@ export default function HosePage({ params, searchParams }: Props) {
             </div>
             <p className="text-sm text-neutral-500">Ratings are confirmed on your quote against the hose maker&apos;s data.</p>
           </ContentSection>
-          <ContentSection title="Bought last, needed fast">
+          <ContentSection title="Lead time">
             <p>
-              Hoses are what Vertiv ships loose with its CDU
-              <Cite id="vertivCdu600" /> and what contractors buy last and in a hurry. Stocked standard lengths ship in 1–2
+              Vertiv offers stainless overbraid hose sets as a ship-loose option for its CDU 600
+              <Cite id="vertivCdu600Spec" />. Stocked standard lengths here ship in 1–2
               business days. The{" "}
               <Link href={`/${countryCode}/build/cdu-kit`} className="font-medium text-cardinal-red underline">
                 CDU hookup kit

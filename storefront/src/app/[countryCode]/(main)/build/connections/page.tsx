@@ -13,7 +13,7 @@ import Link from "next/link"
 
 type Props = { params: { countryCode: string } }
 
-const CITATIONS = ["boyd10u", "ocpManifold", "vertivCdu600", "titan"] as const
+const CITATIONS = ["boyd10u", "ocpManifold", "vertivCdu600Spec", "titan"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
   return {
@@ -71,9 +71,9 @@ export default function ConnectionsPage({ params }: Props) {
       what: "Two flanges bolted face to face over a gasket; ASME B16.5 Class 150 is the common rating on facility water.",
       where: (
         <>
-          On the facility side, and at the CDU on some units: Vertiv&apos;s CoolChip CDU 600 ships a hose set with hygienic
-          flange to ANSI 150
-          <Cite id="vertivCdu600" />.
+          On the facility side, and at the end of some CDU hose sets: Vertiv&apos;s optional CoolChip CDU 600 hose sets have a
+          hygienic flange at the unit and an ANSI 150 lb flange at the facility or TCS end
+          <Cite id="vertivCdu600Spec" />.
         </>
       ),
     },

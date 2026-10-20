@@ -15,7 +15,7 @@ import Link from "next/link"
 
 type Props = { params: { countryCode: string }; searchParams: SearchParams }
 
-const CITATIONS = ["vertivCdu600", "ocpManifold"] as const
+const CITATIONS = ["vertivCdu600Spec", "ocpManifold"] as const
 
 export function generateMetadata({ params }: Props): Metadata {
   return {
@@ -51,9 +51,9 @@ export default function TransitionPage({ params, searchParams }: Props) {
           <ContentSection title="Why every loop needs one">
             <p>
               The CDU side of a liquid-cooling loop is sanitary and the facility side usually isn&apos;t. Vertiv&apos;s
-              CoolChip CDU 600, for example, connects with stainless hygienic fittings and ships a hose set with hygienic
-              flange to ANSI 150
-              <Cite id="vertivCdu600" />. Upstream of the CDU, the facility water system is HVAC pipe: flanged or grooved.
+              CoolChip CDU 600, for example, uses stainless hygienic fittings inside the unit, and its optional hose sets go
+              from a hygienic flange at the unit to an ANSI 150 lb flange at the far end
+              <Cite id="vertivCdu600Spec" />. Upstream of the CDU, the facility water system is HVAC pipe: flanged or grooved.
               The transition spool is the joint between the two worlds.
             </p>
           </ContentSection>
