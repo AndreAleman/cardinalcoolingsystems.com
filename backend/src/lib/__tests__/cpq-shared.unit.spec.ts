@@ -7,9 +7,14 @@ import path from "node:path"
 import {
   BUILDERS,
   BUILDER_TYPES,
+  CDU_MODELS,
   CPQ_TABLES_HASH,
+  DEFAULT_CDU_KIT_OPTIONS,
   END_CONNECTION_ROWS,
   KIT_RULES,
+  formatLb,
+  roundLb,
+  totalLb,
   buildBom,
   candidatesFor,
   canonicalBomText,
@@ -20,6 +25,7 @@ import {
   manifoldGeometry,
   manifoldHeaderLength,
   parsePartNumber,
+  resultSummary,
   sha256Hex,
   spoolPartNumber,
   transitionGeometry,
@@ -92,7 +98,7 @@ describe("builder registry", () => {
 describe("share links", () => {
   it("defaults follow the plan's URL table", () => {
     expect(kit.encode(kit.defaults)).toBe(
-      "v=1&cdu=none&port=tc150&side=tcs&run=hard&far=tc&len=36&iso=none&strainer=none&gasket=epdm&spares=0&units=1&alloy=t316l"
+      "v=1&cdu=none&port=tc150&side=tcs&run=hose&far=tc&len=36&iso=none&strainer=none&gasket=epdm&spares=0&units=1&alloy=t316l"
     )
     expect(manifold.encode(manifold.defaults)).toBe(
       "v=1&header=400&drops=12&pitch=24&drop=100&dstyle=tc&ends=tc&pair=1&alloy=t316l&finish=32&fill=1&inst=0&docs=hydro,mtr"
@@ -148,6 +154,45 @@ describe("share links", () => {
     expect(transition.decode({ od: "400", odb: "350" })).toMatchObject({ options: { odb: 400 }, ignored: ["odb"] })
   })
 
+  it("CDU kit defaults (David, 2026-10-20): TCS, hose 36\", no valves or strainer, EPDM, 316L, no spares, 1 CDU", () => {
+    expect(kit.defaults).toEqual({
+      cdu: "none",
+      port: "tc150",
+      side: "tcs",
+      run: "hose",
+      far: "tc",
+      len: 36,
+      iso: "none",
+      strainer: "none",
+      gasket: "epdm",
+      spares: "0",
+      units: 1,
+      alloy: "t316l",
+    })
+    expect(DEFAULT_CDU_KIT_OPTIONS).toEqual(kit.defaults)
+  })
+
+  it("CDU kit: a link with v but no run predates the hose default and still means hard pipe", () => {
+    // Every Share Link carries every key, so an old full link keeps its meaning by construction.
+    const oldFull = "v=1&cdu=none&port=tc150&side=tcs&run=hard&far=tc&len=36&iso=none&strainer=none&gasket=epdm&spares=0&units=1&alloy=t316l"
+    expect(kit.decode(new URLSearchParams(oldFull))).toEqual({ options: { ...kit.defaults, run: "hard" }, ignored: [] })
+    // A partial link written against v=1 (or an unknown v, read as 1) without run: hard, as it meant then.
+    expect(kit.decode(new URLSearchParams("v=1&port=tc200&units=4")).options.run).toBe("hard")
+    expect(kit.decode(new URLSearchParams("v=7&port=tc200")).options.run).toBe("hard")
+    // Explicit run always wins; an invalid run falls back to the current default and is reported.
+    expect(kit.decode(new URLSearchParams("v=1&run=hose")).options.run).toBe("hose")
+    expect(kit.decode(new URLSearchParams("v=1&run=hard")).options.run).toBe("hard")
+    expect(kit.decode(new URLSearchParams("v=1&run=pipe"))).toMatchObject({ options: { run: "hose" }, ignored: ["run"] })
+    // No v (a bare page, a hand-written prefill such as /build/cdu-kit?cdu=boyd-10u&port=tc150, a JSON body): today's default.
+    expect(kit.decode(new URLSearchParams("cdu=boyd-10u&port=tc150")).options.run).toBe("hose")
+    expect(kit.decode({}).options.run).toBe("hose")
+    expect(kit.decode({ port: "tc200" }).options.run).toBe("hose")
+    // The canonical link of a hose kit says so, so it never depends on the default.
+    expect(kit.encode(kit.defaults)).toContain("&run=hose&")
+    // Other builders ignore the version rule.
+    expect(transition.decode(new URLSearchParams("v=1")).options).toEqual(transition.defaults)
+  })
+
   it("CDU kit: a known CDU fixes its port (B13); the far end defaults by loop", () => {
     expect(kit.decode({ cdu: "boyd-10u" })).toEqual({ options: { ...kit.defaults, cdu: "boyd-10u", port: "tc150" }, ignored: [] })
     expect(kit.decode({ cdu: "boyd-10u", port: "tc300" }).ignored).toEqual(["port"])
@@ -194,9 +239,9 @@ describe("part numbers", () => {
     expect(transition.partNumber({ ...transition.defaults, a: "bw", b: "bwp", len: 36.125, alloy: "t304l", od: 800, odb: 800 })).toBe(
       "bw-bwp-tspool-l36p125-4-800"
     )
-    expect(manifold.partNumber(manifold.defaults)).toBe("clmp-clmp-rman-n12-d100clmp-p24-6-400")
+    expect(manifold.partNumber(manifold.defaults)).toBe("clmp-clmp-rman-n12-d100-clmp-p24-6-400")
     expect(manifold.partNumber({ ...manifold.defaults, ends: "cap", dstyle: "uqd", finish: "20", fill: "0", inst: "1" })).toBe(
-      "clmp-cap-rman-n12-d100uqd-p24-6-400-ra20-nf-ip"
+      "clmp-cap-rman-n12-d100-uqd-p24-6-400-ra20-nf-ip"
     )
     expect(strainer.partNumber({ ...strainer.defaults, iso: "1", dp: "1", mesh: "100" })).toBe("clmp-clmp-strn-short-m100-6-200-iso-dp")
     expect(hose.partNumber({ ...hose.defaults, ends: "tc-npt", cover: "ptfe", sleeve: "fire", size: 50 })).toBe(
@@ -231,6 +276,31 @@ describe("part numbers", () => {
     })
   })
 
+  it("manifold: the drop style is its own token (Sanitube scheme); the legacy glued form still parses", () => {
+    let n = 0
+    for (const o of manifoldSamples()) {
+      const pn = manifold.partNumber(o)
+      const t = pn.split("-")
+      expect(t[4]).toBe(`d${String(o.drop).padStart(3, "0")}`)
+      expect(t[5]).toBe({ tc: "clmp", bv: "bv", uqd: "uqd" }[o.dstyle])
+      // Legacy: d100clmp glued (saved configurations, cart lines).
+      const legacy = [...t.slice(0, 4), t[4] + t[5], ...t.slice(6)].join("-")
+      const fromLegacy = parsePartNumber(legacy)
+      const fromNew = parsePartNumber(pn)
+      expect(fromLegacy).toEqual(fromNew)
+      expect(fromLegacy?.builder_type).toBe("row-manifold")
+      // Legacy → options → the current Part Number.
+      expect(manifold.partNumber(fromLegacy!.options as Options)).toBe(pn)
+      n++
+    }
+    expect(n).toBeGreaterThan(300)
+    expect(parsePartNumber("clmp-clmp-rman-n12-d100clmp-p24-6-400")).toEqual(parsePartNumber("clmp-clmp-rman-n12-d100-clmp-p24-6-400"))
+    expect(parsePartNumber("CLMP-CAP-RMAN-N4-D100BV-P18-6-400-IP")).toMatchObject({
+      builder_type: "row-manifold",
+      options: { dstyle: "bv", ends: "cap", drops: 4, pitch: 18, inst: "1" },
+    })
+  })
+
   it("kit: the Part Number is a hash of the canonical BOM (same parts → same number)", () => {
     const seen = new Map<string, string>()
     for (const o of kitSamples()) {
@@ -254,7 +324,7 @@ describe("part numbers", () => {
   })
 
   it("rejects anything that is not a builder Part Number", () => {
-    for (const s of ["14AM76-150", "kit-cdu-xyz", "clmp-fl150-tspool-l12-6-201", "clmp-fl150-tspool-l12-6-200-200", "clmp-clmp-rman-n12-d100clmp-p24-6-400-nf-ra20", "a-b-c", ""]) {
+    for (const s of ["14AM76-150", "kit-cdu-xyz", "clmp-fl150-tspool-l12-6-201", "clmp-fl150-tspool-l12-6-200-200", "clmp-clmp-rman-n12-d100-clmp-p24-6-400-nf-ra20", "clmp-clmp-rman-n12-d100clmp-p24-6-400-nf-ra20", "clmp-clmp-rman-n12-d100-xyz-p24-6-400", "clmp-clmp-rman-n12-d100-clmp-p24-6", "clmp-clmp-rman-n12-d100-clmp-clmp-p24-6-400", "a-b-c", ""]) {
       expect(parsePartNumber(s)).toBeNull()
     }
   })
@@ -295,6 +365,31 @@ describe("CDU kit BOM (spec 'BOM rules', per CDU, per port)", () => {
     expect(kit.leadTime(options).kind).toBe("custom")
     // Against the live catalog: the stocked lines resolve; spool, valve (TCBFN6 unpublished) and strainer do not.
     expect(bom.lines.map((l) => resolveLine(l))).toEqual([null, "14AM76-150", "13MHHM-100-150", "GTCE-150", null, null])
+  })
+
+  it("Vertiv CoolChip CDU 600: 2-1/2\" sanitary ports (SL-07625 Rev C Table 4.2), both loops", () => {
+    const model = CDU_MODELS.find((m) => m.key === "vertiv-cdu-600")!
+    expect(model).toMatchObject({ port: "tc250", label: "Vertiv CoolChip CDU 600" })
+    expect(model.source).toContain("SL-07625")
+    expect(model.source).toContain("https://www.vertiv.com/")
+    for (const side of ["tcs", "fws"] as const) {
+      const { options, ignored } = kit.decode({ cdu: "vertiv-cdu-600", side })
+      expect(ignored).toEqual([])
+      expect(options.port).toBe("tc250")
+      const bom = kit.bom({ ...options, run: "hard", far: "tc", iso: "bv", strainer: "short" })
+      expect(line(bom, "ferrule").candidates).toEqual(["14AM76-250", "14WMP6-250"])
+      expect(line(bom, "clamp").candidates).toEqual(["13MHHM-250"])
+      expect(line(bom, "gasket_epdm").candidates).toEqual(["GTCE-250"])
+      expect(line(bom, "valve_bv").candidates).toEqual(["TCBVS-250"])
+      expect(line(bom, "spool").part_number).toBe("clmp-clmp-spool-l36-6-250")
+      expect(line(bom, "strainer").part_number).toBe("clmp-clmp-strn-short-m20-6-250")
+      expect(kit.weight(options).per_unit_lb).toBeGreaterThan(0)
+      expect(kit.describe(options)).toContain('VERTIV COOLCHIP CDU 600, 2-1/2" TC PORTS')
+    }
+    // The 2-1/2" ferrule row matches Vertiv's 77.5 mm flange diameter.
+    expect(endConnectionRow("tc", 250).max_od_in * 25.4).toBeCloseTo(77.5, 0)
+    expect(kit.decode({ cdu: "vertiv-cdu-600", port: "tc150" })).toMatchObject({ options: { port: "tc250" }, ignored: ["port"] })
+    expect(kit.validate({ ...kit.defaults, cdu: "vertiv-cdu-600", port: "tc250" }).ok).toBe(true)
   })
 
   it("spares: +10% gaskets rounded up, 1 clamp per kit; units multiply", () => {
@@ -473,6 +568,21 @@ describe("geometry and weight", () => {
     expect(bv.bbox.maxY).toBeCloseTo(7 + 3.5, 9)
   })
 
+  it("weights round once to 0.1 lb; totals are the rounded weight × units", () => {
+    expect(roundLb(88.64)).toBe(88.6)
+    expect(roundLb(88.65)).toBe(88.7)
+    expect(totalLb(88.64, 2)).toBe(177.2) // not round(177.28) = 177.3
+    expect(totalLb(0.1, 3)).toBe(0.3)
+    expect(formatLb(88.6)).toBe("88.6")
+    expect(formatLb(177.2)).toBe("177.2")
+    expect(formatLb(9)).toBe("9.0")
+    expect(formatLb(1234.56)).toBe("1,234.6")
+    for (const o of manifoldSamples()) {
+      const w = manifold.weight(o).per_unit_lb
+      expect(totalLb(w, 2)).toBeCloseTo(2 * roundLb(w), 9)
+    }
+  })
+
   it("kit weight sums its lines; strainer and hose weights include their parts", () => {
     const w = kit.weight(kit.defaults)
     expect(w.parts.length).toBe(kit.bom(kit.defaults).lines.length)
@@ -500,12 +610,208 @@ describe("geometry and weight", () => {
 describe("spec blocks", () => {
   it("state alloy, finish, weld, A380, test pressure and certs; the manifold cites OCP", () => {
     const m = manifold.specBlock(manifold.defaults)
-    for (const s of ["OCP guideline", "T316L", "32 Ra", "Inert-gas welded", "ASTM A380", "150 psig", "MTRs by heat number"]) expect(m).toContain(s)
+    for (const s of ["OCP guideline", "T316L", "32 Ra", "inert-gas (argon) purge", "ASTM A380", "150 psig", "MTRs by heat number"]) expect(m).toContain(s)
     expect(manifold.specBlock({ ...(manifold.defaults as RowManifoldOptions), finish: "20", docs: ["pass"] })).toContain("20 Ra max ID finish")
     expect(transition.specBlock(transition.defaults)).toContain("ASME B16.5 Class 150 raised-face flange")
     expect(kit.specBlock(kit.defaults)).toContain("PG25")
     expect(strainer.specBlock(strainer.defaults)).toContain("841 µm")
     expect(hose.specBlock({ ...(hose.defaults as HoseOptions), ends: "tc-npt" })).toContain("male NPT thread")
+  })
+
+  it("manifold: a connection shared by the drops and the header ends is named once", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    const tcCount = (o: RowManifoldOptions) => manifold.specBlock(o).split("3-A tri-clamp ferrule").length - 1
+    expect(manifold.specBlock(m)).toContain("3-A tri-clamp ferrule drops and both header ends.")
+    expect(manifold.specBlock({ ...m, ends: "cap" })).toContain("3-A tri-clamp ferrule drops and header inlet, welded end cap far end.")
+    expect(manifold.specBlock({ ...m, dstyle: "bv", ends: "fl150" })).toContain(
+      "each drop a sanitary branch with tri-clamp isolation ball valve; ASME B16.5 Class 150 raised-face flange on both header ends."
+    )
+    for (const o of manifoldSamples()) {
+      expect(tcCount(o)).toBeLessThanOrEqual(1)
+      // No sentence is repeated.
+      const sentences = manifold.specBlock(o).split(". ")
+      expect(new Set(sentences).size).toBe(sentences.length)
+    }
+  })
+
+  it("manifold: test pressure only with hydro, the pair sentence only with pair=1", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    expect(manifold.specBlock(m)).toContain("Hydrostatically tested at 150 psig.")
+    expect(manifold.specBlock({ ...m, docs: ["mtr"] })).not.toContain("psig")
+    expect(manifold.specBlock({ ...m, docs: [] })).not.toMatch(/Hydrostatic|Documentation/)
+    expect(manifold.specBlock(m)).toContain(" Supplied as a supply and return pair (2 manifolds).")
+    expect(manifold.specBlock({ ...m, pair: "0" })).not.toContain("pair")
+    expect(manifold.specBlock({ ...m, docs: ["pass", "weldmap"] })).toContain("Documentation: passivation certificate to ASTM A380, weld map.")
+  })
+
+  it("manifold: every option changes the Spec Block text", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    const base = manifold.specBlock(m)
+    const toggles: Partial<RowManifoldOptions>[] = [
+      { header: 600 },
+      { drops: 8 },
+      { pitch: 30 },
+      { drop: 150 },
+      { dstyle: "bv" },
+      { dstyle: "uqd" },
+      { ends: "fl150" },
+      { ends: "grv" },
+      { ends: "cap" },
+      { pair: "0" },
+      { alloy: "t304l" },
+      { finish: "20" },
+      { fill: "0" },
+      { inst: "1" },
+      { docs: ["hydro"] },
+      { docs: ["mtr"] },
+      { docs: ["hydro", "mtr", "pass"] },
+      { docs: ["hydro", "mtr", "weldmap"] },
+    ]
+    for (const t of toggles) expect(manifold.specBlock({ ...m, ...t })).not.toBe(base)
+    expect(manifold.specBlock({ ...m, alloy: "t304l" })).toContain("T304L stainless steel")
+    expect(manifold.specBlock({ ...m, finish: "20" })).toContain("20 Ra max ID finish")
+    expect(manifold.specBlock({ ...m, fill: "0" })).not.toContain("fill point")
+    expect(manifold.specBlock({ ...m, inst: "1" })).toContain("instrument ports")
+  })
+
+  it("manifold: each checked document adds a quoted BOM line; hydro and MTRs say (included)", () => {
+    const m = manifold.defaults as RowManifoldOptions
+    const docs = (o: RowManifoldOptions) => manifold.bom(o).lines.filter((l) => l.role === "doc")
+    const all = docs({ ...m, docs: ["hydro", "mtr", "pass", "weldmap"] })
+    expect(all.map((l) => l.label)).toEqual([
+      "Hydrostatic test certificate (included)",
+      "MTRs by heat number (included)",
+      "Passivation certificate (ASTM A380), quoted",
+      "Weld map, quoted",
+    ])
+    for (const l of all) expect(l).toMatchObject({ kind: "fabricated", lead_time: "custom", qty_per_unit: 1, candidates: [] })
+    expect(docs({ ...m, docs: [] })).toEqual([])
+    expect(docs({ ...m, docs: ["weldmap"] }).map((l) => l.label)).toEqual(["Weld map, quoted"])
+  })
+
+  it("kit: switching the alloy to 304L changes the Spec Block, the BOM descriptions and the Part Number", () => {
+    for (const run of ["hard", "hose"] as const)
+      for (const far of ["tc", "fl150", "npt", "grv"] as const) {
+        const o316 = { ...(kit.defaults as CduKitOptions), run, far, strainer: "short" as const, alloy: "t316l" as const }
+        const o304 = { ...o316, alloy: "t304l" as const }
+        const s304 = kit.specBlock(o304)
+        expect(s304).not.toBe(kit.specBlock(o316))
+        expect(s304).toContain("T304L")
+        expect(s304).not.toMatch(/T316L (spools|ferrules|ASME|NPT|IPS)/)
+        expect(kit.partNumber(o304)).not.toBe(kit.partNumber(o316))
+        const labels304 = kit.bom(o304).lines.map((l) => l.label).join("\n")
+        expect(labels304).not.toBe(kit.bom(o316).lines.map((l) => l.label).join("\n"))
+        for (const l of kit.bom(o304).lines.filter((x) => ["spool", "ferrule"].includes(x.role) || /^adapter_(fl150|npt|grv)$/.test(x.role))) {
+          expect(l.label).toContain("T304L")
+          expect(l.material).toBe("T304L")
+        }
+        if (run === "hard") expect(s304).toContain("welded T304L spools")
+      }
+  })
+
+  it("kit and strainer: every material the Spec Block states is the one on its BOM line", () => {
+    for (const o of kitSamples()) {
+      for (const alloy of ["t316l", "t304l"] as const) {
+        const oo = { ...o, alloy }
+        const bom = kit.bom(oo)
+        const spec = kit.specBlock(oo)
+        const of = (role: string) => bom.lines.find((l) => l.role === role)
+        // Every alloy named is a line's material (a 316L strainer can sit in a 304L kit).
+        for (const al of spec.match(/T3\d\dL?/g) ?? []) expect(bom.lines.map((l) => l.material)).toContain(al)
+        if (of("spool")) expect(spec).toContain(`welded ${of("spool")!.material} spools`)
+        if (of("ferrule")) expect(spec).toContain(`${of("ferrule")!.material} ferrules`)
+        else expect(spec).not.toContain("ferrules")
+        expect(spec).toContain(`heavy-duty ${of("clamp")!.material} single-pin clamps`)
+        if (of("strainer")) expect(spec).toContain(`${of("strainer")!.material} inline tri-clamp strainer`)
+        else expect(spec).not.toContain("strainer")
+      }
+    }
+    const sb = strainer.bom(strainer.defaults)
+    const ss = strainer.specBlock(strainer.defaults)
+    expect(ss.startsWith(`${sb.lines[0].material} stainless steel inline tri-clamp strainer`)).toBe(true)
+    expect(ss).toContain(`heavy-duty ${sb.lines[1].material} clamps`)
+  })
+
+  it("no alloy is hard-coded: clamp and strainer materials come from bom-templates.json and are named on the line", () => {
+    const templates = JSON.parse(fs.readFileSync(path.join(ROOT, "shared/cpq/dimensions/bom-templates.json"), "utf8")).roles as {
+      role: string
+      label: string
+      material?: string
+    }[]
+    const clampT = templates.find((r) => r.role === "clamp")!
+    const strainerT = templates.find((r) => r.role === "strainer")!
+    expect(clampT.material).toBe("T304")
+    expect(strainerT.material).toBe("T316L")
+    for (const bom of [kit.bom(kit.defaults), strainer.bom(strainer.defaults), hose.bom(hose.defaults), manifold.bom({ ...(manifold.defaults as RowManifoldOptions), dstyle: "bv" })]) {
+      for (const l of bom.lines.filter((x) => x.role === "clamp")) {
+        expect(l.material).toBe(clampT.material)
+        expect(l.label.startsWith(`${clampT.label}, ${clampT.material}, `)).toBe(true)
+      }
+    }
+    const st = kit.bom({ ...(kit.defaults as CduKitOptions), strainer: "long" }).lines.find((l) => l.role === "strainer")!
+    expect(st).toMatchObject({ material: "T316L" })
+    expect(st.label.startsWith(`${strainerT.label}, T316L, `)).toBe(true)
+    const src = fs.readFileSync(path.join(ROOT, "shared/cpq/ts/spec-block.ts"), "utf8")
+    expect(src).not.toMatch(/T304 (single-pin )?clamps|316L inline/)
+  })
+
+  it("kit: a grooved far end (no stocked SKU) still gives 304L and 316L kits different Part Numbers", () => {
+    const o = { ...(kit.defaults as CduKitOptions), run: "hose" as const, far: "grv" as const, port: "tc200" as const }
+    expect(kit.bom(o).lines.some((l) => l.role === "ferrule")).toBe(false)
+    expect(kit.partNumber({ ...o, alloy: "t304l" })).not.toBe(kit.partNumber(o))
+  })
+})
+
+// ---------------------------------------------------------------- result line
+
+describe("resultSummary (the one-line result under the headline)", () => {
+  it("kit: units, parts summed over every CDU, Quote with the promise while a line is unstocked", () => {
+    const o = { ...(kit.defaults as CduKitOptions), units: 4 }
+    const r = resultSummary("cdu-kit", o)
+    expect(r).toEqual({
+      units: 4,
+      units_label: "4 CDUs",
+      parts: [
+        { key: "hose", label: "hoses", qty: 8 },
+        { key: "ferrule", label: "ferrules", qty: 8 },
+        { key: "clamp", label: "clamps", qty: 16 },
+        { key: "gasket", label: "gaskets", qty: 16 },
+      ],
+      parts_label: "8 hoses, 8 ferrules, 16 clamps, 16 gaskets",
+      price_total: null,
+      pricing_mode: "quote", // no braided hose is stocked: custom before any resolve
+      lead_label: "Custom production, 3–6 weeks",
+      quote_promise: "Firm quote within 1 business day, held 90 days",
+    })
+    const hard = resultSummary("cdu-kit", { ...o, run: "hard", iso: "bv", strainer: "short", spares: "1" })
+    expect(hard.parts_label).toBe("8 spools, 24 ferrules, 44 clamps, 44 gaskets, 8 valves, 4 strainers")
+    expect(resultSummary("cdu-kit", { ...o, units: 1, far: "fl150" }).units_label).toBe("1 CDU")
+    expect(resultSummary("cdu-kit", { ...o, far: "fl150" }).parts.map((p) => p.key)).toEqual(["hose", "clamp", "gasket", "adapter"])
+  })
+
+  it("follows the resolve: Instant shows the total and the stock lead time, Quote never a price", () => {
+    const o = { ...(kit.defaults as CduKitOptions), units: 2 }
+    const instant = resultSummary("cdu-kit", o, null, { pricing_mode: "instant", price_total: 812.4 })
+    expect(instant).toMatchObject({ pricing_mode: "instant", price_total: 812.4, lead_label: "Ships in 1–2 business days", quote_promise: null })
+    const quote = resultSummary("cdu-kit", o, null, { pricing_mode: "quote", price_total: 999 })
+    expect(quote).toMatchObject({ pricing_mode: "quote", price_total: null, lead_label: "Custom production, 3–6 weeks" })
+    // A resolve response's BOM ({ lines: bom, units }) works the same as the shared BOM.
+    const resolved = { lines: kit.bom(o).lines.map((l) => ({ role: l.role, qty_per_unit: l.qty_per_unit, lead_time: "stock" as const })), units: 2 }
+    expect(resultSummary("cdu-kit", o, resolved, null)).toMatchObject({ pricing_mode: null, lead_label: "Ships in 1–2 business days", parts_label: "4 hoses, 4 ferrules, 8 clamps, 8 gaskets" })
+  })
+
+  it("manifold and transition: the units alone; strainer and hose: the install parts, not the unit itself", () => {
+    expect(resultSummary("row-manifold", manifold.defaults)).toMatchObject({ units_label: "2 manifolds", parts: [], parts_label: "", pricing_mode: "quote" })
+    expect(resultSummary("row-manifold", { ...(manifold.defaults as RowManifoldOptions), pair: "0" }).units_label).toBe("1 manifold")
+    expect(resultSummary("transition", { ...(transition.defaults as TransitionOptions), qty: 8 })).toMatchObject({
+      units_label: "8 spools",
+      parts: [],
+      quote_promise: "Firm quote within 1 business day, held 90 days",
+    })
+    expect(resultSummary("strainer", { ...(strainer.defaults as StrainerOptions), qty: 3 }).parts_label).toBe("6 clamps, 6 gaskets")
+    expect(resultSummary("strainer", { ...(strainer.defaults as StrainerOptions), iso: "1", qty: 1 }).parts_label).toBe("4 clamps, 4 gaskets, 2 valves")
+    expect(resultSummary("hose", hose.defaults)).toMatchObject({ units_label: "1 hose", parts_label: "2 clamps, 2 gaskets" })
+    expect(resultSummary("hose", { ...(hose.defaults as HoseOptions), ends: "tc-npt", qty: 1 }).parts_label).toBe("1 clamp, 1 gasket")
   })
 })
 
@@ -583,7 +889,7 @@ function hoseSamples(): HoseOptions[] {
 function kitSamples(): CduKitOptions[] {
   const out: CduKitOptions[] = []
   const d = kit.defaults as CduKitOptions
-  for (const port of ["tc100", "tc150", "tc200", "tc300", "tc400", "dn50", "dn80"] as const)
+  for (const port of ["tc100", "tc150", "tc200", "tc250", "tc300", "tc400", "dn50", "dn80"] as const)
     for (const run of ["hard", "hose"] as const)
       for (const far of ["tc", "fl150", "npt", "grv"] as const)
         for (const iso of ["none", "bfv", "bv"] as const)

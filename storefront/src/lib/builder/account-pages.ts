@@ -2,7 +2,8 @@
 // noindex and left out of the sitemap. One template, this data file.
 //
 // Rules (B13/B15): `trigger` and `connection` stay null until verified from a primary source.
-// Never guess a port size. Boyd is filled from its 10U datasheet (1.5" tri-clamp). Every other
+// Never guess a port size. Boyd is filled from its 10U datasheet (1.5" tri-clamp), Vertiv from the
+// CoolChip CDU 600 installation guide (2-1/2" sanitary flange, Table 4.2). Every other
 // company renders the data-center catalog cut at posted prices and asks for connection sizes.
 
 import type { CduKitOptions, CduPort } from "@lib/cpq/shared"
@@ -17,6 +18,8 @@ export type AccountConnection = {
   /** A known CDU model in the kit builder (B13), when there is one. */
   cdu: CduKitOptions["cdu"] | null
   source: { title: string; url: string }
+  /** What the source is, as the page says it: "From your datasheet: …". */
+  sourceKind: "datasheet" | "installation guide"
 }
 
 export type AccountPage = {
@@ -33,6 +36,11 @@ export const BOYD_10U_DATASHEET = {
   url: "https://info.boydcorp.com/hubfs/Thermal/Liquid-Cooling/Boyd-10U-Cooling-Distribution-Unit-CDU.pdf",
 }
 
+export const VERTIV_CDU_600_GUIDE = {
+  title: "Vertiv CoolChip CDU 600 Installation and Commissioning Guide (SL-07625), Table 4.2",
+  url: "https://www.vertiv.com/4a689f/globalassets/shared/vertiv-coolchip-cdu-600-installation-and-commissioning-guide-sl-07625.pdf",
+}
+
 export const ACCOUNT_PAGES: readonly AccountPage[] = [
   { slug: "nortek-dcc", company: "Nortek DCC", trigger: null, connection: null },
   {
@@ -45,9 +53,22 @@ export const ACCOUNT_PAGES: readonly AccountPage[] = [
       port: "tc150",
       cdu: "boyd-10u",
       source: BOYD_10U_DATASHEET,
+      sourceKind: "datasheet",
     },
   },
-  { slug: "vertiv", company: "Vertiv", trigger: null, connection: null },
+  {
+    slug: "vertiv",
+    company: "Vertiv",
+    trigger: null,
+    connection: {
+      equipment: "CoolChip CDU 600",
+      label: '2-1/2" sanitary flange supply and return connections (Vertiv CoolChip CDU 600)',
+      port: "tc250",
+      cdu: "vertiv-cdu-600",
+      source: VERTIV_CDU_600_GUIDE,
+      sourceKind: "installation guide",
+    },
+  },
   { slug: "aaon-basx", company: "AAON / BASX", trigger: null, connection: null },
   { slug: "motivair", company: "Motivair", trigger: null, connection: null },
   { slug: "munters", company: "Munters", trigger: null, connection: null },

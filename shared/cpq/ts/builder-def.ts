@@ -26,6 +26,14 @@ export type BuilderDef<O extends Options = Options, G = unknown> = {
   path: string
   /** Builder name, e.g. "Transition Spool". */
   title: string
+  /** What one unit of the BOM is ("CDU" / "CDUs", "manifold" / "manifolds"). */
+  unitNoun: { one: string; many: string }
+  /**
+   * Result-line parts (result-summary.ts): the BOM roles summed for the buyer, minus `exclude` (the
+   * unit itself, e.g. the hose of a hose assembly). Absent = the BOM is a fabricated breakdown and
+   * the result line shows the units alone (manifold, transition).
+   */
+  summaryParts?: { exclude: readonly string[] }
   /** Canonical keys, in canonical order. */
   keys: readonly KeySpec[]
   defaults: Readonly<O>

@@ -294,7 +294,8 @@ export function manifoldBom(o: RowManifoldOptions): Bom {
       line({
         ...fab,
         role: "doc",
-        label: `${DOC_LABEL[doc]}${INCLUDED_DOCS.indexOf(doc) >= 0 ? " (included)" : ""}`,
+        // Included documents cost nothing extra; the others are priced on the quote.
+        label: `${DOC_LABEL[doc]}${INCLUDED_DOCS.indexOf(doc) >= 0 ? " (included)" : ", quoted"}`,
         qty: 1,
       }),
     )
@@ -330,6 +331,7 @@ export const ROW_MANIFOLD_BUILDER = makeBuilder<RowManifoldOptions, ManifoldGeom
   type: "row-manifold",
   path: "/build/row-manifold",
   title: "Row Manifold",
+  unitNoun: { one: "manifold", many: "manifolds" },
   keys: ROW_MANIFOLD_KEYS,
   hasStep: true,
   partNumber: manifoldPartNumber,

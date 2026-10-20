@@ -2,6 +2,7 @@
 
 import { ASSEMBLIES, QUOTE_PROMISE } from "@lib/cpq/shared"
 import Link from "next/link"
+import type { ReactNode } from "react"
 
 /** B14 on the kit pages. */
 export const KIT_WE_CAN_SUPPLY = [
@@ -65,5 +66,43 @@ export function LeadTimeFacts() {
         <p className="mt-1 text-sm text-neutral-800">{QUOTE_PROMISE}.</p>
       </li>
     </ul>
+  )
+}
+
+/**
+ * The sanitary-vs-BPE key paragraph, written once: the answer on /sanitary-vs-bpe and the short
+ * version on the per-account pages. `ocpRef` goes right after the OCP clause (a footnote <Cite>
+ * on a page with footnotes, an inline source link elsewhere).
+ */
+export function SanitaryGradeSummary({
+  countryCode,
+  ocpRef,
+  readMore = false,
+}: {
+  countryCode: string
+  ocpRef: ReactNode
+  readMore?: boolean
+}) {
+  return (
+    <p data-testid="sanitary-grade-summary">
+      The OCP guideline for TCS row manifolds asks for stainless steel of minimum grade 304, welded under an inert
+      atmosphere per AWS D10.18 and surface-treated per ASTM A380
+      {ocpRef}. It does not name ASME BPE. We supply 304L and 316L sanitary tube at 20 Ra ID / 32 Ra OD, with MTRs by
+      heat number; passivation certificates are available on fabricated parts. ASME BPE is available when a project spec names
+      it &mdash;{" "}
+      <Link href={`/${countryCode}/contact?category=${encodeURIComponent("ASME BPE")}`} className="font-medium text-cardinal-red underline">
+        ask us
+      </Link>
+      .
+      {readMore ? (
+        <>
+          {" "}
+          <Link href={`/${countryCode}/sanitary-vs-bpe`} className="font-medium text-cardinal-red underline">
+            Sanitary vs BPE, in full
+          </Link>
+          .
+        </>
+      ) : null}
+    </p>
   )
 }

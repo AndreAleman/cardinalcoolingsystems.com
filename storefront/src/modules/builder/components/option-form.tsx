@@ -15,18 +15,28 @@ type Props = {
   error: { key: string; message: string } | null
   /** Keys rendered disabled with a note (e.g. a CDU model fixes its port). */
   locked?: Record<string, string>
+  /**
+   * "grid": two columns, selects and numbers side by side, button groups and checks full width
+   * (the primary questions, so they fit one phone screen). "stack" (default): one per row.
+   */
+  layout?: "stack" | "grid"
+  testId?: string
 }
+
+/** Controls that read fine at half width. */
+const HALF = new Set<Field["control"]>(["select", "number"])
 
 const labelCls = "block text-xs font-semibold uppercase tracking-wide text-neutral-600"
 const helpCls = "mt-1 text-xs text-neutral-500"
 const inputCls =
   "mt-1.5 h-11 w-full border border-neutral-300 bg-white px-3 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 disabled:bg-neutral-100 disabled:text-neutral-500"
 
-export default function OptionForm({ fields, options, onChange, error, locked = {} }: Props) {
+export default function OptionForm({ fields, options, onChange, error, locked = {}, layout = "stack", testId = "builder-form" }: Props) {
+  const grid = layout === "grid"
   return (
-    <div className="flex flex-col gap-5" data-testid="builder-form">
+    <div className={grid ? "grid grid-cols-2 gap-x-3 gap-y-4" : "flex flex-col gap-5"} data-testid={testId}>
       {fields.map((f) => (
-        <div key={f.key} data-testid={`field-${f.key}`}>
+        <div key={f.key} data-testid={`field-${f.key}`} className={clx("min-w-0", grid && !HALF.has(f.control) && "col-span-2")}>
           <FieldControl field={f} value={options[f.key]} onChange={onChange} lockedNote={locked[f.key]} />
           {f.help ? <p className={helpCls}>{f.help}</p> : null}
           {error?.key === f.key ? (

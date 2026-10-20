@@ -48,9 +48,16 @@ export const CDU_MODELS: readonly { key: CduKitOptions["cdu"]; label: string; po
     port: "tc150",
     source: "Boyd 10U Cooling Distribution Unit datasheet: 1.5\" sanitary (tri-clamp) supply and return ports",
   },
+  {
+    key: "vertiv-cdu-600",
+    label: "Vertiv CoolChip CDU 600",
+    port: "tc250",
+    source:
+      "Vertiv CoolChip CDU 600 Installation and Commissioning Guide, SL-07625 Rev C 08-25, Table 4.2 and §5.4/5.5: primary (FWS) and secondary (TCS) connections are 2-1/2\" (DN65) sanitary flanges to BS4825 Pt.3 or equivalent, 77.5 mm flange diameter (the 2-1/2\" tri-clamp ferrule). The optional 6-way secondary manifold with 1\" hose barbs is not configured. https://www.vertiv.com/4a689f/globalassets/shared/vertiv-coolchip-cdu-600-installation-and-commissioning-guide-sl-07625.pdf",
+  },
 ]
 
-/** Tube size of a CDU port: tcNNN → NNN; DN50 → 2" (200), DN80 → 3" (300) hygienic flange. */
+/** Tube size of a CDU port: tcNNN → NNN (tc250 = 2-1/2"); DN50 → 2" (200), DN80 → 3" (300) hygienic flange. */
 export function cduPortSize(port: CduPort): SizeCode {
   const m = /^tc(\d+)$/.exec(port)
   if (m) return Number(m[1])
@@ -114,6 +121,7 @@ export function kitBom(o: CduKitOptions): Bom {
         kind: "fabricated",
         part_number: spoolPartNumber("tc", "tc", o.len, o.alloy, s),
         size_code: s,
+        material: al.label,
       }),
     )
   } else {
@@ -129,6 +137,7 @@ export function kitBom(o: CduKitOptions): Bom {
         qty: ferrules,
         vars: { d, s },
         size_code: s,
+        material: al.label,
         note: [o.run === "hard" ? "spool weld ends" : "", o.far === "tc" ? "facility pipe end" : ""].filter((x) => x).join(" + "),
       }),
     )
@@ -167,7 +176,9 @@ export function kitBom(o: CduKitOptions): Bom {
   if (st) lines.push(strainerLine(st, r.strainer_ports))
   if (o.far !== "tc") {
     const aRole = FAR_ADAPTER_ROLE[o.far]
-    lines.push(line({ role: aRole, label: `${roleLabel(aRole)}, ${sl} ${al.label} (far end)`, qty: P, vars: { d, s }, size_code: s }))
+    lines.push(
+      line({ role: aRole, label: `${roleLabel(aRole)}, ${sl} ${al.label} (far end)`, qty: P, vars: { d, s }, size_code: s, material: al.label }),
+    )
   }
   if (isDnPort(o.port)) {
     lines.push(
@@ -256,6 +267,8 @@ export const CDU_KIT_BUILDER = makeBuilder<CduKitOptions>({
   type: "cdu-kit",
   path: "/build/cdu-kit",
   title: "CDU Hookup Kit",
+  unitNoun: { one: "CDU", many: "CDUs" },
+  summaryParts: { exclude: [] },
   keys: CDU_KIT_KEYS,
   normalize: (o, ctx) => {
     let out = o
@@ -265,6 +278,8 @@ export const CDU_KIT_BUILDER = makeBuilder<CduKitOptions>({
       if (ctx.present("port")) ctx.ignore("port")
       out = { ...out, port: model.port }
     }
+    // The run defaulted to hard pipe until 2026-10-20: a link with `v` but no `run` meant hard.
+    if (ctx.version !== undefined && !ctx.present("run")) out = { ...out, run: "hard" }
     // Far end defaults by loop: TCS → tri-clamp, FWS → ANSI 150 flange.
     if (!ctx.given("far")) out = { ...out, far: out.side === "fws" ? "fl150" : "tc" }
     return out
@@ -282,5 +297,5 @@ export const CDU_KIT_BUILDER = makeBuilder<CduKitOptions>({
   weight: kitWeight,
   bom: kitBom,
   standardRange: checkKitRange,
-  specBlock: kitSpecBlock,
+  specBlock: (o) => kitSpecBlock(o, kitBom(o)),
 })

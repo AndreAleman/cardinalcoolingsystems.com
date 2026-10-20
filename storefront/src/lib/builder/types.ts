@@ -49,7 +49,13 @@ export type ResolveResponse = {
   price_basis: PriceBasis
   /** ISO date of the resolve: the price's as-of date. */
   priced_at: string
+  /** Per-unit weight, rounded once to 0.1 lb (shared roundLb). */
   weight_lb_per_unit: number
+  /**
+   * weight_lb_per_unit × units (shared totalLb): a pair is exactly 2 × one. The Part Number card
+   * computes the same total from the per-unit value with totalLb, so the two always agree.
+   */
+  weight_lb_total: number
   lead_time: { kind: "stock" | "custom"; label: string }
   standard_range: { ok: boolean; reasons: { code: string; message: string }[] }
   spec_block: string

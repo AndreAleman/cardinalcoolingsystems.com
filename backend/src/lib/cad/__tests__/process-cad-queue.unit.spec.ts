@@ -93,7 +93,7 @@ describe("processCadQueue (review off)", () => {
       queued_at: utc("2026-10-16T21:00:00Z"),
       builder_type: "row-manifold",
       configuration: { ...MANIFOLD_OPTIONS },
-      part_number: "clmp-clmp-rman-n12-d100clmp-p24-6-400",
+      part_number: "clmp-clmp-rman-n12-d100-clmp-p24-6-400",
     })
     const cad = new FakeCadService([row])
     const now = utc("2026-10-19T13:00:00Z")

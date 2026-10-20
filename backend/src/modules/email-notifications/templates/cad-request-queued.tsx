@@ -49,7 +49,7 @@ export const CadRequestQueuedTemplate: React.FC<CadRequestQueuedProps> & { Previ
 CadRequestQueuedTemplate.PreviewProps = {
   reference: 'CAD-12',
   contactName: 'Ada',
-  partNumber: 'clmp-clmp-rman-n12-d100clmp-p24-6-400',
+  partNumber: 'clmp-clmp-rman-n12-d100-clmp-p24-6-400',
   description: '4" ROW MANIFOLD 12 X 1" TC DROPS @ 24" TC ENDS T316L',
   configuration: [{ label: 'Header OD', value: '4"' }],
   review: true,

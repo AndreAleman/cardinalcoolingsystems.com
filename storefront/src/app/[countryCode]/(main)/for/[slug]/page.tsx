@@ -1,9 +1,13 @@
 import { accountPage, kitLinkFor } from "@lib/builder/account-pages"
-import { canonicalUrl, decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
+import { CITATIONS } from "@lib/builder/citations"
+import { builderMetadata } from "@lib/builder/seo"
+import { decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
 import { getCatalogCut } from "@lib/data/catalog-cut"
 import { convertToLocale } from "@lib/util/money"
 import BuilderShell from "@modules/builder/components/builder-shell"
-import { GlycolNote, LeadTimeFacts } from "@modules/builder/components/page-bits"
+import AccountPageView from "@modules/builder/components/account-page-view"
+import { GlycolNote, LeadTimeFacts, SanitaryGradeSummary } from "@modules/builder/components/page-bits"
+import EmailOff from "@modules/common/components/email-off"
 import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -16,14 +20,32 @@ import { notFound } from "next/navigation"
 
 type Props = { params: { countryCode: string; slug: string }; searchParams: SearchParams }
 
+const NO_INDEX = { index: false, follow: false, nocache: true } as const
+
 export function generateMetadata({ params }: Props): Metadata {
   const page = accountPage(params.slug)
-  return {
-    title: page ? `${page.company}: liquid cooling connections at posted prices | Cardinal Cooling Systems` : "Cardinal Cooling Systems",
-    robots: { index: false, follow: false, nocache: true },
-    alternates: { canonical: canonicalUrl(params.countryCode, `/for/${params.slug}`) },
-  }
+  if (!page) return { title: "Cardinal Cooling Systems", robots: NO_INDEX }
+  const conn = page.connection
+  return builderMetadata({
+    countryCode: params.countryCode,
+    // "Boyd 10U CDU hookup kit", not "… for Boyd" when the equipment already names the company.
+    title: conn
+      ? conn.equipment.toLowerCase().startsWith(page.company.toLowerCase())
+        ? `${conn.equipment} hookup kit`
+        : `${conn.equipment} hookup kit for ${page.company}`
+      : `Sanitary connection parts for ${page.company}`,
+    description: conn
+      ? `Prepared for ${page.company}'s purchasing and engineering team: the hookup kit for ${conn.label}, priced live when every part is stocked.`
+      : `Prepared for ${page.company}'s purchasing and engineering team: tri-clamp fittings, valves and strainers for data center liquid cooling at posted prices. Send your connection sizes and we'll price your exact BOM in 48 hours.`,
+    path: `/for/${page.slug}`,
+    robots: NO_INDEX,
+  })
 }
+
+const STANDARD_SIZES =
+  '1"–4" tri-clamp ferrules, clamps, gaskets, 90s and tees; 2"–4" butterfly and ball valves; 316L strainers.'
+const OCP_MANIFOLD = CITATIONS.ocpManifold
+const DAVID_EMAIL = "aleman@cardinalcoolingsystems.com"
 
 export default async function AccountLandingPage({ params, searchParams }: Props) {
   const { countryCode, slug } = params
@@ -38,7 +60,10 @@ export default async function AccountLandingPage({ params, searchParams }: Props
     <div className="bg-neutral-50 pb-24 small:pb-16" data-testid="account-page" data-slug={page.slug}>
       <header className="border-b border-neutral-200 bg-white px-4 pb-10 pt-10 xsmall:px-6 small:px-12 small:pt-14">
         <div className="mx-auto max-w-[1440px]">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-cardinal-red">For {page.company}</p>
+          <AccountPageView slug={page.slug} company={page.company} />
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-cardinal-red" data-testid="account-prepared-for">
+            Prepared for {page.company}&apos;s purchasing and engineering team
+          </p>
           <h1 className="max-w-4xl text-3xl font-normal tracking-tight text-neutral-900 small:text-5xl">
             {conn ? `The hookup kit for your ${conn.equipment}` : `Sanitary connection parts for ${page.company}, at posted prices`}
           </h1>
@@ -53,29 +78,39 @@ export default async function AccountLandingPage({ params, searchParams }: Props
             ) : null}
             {conn ? (
               <p data-testid="account-connection">
-                From your datasheet: {conn.label} (
+                From your {conn.sourceKind}: {conn.label} (
                 <a href={conn.source.url} target="_blank" rel="noopener noreferrer" className="underline">
                   {conn.source.title}
                 </a>
                 ). The kit below is pre-filled for it and prices live when every part is stocked.
               </p>
             ) : (
-              <p data-testid="account-ask">
-                Tri-clamp ferrules, clamps, gaskets, elbows, tees and valves for data center liquid cooling, at the prices we
-                post. Send us your connection sizes and we&apos;ll price an exact BOM in 48 hours.
-              </p>
+              <div data-testid="account-ask" className="flex flex-col gap-2">
+                <p>
+                  Standard sizes: {STANDARD_SIZES} Parts with a posted price show it below; anything without one is quoted.
+                </p>
+                <p className="font-medium text-neutral-900">
+                  Send us your connection sizes and we&apos;ll price your exact BOM in 48 hours.
+                </p>
+              </div>
             )}
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
+            {/* One quote action per page: with a known connection it is the builder's Add to Quote List below. */}
             {conn ? (
-              <Link href={`/${countryCode}${kitLinkFor(conn)}`} className="inline-flex h-12 items-center bg-neutral-900 px-6 text-sm font-semibold text-white hover:bg-neutral-700">
+              <Link href={`/${countryCode}${kitLinkFor(conn)}`} className="inline-flex h-12 items-center border border-neutral-900 px-6 text-sm font-semibold text-neutral-900 hover:bg-neutral-100">
                 Open the full kit builder
               </Link>
-            ) : null}
-            <Link href={contactHref} className="inline-flex h-12 items-center bg-cardinal-red px-6 text-sm font-semibold text-white hover:bg-cardinal-red-hover" data-testid="account-send-sizes">
-              Send your connection sizes
-            </Link>
+            ) : (
+              <Link href={contactHref} className="inline-flex h-12 items-center bg-cardinal-red px-6 text-sm font-semibold text-white hover:bg-cardinal-red-hover" data-testid="account-send-sizes">
+                Send your connection sizes
+              </Link>
+            )}
           </div>
+          <p className="mt-4 text-sm text-neutral-600" data-testid="account-contact">
+            Your contact: David Aleman,{" "}
+            <EmailOff email={DAVID_EMAIL} className="font-medium text-cardinal-red underline" subject={`Cardinal parts for ${page.company}`} />
+          </p>
         </div>
       </header>
 
@@ -91,13 +126,30 @@ export default async function AccountLandingPage({ params, searchParams }: Props
               formFooter={<GlycolNote />}
             />
           ) : (
-            <CatalogCut groups={cut} contactHref={contactHref} countryCode={countryCode} />
+            <CatalogCut groups={cut} countryCode={countryCode} />
           )}
         </div>
       </section>
 
       <section className="px-4 pt-10 xsmall:px-6 small:px-12">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto flex max-w-3xl flex-col gap-6">
+          <section aria-label="Sanitary or BPE" className="text-base leading-relaxed text-neutral-700">
+            <h2 className="mb-3 text-2xl font-normal tracking-tight text-neutral-900">Sanitary or ASME BPE?</h2>
+            <SanitaryGradeSummary
+              countryCode={countryCode}
+              readMore
+              ocpRef={
+                <>
+                  {" "}
+                  (
+                  <a href={OCP_MANIFOLD.url} target="_blank" rel="noopener noreferrer" className="underline">
+                    OCP TCS row-manifold guideline, §1.4
+                  </a>
+                  )
+                </>
+              }
+            />
+          </section>
           <LeadTimeFacts />
         </div>
       </section>
@@ -107,20 +159,16 @@ export default async function AccountLandingPage({ params, searchParams }: Props
 
 function CatalogCut({
   groups,
-  contactHref,
   countryCode,
 }: {
   groups: Awaited<ReturnType<typeof getCatalogCut>>
-  contactHref: string
   countryCode: string
 }) {
   if (!groups.length) {
     return (
       <p className="border border-neutral-200 bg-white p-6 text-sm text-neutral-700" data-testid="catalog-cut-empty">
-        <Link href={contactHref} className="font-semibold text-cardinal-red underline">
-          Send your connection sizes
-        </Link>{" "}
-        and we&apos;ll price an exact BOM in 48 hours.
+        Posted prices are not available right now. Send us your connection sizes with the button above and we&apos;ll
+        price your exact BOM in 48 hours.
       </p>
     )
   }

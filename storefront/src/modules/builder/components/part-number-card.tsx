@@ -5,6 +5,7 @@
 // prompt), the lead time, the weight and any engineering-review flags. Never a blank price
 // (lib/builder/pricing-view.ts).
 
+import { formatLb, totalLb } from "@lib/cpq/shared"
 import { SIGN_IN_PROMPT, type PricingView } from "@lib/builder/pricing-view"
 import { convertToLocale } from "@lib/util/money"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -134,8 +135,12 @@ export default function PartNumberCard({
         <div>
           <dt className="text-xs uppercase tracking-wide text-neutral-500">Weight</dt>
           <dd className="font-medium text-neutral-900" data-testid="weight">
-            {formatLb(weightLb)} per {unitNoun}
-            {units > 1 ? <span className="block text-xs font-normal text-neutral-500">{formatLb(weightLb * units)} total</span> : null}
+            {weightText(weightLb)} per {unitNoun}
+            {units > 1 && weightLb > 0 ? (
+              <span className="block text-xs font-normal text-neutral-500" data-testid="weight-total">
+                {formatLb(totalLb(weightLb, units))} lb for {units} {unitsNoun}
+              </span>
+            ) : null}
           </dd>
         </div>
       </dl>
@@ -149,7 +154,11 @@ export default function PartNumberCard({
   )
 }
 
-export function formatLb(lb: number): string {
+/**
+ * Per-unit weight, "≈ 88.6 lb": rounded once to 0.1 lb (shared formatLb, as on the drawing's title
+ * block); the total is that rounded weight × units (shared totalLb), so a pair is exactly 2 × one.
+ */
+export function weightText(lb: number): string {
   if (!Number.isFinite(lb) || lb <= 0) return "—"
-  return `${lb < 10 ? lb.toFixed(1) : Math.round(lb).toLocaleString("en-US")} lb`
+  return `≈ ${formatLb(lb)} lb`
 }

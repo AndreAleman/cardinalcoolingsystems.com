@@ -1,6 +1,7 @@
 import { getCategoriesList } from "@lib/data/categories"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import NewsletterForm from "@modules/layout/components/newsletter-form"
+import NewsletterBlock from "@modules/layout/components/newsletter-form/newsletter-block"
+import EmailOff from "@modules/common/components/email-off"
 import PaymentIcons from "@modules/common/components/payment-icons"
 import { STAINLESS_TUBE_PAGE_PATH } from "@lib/stainless-tube"
 
@@ -36,9 +37,9 @@ export default async function Footer() {
               className="text-sm leading-relaxed"
               style={{ color: "rgba(255,255,255,0.45)" }}
             >
-              Premium stainless steel sanitary fittings for food processing,
-              pharmaceuticals, brewing, and industrial applications. Quality you
-              can trust.
+              Stainless steel sanitary fittings for data center liquid cooling,
+              food processing, pharmaceuticals, brewing and industrial
+              applications.
             </p>
             <p className="mt-4 text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
               Cardinal Cooling Systems LLC
@@ -131,13 +132,11 @@ export default async function Footer() {
             <div className="space-y-4 text-sm">
               <div>
                 <p className="font-semibold text-white mb-1">Email:</p>
-                <a
-                  href="mailto:aleman@cardinalcoolingsystems.com"
-                  className="transition-colors hover:text-white"
-                  style={{ color: "#E3000F" }}
-                >
-                  aleman@cardinalcoolingsystems.com
-                </a>
+                <EmailOff
+                  email="aleman@cardinalcoolingsystems.com"
+                  className="text-[#E3000F] transition-colors hover:text-white"
+                  testId="footer-email"
+                />
               </div>
               <div>
                 <p className="font-semibold text-white mb-1">Phone:</p>
@@ -161,23 +160,8 @@ export default async function Footer() {
           </div>
         </div>
 
-        {/* Newsletter signup — email-capture / re-engagement hook */}
-        <div
-          className="py-10 border-b"
-          style={{ borderColor: "rgba(255,255,255,0.08)" }}
-        >
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div>
-              <h3 className="text-base font-semibold text-white mb-1">
-                Stay Updated
-              </h3>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-                Product updates, lead-time news, and cooling-industry insights.
-              </p>
-            </div>
-            <NewsletterForm />
-          </div>
-        </div>
+        {/* Newsletter signup (hidden on the builder section) */}
+        <NewsletterBlock />
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 py-8">

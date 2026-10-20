@@ -88,6 +88,11 @@ export type BomRoleTemplate = {
   label: string
   /** Candidate SKU patterns in order of preference; {d} {s} {sr} {s2} placeholders. Empty = none stocked. */
   patterns: string[]
+  /**
+   * Fixed material of the whole SKU family, when it does not follow the configuration's alloy
+   * (clamps are T304, strainers T316L). Named in the BOM line and in the Spec Block.
+   */
+  material?: string
   source: string
   verified: boolean
 }
@@ -196,9 +201,9 @@ export type DecodeResult<O> = { options: O; ignored: string[] }
 export type OptionError = { key: string; message: string }
 export type ValidationResult<O> = { ok: true; value: O } | { ok: false; errors: OptionError[] }
 
-export type CduPort = "tc100" | "tc150" | "tc200" | "tc300" | "tc400" | "dn50" | "dn80"
+export type CduPort = "tc100" | "tc150" | "tc200" | "tc250" | "tc300" | "tc400" | "dn50" | "dn80"
 export type CduKitOptions = {
-  cdu: "none" | "boyd-10u"
+  cdu: "none" | "boyd-10u" | "vertiv-cdu-600"
   port: CduPort
   side: "tcs" | "fws"
   run: "hard" | "hose"
@@ -280,6 +285,12 @@ export type BomLine = {
   part_number?: string
   size_code?: SizeCode
   note?: string
+  /**
+   * The line's material as the BOM names it ("T316L", "T304"): the configuration's alloy for
+   * alloy-following parts, or the role's fixed `material` from bom-templates.json. The Spec Block
+   * reads it from here, so the two can't disagree.
+   */
+  material?: string
 }
 export type Bom = { lines: BomLine[]; units: number }
 

@@ -1,8 +1,9 @@
-import { canonicalUrl, decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
+import { decodePageOptions, drawnDate, type SearchParams } from "@lib/builder/page"
 import BuilderShell from "@modules/builder/components/builder-shell"
 import { GlycolNote, KIT_WE_CAN_SUPPLY, WeCanSupply } from "@modules/builder/components/page-bits"
 import BuilderPage from "@modules/builder/templates/builder-page"
 import CduKitContent, { CDU_KIT_CITATIONS } from "@modules/builder/templates/cdu-kit-content"
+import { builderMetadata } from "@lib/builder/seo"
 import { Metadata } from "next"
 
 /*
@@ -14,12 +15,13 @@ import { Metadata } from "next"
 type Props = { params: { countryCode: string }; searchParams: SearchParams }
 
 export function generateMetadata({ params }: Props): Metadata {
-  return {
-    title: "CDU Piping Connections: Tri-Clamp Hookup Kit & CDU Hose Kit Builder | Cardinal Cooling Systems",
+  return builderMetadata({
+    countryCode: params.countryCode,
+    title: "CDU Hookup Kit Builder: Tri-Clamp CDU Piping Connections",
     description:
-      "Build the piping between a coolant distribution unit and the TCS or facility pipe: 1\"–4\" tri-clamp 316L ferrules, clamps, gaskets, valves, strainer, spool or CDU hose kit. Live price when every part is stocked.",
-    alternates: { canonical: canonicalUrl(params.countryCode, "/build/cdu-kit") },
-  }
+      "CDU Hookup Kit: tri-clamp hoses, spools, valves and strainers sized to your CDU port, priced from stock.",
+    path: "/build/cdu-kit",
+  })
 }
 
 export default function CduKitPage({ params, searchParams }: Props) {
@@ -33,14 +35,15 @@ export default function CduKitPage({ params, searchParams }: Props) {
       h1="What piping connections does a CDU need?"
       answer={
         <p>
-          A CDU needs a hookup kit for each supply and return port: the run to the facility or TCS pipe (a welded spool or a
-          stainless braided hose), the tri-clamp ferrules, clamps and gaskets at every joint, any isolation valves and
+          A CDU needs a hookup kit for each supply and return port: the run to the facility or TCS pipe (a stainless braided
+          hose by default, or a welded spool), the tri-clamp ferrules, clamps and gaskets at every joint, any isolation valves and
           supply-side strainer, and an adapter when the far end isn&apos;t tri-clamp. Pick your CDU port below and get the bill
           of materials, priced live when every part is stocked.
         </p>
       }
       citations={CDU_KIT_CITATIONS}
       content={<CduKitContent countryCode={countryCode} />}
+      after={<WeCanSupply countryCode={countryCode} items={KIT_WE_CAN_SUPPLY} />}
     >
       <BuilderShell
         type="cdu-kit"
@@ -48,12 +51,7 @@ export default function CduKitPage({ params, searchParams }: Props) {
         ignored={ignored}
         drawnDate={drawnDate()}
         formTitle="Configure your kit"
-        formFooter={
-          <>
-            <GlycolNote />
-            <WeCanSupply countryCode={countryCode} items={KIT_WE_CAN_SUPPLY} />
-          </>
-        }
+        formFooter={<GlycolNote />}
       />
     </BuilderPage>
   )

@@ -5,7 +5,7 @@ import type { ResolvedBomLine } from "../types"
 
 describe("BOM rows", () => {
   it("local rows: fabricated lines are made to order, stocked roles are 'checking'", () => {
-    const o = { ...getBuilder("cdu-kit").defaults, units: 2 }
+    const o = { ...getBuilder("cdu-kit").defaults, run: "hard", units: 2 }
     const bom = getBuilder("cdu-kit").bom(o)
     const rows = localBomRows(bom)
     const spool = rows.find((r) => r.role === "spool")!
@@ -37,7 +37,7 @@ describe("BOM rows", () => {
   })
 
   it("resolved rows use the local BOM to tell fabricated from not-stocked", () => {
-    const o = getBuilder("cdu-kit").defaults
+    const o = { ...getBuilder("cdu-kit").defaults, run: "hard" }
     const bom = getBuilder("cdu-kit").bom(o)
     const lines: ResolvedBomLine[] = bom.lines.map((l) => ({
       role: l.role, label: l.label, sku: null, variant_id: null, qty_per_unit: l.qty_per_unit, qty_total: l.qty_per_unit,

@@ -25,10 +25,10 @@ const present = fs.existsSync(VERSION_PY)
 describe("CAD cache key", () => {
   it("is generator 1, and every version is part of the key and the object keys", () => {
     expect(CAD_GENERATOR_VERSION).toBe("1")
-    expect(cadCacheKey("clmp-fl150-tspool-l12-6-200")).toBe(`clmp-fl150-tspool-l12-6-200@${CPQ_TABLES_HASH}-g1-d1`)
+    expect(cadCacheKey("clmp-fl150-tspool-l12-6-200")).toBe(`clmp-fl150-tspool-l12-6-200@${CPQ_TABLES_HASH}-g1-d2`)
     expect(cadObjectKeys("kit-cdu-a5ad698f")).toEqual({
-      step: `cad/kit-cdu-a5ad698f/${CPQ_TABLES_HASH}-g1-d1.step`,
-      pdf: `cad/kit-cdu-a5ad698f/${CPQ_TABLES_HASH}-g1-d1.pdf`,
+      step: `cad/kit-cdu-a5ad698f/${CPQ_TABLES_HASH}-g1-d2.step`,
+      pdf: `cad/kit-cdu-a5ad698f/${CPQ_TABLES_HASH}-g1-d2.pdf`,
     })
   })
 })

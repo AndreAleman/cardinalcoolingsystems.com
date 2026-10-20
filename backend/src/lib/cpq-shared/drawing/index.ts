@@ -5,7 +5,7 @@
 // Kept out of ../index so the non-React core never pulls in JSX. React 18 (backend and storefront).
 
 /** Bump on any visible drawing change (it is part of the CAD Package cache key) and rewrite the goldens. */
-export const DRAWING_VERSION = 1
+export const DRAWING_VERSION = 2
 
 export { BuilderSheet, BUILDER_SHEETS, type BuilderSheetProps } from "./builder-sheet"
 export {

@@ -11,6 +11,8 @@ import {
   getBuilder,
   leadTimeOf,
   QUOTE_PROMISE,
+  roundLb,
+  totalLb,
   type BomLine,
   type BuilderType,
   type LeadTime,
@@ -77,7 +79,10 @@ export type ResolveResult = {
   currency_code: "usd"
   price_basis: PriceBasis
   priced_at: string
+  /** Rounded once to 0.1 lb (shared roundLb), as the page and the drawing show it. */
   weight_lb_per_unit: number
+  /** weight_lb_per_unit × units (shared totalLb): a pair is exactly 2 × one manifold. */
+  weight_lb_total: number
   lead_time: LeadTime
   /** Shown with every Quote-mode configuration; null when Instant. */
   quote_promise: string | null
@@ -90,7 +95,6 @@ export type ResolveResult = {
 export type CandidateCheck = { ok: boolean; reason?: string }
 
 export const roundCents = (n: number): number => Math.round((n + Number.EPSILON) * 100) / 100
-const round2 = roundCents
 
 /** B1 check of one existing variant against the quantity the configuration needs. */
 export function checkCandidate(v: VariantFacts, qtyTotal: number): CandidateCheck {
@@ -218,7 +222,8 @@ export function resolveConfiguration(input: ResolveInput): ResolveResult {
         bom: [alt],
         price_per_unit: perUnit,
         price_total: roundCents(perUnit * units),
-        weight_lb_per_unit: round2((alt.weight_lb ?? 0) * alt.qty_per_unit),
+        weight_lb_per_unit: roundLb((alt.weight_lb ?? 0) * alt.qty_per_unit),
+        weight_lb_total: totalLb((alt.weight_lb ?? 0) * alt.qty_per_unit, units),
         lead_time: leadTimeOf("stock"),
         quote_promise: null,
         stocked_alternative: { sku: alt.sku, variant_id: alt.variant_id, unit_price: alt.unit_price },
@@ -238,7 +243,8 @@ export function resolveConfiguration(input: ResolveInput): ResolveResult {
     bom: lines,
     price_per_unit: totals?.price_per_unit ?? null,
     price_total: totals?.price_total ?? null,
-    weight_lb_per_unit: round2(b.weight(options).per_unit_lb),
+    weight_lb_per_unit: roundLb(b.weight(options).per_unit_lb),
+    weight_lb_total: totalLb(b.weight(options).per_unit_lb, units),
     lead_time: leadTimeOf(instant ? "stock" : "custom"),
     quote_promise: instant ? null : QUOTE_PROMISE,
     stocked_alternative: null,
