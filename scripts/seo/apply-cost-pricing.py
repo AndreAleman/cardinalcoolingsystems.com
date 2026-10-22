@@ -3,6 +3,7 @@
     python3 scripts/seo/apply-cost-pricing.py --mult 1.8                 # dry run: show every change, write nothing
     python3 scripts/seo/apply-cost-pricing.py --mult 1.8 --apply         # write, after saving a backup of the old prices
     python3 scripts/seo/apply-cost-pricing.py --revert pricing-backup-<time>.json   # put the old prices back
+    python3 scripts/seo/apply-cost-pricing.py --mult 1.8 --ferguson Cardinal-Cooling-Pricing.xlsx   # cap at Ferguson
 
     Cowbird (same catalog, same cost file):
     python3 scripts/seo/apply-cost-pricing.py --mult 1.75 \
@@ -14,11 +15,15 @@ SKU). Price = round(cost x mult, 2) in USD. Tube (AI270/A270 SKUs) is skipped: i
 list by apply-tube-pricing.py. SKUs with a $0 cost, rows whose Notes aren't "OK", and site SKUs missing from the
 file are left alone and listed so someone can decide what to do with them.
 
+With --ferguson (the owner's sheet: SKU in column A, Ferguson price in column F), a SKU whose cost x mult is above
+Ferguson drops to --under (10%) below Ferguson, but never under --min-margin (20%) gross margin. Rare sizes where
+Ferguson sells below our cost stay above Ferguson at that floor. Always pass it, or a plain re-run raises them again.
+
 Every price on a variant is sent back on update (Medusa replaces a variant's whole price set), so prices in other
 currencies or with quantity rules survive untouched. Admin credentials come from backend/.env like the other
 scripts here. Idempotent: re-running with the same multiplier changes nothing.
 """
-import argparse, csv, json, os, pathlib, sys, time, urllib.request
+import argparse, csv, json, math, os, pathlib, sys, time, urllib.request
 
 HERE = pathlib.Path(__file__).parent; ROOT = HERE.parent.parent
 DEFAULT_CSV = ROOT.parent / "cardinalcoolingsystems.com" / "Sanitube A Pricing 02-02-2026.csv"
@@ -68,6 +73,24 @@ def is_tube(sku):
     return sku.startswith(("AI270", "A270"))
 
 
+def ferguson_prices(path):
+    from openpyxl import load_workbook
+    out = {}
+    for r in load_workbook(path, read_only=True, data_only=True).active.iter_rows(min_row=2, values_only=True):
+        if r[0] and isinstance(r[5], (int, float)) and r[5] > 0:
+            out[str(r[0]).strip()] = float(r[5])
+    return out
+
+
+def target_price(cost, mult, ferg, under, min_margin):
+    """cost x mult, capped at `under` below Ferguson, never below `min_margin` gross margin."""
+    price = round(cost * mult, 2)
+    if ferg is None or price <= ferg:
+        return price
+    floor = math.ceil(cost / (1 - min_margin) * 100 - 1e-6) / 100
+    return min(price, max(round(ferg * (1 - under), 2), floor))
+
+
 def price_payload(prices, usd_amount=None):
     """All of a variant's prices, with the plain USD one (no rules) set to usd_amount."""
     rows = []
@@ -101,6 +124,9 @@ def main():
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--revert")
     ap.add_argument("--csv", default=str(DEFAULT_CSV))
+    ap.add_argument("--ferguson", help="owner's Ferguson price sheet (.xlsx); caps prices that would be above Ferguson")
+    ap.add_argument("--under", type=float, default=0.10, help="how far below Ferguson to price a capped SKU")
+    ap.add_argument("--min-margin", type=float, default=0.20, help="lowest gross margin a Ferguson cap may go to")
     ap.add_argument("--backend", default=os.environ.get("MEDUSA_BACKEND_URL", "https://backend-production-04a8.up.railway.app"))
     ap.add_argument("--env", help="backend .env with MEDUSA_ADMIN_EMAIL / MEDUSA_ADMIN_PASSWORD")
     a = ap.parse_args()
@@ -125,6 +151,8 @@ def main():
         if (r.get("Notes") or "OK").strip() != "OK":
             notes[sku] = r["Notes"].strip()
 
+    ferg = ferguson_prices(a.ferguson) if a.ferguson else {}
+    capped = above = 0
     products = admin.products()
     changes, backup, skipped = {}, [], {"tube": 0, "not in cost file": [], "zero cost": [], "flagged in cost file": [], "no plain USD price": [], "unchanged": 0}
     up = down = 0
@@ -146,7 +174,9 @@ def main():
             usd = plain_usd(prices)
             if not usd:
                 skipped["no plain USD price"].append(sku); continue
-            new = round(cost[sku] * a.mult, 2)
+            new = target_price(cost[sku], a.mult, ferg.get(sku), a.under, a.min_margin)
+            if new < round(cost[sku] * a.mult, 2):
+                capped += 1; above += new > ferg[sku]
             if abs(float(usd["amount"]) - new) < 0.005:
                 skipped["unchanged"] += 1; continue
             up += new > float(usd["amount"]); down += new < float(usd["amount"])
@@ -156,6 +186,8 @@ def main():
 
     n = sum(len(x) for x in changes.values())
     print(f"\n{n} variants to reprice at cost x {a.mult} ({down} down, {up} up); {skipped['unchanged']} already right; {skipped['tube']} tube skipped")
+    if ferg:
+        print(f"Ferguson cap: {capped} SKUs priced below cost x {a.mult}; {above} of them stay above Ferguson at the {a.min_margin:.0%} margin floor")
     for k in ("flagged in cost file", "zero cost", "not in cost file", "no plain USD price"):
         if skipped[k]:
             print(f"left alone, {k} ({len(skipped[k])}): " + ", ".join(skipped[k][:40]) + (" ..." if len(skipped[k]) > 40 else ""))
