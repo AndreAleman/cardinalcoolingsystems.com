@@ -175,7 +175,7 @@ const medusaConfig = {
               webhookSecret: STRIPE_WEBHOOK_SECRET,
             }
           }] : []),
-          {
+          ...(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET ? [{
             resolve: "@rsc-labs/medusa-paypal-payment/providers/paypal-payment",
             id: "paypal-payment",
             options: {
@@ -183,7 +183,7 @@ const medusaConfig = {
               oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET,
               environment: process.env.PAYPAL_IS_SANDBOX === "true" ? "sandbox" : "production",
             }
-          }
+          }] : []),
         ],
       },
     },
