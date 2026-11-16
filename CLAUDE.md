@@ -7,7 +7,6 @@ MEP firms, colo operators).
 
 - `backend/` — Medusa backend (Railway project `cardinal_cooling_systems`).
 - `storefront/` — Next.js storefront (cardinalcoolingsystems.com).
-- `b2b-starter/` — reference starter the build derives from.
 
 ## Working here as an agent
 
