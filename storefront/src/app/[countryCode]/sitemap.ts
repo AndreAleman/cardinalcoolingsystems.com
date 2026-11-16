@@ -4,6 +4,7 @@ import { listRegions } from '@lib/data/regions'
 import { listCategories } from '@lib/data/categories'
 import { client } from '../../sanity/lib/client'
 import { groq } from 'next-sanity'
+import { BUILDER_TYPES, getBuilder } from '@lib/cpq/shared'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://cardinalcoolingsystems.com'
@@ -43,6 +44,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    // Cardinal Builder: index, the five builders, the Boyd 10U kit, the two explainers.
+    // Per-account pages (/for/[slug]) are noindex and deliberately left out (plan B15).
+    ...[
+      '/build',
+      ...BUILDER_TYPES.map((t) => getBuilder(t as string).path),
+      '/build/cdu-kit/boyd-10u',
+      '/build/connections',
+      '/sanitary-vs-bpe',
+    ].map((path) => ({
+      url: `${baseUrl}/${countryCode}${path}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: path === '/build' || path === '/build/cdu-kit' ? 0.9 : 0.8,
+    })),
     {
       url: `${baseUrl}/${countryCode}/blog`,
       lastModified: new Date(),

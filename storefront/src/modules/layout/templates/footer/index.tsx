@@ -64,6 +64,16 @@ export default async function Footer() {
                   Stainless Steel Tubing &amp; Pipe
                 </LocalizedClientLink>
               </li>
+              <li>
+                <LocalizedClientLink
+                  href="/build"
+                  className="text-sm transition-colors hover:text-white"
+                  style={{ color: "rgba(255,255,255,0.6)" }}
+                  data-testid="build-kit-footer-link"
+                >
+                  Build a kit
+                </LocalizedClientLink>
+              </li>
               {parentCategories.map((c) => (
                 <li key={c.id}>
                   <LocalizedClientLink

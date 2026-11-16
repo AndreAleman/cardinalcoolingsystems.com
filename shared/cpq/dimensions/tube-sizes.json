@@ -1,0 +1,103 @@
+{
+  "version": "2026-10-16-draft",
+  "status": "draft: pending Houston sign-off (H2)",
+  "units": "in",
+  "sizes": [
+    {
+      "size_code": 50,
+      "label": "1/2\"",
+      "od_in": 0.5,
+      "wall_in": 0.065,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16); 1/2\" and 3/4\" are tee-only sizes (Phase 4 D3, H9), wall per sanitaryfittings.us 7MPS table (2026-10-16); 1/2\" and 3/4\" are tee-only sizes (Phase 4 D3, H9), wall per sanitaryfittings.us 7MPS table (2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 75,
+      "label": "3/4\"",
+      "od_in": 0.75,
+      "wall_in": 0.065,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16); 1/2\" and 3/4\" are tee-only sizes (Phase 4 D3, H9), wall per sanitaryfittings.us 7MPS table (2026-10-16); 1/2\" and 3/4\" are tee-only sizes (Phase 4 D3, H9), wall per sanitaryfittings.us 7MPS table (2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 100,
+      "label": "1\"",
+      "od_in": 1,
+      "wall_in": 0.065,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 150,
+      "label": "1-1/2\"",
+      "od_in": 1.5,
+      "wall_in": 0.065,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 200,
+      "label": "2\"",
+      "od_in": 2,
+      "wall_in": 0.065,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 250,
+      "label": "2-1/2\"",
+      "od_in": 2.5,
+      "wall_in": 0.065,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 300,
+      "label": "3\"",
+      "od_in": 3,
+      "wall_in": 0.065,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 400,
+      "label": "4\"",
+      "od_in": 4,
+      "wall_in": 0.083,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 600,
+      "label": "6\"",
+      "od_in": 6,
+      "wall_in": 0.109,
+      "source": "ASME BPE-2022 hygienic tube OD/wall (Part DT, tubing table; table no. to confirm, H2); cross-checked vs ASTM A270 sanitary tube and 14WMP catalog IDs (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 800,
+      "label": "8\"",
+      "od_in": 8,
+      "wall_in": 0.109,
+      "source": "draft estimate (H25): BPE tube table stops at 6\"; wall back-calculated from 14WMP catalog ID (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 1000,
+      "label": "10\"",
+      "od_in": 10,
+      "wall_in": 0.109,
+      "source": "draft estimate (H25): BPE tube table stops at 6\"; wall back-calculated from 14WMP catalog ID (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    },
+    {
+      "size_code": 1200,
+      "label": "12\"",
+      "od_in": 12,
+      "wall_in": 0.12,
+      "source": "draft estimate (H25): BPE tube table stops at 6\"; wall back-calculated from 14WMP catalog ID (duvasanitary.com / sanitaryfittings.us, 2026-10-16)",
+      "verified": false
+    }
+  ]
+}

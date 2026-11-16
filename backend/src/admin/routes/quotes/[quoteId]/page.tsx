@@ -18,6 +18,7 @@ import { formatAmount, formatDate } from "../../../lib/format"
 import { QuoteLinePricing } from "../components/quote-line-pricing"
 import { QuoteMessages } from "../components/quote-messages"
 import { QuoteStatusBadge } from "../components/quote-status-badge"
+import { builderLineDetails } from "../../../../utils/builder-quote-line"
 
 /*
   /app/quotes/:quoteId — the id is the segment after "quotes". Read
@@ -190,10 +191,16 @@ const QuoteDetailPage = () => {
                     <Text size="small" weight="plus" className="text-ui-fg-base">
                       {item.title}
                     </Text>
+                    {/* Cardinal Builder line (plan B3): its configuration rows. */}
+                    {builderLineDetails(item).map((row) => (
+                      <Text key={row} size="xsmall" className="text-ui-fg-subtle">
+                        {row}
+                      </Text>
+                    ))}
                   </Table.Cell>
                   <Table.Cell>
                     <Text size="small" className="text-ui-fg-subtle">
-                      {item.variant?.sku ?? "—"}
+                      {item.variant?.sku ?? item.variant_sku ?? "—"}
                     </Text>
                   </Table.Cell>
                   <Table.Cell>

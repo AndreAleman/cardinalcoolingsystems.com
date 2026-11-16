@@ -5,6 +5,7 @@ import Thumbnail from "../thumbnail"
 import PreviewPrice from "./price"
 import { getProductsById } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
+import { plainText } from "@lib/util/plain-text"
 
 export default async function ProductPreview({
   product,
@@ -58,7 +59,7 @@ const displayPrice = cheapestPrice?.calculated_price_number && cheapestPrice.cal
             {product.title}
           </Text>
           <Text className="text-gray-600 text-xs line-clamp-1 mb-auto">
-            {product.description || "\u00A0"}
+            {plainText(product.description) || "\u00A0"}
           </Text>
           <div className="flex items-center justify-between pt-2">
             {/* Price on the left */}

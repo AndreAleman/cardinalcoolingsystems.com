@@ -7,6 +7,7 @@ import { HttpTypes } from "@medusajs/types"
 import { nonEmptyCategoryIds, pruneEmptyCategories } from "@lib/util/category-visibility"
 
 const staticNavigationItems = [
+  { label: "Build a Kit", href: "/build" },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "Blog", href: "/blog" },

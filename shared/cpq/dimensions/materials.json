@@ -1,0 +1,19 @@
+{
+  "version": "2026-10-16-draft",
+  "status": "draft: pending Houston sign-off (H2)",
+  "units": "in",
+  "alloys": [
+    {
+      "value": "T304L",
+      "digit": "4",
+      "label": "T304L",
+      "density_lb_per_in3": 0.289
+    },
+    {
+      "value": "T316L",
+      "digit": "6",
+      "label": "T316L",
+      "density_lb_per_in3": 0.29
+    }
+  ]
+}

@@ -13,6 +13,9 @@ import {
 } from "resend"
 import type { ReactNode } from "react"
 import { EmailTemplates, generateEmailTemplate } from "../templates"
+import { cadRequestLinkSubject } from "../templates/cad-request-link"
+import { cadRequestQueuedSubject } from "../templates/cad-request-queued"
+import { cadAlertSubject } from "../templates/cad-request-alert"
 
 
 
@@ -41,6 +44,9 @@ const TEMPLATE_FROM: Record<string, string> = {
   "company-welcome": INFO_FROM,
   "company-decided": INFO_FROM,
   "invite-user": INFO_FROM,
+  // CAD Requests: the buyer-facing link and notice come from info@; the staff alert keeps `from`.
+  "cad-request-link": INFO_FROM,
+  "cad-request-queued": INFO_FROM,
 }
 
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
@@ -145,6 +151,12 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
           : "About your Cardinal company account"
       case EmailTemplates.PASSWORD_RESET:
         return "Reset your Cardinal password"
+      case EmailTemplates.CAD_REQUEST_LINK:
+        return cadRequestLinkSubject(data as any)
+      case EmailTemplates.CAD_REQUEST_QUEUED:
+        return cadRequestQueuedSubject(data as any)
+      case EmailTemplates.CAD_REQUEST_ALERT:
+        return cadAlertSubject(data as any)
       default:
         return "New Email"
     }

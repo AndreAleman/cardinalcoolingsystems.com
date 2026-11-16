@@ -24,9 +24,12 @@ export type AdminQuoteAddress = {
 export type AdminQuoteItem = {
   id: string
   title: string
+  subtitle?: string | null
   quantity: number
   unit_price: number
   total?: number
+  variant_sku?: string | null
+  metadata?: Record<string, unknown> | null
   variant?: {
     id: string
     sku?: string | null
@@ -176,6 +179,21 @@ export type QuoteLinePricingLine = {
   cost: number | null
   markup_pct: number | null
   computed_sell: number | null
+  /* Plan B6 */
+  benchmark_price: number | null
+  benchmark_source: string | null
+  approved_price: number | null
+  /* Cardinal Builder Quote line */
+  part_number: string | null
+}
+
+export type QuoteLinePricingInput = {
+  item_id: string
+  cost: number
+  markup_pct: number
+  benchmark_price?: number | null
+  benchmark_source?: string | null
+  approved_price?: number | null
 }
 
 export type QuoteLinePricingResponse = {
@@ -205,7 +223,7 @@ export const useQuoteLinePricing = (quoteId: string) =>
 export const useSetQuoteLinePricing = (quoteId: string) => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (prices: { item_id: string; cost: number; markup_pct: number }[]) =>
+    mutationFn: (prices: QuoteLinePricingInput[]) =>
       sdk.client.fetch<QuoteLinePricingResponse>(
         `/admin/quotes/${quoteId}/line-pricing`,
         { method: "POST", body: { prices } }

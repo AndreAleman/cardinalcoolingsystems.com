@@ -78,3 +78,31 @@ export function computeQuoteTotals(lines: PricedLine[]): QuoteTotals {
     unpriced_lines: unpriced,
   };
 }
+
+/**
+ * Selling price checked against the benchmark (plan B6): the approved
+ * price when set, else the computed sell (cost + markup), else the line's
+ * current unit price. null when none is known yet.
+ */
+export function sellingPriceForBenchmark(line: {
+  approved_price?: number | null;
+  computed_sell?: number | null;
+  sell_price?: number | null;
+}): number | null {
+  for (const v of [line.approved_price, line.computed_sell, line.sell_price]) {
+    if (v !== null && v !== undefined && Number.isFinite(Number(v)) && Number(v) > 0) {
+      return Number(v);
+    }
+  }
+  return null;
+}
+
+/** Plan B6: warn when the selling price is not under the competitor benchmark. */
+export function isAtOrAboveBenchmark(
+  sellingPrice: number | null | undefined,
+  benchmarkPrice: number | null | undefined
+): boolean {
+  if (sellingPrice === null || sellingPrice === undefined) return false;
+  if (benchmarkPrice === null || benchmarkPrice === undefined || !(benchmarkPrice > 0)) return false;
+  return sellingPrice >= benchmarkPrice;
+}

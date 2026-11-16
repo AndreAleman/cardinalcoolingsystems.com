@@ -1,15 +1,35 @@
-import { Badge, Button, Input, Table, Text } from "@medusajs/ui"
+import { Badge, Button, Input, Table, Text, Tooltip } from "@medusajs/ui"
+import { ExclamationCircle } from "@medusajs/icons"
 import { useEffect, useState } from "react"
 import {
   computeSellPrice,
+  isAtOrAboveBenchmark,
+  sellingPriceForBenchmark,
 } from "../../../../workflows/quote/utils/markup"
 import {
+  QuoteLinePricingInput,
   useQuoteLinePricing,
   useSetQuoteLinePricing,
 } from "../../../hooks/quotes"
 import { formatAmount } from "../../../lib/format"
 
-type DraftRow = { cost: string; markup_pct: string }
+type DraftRow = {
+  cost: string
+  markup_pct: string
+  benchmark_price: string
+  benchmark_source: string
+  approved_price: string
+}
+
+const EMPTY_DRAFT: DraftRow = {
+  cost: "",
+  markup_pct: "",
+  benchmark_price: "",
+  benchmark_source: "",
+  approved_price: "",
+}
+
+const str = (n: number | null | undefined) => (n !== null && n !== undefined ? String(n) : "")
 
 /*
   Internal markup calculator — per-line cost + markup% inputs computing
@@ -17,6 +37,10 @@ type DraftRow = { cost: string; markup_pct: string }
   ONLY: none of these numbers exist on any /store response. Saving
   upserts the rows; applying the computed sell to the draft order still
   happens through Medusa's draft-order editor (deep link on the page).
+
+  Plan B6: Todd's price is the cost; Cardinal records the competitor
+  benchmark (price + source) and the approved selling price, and the
+  row warns when the selling price is not under the benchmark.
 */
 export const QuoteLinePricing = ({
   quoteId,
@@ -39,8 +63,11 @@ export const QuoteLinePricing = ({
         data.line_pricings.map((line) => [
           line.item_id,
           {
-            cost: line.cost !== null ? String(line.cost) : "",
-            markup_pct: line.markup_pct !== null ? String(line.markup_pct) : "",
+            cost: str(line.cost),
+            markup_pct: str(line.markup_pct),
+            benchmark_price: str(line.benchmark_price),
+            benchmark_source: line.benchmark_source ?? "",
+            approved_price: str(line.approved_price),
           },
         ])
       )
@@ -67,16 +94,22 @@ export const QuoteLinePricing = ({
       const draft = drafts[line.item_id]
       const cost = draft ? parse(draft.cost) : null
       const markup_pct = draft ? parse(draft.markup_pct) : null
-      return cost !== null && markup_pct !== null
-        ? { item_id: line.item_id, cost, markup_pct }
-        : null
+      if (cost === null || markup_pct === null) return null
+      return {
+        item_id: line.item_id,
+        cost,
+        markup_pct,
+        benchmark_price: draft ? parse(draft.benchmark_price) : null,
+        benchmark_source: draft && draft.benchmark_source.trim() ? draft.benchmark_source.trim() : null,
+        approved_price: draft ? parse(draft.approved_price) : null,
+      }
     })
-    .filter((row): row is { item_id: string; cost: number; markup_pct: number } => !!row)
+    .filter((row): row is Required<QuoteLinePricingInput> => !!row)
 
   const setDraft = (itemId: string, patch: Partial<DraftRow>) =>
     setDrafts((prev) => ({
       ...prev,
-      [itemId]: { cost: "", markup_pct: "", ...prev[itemId], ...patch },
+      [itemId]: { ...EMPTY_DRAFT, ...prev[itemId], ...patch },
     }))
 
   if (isPending) {
@@ -97,7 +130,9 @@ export const QuoteLinePricing = ({
             Internal pricing
           </Text>
           <Text size="small" leading="compact" className="text-ui-fg-subtle">
-            Cost + markup compute the sell price. Apply prices via the draft order.
+            Cost (Todd's price) + markup compute the sell price. Record the
+            competitor benchmark and the approved price; apply prices via the
+            draft order.
           </Text>
         </div>
         <Badge size="2xsmall" rounded="full" color="grey">
@@ -114,16 +149,31 @@ export const QuoteLinePricing = ({
             <Table.HeaderCell>Unit cost</Table.HeaderCell>
             <Table.HeaderCell>Markup %</Table.HeaderCell>
             <Table.HeaderCell>Computed sell</Table.HeaderCell>
+            <Table.HeaderCell>Benchmark</Table.HeaderCell>
+            <Table.HeaderCell>Source</Table.HeaderCell>
+            <Table.HeaderCell>Approved</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {lines.map((line) => {
-            const draft = drafts[line.item_id] ?? { cost: "", markup_pct: "" }
+            const draft = drafts[line.item_id] ?? EMPTY_DRAFT
             const computed = sellFor(line.item_id)
+            const benchmark = parse(draft.benchmark_price)
+            const selling = sellingPriceForBenchmark({
+              approved_price: parse(draft.approved_price),
+              computed_sell: computed,
+              sell_price: line.sell_price,
+            })
+            const overBenchmark = isAtOrAboveBenchmark(selling, benchmark)
             return (
               <Table.Row key={line.item_id}>
                 <Table.Cell>
                   <Text size="small" className="text-ui-fg-base">{line.title}</Text>
+                  {line.part_number && (
+                    <Text size="xsmall" className="text-ui-fg-muted font-mono">
+                      {line.part_number}
+                    </Text>
+                  )}
                 </Table.Cell>
                 <Table.Cell>
                   <Text size="small" className="tabular-nums">{line.quantity}</Text>
@@ -163,6 +213,59 @@ export const QuoteLinePricing = ({
                   <Text size="small" weight="plus" className="tabular-nums">
                     {computed !== null ? formatAmount(computed, currencyCode) : "—"}
                   </Text>
+                </Table.Cell>
+                <Table.Cell>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      size="small"
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      className="w-28"
+                      value={draft.benchmark_price}
+                      placeholder="—"
+                      onChange={(e) =>
+                        setDraft(line.item_id, { benchmark_price: e.target.value })
+                      }
+                    />
+                    {overBenchmark && (
+                      <Tooltip
+                        content={`Selling price ${formatAmount(selling, currencyCode)} is not under the benchmark ${formatAmount(benchmark, currencyCode)}`}
+                      >
+                        <ExclamationCircle className="text-ui-fg-error" />
+                      </Tooltip>
+                    )}
+                  </div>
+                  {overBenchmark && (
+                    <Text size="xsmall" className="text-ui-fg-error">
+                      Not under benchmark
+                    </Text>
+                  )}
+                </Table.Cell>
+                <Table.Cell>
+                  <Input
+                    size="small"
+                    className="w-32"
+                    value={draft.benchmark_source}
+                    placeholder="Competitor"
+                    onChange={(e) =>
+                      setDraft(line.item_id, { benchmark_source: e.target.value })
+                    }
+                  />
+                </Table.Cell>
+                <Table.Cell>
+                  <Input
+                    size="small"
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    className="w-28"
+                    value={draft.approved_price}
+                    placeholder="—"
+                    onChange={(e) =>
+                      setDraft(line.item_id, { approved_price: e.target.value })
+                    }
+                  />
                 </Table.Cell>
               </Table.Row>
             )

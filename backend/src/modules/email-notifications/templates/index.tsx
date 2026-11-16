@@ -19,6 +19,9 @@ import { RequestApprovedTemplate, REQUEST_APPROVED, isRequestApprovedData } from
 import { RequestRejectedTemplate, REQUEST_REJECTED, isRequestRejectedData } from './request-rejected'
 import { PoUploadedTemplate, PO_UPLOADED, isPoUploadedData } from './po-uploaded'
 import { PasswordResetTemplate, PASSWORD_RESET, isPasswordResetData } from './password-reset'
+import { CadRequestLinkTemplate, CAD_REQUEST_LINK, isCadRequestLinkData } from './cad-request-link'
+import { CadRequestQueuedTemplate, CAD_REQUEST_QUEUED, isCadRequestQueuedData } from './cad-request-queued'
+import { CadRequestAlertTemplate, CAD_REQUEST_ALERT, isCadRequestAlertData } from './cad-request-alert'
 
 export const EmailTemplates = {
   INVITE_USER,
@@ -38,6 +41,9 @@ export const EmailTemplates = {
   REQUEST_REJECTED,
   PO_UPLOADED,
   PASSWORD_RESET,
+  CAD_REQUEST_LINK,
+  CAD_REQUEST_QUEUED,
+  CAD_REQUEST_ALERT,
   CONTACT_FORM: 'contact-form'  // ✅ Changed: simple string constant
 } as const
 
@@ -162,6 +168,24 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.PASSWORD_RESET}"`)
       }
       return <PasswordResetTemplate {...data} />
+
+    case EmailTemplates.CAD_REQUEST_LINK:
+      if (!isCadRequestLinkData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.CAD_REQUEST_LINK}"`)
+      }
+      return <CadRequestLinkTemplate {...data} />
+
+    case EmailTemplates.CAD_REQUEST_QUEUED:
+      if (!isCadRequestQueuedData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.CAD_REQUEST_QUEUED}"`)
+      }
+      return <CadRequestQueuedTemplate {...data} />
+
+    case EmailTemplates.CAD_REQUEST_ALERT:
+      if (!isCadRequestAlertData(data)) {
+        throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid data for template "${EmailTemplates.CAD_REQUEST_ALERT}"`)
+      }
+      return <CadRequestAlertTemplate {...data} />
 
     case EmailTemplates.CONTACT_FORM:  // ✅ Simplified case
       console.log('[Templates] Using CONTACT_FORM template')

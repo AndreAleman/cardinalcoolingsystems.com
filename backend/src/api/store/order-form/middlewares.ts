@@ -6,6 +6,11 @@ import {
 import { ensureCompanyApproved } from "../../middlewares/ensure-company-approved";
 import { ensureInvoicePaymentEnabled } from "../../middlewares/ensure-invoice-payment-enabled";
 import {
+  honeypot,
+  rateLimit,
+  requireTurnstile,
+} from "../../middlewares/abuse-guard";
+import {
   GuestQuote,
   PlaceDepositOrder,
   PlaceInvoiceOrder,
@@ -27,10 +32,17 @@ export const orderFormMiddlewares: MiddlewareRoute[] = [
   },
   {
     // Public on purpose: guests quote without an account (decided
-    // 2026-08-31). Publishable-key protection only, like /store/carts.
+    // 2026-08-31). Hardened like /store/contact (Cardinal Builder plan
+    // B4, ADR-0008): rate limit, then the honeypot (calm 200, nothing
+    // created), then Turnstile — all before validation, all fail open.
     matcher: "/store/order-form/guest-quote",
     methods: ["POST"],
-    middlewares: [validateAndTransformBody(GuestQuote)],
+    middlewares: [
+      rateLimit("guest_quote"),
+      honeypot,
+      requireTurnstile,
+      validateAndTransformBody(GuestQuote),
+    ],
   },
   {
     matcher: "/store/order-form/po-upload",

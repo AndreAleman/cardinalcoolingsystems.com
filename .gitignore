@@ -10,3 +10,6 @@ accurate-frontend/
 reference/
 zero-price-skus.csv
 /*.csv
+
+# Shared CPQ core: generated canonical copy (scripts/sync-cpq-shared.mjs)
+shared/cpq/ts/dimension-tables.ts

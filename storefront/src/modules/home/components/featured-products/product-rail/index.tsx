@@ -2,6 +2,7 @@
 "use client"
 
 import { HttpTypes } from "@medusajs/types"
+import { plainText } from "@lib/util/plain-text"
 import { Link2, CornerDownRight, Settings2, ShieldCheck, Thermometer } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -127,7 +128,7 @@ export default function ProductRail({
                         {product.title}
                       </h3>
                       <p className="text-sm text-slate-500 leading-relaxed">
-                        {product.description}
+                        {plainText(product.description)}
                       </p>
                     </div>
                     {config.specs.length > 0 && (
@@ -180,7 +181,7 @@ export default function ProductRail({
                     <Icon className="w-5 h-5 text-slate-400" />
                   </div>
                   <p className="text-sm text-slate-500 leading-relaxed">
-                    {product.description}
+                    {plainText(product.description)}
                   </p>
                 </div>
               </Link>

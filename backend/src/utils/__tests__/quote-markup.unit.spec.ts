@@ -1,4 +1,9 @@
-import { computeQuoteTotals, computeSellPrice } from "../../workflows/quote/utils/markup";
+import {
+  computeQuoteTotals,
+  computeSellPrice,
+  isAtOrAboveBenchmark,
+  sellingPriceForBenchmark,
+} from "../../workflows/quote/utils/markup";
 
 describe("computeSellPrice", () => {
   it("applies a whole-percent markup", () => {
@@ -112,3 +117,20 @@ describe("computeQuoteTotals", () => {
     expect(totals.total_sell).toBe(0.9)
   })
 })
+
+describe("benchmark warning (Cardinal Builder plan B6)", () => {
+  it("selling price = approved, else computed sell, else current sell", () => {
+    expect(sellingPriceForBenchmark({ approved_price: 90, computed_sell: 100, sell_price: 0 })).toBe(90);
+    expect(sellingPriceForBenchmark({ approved_price: null, computed_sell: 100, sell_price: 80 })).toBe(100);
+    expect(sellingPriceForBenchmark({ approved_price: null, computed_sell: null, sell_price: 80 })).toBe(80);
+    expect(sellingPriceForBenchmark({ sell_price: 0 })).toBeNull();
+  });
+  it("warns when the selling price is not under the benchmark", () => {
+    expect(isAtOrAboveBenchmark(100, 100)).toBe(true);
+    expect(isAtOrAboveBenchmark(101, 100)).toBe(true);
+    expect(isAtOrAboveBenchmark(99.99, 100)).toBe(false);
+    expect(isAtOrAboveBenchmark(100, null)).toBe(false);
+    expect(isAtOrAboveBenchmark(100, 0)).toBe(false);
+    expect(isAtOrAboveBenchmark(null, 100)).toBe(false);
+  });
+});

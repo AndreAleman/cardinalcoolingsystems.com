@@ -4,6 +4,7 @@ import {
   Modules,
 } from "@medusajs/framework/utils";
 import { BACKEND_URL } from "../../../lib/constants";
+import { builderLineDetails } from "../../../utils/builder-quote-line";
 
 /*
   Notify Cardinal that a new Quote Request / order landed in admin.
@@ -18,6 +19,8 @@ export type OperatorNotificationItem = {
   sku: string;
   title: string | null;
   qty: number;
+  /** Cardinal Builder line: its configuration rows ("Part Number: …"). */
+  details?: string[];
 };
 
 type Input = {
@@ -154,6 +157,7 @@ export const sendOperatorNotificationStep = createStep(
         "items.title",
         "items.quantity",
         "items.variant_sku",
+        "items.metadata",
       ],
       filters: { id: cart_id },
     });
@@ -169,6 +173,7 @@ export const sendOperatorNotificationStep = createStep(
         sku: (it?.variant_sku as string) || "(no SKU)",
         title: (it?.title as string) || null,
         qty: Number(it?.quantity ?? 0),
+        details: builderLineDetails(it),
       })
     );
 

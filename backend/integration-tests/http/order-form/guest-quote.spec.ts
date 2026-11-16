@@ -121,6 +121,130 @@ medusaIntegrationTestRunner({
       expect(quoteA.customer_id).toEqual(quoteB.customer_id);
     });
 
+    const guestBody = (cartId: string, extra: Record<string, unknown> = {}) => ({
+      cart_id: cartId,
+      email: "eng@prospect.test",
+      first_name: "Eli",
+      last_name: "Eng",
+      company_name: "Prospect Cooling",
+      ...extra,
+    });
+
+    it("quotes a cart holding a Cardinal Builder Quote line (part number + configuration reach the quote)", async () => {
+      // A row manifold is always Quote (fabricated): no catalog needed.
+      const added = (
+        await api.post(
+          "/store/build/quote-lines",
+          { builder_type: "row-manifold", options: { drops: 8 }, source_page: "/us/build/row-manifold" },
+          world.storeHeaders
+        )
+      ).data;
+      expect(added.pricing_mode).toBe("quote");
+      // Mixed cart: the builder line next to a normal catalog line.
+      await api.post(
+        `/store/carts/${added.cart_id}/line-items`,
+        { variant_id: world.variant.id, quantity: 1 },
+        world.storeHeaders
+      );
+
+      const response = await api.post(
+        "/store/order-form/guest-quote",
+        // The storefront's bot-protection fields ride along (B4).
+        guestBody(added.cart_id, { website: "", elapsed_ms: 8000, turnstile_token: "" }),
+        world.storeHeaders
+      );
+      expect(response.status).toEqual(200);
+
+      const container = getContainer();
+      const quote = await (container.resolve(QUOTE_MODULE) as any).retrieveQuote(response.data.quote_id);
+      const query = container.resolve("query");
+      const {
+        data: [order],
+      } = await query.graph({
+        entity: "order",
+        fields: ["id", "items.title", "items.variant_sku", "items.unit_price", "items.metadata"],
+        filters: { id: quote.draft_order_id },
+      });
+      const builderLine = (order as any).items.find((i: any) => i.metadata?.builder);
+      expect(builderLine).toMatchObject({
+        variant_sku: added.part_number,
+        unit_price: 0,
+        metadata: expect.objectContaining({
+          pricing_mode: "quote",
+          part_number: added.part_number,
+          configuration_id: added.configuration_id,
+        }),
+      });
+      expect(builderLine.metadata.configuration_display[0]).toEqual({
+        label: "Part Number",
+        value: added.part_number,
+      });
+      expect((order as any).items).toHaveLength(2);
+    });
+
+    it("honeypot: a filled `website` field gets a calm 200 and creates nothing", async () => {
+      const container = getContainer();
+      const quoteService = container.resolve(QUOTE_MODULE) as any;
+      const cart = await makeGuestCart();
+
+      const trapped = await api.post(
+        "/store/order-form/guest-quote",
+        guestBody(cart.id, { website: "https://spam.example" }),
+        world.storeHeaders
+      );
+      expect(trapped.status).toEqual(200);
+      expect(trapped.data).toEqual({ success: true });
+
+      const tooFast = await api.post(
+        "/store/order-form/guest-quote",
+        guestBody(cart.id, { elapsed_ms: 300 }),
+        world.storeHeaders
+      );
+      expect(tooFast.status).toEqual(200);
+      expect(tooFast.data.quote_id).toBeUndefined();
+
+      expect(await quoteService.listQuotes({})).toHaveLength(0);
+    });
+
+    it("Turnstile: with a secret key configured, a missing token is 403", async () => {
+      const cart = await makeGuestCart();
+      process.env.TURNSTILE_SECRET_KEY = "1x0000000000000000000000000000000AA";
+      try {
+        const res = await api
+          .post("/store/order-form/guest-quote", guestBody(cart.id), world.storeHeaders)
+          .catch((err) => err.response);
+        expect(res.status).toEqual(403);
+        expect(res.data.code).toEqual("challenge_failed");
+      } finally {
+        process.env.TURNSTILE_SECRET_KEY = "";
+      }
+    });
+
+    it("rate limit: the 11th guest quote from one address in an hour is 429", async () => {
+      const { __resetRateLimitMemory } = await import("../../../src/lib/rate-limit");
+      __resetRateLimitMemory();
+      process.env.RATE_LIMIT_DISABLED = "0";
+      try {
+        // Honeypot-trapped submits still count against the limit (it runs first) and are cheap.
+        for (let i = 0; i < 10; i++) {
+          const ok = await api.post(
+            "/store/order-form/guest-quote",
+            { website: "trap" },
+            world.storeHeaders
+          );
+          expect(ok.status).toEqual(200);
+        }
+        const blocked = await api
+          .post("/store/order-form/guest-quote", { website: "trap" }, world.storeHeaders)
+          .catch((err) => err.response);
+        expect(blocked.status).toEqual(429);
+        expect(blocked.data.code).toEqual("rate_limited");
+      } finally {
+        process.env.RATE_LIMIT_DISABLED = "1";
+        __resetRateLimitMemory();
+      }
+    });
+
     it("requires email and company name", async () => {
       const cart = await makeGuestCart();
       const response = await api

@@ -56,6 +56,11 @@ export type ModuleQuoteLinePricing = {
   item_id: string;
   cost: number;
   markup_pct: number;
+  /** Competitor price (dollars) the selling price is checked against (plan B6). */
+  benchmark_price?: number | null;
+  benchmark_source?: string | null;
+  /** Selling price Cardinal approved (dollars). */
+  approved_price?: number | null;
 };
 
 export type ModuleCreateQuoteMessage = {

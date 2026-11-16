@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "description": "Golden row-manifold vectors: input options (canonical), Part Number, the expected geometry block cad-service checks (every leaf within tolerance), weight. Written by backend/src/lib/__tests__/cpq-shared-drawing.unit.spec.ts with CPQ_UPDATE_FIXTURES=1.",
+  "tolerance": 0.001,
+  "vectors": [
+    {
+      "name": "plan golden: 4in header, 12 x 1in TC drops at 24in, TC ends",
+      "input": {
+        "header": 400,
+        "drops": 12,
+        "pitch": 24,
+        "drop": 100,
+        "dstyle": "tc",
+        "ends": "tc",
+        "pair": "1",
+        "alloy": "t316l",
+        "finish": "32",
+        "fill": "1",
+        "inst": "0",
+        "docs": [
+          "hydro",
+          "mtr"
+        ]
+      },
+      "share_query": "v=1&header=400&drops=12&pitch=24&drop=100&dstyle=tc&ends=tc&pair=1&alloy=t316l&finish=32&fill=1&inst=0&docs=hydro,mtr",
+      "part_number": "clmp-clmp-rman-n12-d100clmp-p24-6-400",
+      "expected": {
+        "headerLength": 280,
+        "headerTubeLength": 278.75,
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              280,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "drops": 12,
+        "firstDropX": 8,
+        "lastDropX": 272,
+        "dropFaceY": 7,
+        "branches": [
+          {
+            "role": "drop",
+            "x": 8,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 32,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 56,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 80,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 104,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 128,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 152,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 176,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 200,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 224,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 248,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 272,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "fill",
+            "x": 3.8165,
+            "side": -1,
+            "size_code": 100,
+            "faceY": -4.5
+          },
+          {
+            "role": "drain",
+            "x": 276.1835,
+            "side": -1,
+            "size_code": 50,
+            "faceY": -4.5
+          },
+          {
+            "role": "vent",
+            "x": 276.1835,
+            "side": 1,
+            "size_code": 50,
+            "faceY": 4.5
+          }
+        ],
+        "bbox": {
+          "minX": 0,
+          "minY": -4.5,
+          "maxX": 280,
+          "maxY": 7
+        }
+      },
+      "weight_lb": 88.56645,
+      "standard_range": [
+        "header_over_stick"
+      ]
+    },
+    {
+      "name": "ball-valve drops, capped, instrument ports",
+      "input": {
+        "header": 400,
+        "drops": 4,
+        "pitch": 18,
+        "drop": 100,
+        "dstyle": "bv",
+        "ends": "cap",
+        "pair": "1",
+        "alloy": "t316l",
+        "finish": "32",
+        "fill": "1",
+        "inst": "1",
+        "docs": [
+          "hydro",
+          "mtr"
+        ]
+      },
+      "share_query": "v=1&header=400&drops=4&pitch=18&drop=100&dstyle=bv&ends=cap&pair=1&alloy=t316l&finish=32&fill=1&inst=1&docs=hydro,mtr",
+      "part_number": "clmp-cap-rman-n4-d100bv-p18-6-400-ip",
+      "expected": {
+        "headerLength": 70,
+        "headerTubeLength": 68,
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              70,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "drops": 4,
+        "firstDropX": 8,
+        "lastDropX": 62,
+        "dropFaceY": 7,
+        "branches": [
+          {
+            "role": "drop",
+            "x": 8,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 26,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 44,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "drop",
+            "x": 62,
+            "side": 1,
+            "size_code": 100,
+            "faceY": 7
+          },
+          {
+            "role": "fill",
+            "x": 3.8165,
+            "side": -1,
+            "size_code": 100,
+            "faceY": -4.5
+          },
+          {
+            "role": "drain",
+            "x": 65.8085,
+            "side": -1,
+            "size_code": 50,
+            "faceY": -4.5
+          },
+          {
+            "role": "vent",
+            "x": 65.8085,
+            "side": 1,
+            "size_code": 50,
+            "faceY": 4.5
+          },
+          {
+            "role": "instrument",
+            "x": 2.752667,
+            "side": 1,
+            "size_code": 50,
+            "faceY": 4.5
+          },
+          {
+            "role": "instrument",
+            "x": 4.880333,
+            "side": 1,
+            "size_code": 50,
+            "faceY": 4.5
+          }
+        ],
+        "bbox": {
+          "minX": 0,
+          "minY": -4.5,
+          "maxX": 70,
+          "maxY": 10.5
+        }
+      },
+      "weight_lb": 35.224822,
+      "standard_range": []
+    },
+    {
+      "name": "6in header, 1-1/2in UQD stubs, 150# flanges, no fill",
+      "input": {
+        "header": 600,
+        "drops": 6,
+        "pitch": 30,
+        "drop": 150,
+        "dstyle": "uqd",
+        "ends": "fl150",
+        "pair": "1",
+        "alloy": "t316l",
+        "finish": "32",
+        "fill": "0",
+        "inst": "0",
+        "docs": [
+          "hydro",
+          "mtr"
+        ]
+      },
+      "share_query": "v=1&header=600&drops=6&pitch=30&drop=150&dstyle=uqd&ends=fl150&pair=1&alloy=t316l&finish=32&fill=0&inst=0&docs=hydro,mtr",
+      "part_number": "fl150-fl150-rman-n6-d150uqd-p30-6-600-nf",
+      "expected": {
+        "headerLength": 170,
+        "headerTubeLength": 163,
+        "faces": {
+          "a": {
+            "point": [
+              0,
+              0
+            ],
+            "dir": [
+              -1,
+              0
+            ]
+          },
+          "b": {
+            "point": [
+              170,
+              0
+            ],
+            "dir": [
+              1,
+              0
+            ]
+          }
+        },
+        "drops": 6,
+        "firstDropX": 10,
+        "lastDropX": 160,
+        "dropFaceY": 9,
+        "branches": [
+          {
+            "role": "drop",
+            "x": 10,
+            "side": 1,
+            "size_code": 150,
+            "faceY": 9
+          },
+          {
+            "role": "drop",
+            "x": 40,
+            "side": 1,
+            "size_code": 150,
+            "faceY": 9
+          },
+          {
+            "role": "drop",
+            "x": 70,
+            "side": 1,
+            "size_code": 150,
+            "faceY": 9
+          },
+          {
+            "role": "drop",
+            "x": 100,
+            "side": 1,
+            "size_code": 150,
+            "faceY": 9
+          },
+          {
+            "role": "drop",
+            "x": 130,
+            "side": 1,
+            "size_code": 150,
+            "faceY": 9
+          },
+          {
+            "role": "drop",
+            "x": 160,
+            "side": 1,
+            "size_code": 150,
+            "faceY": 9
+          }
+        ],
+        "bbox": {
+          "minX": 0,
+          "minY": -5.5,
+          "maxX": 170,
+          "maxY": 9
+        }
+      },
+      "weight_lb": 151.481907,
+      "standard_range": []
+    }
+  ]
+}

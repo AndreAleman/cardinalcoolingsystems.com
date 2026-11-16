@@ -9,6 +9,7 @@ import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-relat
 import { notFound } from "next/navigation"
 import ProductActionsWrapper from "./product-actions-wrapper"
 import { HttpTypes } from "@medusajs/types"
+import { plainText } from "@lib/util/plain-text"
 import SanityTabs from "../components/sanity-tabs"
 import Link from "next/link"
 import ProductViewTracker from "@modules/products/components/product-view-tracker"
@@ -47,7 +48,8 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
   const allTabs: SanityTab[] = []
 
   // Product description from Medusa — plain text converted to PortableText block
-  if (product.description && product.description.trim().length > 0) {
+  const descriptionText = plainText(product.description)
+  if (descriptionText.length > 0) {
     allTabs.push({
       _key: "product-description-medusa",
       title: "Product Description",
@@ -56,7 +58,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = async ({
           _type: "block",
           _key: "desc-block",
           style: "normal",
-          children: [{ _type: "span", _key: "desc-span", text: product.description }],
+          children: [{ _type: "span", _key: "desc-span", text: descriptionText }],
           markDefs: [],
         },
       ],

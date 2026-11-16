@@ -13,12 +13,30 @@ import { computeSellPrice } from "../utils/markup";
   restores the exact prior state (delete created rows, revert updated
   ones).
 */
+export type QuoteLinePricingInput = {
+  item_id: string;
+  cost: number;
+  markup_pct: number;
+  /* Plan B6. Omitted = unchanged, null = cleared. */
+  benchmark_price?: number | null;
+  benchmark_source?: string | null;
+  approved_price?: number | null;
+};
+
+const B6_FIELDS = ["benchmark_price", "benchmark_source", "approved_price"] as const;
+
+/* Only the B6 fields the caller sent (undefined = leave as is). */
+const b6Patch = (item: QuoteLinePricingInput) =>
+  Object.fromEntries(
+    B6_FIELDS.filter((k) => item[k] !== undefined).map((k) => [k, item[k]])
+  );
+
 export const upsertQuoteLinePricingStep = createStep(
   "upsert-quote-line-pricing",
   async (
     input: {
       quote_id: string;
-      items: { item_id: string; cost: number; markup_pct: number }[];
+      items: QuoteLinePricingInput[];
     },
     { container }
   ) => {
@@ -48,6 +66,7 @@ export const upsertQuoteLinePricingStep = createStep(
             item_id: item.item_id,
             cost: item.cost,
             markup_pct: item.markup_pct,
+            ...b6Patch(item),
           }))
         )) as ModuleQuoteLinePricing[])
       : [];
@@ -58,6 +77,7 @@ export const upsertQuoteLinePricingStep = createStep(
             id: existingByItem.get(item.item_id)!.id,
             cost: item.cost,
             markup_pct: item.markup_pct,
+            ...b6Patch(item),
           }))
         )) as ModuleQuoteLinePricing[])
       : [];
@@ -66,7 +86,14 @@ export const upsertQuoteLinePricingStep = createStep(
       created_ids: created.map((row) => row.id),
       previous: toUpdate.map((item) => {
         const row = existingByItem.get(item.item_id)!;
-        return { id: row.id, cost: row.cost, markup_pct: row.markup_pct };
+        return {
+          id: row.id,
+          cost: row.cost,
+          markup_pct: row.markup_pct,
+          benchmark_price: row.benchmark_price ?? null,
+          benchmark_source: row.benchmark_source ?? null,
+          approved_price: row.approved_price ?? null,
+        };
       }),
     });
   },

@@ -8,6 +8,7 @@ import { TUBE_STICK_FT, isTubeLineItem, sticksLabel } from "@lib/util/tube-stick
 import { notifyCartUpdated } from "@lib/hooks/use-cart-count"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
+import { builderLineView } from "@lib/builder/quote-line"
 import Link from "next/link"
 
 type CartData = {
@@ -194,6 +195,8 @@ export default function CartPanel() {
                 // Tube: feet in whole 20 ft sticks (lib/util/tube-sticks.ts).
                 const tube = isTubeLineItem(item as any)
                 const step = tube ? TUBE_STICK_FT : 1
+                // Cardinal Builder Quote line: Part Number + "Quote", never $0.00.
+                const builder = builderLineView(item as any)
 
                 return (
                   <li
@@ -256,6 +259,13 @@ export default function CartPanel() {
                         </p>
                       )}
 
+                      {/* Builder line: Part Number */}
+                      {builder?.partNumber && (
+                        <p className="text-xs font-mono mt-0.5 break-all" style={{ color: "#111111" }} data-testid="cart-panel-builder-pn">
+                          {builder.partNumber}
+                        </p>
+                      )}
+
                       {/* SKU */}
                       {item.variant?.sku && (
                         <p className="text-xs font-mono mt-0.5" style={{ color: "#E3000F" }}>
@@ -301,9 +311,15 @@ export default function CartPanel() {
                         </div>
 
                         {/* Line total */}
-                        <span className="text-sm font-semibold" style={{ color: "#111111" }}>
-                          {convertToLocale({ amount: lineTotal, currency_code: currencyCode })}
-                        </span>
+                        {builder?.quote ? (
+                          <span className="bg-neutral-900 px-1.5 py-0.5 text-[11px] font-semibold uppercase text-white">
+                            Quote
+                          </span>
+                        ) : (
+                          <span className="text-sm font-semibold" style={{ color: "#111111" }}>
+                            {convertToLocale({ amount: lineTotal, currency_code: currencyCode })}
+                          </span>
+                        )}
                       </div>
                       {tube && (
                         <p className="text-xs mt-1.5" style={{ color: "#6b7280" }}>

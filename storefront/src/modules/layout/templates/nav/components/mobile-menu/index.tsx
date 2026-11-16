@@ -48,6 +48,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
   }, [])
 
   const staticNavigationItems = [
+    { label: "Build a Kit", href: "/build" },
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
     { label: "About Us", href: "/about" },

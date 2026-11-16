@@ -4,11 +4,14 @@ import {
   WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk";
 import { ModuleQuoteLinePricing } from "../../../modules/quote/types";
-import { upsertQuoteLinePricingStep } from "../steps/upsert-quote-line-pricing";
+import {
+  QuoteLinePricingInput,
+  upsertQuoteLinePricingStep,
+} from "../steps/upsert-quote-line-pricing";
 
 export type SetQuoteLinePricingWorkflowInput = {
   quote_id: string;
-  items: { item_id: string; cost: number; markup_pct: number }[];
+  items: QuoteLinePricingInput[];
 };
 
 /*
